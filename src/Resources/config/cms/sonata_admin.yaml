@@ -20,7 +20,7 @@ sonata_admin:
     title:      Networking CMS
     title_logo: /bundles/networkinginitcms/img/logo_initcms.png
     templates:
-        knp_menu_template: "@NetworkingInitCms/Menu/initcms_knp_menu.html.twig"
+        knp_menu_template: "@NetworkingInitCms/Menu/admin_side_menu.html.twig"
         user_block: '@NetworkingInitCms/Admin/user_block.html.twig'
         layout:     '@NetworkingInitCms/admin_layout.html.twig'
         ajax:       '@NetworkingInitCms/ajax_layout.html.twig'

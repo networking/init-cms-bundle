@@ -11,19 +11,18 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
 
 /**
  * Class PageInterface.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-interface PageInterface
-    extends \Symfony\Cmf\Component\Routing\RouteReferrersReadInterface,
-            \Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface
+interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterface, VersionableInterface
 {
     public const PATH_SEPARATOR = '/';
 
@@ -73,8 +72,6 @@ interface PageInterface
     public function getMetaDescription(): ?string;
 
     /**
-     * @param PageInterface $parent
-     *
      * @return $this
      */
     public function setParent(PageInterface $parent = null);
@@ -88,9 +85,9 @@ interface PageInterface
     public function setParents(array $parents): self;
 
     /**
-     * @return Collection<int, self>
+     * @return array<int, PageInterface>
      */
-    public function getParents(): array;
+    public function getParents();
 
     public function addChildren(PageInterface $children): self;
 
@@ -135,11 +132,14 @@ interface PageInterface
 
     public function removeLayoutBlock(LayoutBlockInterface $layoutBlock): self;
 
-    public function setLayoutBlock($layoutBlocks): self;
+    public function setLayoutBlocks($layoutBlocks): self;
 
     public function orderLayoutBlocks(): void;
 
-    public function getLayoutBlock(?string $zone): Collection;
+    /**
+     * @return Collection<int, LayoutBlockInterface>
+     */
+    public function getLayoutBlocks(?string $zone): Collection|array;
 
     public function setMenuItem(MenuItemInterface $menuItem): self;
 
@@ -162,8 +162,6 @@ interface PageInterface
     public function getLocale(): ?string;
 
     public function setOriginals(array $originals): self;
-
-    public function setOriginal(PageInterface $page): self;
 
     public function getOriginals(): Collection|array;
 
@@ -241,12 +239,12 @@ interface PageInterface
     /**
      * @return array<int>
      */
-    public function convertTranslationsToIntegerArray(): array;
+    public function convertTranslationsToArray(): array;
 
     /**
      * @return array<int>
      */
-    public function convertOriginalsToIntegerArray(): array;
+    public function convertOriginalsToArray(): array;
 
     public function getStatusLabel(): string;
 

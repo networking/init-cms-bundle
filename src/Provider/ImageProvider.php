@@ -66,14 +66,15 @@ class ImageProvider extends FileProvider implements ImageProviderInterface
      */
     public function buildEditForm(FormMapper $formMapper): void
     {
-        $formMapper->add('name');
-        $formMapper->add('authorName');
-        $formMapper->add('description');
-        $formMapper->add('copyright');
         $formMapper->add('binaryContent',
             FileType::class,
             ['label' => 'form.label_binary_content_image_new', 'required' => false]
         );
+        $formMapper->add('name');
+        $formMapper->add('authorName');
+        $formMapper->add('description');
+        $formMapper->add('copyright');
+
         $formMapper->add('enabled', null, ['required' => false], ['inline_block' => true]);
         if (!$this->getCdn() instanceof Server) {
             $formMapper->add(
@@ -104,6 +105,7 @@ class ImageProvider extends FileProvider implements ImageProviderInterface
         if (null !== parse_url($path, PHP_URL_SCHEME)) {
 	        return $path;
         }
+
 
         return $this->getCdn()->getPath($path, $media->getCdnIsFlushable());
     }

@@ -11,23 +11,10 @@ file that was distributed with this source code.
 {% extends '@NetworkingInitCms/CRUD/base_list.html.twig' %}
 
 {% block actions %}
-    <h1>{% include '@NetworkingInitCms/Core/create_button.html.twig' %}</h1>
+   {% include '@NetworkingInitCms/Core/create_button.html.twig' %}
 {% endblock %}
 
-{% block list_table %}
-    {{ parent() }}
-{% endblock %}
-{% block footer %}
-    {{ parent() }}
-    <div class="modal fade" tabindex="-1" role="dialog" id="list_dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-            </div>
-        </div>
-    </div>
-{% endblock %}
 {% block before_body_end %}
     {{ parent() }}
-    {% include '@NetworkingInitCms/CRUD/list_script.html.twig' %}
+    <script src="{{ asset('list.js', 'init_cms')}}"></script>
 {% endblock %}

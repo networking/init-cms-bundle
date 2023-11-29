@@ -24,7 +24,7 @@ interface ContentRouteInterface
      *
      * @param RouteReferrersReadInterface $content
      *
-     * @return ContentRoute
+     * @return $this
      */
     public function setContent(RouteReferrersReadInterface $content);
 

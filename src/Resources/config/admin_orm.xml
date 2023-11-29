@@ -8,13 +8,13 @@
     <parameters>
         <parameter key="networking_init_cms.admin.group.entity">Networking\InitCmsBundle\Entity\Group</parameter>
         <parameter key="networking_init_cms.admin.group.controller">Sonata\AdminBundle\Controller\CRUDController</parameter>
-        <parameter key="networking_init_cms.admin.group.class">Networking\InitCmsBundle\Admin\Entity\GroupAdmin</parameter>
+        <parameter key="networking_init_cms.admin.group.class">Networking\InitCmsBundle\Admin\GroupAdmin</parameter>
         <parameter key="networking_init_cms.admin.translation_domain">SonataUserBundle</parameter>
         <parameter key="networking_init_cms.admin.group.translation_domain">SonataUserBundle</parameter>
     </parameters>
     <services>
         <!-- Page Admin-->
-        <service id="networking_init_cms.admin.page" class="Networking\InitCmsBundle\Admin\Entity\PageAdmin"
+        <service id="networking_init_cms.admin.page" class="Networking\InitCmsBundle\Admin\PageAdmin"
                  public="true">
             <argument type="service" id="networking_init_cms.page_manager"/>
             <call method="setSonataAnnotationReader">
@@ -51,10 +51,9 @@
 
         <!-- Layout Block Admin-->
         <service id="networking_init_cms.admin.layout_block"
-                 class="Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin" public="true">
+                 class="Networking\InitCmsBundle\Admin\LayoutBlockAdmin" public="true">
             <argument type="service" id="networking_init_cms.page_manager"/>
             <argument type="service" id="networking_init_cms.layout_block_form_listener"/>
-            <argument type="service" id="jms_serializer.serializer"/>
             <argument type="service" id="networking_init_cms.admin.page"/>
             <call method="setSonataAnnotationReader">
                 <argument type="service" id="networking_init_cms.annotation.reader"/>
@@ -65,13 +64,12 @@
             <tag name="sonata.admin" manager_type="orm" label="content"
                  model_class="Networking\InitCmsBundle\Entity\LayoutBlock"
                  controller="Networking\InitCmsBundle\Controller\LayoutBlockController"
-                 translation_domain="PageAdmin"
-                 label_translator_strategy="sonata.admin.label.strategy.underscore"
+                 translation_domain="admin"
                  persist_filters="true"/>
         </service>
 
         <!-- Menu Item Admin -->
-        <service id="networking_init_cms.admin.menu_item" class="Networking\InitCmsBundle\Admin\Entity\MenuItemAdmin"
+        <service id="networking_init_cms.admin.menu_item" class="Networking\InitCmsBundle\Admin\MenuItemAdmin"
                  public="true">
             <call method="setSonataAnnotationReader">
                 <argument type="service" id="networking_init_cms.annotation.reader"/>
@@ -110,7 +108,7 @@
         </service>
 
         <!-- Help Text Admin-->
-        <service id="networking_init_cms.admin.help_text" class="Networking\InitCmsBundle\Admin\Entity\HelpTextAdmin"
+        <service id="networking_init_cms.admin.help_text" class="Networking\InitCmsBundle\Admin\HelpTextAdmin"
                  public="true">
             <call method="setSonataAnnotationReader">
                 <argument type="service" id="networking_init_cms.annotation.reader"/>
@@ -132,7 +130,7 @@
         </service>
 
         <!-- Tag Admin-->
-        <service id="networking_init_cms.admin.tag" class="Networking\InitCmsBundle\Admin\Entity\TagAdmin"
+        <service id="networking_init_cms.admin.tag" class="Networking\InitCmsBundle\Admin\TagAdmin"
                  public="true">
             <tag name="sonata.admin" manager_type="orm" label="tags"
                  model_class="Networking\InitCmsBundle\Entity\Tag"
@@ -143,7 +141,7 @@
         </service>
 
         <service id="networking_init_cms.admin_entity.translation_admin"
-                 class="Networking\InitCmsBundle\Admin\Entity\TranslationAdmin">
+                 class="Networking\InitCmsBundle\Admin\TranslationAdmin">
             <call method="setEditableOptions">
                 <argument>%networking_init_cms.editable%</argument>
             </call>

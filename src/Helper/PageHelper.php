@@ -10,21 +10,25 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Helper;
 
-use JMS\Serializer\SerializerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
+use Networking\InitCmsBundle\Model\ContentRouteInterface;
 use Networking\InitCmsBundle\Model\ContentRouteManagerInterface;
+use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotManagerInterface;
-use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
+use Networking\InitCmsBundle\Serializer\PageNormalizer;
 use Sonata\AdminBundle\Exception\NoValueException;
-use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class PageHelper.
@@ -76,8 +80,8 @@ class PageHelper
     /**
      * PageHelper constructor.
      *
-     * @param bool                         $allowLocaleCookie
-     * @param bool                         $singleLanguage
+     * @param bool $allowLocaleCookie
+     * @param bool $singleLanguage
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -101,8 +105,6 @@ class PageHelper
     }
 
     /**
-     * @param $path
-     *
      * @return string
      */
     public static function getPageRoutePath($path)
@@ -114,8 +116,8 @@ class PageHelper
         }
         $path = implode(PageInterface::PATH_SEPARATOR, $pathArray);
 
-        //add first slash
-        if (substr($path, 0, 1) != PageInterface::PATH_SEPARATOR) {
+        // add first slash
+        if (PageInterface::PATH_SEPARATOR != substr($path, 0, 1)) {
             $path = PageInterface::PATH_SEPARATOR.$path;
         }
 
@@ -125,11 +127,8 @@ class PageHelper
     /**
      * Set the variables to the given content type object.
      *
-     * @param $fieldName
-     * @param $value
      * @param null $method
      *
-     * @return mixed
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public static function setFieldValue(PageInterface $object, $fieldName, $value, $method = null)
@@ -162,10 +161,8 @@ class PageHelper
     /**
      * Fetch the variables from the given content type object.
      *
-     * @param $fieldName
      * @param null $method
      *
-     * @return mixed
      * @throws \Sonata\AdminBundle\Exception\NoValueException
      */
     public static function getFieldValue(PageInterface $object, $fieldName, $method = null)
@@ -204,10 +201,6 @@ class PageHelper
     }
 
     /**
-     * @param $path
-     * @param $id
-     * @param $slug
-     *
      * @return mixed
      */
     public static function replaceSlugInPath($path, $id, $slug): string|array|null
@@ -220,25 +213,31 @@ class PageHelper
      */
     public function makePageSnapshot(PageInterface $page)
     {
-        foreach ($page->getLayoutBlock() as $layoutBlock) {
-            $layoutBlockContent = $this->registry->getManagerForClass($layoutBlock->getClassType())->getRepository($layoutBlock->getClassType())->find(
-                $layoutBlock->getObjectId()
-            );
-            $layoutBlock->takeSnapshot($this->serializer->serialize($layoutBlockContent, 'json'));
-        }
-
         $pageSnapshotClass = $this->pageSnapshotManager->getClassName();
 
         /** @var \Networking\InitCmsBundle\Model\PageSnapshotInterface $pageSnapshot */
         $pageSnapshot = new $pageSnapshotClass($page);
-        $pageSnapshot->setVersionedData($this->serializer->serialize($page, 'json'))
+
+        $defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (object $object, string $format, array $context): int {
+                return $object->getId();
+            },
+            AbstractNormalizer::ALLOW_EXTRA_ATTRIBUTES => false,
+            AbstractNormalizer::REQUIRE_ALL_PROPERTIES => false,
+            AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => false,
+            AbstractObjectNormalizer::SKIP_UNINITIALIZED_VALUES => true,
+        ];
+
+        $data = $this->serializer->serialize($page, 'json', $defaultContext);
+
+        $pageSnapshot->setVersionedData($data)
             ->setPage($page);
 
         if ($oldPageSnapshot = $page->getSnapshot()) {
             $snapshotContentRoute = $oldPageSnapshot->getContentRoute();
         } else {
             $contentRouteClass = $this->contentRouteManager->getClassName();
-            /** @var \Networking\InitCmsBundle\Model\ContentRouteInterface $snapshotContentRoute */
+            /** @var ContentRouteInterface $snapshotContentRoute */
             $snapshotContentRoute = new $contentRouteClass();
         }
 
@@ -246,6 +245,7 @@ class PageHelper
         $pageSnapshot->setPath(self::getPageRoutePath($page->getPath()));
 
         $om = $this->registry->getManagerForClass($pageSnapshotClass);
+
         $om->persist($pageSnapshot);
         $om->flush();
 
@@ -261,20 +261,16 @@ class PageHelper
         $om->flush();
     }
 
-    /**
-     * Unserialize the PageSnapshot data into a page object.
-     *
-     * @param bool                  $unserializeTranslations
-     * @return array|\JMS\Serializer\scalar|object
-     */
-    public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $unserializeTranslations = true)
+    public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $deserializeTranslations = true)
     {
-        $context = new PageSnapshotDeserializationContext();
-        $context->setDeserializeTranslations($unserializeTranslations);
-
-        if(str_contains($pageSnapshot->getResourceName(), 'Proxies\__CG__\\')){
+        if (str_contains($pageSnapshot->getResourceName(), 'Proxies\__CG__\\')) {
             $pageSnapshot->setResourceName(str_replace('Proxies\__CG__\\', '', $pageSnapshot->getResourceName()));
         }
+
+        $context = [
+            PageNormalizer::DESERIALIZE_TRANSLATIONS => $deserializeTranslations,
+            AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true,
+        ];
 
         return $this->serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json', $context);
     }
@@ -282,7 +278,6 @@ class PageHelper
     /**
      * create a copy of a given page object in a given locale.
      *
-     * @param $locale
      * @return PageInterface
      */
     public function makeTranslationCopy(PageInterface $page, $locale)
@@ -300,32 +295,18 @@ class PageHelper
         $pageCopy->setIsHome($page->getIsHome());
         $pageCopy->setLocale($locale);
         $pageCopy->setTemplateName($page->getTemplateName());
-        $pageCopy->setOriginal($page);
+        $pageCopy->getOriginals()->add($page);
 
-        $layoutBlocks = $page->getLayoutBlock();
-	    $om = $this->registry->getManager();
+        $layoutBlocks = $page->getLayoutBlocks();
+        $om = $this->registry->getManager();
 
         foreach ($layoutBlocks as $layoutBlock) {
-
-            /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
-
-
-            $content = $om->getRepository($newLayoutBlock->getClassType())->find(
-                $newLayoutBlock->getObjectId()
-            );
-            $newContent = clone $content;
-
-            $om->persist($newContent);
-            $om->flush();
-
-            $newLayoutBlock->setObjectId($newContent->getId());
             $newLayoutBlock->setPage($pageCopy);
-
             $om->persist($newLayoutBlock);
         }
 
-	    $om->persist($pageCopy);
+        $om->persist($pageCopy);
 
         $om->flush();
 
@@ -334,7 +315,6 @@ class PageHelper
 
     /**
      * create a copy of a given page object.
-     *
      *
      * @return PageInterface
      */
@@ -358,27 +338,13 @@ class PageHelper
         $pageCopy->setTemplateName($page->getTemplateName());
         $pageCopy->setLocale($page->getLocale());
 
-        $layoutBlocks = $page->getLayoutBlock();
+        $layoutBlocks = $page->getLayoutBlocks();
 
         $om = $this->registry->getManager();
 
         foreach ($layoutBlocks as $layoutBlock) {
-
-            /** @var $newLayoutBlock \Networking\InitCmsBundle\Model\LayoutBlockInterface */
             $newLayoutBlock = clone $layoutBlock;
-
-
-            $content = $om->getRepository($newLayoutBlock->getClassType())->find(
-                $newLayoutBlock->getObjectId()
-            );
-            $newContent = clone $content;
-
-            $om->persist($newContent);
-            $om->flush();
-
-            $newLayoutBlock->setObjectId($newContent->getId());
             $newLayoutBlock->setPage($pageCopy);
-
             $om->persist($newLayoutBlock);
         }
 
@@ -392,14 +358,13 @@ class PageHelper
     /**
      * Fills the request object with the content route parameters if found.
      *
-     *
      * @return Request
      */
     public function matchContentRouteRequest(Request $request)
     {
         $requestParams = $this->router->matchRequest($request);
 
-        if (is_array($requestParams) && !empty($requestParams)) {
+        if (!empty($requestParams)) {
             $request->attributes->add($requestParams);
 
             unset($requestParams['_route']);
@@ -418,8 +383,6 @@ class PageHelper
     /**
      * Returns if a page is active or inactive based on json string from page snapshot.
      *
-     * @param $jsonString
-     *
      * @return bool
      */
     public function jsonPageIsActive($jsonString)
@@ -431,10 +394,10 @@ class PageHelper
         $activeStart = array_key_exists('active_from', $page) && $page['active_from'] ? new \DateTime($page['active_from']) : new \DateTime();
         $activeEnd = array_key_exists('active_to', $page) && $page['active_to'] ? new \DateTime($page['active_to']) : new \DateTime();
 
-        if ($now->getTimestamp() >= $activeStart->getTimestamp() &&
-            $now->getTimestamp() <= $activeEnd->getTimestamp()
+        if ($now->getTimestamp() >= $activeStart->getTimestamp()
+            && $now->getTimestamp() <= $activeEnd->getTimestamp()
         ) {
-            return $page['status'] == PageInterface::STATUS_PUBLISHED;
+            return PageInterface::STATUS_PUBLISHED == $page['status'];
         }
 
         return false;
@@ -477,19 +440,18 @@ class PageHelper
     }
 
     /**
-     * @param $locale
      * @return Cookie[]
      */
-    public function setLocaleCookies($locale){
-
+    public function setLocaleCookies($locale)
+    {
         $params = session_get_cookie_params();
-        $samesite = array_key_exists('samesite', $params)?$params['samesite']:Cookie::SAMESITE_LAX;
-        $secure = $samesite ==='none'?true:$params['secure'];
+        $samesite = array_key_exists('samesite', $params) ? $params['samesite'] : Cookie::SAMESITE_LAX;
+        $secure = 'none' === $samesite ? true : $params['secure'];
 
         $cookies = [];
         $expires = 0;
-        if($params['lifetime']){
-            $expires = time()+$params['lifetime'];
+        if ($params['lifetime']) {
+            $expires = time() + $params['lifetime'];
         }
 
         $cookies[] = Cookie::create(
@@ -504,8 +466,8 @@ class PageHelper
             $samesite
         );
 
-        //fallback if browser does not support samesite=none
-        if($samesite === 'none'){
+        // fallback if browser does not support samesite=none
+        if ('none' === $samesite) {
             $cookies[] = Cookie::create(
                 '_locale_legacy',
                 $locale,
@@ -516,8 +478,6 @@ class PageHelper
                 $params['httponly'],
                 false
             );
-
-
         }
 
         return $cookies;

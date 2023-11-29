@@ -10,14 +10,13 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Twig\Extension;
 
 use Doctrine\ORM\EntityRepository;
-use FOS\CKEditorBundle\Model\ConfigManager;
+use Doctrine\Persistence\ManagerRegistry;
 use FOS\CKEditorBundle\Config\CKEditorConfiguration;
-use JMS\Serializer\SerializerInterface;
-use Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin;
-use Networking\InitCmsBundle\Admin\Model\PageAdmin;
+use Networking\InitCmsBundle\Admin\LayoutBlockAdmin;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Networking\InitCmsBundle\Form\Type\IconradioType;
@@ -27,10 +26,11 @@ use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Twig\TokenParser\JSTokenParser;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Form\Type\ModelHiddenType;
 use Sonata\Form\Type\BooleanType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -53,7 +53,6 @@ use Twig\TwigFunction;
  */
 class NetworkingHelperExtension extends AbstractExtension
 {
-
     /**
      * @var bool
      */
@@ -70,46 +69,6 @@ class NetworkingHelperExtension extends AbstractExtension
     protected $ckeditorRendered = false;
 
     /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
-     * @var Environment
-     */
-    protected $templating;
-
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-    /**
-     * @var ManagerRegistry
-     */
-    protected $doctrine;
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-    /**
-     * @var LayoutBlockAdmin
-     */
-    protected $layoutBlockAdmin;
-    /**
-     * @var SerializerInterface
-     */
-    protected $serializer;
-    /**
-     * @var PageManagerInterface
-     */
-    protected $pageManager;
-
-    /**
-     * @var ConfigManager
-     */
-    protected $ckEditorConfigManager;
-
-    /**
      * @var string
      */
     protected $currentTemplate;
@@ -117,32 +76,22 @@ class NetworkingHelperExtension extends AbstractExtension
     /**
      * NetworkingHelperExtension constructor.
      *
-     * @param array                $templates
-     * @param array                $contentTypes
+     * @param array $templates
+     * @param array $contentTypes
      */
     public function __construct(
-        KernelInterface $kernel,
-        Environment $templating,
-        RequestStack $requestStack,
-        ManagerRegistry $doctrine,
-        TranslatorInterface $translator,
-        LayoutBlockAdmin $layoutBlockAdmin,
-        SerializerInterface $serializer,
-        PageManagerInterface $pageManager,
-        CKEditorConfiguration $ckEditorConfigManager,
+        protected KernelInterface $kernel,
+        protected Environment $templating,
+        protected RequestStack $requestStack,
+        protected ManagerRegistry $doctrine,
+        protected TranslatorInterface $translator,
+        protected LayoutBlockAdmin $layoutBlockAdmin,
+        protected PageManagerInterface $pageManager,
+        protected CKEditorConfiguration $ckEditorConfigManager,
+        protected Packages $packages,
         protected $templates = [],
         protected $contentTypes = []
-
     ) {
-        $this->kernel = $kernel;
-        $this->templating = $templating;
-        $this->requestStack = $requestStack;
-        $this->doctrine = $doctrine;
-        $this->translator = $translator;
-        $this->layoutBlockAdmin = $layoutBlockAdmin;
-        $this->serializer = $serializer;
-        $this->pageManager = $pageManager;
-        $this->ckEditorConfigManager = $ckEditorConfigManager;
     }
 
     /**
@@ -163,14 +112,13 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function getFilters()
     {
-        $filters = [
+        return [
             new TwigFilter('truncate', $this->truncate(...), ['needs_environment' => true]),
             new TwigFilter('excerpt', $this->excerpt(...), ['needs_environment' => true]),
             new TwigFilter('highlight', $this->highlight(...)),
             new TwigFilter('base64_encode', $this->base64Encode(...)),
+            new TwigFilter('json_decode', $this->jsonDecode(...)),
         ];
-
-        return $filters;
     }
 
     /**
@@ -182,6 +130,7 @@ class NetworkingHelperExtension extends AbstractExtension
     {
         return [
             new TwigFunction('render_initcms_block', $this->renderInitCmsBlock(...), ['is_safe' => ['html']]),
+            new TwigFunction('render_layout_block', $this->renderLayoutBlock(...), ['is_safe' => ['html']]),
             new TwigFunction('get_initcms_template_zones', $this->getInitCmsTemplateZones(...), ['is_safe' => ['html']]),
             new TwigFunction('render_initcms_field_as_string', $this->renderInitcmsFieldAsString(...), ['is_safe' => ['html']]),
             new TwigFunction('get_form_field_zone', $this->getFormFieldZone(...), ['is_safe' => ['html']]),
@@ -196,6 +145,9 @@ class NetworkingHelperExtension extends AbstractExtension
             new TwigFunction('is_admin_group_active', $this->isAdminGroupActive(...), ['is_safe' => ['html']]),
             new TwigFunction('get_initcms_page_url', $this->getPageUrl(...), ['is_safe' => ['html']]),
             new TwigFunction('get_media_by_id', $this->getMediaById(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_content_type_name', $this->getContentTypeName(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_content_type_icon', $this->getContentTypeIcon(...), ['is_safe' => ['html']]),
+            new TwigFunction('get_content_template', $this->getContentTemplate(...)),
             new TwigFunction('ckeditor_is_rendered', $this->ckeditorIsRendered(...)),
             new TwigFunction('content_css', $this->getContentCss(...)),
             new TwigFunction('get_file_icon', $this->getFileIcon(...)),
@@ -205,38 +157,39 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param $template
      * @param array $params
+     *
      * @return string
+     *
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
     public function renderInitCmsBlock($template, LayoutBlockInterface $layoutBlock, $params = [])
     {
-        if (!$serializedContent = $layoutBlock->getSnapshotContent()) {
-            // Draft View
-            $contentItem = $layoutBlock->getContent();
-        } else {
-            // Live View
-            $contentItem = $this->serializer->deserialize(
-                $serializedContent,
-                $layoutBlock->getClassType(),
-                'json'
-            );
-        }
+        $options = $layoutBlock->getTemplateOptions($params);
+        $context = ['layoutBlock' => $layoutBlock, ...$params,  ...$options];
 
-        if (!is_object($contentItem)) {
-            $this->layoutBlockAdmin->delete($layoutBlock);
+        return $this->templating->render($template, $context);
+    }
 
-            return '---';
-        }
+    /**
+     * @param array $params
+     *
+     * @return string
+     *
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function renderLayoutBlock(LayoutBlockInterface $layoutBlock, $fallbackTemplate = null, $params = [])
+    {
+        $template = $this->getContentTemplate($layoutBlock, $fallbackTemplate);
 
-        $options = $contentItem->getTemplateOptions($params);
+        $options = $layoutBlock->getTemplateOptions($params);
+        $context = ['layoutBlock' => $layoutBlock, ...$params,  ...$options];
 
-        $options = array_merge($options, $params);
-
-        return $this->templating->render($template, $options);
+        return $this->templating->render($template, $context);
     }
 
     /**
@@ -246,37 +199,37 @@ class NetworkingHelperExtension extends AbstractExtension
      */
     public function renderInitcmsAdminBlock(LayoutBlockInterface $layoutBlock): bool|string
     {
-        if ($layoutBlock->getObjectId()) {
-            // Draft View
-            $contentItem = $layoutBlock->getContent();
-        } else {
-            $classType = $layoutBlock->getClassType();
-            $contentItem = new $classType();
+        $adminContent = $layoutBlock->getAdminContent();
+
+        $template = $this->getContentTemplate($layoutBlock, null);
+
+        $content = ['layoutBlock' => $layoutBlock, 'is_admin' => true];
+
+        if (array_key_exists('template', $adminContent)) {
+            $template = $adminContent['template'];
         }
 
-        if (!is_object($contentItem)) {
-            $this->layoutBlockAdmin->delete($layoutBlock);
-
-            return false;
+        if (array_key_exists('content', $adminContent)) {
+            $content = array_merge($content, $adminContent['content']);
         }
 
-        $adminContent = $contentItem->getAdminContent();
-
-        return $this->templating->render($adminContent['template'], $adminContent['content']);
+        return $this->templating->render($template, $content);
     }
 
-    /**
-     * @return mixed
-     */
     public function renderContentTypeName(LayoutBlockInterface $layoutBlock)
     {
-        if ($layoutBlock->getObjectId()) {
-            $contentItem = $layoutBlock->getContent();
+        if (method_exists($layoutBlock, 'getContentTypeName')) {
+            $name = $layoutBlock->getContentTypeName();
         } else {
-            $classType = $layoutBlock->getClassType();
-
-            $contentItem = new $classType();
+            $name = $layoutBlock::class;
         }
+
+        return $this->translator->trans($name);
+    }
+
+    public function getContentTypeName($class)
+    {
+        $contentItem = new ($class)();
 
         if (method_exists($contentItem, 'getContentTypeName')) {
             $name = $contentItem->getContentTypeName();
@@ -287,11 +240,29 @@ class NetworkingHelperExtension extends AbstractExtension
         return $this->translator->trans($name);
     }
 
-    /**
-     * @param string                                   $adminCode
-     *
-     */
-    public function renderAdminSubNav(AdminInterface $admin, $adminCode = ''): bool|\Knp\Menu\ItemInterface
+    public function getContentTypeIcon($class): ?string
+    {
+        foreach ($this->contentTypes as $contentType) {
+            if ($contentType['class'] === $class) {
+                return $contentType['icon'];
+            }
+        }
+
+        return null;
+    }
+
+    public function getContentTemplate(LayoutBlockInterface $layoutBlock, string $fallback = null): ?string
+    {
+        foreach ($this->contentTypes as $contentType) {
+            if ($contentType['class'] === $layoutBlock::class) {
+                return $contentType['default_template'];
+            }
+        }
+
+        return $layoutBlock->getTemplate() ?? $fallback;
+    }
+
+    public function renderAdminSubNav(AdminInterface $admin, string $adminCode = ''): bool|\Knp\Menu\ItemInterface
     {
         $menu = false;
 
@@ -322,7 +293,8 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param string                                   $adminCode
+     * @param string $adminCode
+     *
      * @return bool
      */
     public function isAdminActive(AdminInterface $admin, $adminCode = '')
@@ -347,6 +319,7 @@ class NetworkingHelperExtension extends AbstractExtension
 
     /**
      * @param string $adminCode
+     *
      * @return bool
      */
     public function isAdminGroupActive(array $group, $adminCode = '')
@@ -363,26 +336,20 @@ class NetworkingHelperExtension extends AbstractExtension
         return $active;
     }
 
-    /**
-     * @return mixed
-     */
     public function getInitCmsTemplateZones()
     {
         return $this->getZonesByTemplate($this->getCurrentTemplate());
     }
 
-    /**
-     * @param $template
-     *
-     * @return mixed
-     */
     protected function getZonesByTemplate($template)
     {
         $zones = $this->templates[$template]['zones'];
 
         foreach ($zones as $key => $zone) {
-            $temp = array_map($this->jsString(...), $zone['restricted_types']);
-            $zones[$key]['restricted_types'] = '['.implode(',', $temp).']';
+            //            $temp = array_map($this->jsString(...), $zone['restricted_types']);
+            //            $test = '['.implode(',', $temp).']';
+            //
+            //            dump($test);
 
             $zones[$key]['restricted_types'] = json_encode($zone['restricted_types'], JSON_THROW_ON_ERROR);
         }
@@ -392,7 +359,7 @@ class NetworkingHelperExtension extends AbstractExtension
 
     public function getCurrentTemplate(): int|string|null
     {
-        if(!$this->currentTemplate){
+        if (!$this->currentTemplate) {
             $request = $this->requestStack->getCurrentRequest();
             $pageId = (!$request->get('objectId')) ? $request->get('id') : $request->get('objectId');
 
@@ -409,13 +376,9 @@ class NetworkingHelperExtension extends AbstractExtension
             }
         }
 
-
         return $this->currentTemplate;
     }
 
-    /**
-     * @return mixed
-     */
     public function getContentTypeOptions()
     {
         return $this->contentTypes;
@@ -424,10 +387,11 @@ class NetworkingHelperExtension extends AbstractExtension
     /**
      * Guess which icon should represent an entity admin.
      *
-     * @param string         $size
-     * @param bool           $active
+     * @param string $size
+     * @param bool   $active
      *
      * @return string
+     *
      * @todo This is a bit of a hack. Need to provide a better way of providing admin icons
      */
     public function getInitcmsAdminIconPath(
@@ -462,10 +426,10 @@ class NetworkingHelperExtension extends AbstractExtension
                 )
                 ) {
                     $imagePath = 'bundles'.DIRECTORY_SEPARATOR.str_replace(
-                            'bundle',
-                            '',
-                            strtolower($bundleName)
-                        ).DIRECTORY_SEPARATOR.$icon;
+                        'bundle',
+                        '',
+                        strtolower($bundleName)
+                    ).DIRECTORY_SEPARATOR.$icon;
                 }
             }
         }
@@ -475,8 +439,6 @@ class NetworkingHelperExtension extends AbstractExtension
 
     /**
      * Modifies a string to remove all non ASCII characters and spaces.
-     *
-     * @param $text
      *
      * @return mixed|string
      */
@@ -509,10 +471,9 @@ class NetworkingHelperExtension extends AbstractExtension
     /**
      * returns the locale of the current admin user.
      *
-     *
      * @return mixed|string
      */
-    public function getCurrentAdminLocale(\Sonata\AdminBundle\Admin\AdminInterface $admin)
+    public function getCurrentAdminLocale(AdminInterface $admin)
     {
         $locale = '';
 
@@ -522,21 +483,20 @@ class NetworkingHelperExtension extends AbstractExtension
 
         if ($admin->hasSubject()) {
             $subject = $admin->getSubject();
+
             return $this->getFieldValue($subject, 'locale');
         }
 
         $parameters = $admin->getFilterParameters();
 
         if (array_key_exists('locale', $parameters)) {
-
-
             $data = $parameters['locale'];
-            
+
             if (!$data || !is_array($data) || !array_key_exists('value', $data)) {
                 $locale = $this->getCurrentLocale();
             }
 
-            if(is_array($data) && array_key_exists('value', $data)){
+            if (is_array($data) && array_key_exists('value', $data)) {
                 $data['value'] = trim((string) $data['value']);
 
                 if (strlen($data['value']) > 0) {
@@ -548,8 +508,10 @@ class NetworkingHelperExtension extends AbstractExtension
                 $locale = $admin->getDefaultLocale();
             }
 
+            if (!$locale) {
+                $locale = $this->getCurrentLocale();
+            }
         }
-
 
         return $locale;
     }
@@ -557,8 +519,6 @@ class NetworkingHelperExtension extends AbstractExtension
     /**
      * Fetch the variables from the given content type object.
      *
-     * @param $object
-     * @param $fieldName
      * @param null $method
      *
      * @return mixed|string
@@ -589,7 +549,6 @@ class NetworkingHelperExtension extends AbstractExtension
      *
      * @static
      *
-     * @param $str
      * @param bool $firstToCapital
      *
      * @return mixed
@@ -600,28 +559,20 @@ class NetworkingHelperExtension extends AbstractExtension
             $str[0] = strtoupper((string) $str[0]);
         }
 
-        return preg_replace_callback('/_([a-z])/', fn($s): string => strtoupper((string) $s[1]), (string) $str);
+        return preg_replace_callback('/_([a-z])/', fn ($s): string => strtoupper((string) $s[1]), (string) $str);
     }
 
-    /**
-     * @return mixed
-     */
     private function getCurrentLocale()
     {
         return $this->requestStack->getCurrentRequest()->getLocale();
     }
 
-    /**
-     * @param $class
-     */
     public function networking_init_cms_resource_bundle($class): string
     {
         return strtolower(str_replace('bundle', '', $this->getBundleName($class)));
     }
 
     /**
-     * @param $class
-     *
      * @return string
      */
     public function getBundleName($class)
@@ -632,9 +583,6 @@ class NetworkingHelperExtension extends AbstractExtension
             substr($ns, 0, ($p2 = strpos($ns, '\\', $p1 + 1)) === false ? strlen($ns) : $p2);
     }
 
-    /**
-     * @param $class
-     */
     public function getShortName($class): string
     {
         $reflector = new \ReflectionClass($class::class);
@@ -643,8 +591,6 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param $class
-     *
      * @return mixed
      */
     public function getBundleShortName($class): string
@@ -655,16 +601,15 @@ class NetworkingHelperExtension extends AbstractExtension
     /**
      * Gets a list of forms sorted to a particular zone.
      *
-     * @param $formChildren
-     * @param $zone
-     *
      * @return array
      */
     public function getSubFormsByZone($formChildren, $zone)
     {
         $zones = [];
 
-        foreach ($formChildren as $subForms) {
+        $layoutBlocksFormView = $formChildren['layoutBlocks'];
+
+        foreach ($layoutBlocksFormView as $subForms) {
             if ($this->getFormFieldZone($subForms) == $zone) {
                 $zones[] = $subForms;
             }
@@ -673,9 +618,6 @@ class NetworkingHelperExtension extends AbstractExtension
         return $zones;
     }
 
-    /**
-     * @return mixed
-     */
     public function getFormFieldZone(FormView $formView)
     {
         $zones = $this->getZoneNames();
@@ -708,20 +650,25 @@ class NetworkingHelperExtension extends AbstractExtension
         return $zones;
     }
 
-    /**
-     * @param $value
-     */
     public function base64Encode($value): string
     {
         return base64_encode((string) $value);
     }
 
+    public function jsonDecode($value): ?array
+    {
+        if (!$value) {
+            return null;
+        }
+
+        return json_decode((string) $value);
+    }
+
     /**
-     * @param $template
-     * @param $object
-     * @param null     $translationDomain
+     * @param null $translationDomain
      *
      * @return string
+     *
      * @throws \Twig\Error\Error
      */
     public function renderInitcmsFieldAsString(
@@ -730,8 +677,7 @@ class NetworkingHelperExtension extends AbstractExtension
         FormView $formView,
         $translationDomain = null
     ) {
-
-        /** @var $fieldDescription \Sonata\DoctrineORMAdminBundle\Admin\FieldDescription */
+        /** @var $fieldDescription FieldDescriptionInterface */
         $fieldDescription = $formView->vars['sonata_admin']['field_description'];
         $value = '';
 
@@ -832,9 +778,6 @@ class NetworkingHelperExtension extends AbstractExtension
         $this->addToCollectedHtml($data);
     }
 
-    /**
-     * @param $data
-     */
     protected function addToCollectedHtml($data)
     {
         $this->collectedHtml[] = $data;
@@ -849,10 +792,11 @@ class NetworkingHelperExtension extends AbstractExtension
      * Extracts an excerpt from the text surrounding the phrase with a number of characters on each side
      * determined by radius.
      *
-     * @param string            $text     String to search the phrase in
-     * @param string            $phrase   Phrase that will be searched for
-     * @param int               $radius   The amount of characters that will be returned on each side of the founded phrase
-     * @param string            $ellipsis Ending that will be appended
+     * @param string $text     String to search the phrase in
+     * @param string $phrase   Phrase that will be searched for
+     * @param int    $radius   The amount of characters that will be returned on each side of the founded phrase
+     * @param string $ellipsis Ending that will be appended
+     *
      * @return string
      */
     public function excerpt(Environment $env, $text, $phrase, $radius = 100, $ellipsis = '...')
@@ -861,7 +805,7 @@ class NetworkingHelperExtension extends AbstractExtension
             return static::truncate($env, $text, $radius * 2, $ellipsis);
         }
 
-        $text = html_entity_decode($text, null, $env->getCharset());
+        $text = html_entity_decode($text, ENT_QUOTES, $env->getCharset());
 
         $append = $prepend = $ellipsis;
 
@@ -870,7 +814,7 @@ class NetworkingHelperExtension extends AbstractExtension
 
         $pos = mb_strpos(mb_strtolower($text, $env->getCharset()), mb_strtolower($phrase, $env->getCharset()));
 
-        if ($pos === false) {
+        if (false === $pos) {
             return mb_substr($text, 0, $radius, $env->getCharset()).$ellipsis;
         }
 
@@ -896,11 +840,12 @@ class NetworkingHelperExtension extends AbstractExtension
      * Cuts a string to the length of $length and replaces the last characters
      * with the ellipsis if the text is longer than length.
      *
-     * @param string            $text     String to truncate
-     * @param int               $length   Length of returned string, including ellipsis
-     * @param string            $ellipsis Will be used as Ending and appended to the trimmed string (`ending` is deprecated)
-     * @param bool              $exact    If false, $text will not be cut mid-word
-     * @param bool              $html     If true, HTML tags would be handled correctly
+     * @param string $text     String to truncate
+     * @param int    $length   Length of returned string, including ellipsis
+     * @param string $ellipsis Will be used as Ending and appended to the trimmed string (`ending` is deprecated)
+     * @param bool   $exact    If false, $text will not be cut mid-word
+     * @param bool   $html     If true, HTML tags would be handled correctly
+     *
      * @return string
      */
     public static function truncate(
@@ -911,7 +856,7 @@ class NetworkingHelperExtension extends AbstractExtension
         $exact = true,
         $html = false
     ) {
-        if ($html && $ellipsis == '...' && $env->getCharset() == 'UTF-8') {
+        if ($html && '...' == $ellipsis && 'UTF-8' == $env->getCharset()) {
             $ellipsis = "\xe2\x80\xa6";
         }
 
@@ -937,7 +882,7 @@ class NetworkingHelperExtension extends AbstractExtension
                     } elseif (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag)) {
                         $pos = array_search($closeTag[1], $openTags);
 
-                        if ($pos !== false) {
+                        if (false !== $pos) {
                             array_splice($openTags, $pos, 1);
                         }
                     }
@@ -1032,8 +977,6 @@ class NetworkingHelperExtension extends AbstractExtension
      * @param string $format The piece of html with that the phrase will be highlighted
      * @param bool   $html   If true, will ignore any HTML tags, ensuring that only the correct text is highlighted
      * @param string $regex  a custom regex rule that is used to match words, default is '|$tag|iu'
-     *
-     * @return mixed
      */
     public function highlight(
         $text,
@@ -1081,10 +1024,6 @@ class NetworkingHelperExtension extends AbstractExtension
 
     /**
      * Return a media object by its' id.
-     *
-     * @param $id
-     *
-     * @return mixed
      */
     public function getMediaById($id)
     {
@@ -1115,7 +1054,7 @@ class NetworkingHelperExtension extends AbstractExtension
      *
      * @param null $configName
      *
-     * @return bool
+     * @return bool|array
      */
     public function getContentCss($configName = null)
     {
@@ -1124,21 +1063,40 @@ class NetworkingHelperExtension extends AbstractExtension
         }
 
         $configs = $this->ckEditorConfigManager->getConfigs();
-        if (array_key_exists('contentsCss', $configs[$configName])) {
-            $contentCss = $configs[$configName]['contentsCss'];
-            if(!is_array($contentCss)){
-                $contentCss = [$contentCss];
+
+        $config = $configs[$configName];
+
+        if (isset($config['contentsCss'])) {
+            $cssContents = (array) $config['contentsCss'];
+
+            $config['contentsCss'] = [];
+            foreach ($cssContents as $cssContent) {
+                $config['contentsCss'][] = $this->fixPath($cssContent);
             }
-            return $contentCss;
+
+            return $config['contentsCss'];
         }
 
         return false;
     }
 
+    private function fixPath(string $path): string
+    {
+        if (null === $this->packages) {
+            return $path;
+        }
+
+        $url = $this->packages->getUrl($path);
+
+        if (str_ends_with($path, '/') && false !== ($position = strpos($url, '?'))) {
+            $url = substr($url, 0, (int) $position);
+        }
+
+        return $url;
+    }
+
     /**
      * Guess which fontawesome icon to use.
-     *
-     * @param $filename
      */
     public function getFileIcon($filename): string
     {
@@ -1159,15 +1117,12 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param $text
-     * @param $maxLength
      * @param string $delimiter
      *
      * @return string
      */
     public function cropMiddle($text, $maxLength, $delimiter = '...')
     {
-
         // return text if it doesn't need to be cropped
         if (!$text || strlen((string) $text) <= $maxLength || !substr((string) $text, 0)) {
             return $text;
@@ -1179,7 +1134,6 @@ class NetworkingHelperExtension extends AbstractExtension
     }
 
     /**
-     * @param $size
      * @param null $unit
      * @param int  $decemals
      */
@@ -1199,9 +1153,6 @@ class NetworkingHelperExtension extends AbstractExtension
         return number_format($size / ($extent >> 10), $decemals).$rank;
     }
 
-    /**
-     * @param $s
-     */
     protected function jsString($s): string
     {
         return '"'.addcslashes((string) $s, "\0..\37\"\\").'"';

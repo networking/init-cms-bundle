@@ -15,7 +15,7 @@ namespace Networking\InitCmsBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\Persistence\ManagerRegistry;
-use Networking\InitCmsBundle\Admin\Model\TagAdmin;
+use Networking\InitCmsBundle\Admin\TagAdmin;
 use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Exception\DuplicateMediaException;
@@ -253,9 +253,18 @@ class MediaAdminController extends CRUDController
         if ($tag !== null) {
             $selectedModels = $selectedModelQuery->execute();
 
+            $status = 'success';
+            $message = 'tag_added';
+
             try {
                 /** @var Media $selectedModel */
                 foreach ($selectedModels as $selectedModel) {
+
+                    if($selectedModel->getTags()->contains($tag)){
+                        $status = 'warning';
+                        $message = 'tag_already_added';
+                        continue;
+                    }
                     if (!$this->getParameter('networking_init_cms.multiple_media_tags')) {
                         $selectedModel->setTags(new ArrayCollection());
                     }
@@ -263,16 +272,17 @@ class MediaAdminController extends CRUDController
                     $this->admin->getModelManager()->update($selectedModel);
                 }
 
-                $status = 'success';
-                $message = 'tag_added';
-            } catch (\Exception) {
+
+            } catch (\Exception $e) {
                 $status = 'error';
-                $message = 'tag_not_added';
+                $message = $e->getMessage();
             }
 
             $data = [
                 'result' => 'ok',
                 'status' => $status,
+                'tag' => $tag->getId(),
+                'media' => $selectedModel->getId(),
                 'message' => $this->trans($message, ['%tag%' => $tag->getPath()]), ];
         }
 
@@ -324,6 +334,7 @@ class MediaAdminController extends CRUDController
         }
 
         $galleryMode = $request->query->get('galleryMode', false);
+        $multiSelect = $request->query->get('multiSelect', false);
 
         if($request->query->has('pcode')){
             $galleryMode = true;
@@ -352,24 +363,44 @@ class MediaAdminController extends CRUDController
         if(!$context){
             $context = $persistentParameters['context'];
         }
+
+        $tagFilter = $datagrid->getFilter('tags');
+        $selectedTag = false;
+
+        if(array_key_exists('tags', $filters) && array_key_exists('value', $filters['tags'])){
+            $selectedTag = (int)$filters['tags']['value'];
+        }
         $mediaPool = $this->container->get('sonata.media.pool');
-        return $this->renderWithExtraParams(
+
+        $selected = $request->query->get('selected', false);
+
+        if($selected){
+            $selected = explode(',', $selected);
+        }
+
+        $params = $this->addRenderExtraParams([
+            'multiSelect' => $multiSelect,
+            'selected' => $multiSelect?$selected:[],
+            'providers' => $mediaPool->getProvidersByContext($context),
+            'media_pool' => $mediaPool,
+            'persistent_parameters' => $persistentParameters,
+            'currentProvider' => array_key_exists('providerName', $filters)?$filters['providerName']['value']:$persistentParameters['provider'],
+            'tags' => $tags,
+            'tagAdmin' => $tagAdmin,
+            'tagJson' => $tagAdmin->getTagTree($selectedTag),
+            'lastItem' => 0,
+            'action' => 'list',
+            'form' => $formView,
+            'datagrid' => $datagrid,
+            'galleryListMode' => $galleryMode,
+            'csrf_token' => $this->getCsrfToken('sonata.batch'),
+            'show_actions' => true,
+        ]);
+
+        return $this->render(
             '@NetworkingInitCms/MediaAdmin/list.html.twig',
-            [
-                'providers' => $mediaPool->getProvidersByContext($context),
-                'media_pool' => $mediaPool,
-                'persistent_parameters' => $persistentParameters,
-                'currentProvider' => array_key_exists('providerName', $filters)?$filters['providerName']['value']:$persistentParameters['filter'],
-                'tags' => $tags,
-                'tagAdmin' => $tagAdmin,
-                'lastItem' => 0,
-                'action' => 'list',
-                'form' => $formView,
-                'datagrid' => $datagrid,
-                'galleryListMode' => $galleryMode,
-                'csrf_token' => $this->getCsrfToken('sonata.batch'),
-                'show_actions' => true,
-            ]
+            $params
+
         );
     }
 
@@ -384,8 +415,9 @@ class MediaAdminController extends CRUDController
         if (null !== $preResponse) {
             return $preResponse;
         }
-        
-        $galleryListMode = $request->query->get('galleryMode', false);
+
+        $galleryMode = $request->query->get('galleryMode', false);
+        $multiSelect = $request->query->get('multiSelect', false);
         $datagrid = $this->admin->getDatagrid();
         $datagrid->getForm()->createView();
         $persistentParameters = $this->admin->getPersistentParameters();
@@ -400,12 +432,20 @@ class MediaAdminController extends CRUDController
 
         $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
 
+        $selected = $request->query->get('selected', false);
+
+        if($selected){
+            $selected = explode(',', $selected);
+        }
+
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/MediaAdmin/list_items.html.twig',
             [
                 'providers' => $this->container->get('sonata.media.pool')->getProvidersByContext(
                     $request->get('context', $persistentParameters['context'])
                 ),
+                'multiSelect' => $multiSelect,
+                'selected' => $multiSelect?$selected:[],
                 'media_pool' => $this->container->get('sonata.media.pool'),
                 'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
@@ -413,7 +453,7 @@ class MediaAdminController extends CRUDController
                 'lastItem' => 0,
                 'action' => 'list',
                 'datagrid' => $datagrid,
-                'galleryListMode' => $galleryListMode,
+                'galleryListMode' => $galleryMode,
                 'show_actions' => true,
             ]
         );
@@ -568,6 +608,30 @@ class MediaAdminController extends CRUDController
         } catch (\Exception $e) {
             throw new UploadException($e->getMessage());
         }
+    }
+
+    public function gallerySelect(Request $request)
+    {
+
+
+        $request->query->set('galleryMode', true);
+        $request->query->set('multiSelect', true);
+
+
+        return $this->listAction($request);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function refreshSelectList(Request $request)
+    {
+        $request->query->set('galleryMode', true);
+        $request->query->set('multiSelect', true);
+
+        return $this->refreshList($request);
     }
 
     public static function getSubscribedServices(): array

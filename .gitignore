@@ -1,14 +1,13 @@
 .idea
-
+.DS_Store
 /vendor
 composer.phar
 phpunit.xml
 composer.lock
-.DS_Store
 php-cs-fixer.phar
 
 /node_modules
 /package-lock.json
 /yarn.lock
 /yarn-error.log
-
+node_modules

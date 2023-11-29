@@ -10,19 +10,23 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Helper;
 
 use Doctrine\ORM\EntityManagerInterface;
-use JMS\Serializer\SerializerInterface;
-use Networking\InitCmsBundle\Model\ContentRouteManager;
+use Doctrine\Persistence\ObjectManager;
+use Networking\InitCmsBundle\Component\Routing\Route;
+use Networking\InitCmsBundle\Entity\ContentRoute;
+use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class LanguageSwitcherHelper.
@@ -47,12 +51,7 @@ class LanguageSwitcherHelper
     protected $pageManager;
 
     /**
-     * @var SerializerInterface
-     */
-    protected $serializer;
-
-    /**
-     * @var \Doctrine\Persistence\ObjectManager
+     * @var ObjectManager
      */
     protected $om;
 
@@ -61,41 +60,28 @@ class LanguageSwitcherHelper
      */
     protected $pageHelper;
 
-
-    /**
-     * LanguageSwitcherHelper constructor.
-     * @param $fallbackRoute
-     * @param string $fallbackRoute
-     */
     public function __construct(
         RequestStack $requestStack,
         EntityManagerInterface $om,
         PageHelper $pageHelper,
         PageManagerInterface $pageManager,
         RouterInterface $router,
-        SerializerInterface $serializer,
-        protected $fallbackRoute
+        protected string $fallbackRoute
     ) {
         $this->requestStack = $requestStack;
         $this->om = $om;
         $this->pageHelper = $pageHelper;
         $this->pageManager = $pageManager;
         $this->router = $router;
-        $this->serializer = $serializer;
     }
 
     /**
      * Returns the corresponding route of the given URL for the locale supplied
      * If none is found it returns the original route object.
      *
-     * @param $oldUrl
-     * @param $oldLocale
-     * @param $locale
-     *
-     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function getTranslationRoute($oldUrl, $oldLocale, $locale): array|\Networking\InitCmsBundle\Component\Routing\Route|string
+    public function getTranslationRoute($oldUrl, $oldLocale, $locale): array|Route|RouteObjectInterface|string
     {
         $cookies = $this->requestStack->getCurrentRequest()->cookies ? $this->requestStack->getCurrentRequest(
         )->cookies->all() : [];
@@ -108,7 +94,6 @@ class LanguageSwitcherHelper
 
         try {
             $request = $this->pageHelper->matchContentRouteRequest($oldRequest);
-
         } catch (ResourceNotFoundException) {
             $request = $oldRequest;
         }
@@ -120,9 +105,7 @@ class LanguageSwitcherHelper
                 if ($route = $this->router->matchRequest(Request::create('/404'))) {
                     return $route;
                 }
-                throw new NotFoundHttpException(
-                    sprintf('Could not find a translation to "%s" for this request"', $locale)
-                );
+                throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for this request"', $locale));
             }
 
             if (!array_key_exists('_content', $route)) {
@@ -134,37 +117,25 @@ class LanguageSwitcherHelper
             }
         }
 
-        if ($content instanceof PageInterface) {
-            $translation = $content->getAllTranslations()->get($locale);
-            if (is_null($translation)) {
-                //@todo does this make sense, or should we throw an exception
-                return ['_route' => 'networking_init_cms_home'];
-            }
-            if (!is_null($translation)) {
-                //return a contentRoute object
-                $contentRoute = $translation->getContentRoute()->setContent($translation);
+        $data = match (true) {
+            $content instanceof PageInterface => [
+                'translations' => $content->converTranslationsToArray(),
+                'originals' => $content->convertOriginalsToArray(),
+            ],
+            $content instanceof PageSnapshotInterface => json_decode($content->getVersionedData(), true),
+            default => ['translations' => [], 'originals' => []],
+        };
 
-                return ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
-            }
+        $route = $this->extractTranslationForLocale($data['translations'], $locale);
+
+        if ($route instanceof RouteObjectInterface) {
+            return $route;
         }
 
-        if ($content instanceof PageSnapshotInterface) {
-            $content = $this->pageHelper->unserializePageSnapshotData($content);
+        $route = $this->extractTranslationForLocale($data['originals'], $locale);
 
-            $translation = $content->getAllTranslations()->get($locale);
-
-            if ($translation && $snapshotId = $translation->getId()) {
-                /** @var $snapshot PageSnapshotInterface */
-                $snapshot = $this->om->getRepository($content->getSnapshotClassType())->findOneBy(
-                    ['resourceId' => $snapshotId]
-                );
-
-                if ($snapshot) {
-                    $contentRoute = $snapshot->getRoute();
-
-                    return ContentRouteManager::generateRoute($contentRoute, $contentRoute->getPath(), '');
-                }
-            }
+        if ($route instanceof RouteObjectInterface) {
+            return $route;
         }
 
         if ($this->fallbackRoute) {
@@ -175,10 +146,61 @@ class LanguageSwitcherHelper
             return $route;
         }
 
-        //no valid translation found
-        throw new NotFoundHttpException(
-            sprintf('Could not find a translation to "%s" for content "%s"', $locale, $content->__toString())
-        );
+        // no valid translation found
+        throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for content "%s"', $locale, $content->__toString()));
+    }
+
+    public function extractTranslationForLocale(array $translations, string $locale): ?RouteObjectInterface
+    {
+        foreach ($translations as $translation) {
+            if (is_array($translation) && $translation['locale'] === $locale) {
+                return $this->generateRouteFromTranslationArray($translation);
+            }
+
+            if (is_int($translation)) {
+                return $this->generateRouteFromTranslationId($translation, $locale);
+            }
+        }
+
+        return null;
+    }
+
+    public function generateRouteFromTranslationArray(array $translationArray): RouteObjectInterface
+    {
+        $contentRouteData = $translationArray['contentRoute'];
+        $contentRoute = $this->om->getRepository(ContentRoute::class)->find($contentRouteData['id']);
+
+        return ContentRouteManager::generateRoute($contentRoute, $contentRouteData['path'], '');
+    }
+
+    protected function generateRouteFromTranslationId(int $id, string $locale): ?RouteObjectInterface
+    {
+        /** @var PageInterface $page */
+        $page = $this->pageManager->findOneBy(['id' => $id, 'locale' => $locale]);
+
+        if ($page) {
+            /** @var PageSnapshotInterface $snapshot */
+            $snapshot = $page->getSnapshot();
+
+            return ContentRouteManager::generateRoute($snapshot->getContentRoute(), $snapshot->getPath(), '');
+        }
+
+        $page = $this->pageManager->findOneBy(['id' => $id]);
+
+        $translation = $page->getAllTranslations()->filter(
+            function (PageInterface $page) use ($locale) {
+                return $page->getLocale() === $locale;
+            }
+        )->first();
+
+        if ($translation) {
+            /** @var PageSnapshotInterface $snapshot */
+            $snapshot = $translation->getSnapshot();
+
+            return ContentRouteManager::generateRoute($snapshot->getContentRoute(), $snapshot->getPath(), '');
+        }
+
+        return null;
     }
 
     /**
@@ -202,7 +224,7 @@ class LanguageSwitcherHelper
     {
         $baseUrl = $this->prepareBaseUrl($referrer);
 
-        if (null === ($referrer)) {
+        if (null === $referrer) {
             return '/';
         }
 
@@ -223,13 +245,11 @@ class LanguageSwitcherHelper
             $pathInfo = substr((string) $pathInfo, $pos + strlen((string) $host));
         }
 
-        return (string)$pathInfo;
+        return (string) $pathInfo;
     }
 
     /**
      * Prepares the Base URL.
-     *
-     * @param $referrer
      */
     public function prepareBaseUrl($referrer): bool|string
     {
@@ -263,12 +283,12 @@ class LanguageSwitcherHelper
         // Does the baseUrl have anything in common with the request_uri?
         $requestUri = $referrer;
 
-        if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, $baseUrl)) {
+        if ($baseUrl && $prefix = $this->getUrlencodedPrefix($requestUri, $baseUrl)) {
             // full $baseUrl matches
             return $prefix;
         }
 
-        if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, dirname((string) $baseUrl))) {
+        if ($baseUrl && $prefix = $this->getUrlencodedPrefix($requestUri, dirname((string) $baseUrl))) {
             // directory portion of $baseUrl matches
             return rtrim($prefix, '/');
         }
@@ -289,9 +309,9 @@ class LanguageSwitcherHelper
         // out of baseUrl. $pos !== 0 makes sure it is not matching a value
         // from PATH_INFO or QUERY_STRING
         if ((strlen((string) $requestUri) >= strlen((string) $baseUrl)) && ((false !== ($pos = strpos(
-                        (string) $requestUri,
-                        (string) $baseUrl
-                    ))) && ($pos !== 0))) {
+            (string) $requestUri,
+            (string) $baseUrl
+        ))) && (0 !== $pos))) {
             $baseUrl = substr((string) $requestUri, 0, $pos + strlen((string) $baseUrl));
         }
 
@@ -307,16 +327,10 @@ class LanguageSwitcherHelper
      *
      * @return string|false The prefix as it is encoded in $string, or false
      */
-    /**
-     * @param $string
-     * @param $prefix
-     *
-     * @return bool
-     */
-    protected function getUrlencodedPrefix($string, $prefix)
+    protected function getUrlencodedPrefix($string, $prefix): ?string
     {
         if (!str_starts_with(rawurldecode((string) $string), (string) $prefix)) {
-            return false;
+            return null;
         }
 
         $len = strlen((string) $prefix);
@@ -325,6 +339,6 @@ class LanguageSwitcherHelper
             return $match[0];
         }
 
-        return false;
+        return null;
     }
 }

@@ -7,7 +7,7 @@ namespace Networking\InitCmsBundle\Annotation;
 /**
  * @Annotation
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 class FormMapper extends AbstractMapper implements FormInterface
 {
     /**
@@ -39,6 +39,26 @@ class FormMapper extends AbstractMapper implements FormInterface
      * @var bool
      */
     public $ignoreOnParent = false;
+
+    public function __construct(
+        ?string $name,
+        string $type,
+        array $fieldDescriptionOptions = [],
+        array $options = [],
+        ?string $with = null,
+        array $withOptions = [],
+        ?string $tab = null,
+        bool $ignoreOnParent = false
+    ){
+        $this->name = $name;
+        $this->type = $type;
+        $this->fieldDescriptionOptions = $fieldDescriptionOptions;
+        $this->options = $options;
+        $this->with = $with;
+        $this->withOptions = $withOptions;
+        $this->tab = $tab;
+        $this->ignoreOnParent = $ignoreOnParent;
+    }
 
     /**
      * @return array

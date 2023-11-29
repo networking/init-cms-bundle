@@ -1,5 +1,0 @@
-Networking\InitCmsBundle\Entity\LayoutBlock:
-    properties:
-        id:
-            type: integer
-

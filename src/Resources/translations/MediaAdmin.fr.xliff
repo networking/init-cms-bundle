@@ -480,6 +480,10 @@
                 <source>copy_to_clipboard</source>
                 <target>Le URL %item% a été copié dans le presse-papier</target>
             </trans-unit>
+            <trans-unit id="confirm_selection">
+                <source>confirm_selection</source>
+                <target>Confirmer le choix</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

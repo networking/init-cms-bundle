@@ -1,4 +1,0 @@
-Networking\InitCmsBundle\Entity\BasePage:
-    properties:
-        layoutBlock:
-            type: ArrayCollection<Networking\InitCmsBundle\Enitiy\LayoutBlock>

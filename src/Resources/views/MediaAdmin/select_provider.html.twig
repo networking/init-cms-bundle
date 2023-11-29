@@ -9,25 +9,19 @@ file that was distributed with this source code.
 
 #}
 
-{% extends '@NetworkingInitCms/CRUD/action.html.twig' %}
+{% extends app.request.xmlHttpRequest?'@NetworkingInitCms/modal-edit.html.twig':base_template %}
+
 
 {% block title %}{{ 'title_select_provider'|trans({}, 'MediaAdmin') }}{% endblock %}
 
 {% block content %}
 
-    {% if app.request.isXmlHttpRequest %}
-        <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>{{ "title_create"|trans({}, admin.translationDomain) }}</h3>
-        </div>
-        <div class="modal-body">
-    {% endif %}
+    {% block modal_body %}
+
     {% for code, provider in providers %}
         <a href="{{ admin.generateUrl('create', {'provider': provider.name} + app.request.query.all|default({}) ) }}"
-           class="btn btn-default"
-           data-toggle="tooltip"
+           class="btn btn-light"
+           data-bs-toggle="tooltip"
            data-placement="top"
            title="{{ provider.providerMetadata.description|trans({}, 'MediaAdmin') }}"
                 >
@@ -56,10 +50,6 @@ file that was distributed with this source code.
     {% else %}
         <span class="alert alert-info">{{ 'no_provider_available'|trans({}, 'SonataMediaBundle') }}</span>
     {% endfor %}
-    {% if app.request.isXmlHttpRequest %}
-        </div>
+        {% endblock %}
 
-        </div>
-        </div>
-    {% endif %}
 {% endblock %}

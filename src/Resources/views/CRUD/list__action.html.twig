@@ -8,31 +8,37 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-<td class="icons" style="text-align: right">
-    <div style="position:relative;">
+<td class="text-end w-200px">
 
         {% if field_description.options.actions|length > 2 %}
 
         {% include field_description.options.actions.edit.template %}
-                <a class="btn btn-default btn-sm actions-toggle"
-                        data-original-title="{{ 'link.show_more_actions'|trans({}, 'NetworkingInitCmsBundle') }}"
-                        data-toggle="row-actions">
-                    <i class="fa fa-chevron-down"></i>
-                </a>
-        <div class="row-actions">
-            {% for key, actions in field_description.options.actions %}
-                {% include actions.template %}
-            {% endfor %}
-            <a class="btn btn-default btn-sm actions-toggle-close "
-                    data-original-title="{{ 'link.hide_actions'|trans({}, 'NetworkingInitCmsBundle') }}"
-                    data-toggle="row-actions">
-                <i class="fa fa-chevron-left caret-button-padding"></i>
-            </a>
-        </div>
+
+            <!--begin::Toggle-->
+            <button type="button" class="btn btn-sm btn-light rotate"
+                    data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                    data-kt-menu-placement="bottom-end"
+                    title="{{ 'link.show_more_actions'|trans({}, 'NetworkingInitCmsBundle') }}"
+                ><i class="ki-outline ki-dots-horizontal fs-3"></i>
+            </button>
+            <!--end::Toggle-->
+
+            <!--begin::Menu-->
+            <div class="menu menu-sub menu-sub-dropdown
+            menu-column menu-rounded menu-gray-800 py-4
+            menu-state-bg fw-semibold w-auto" data-kt-menu="true">
+                <!--end::Menu separator-->
+                {% for key, actions in field_description.options.actions %}
+                <div class="menu-item px-3">
+                    {% include actions.template with {'isSubNav': true} %}
+                </div>
+                {% endfor %}
+
+            </div>
+
         {% else %}
             {% for key, actions in field_description.options.actions %}
                 {% include actions.template %}
             {% endfor %}
         {% endif %}
-    </div>
 </td>

@@ -163,7 +163,7 @@ interface MenuItemInterface
     /**
      * @param bool $isRoot
      */
-    public function setIsRoot($isRoot);
+    public function setIsRoot(bool $isRoot);
 
     /**
      * @return bool

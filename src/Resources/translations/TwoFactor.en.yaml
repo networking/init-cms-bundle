@@ -3,5 +3,5 @@ two_step_code_exists: 2FA has been setup for this user, do you wish to reset it?
 message_two_step_into: 'Open your authentication app, e.g. Google Authenticator, scan the code and enter it in the input field below.'
 message_two_step_code_help: 'Open your authenticator app on your device to view your authentication code.'
 confirm_code: Confirm Code
-complete_later: Cance
+complete_later: Cancel
 qr_code_secret: If you can't scan the QR-code, you can enter this secret in your app instead.

@@ -1,0 +1,51 @@
+{% set _form_start = block('form_start') is defined ? block('form_start')|trim : null %}
+{% set _form_end = block('form_end') is defined ? block('form_end')|trim : null %}
+{% set _formactions = block('formactions') is defined ? block('formactions')|trim : null %}
+{% set _modal_body = block('modal_body') is defined ? block('modal_body')|trim : null %}
+{% set _modal_footer = block('modal_footer') is defined ? block('modal_footer')|trim : null %}
+
+<div class="modal-header">
+    <div class="modal-title h3">
+        {% block title %}
+        {% endblock %}
+    </div>
+    <div class="modal-toolbar">
+        <!--begin::Close-->
+        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+            <i class="ki-outline ki-cross fs-1"></i>
+        </div>
+    <!--end::Close-->
+    </div>
+
+</div>
+{{ _form_start|raw }}
+<div class="modal-body">
+    {% for notice_level in ['success','error','info', 'warning'] %}
+        {% set session_var = 'sonata_flash_' ~ notice_level %}
+        {% set color = (notice_level=='error')?'danger':notice_level %}
+        {% for flash in app.session.flashbag.get(session_var) %}
+        <!--begin::Alert-->
+        <div class="alert alert-{{ color }} d-flex align-items-center p-5">
+            <!--begin::Icon-->
+            <i class="ki-duotone ki-shield-tick fs-2hx text-{{ color }} me-4"><span class="path1"></span><span class="path2"></span></i>
+            <!--end::Icon-->
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-column">
+                <!--begin::Title-->
+                <!--end::Title-->
+                <!--begin::Content-->
+                <span>{{ flash }}</span>
+                <!--end::Content-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Alert-->
+        {% endfor %}
+    {% endfor %}
+    {{ _modal_body|raw }}
+</div>
+<div class="modal-footer">
+    {{ _formactions|raw }}
+    {{ _modal_footer|raw }}
+</div>
+{{ _form_end|raw }}

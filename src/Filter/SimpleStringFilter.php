@@ -10,12 +10,14 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Filter;
 
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Filter\Model\FilterData;
-use Sonata\AdminBundle\Form\Type\Filter\DefaultType;
+use Sonata\AdminBundle\Form\Type\Filter\FilterDataType;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
+use Sonata\AdminBundle\Search\SearchableFilterInterface;
+use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\DoctrineORMAdminBundle\Filter\Filter;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -24,23 +26,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class SimpleStringFilter extends Filter
+class SimpleStringFilter extends Filter implements SearchableFilterInterface
 {
-
     final public const CHOICES = [
         ContainsOperatorType::TYPE_CONTAINS => 'LIKE',
         ContainsOperatorType::TYPE_NOT_CONTAINS => 'NOT LIKE',
         ContainsOperatorType::TYPE_EQUAL => '=',
     ];
-    /**
-     * {@inheritdoc}
-     */
+
     public function filter(
-        \Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQueryInterface $query, string $alias, string $field, FilterData $data): void
-    {
-
-
-
+        ProxyQueryInterface $query,
+        string $alias,
+        string $field,
+        FilterData $data
+    ): void {
         if (!$data->hasValue()) {
             return;
         }
@@ -50,7 +49,6 @@ class SimpleStringFilter extends Filter
         if (!$operator) {
             $operator = 'LIKE';
         }
-
 
         $parameterName = $this->getNewParameterName($query);
 
@@ -69,11 +67,11 @@ class SimpleStringFilter extends Filter
 
         $this->applyWhere($query, $or);
 
-
         if (ContainsOperatorType::TYPE_EQUAL === $this->getOption('operator_type')) {
             $queryBuilder->setParameter($parameterName, $data->getValue());
         } else {
-            $queryBuilder->setParameter($parameterName,
+            $queryBuilder->setParameter(
+                $parameterName,
                 sprintf(
                     $this->getOption('format'),
                     $this->getOption('case_sensitive') ? $data->getValue() : mb_strtolower((string) $data->getValue())
@@ -82,60 +80,39 @@ class SimpleStringFilter extends Filter
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDefaultOptions(): array
     {
         return [
+            'advanced_filter' => false,
             'format' => '%%%s%%',
             'field_type' => TextType::class,
             'operator_type' => ContainsOperatorType::TYPE_CONTAINS,
             'label_render' => true,
-            'widget_form_group' => true,
-            'case_sensitive' => false,
+            'force_case_insensitivity' => false,
+            'global_search' => true,
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getLabelRender()
-    {
-        return $this->getOption('label_render');
-    }
-
-    public function getWidgetControlGroup()
-    {
-        if ($this->getFieldType() == 'hidden') {
-            return false;
-        }
-
-        return $this->getOption('widget_form_group');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getRenderSettings(): array
     {
         return [
-            DefaultType::class,
+            FilterDataType::class,
             [
                 'field_type' => $this->getFieldType(),
                 'field_options' => $this->getFieldOptions(),
                 'label' => $this->getLabel(),
-                'label_render' => $this->getLabelRender(),
-                'widget_form_group' => $this->getWidgetControlGroup(),
             ],
         ];
     }
 
     public function getFormOptions(): array
     {
-        return [];
+        return [
+            'field_type' => $this->getFieldType(),
+            'field_options' => $this->getFieldOptions(),
+            'label' => $this->getLabel(),
+        ];
     }
-
 
     /**
      * @param string $type
@@ -145,5 +122,10 @@ class SimpleStringFilter extends Filter
     private function getOperator($type)
     {
         return self::CHOICES[$type] ?? false;
+    }
+
+    public function isSearchEnabled(): bool
+    {
+        return $this->getOption('global_search');
     }
 }

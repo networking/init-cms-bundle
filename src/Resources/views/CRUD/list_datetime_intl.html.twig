@@ -1,0 +1,33 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends get_admin_template('base_list_field', admin.code) %}
+
+{% block field %}
+    {%- if value is empty -%}
+        &nbsp;
+    {%- else -%}
+        {% set pattern =  field_description.option('pattern') %}
+        {% set timezone =  field_description.option('timezone') %}
+        {% set format =  field_description.option('format') %}
+        {% set format_date =  field_description.option('format_date')|default(format)  %}
+        {% set format_time =  field_description.option('format_time')|default(format)  %}
+
+
+        <time datetime="{{ value|date('c', 'UTC') }}" title="{{ value|date('c', 'UTC') }}">
+            {% if pattern %}
+                {{ value|format_datetime(pattern = pattern ,timezone = timezone|default(null)) }}
+            {% else %}
+            {{ value|format_datetime(format_date|default('medium'), format_time|default('medium'),timezone = timezone|default(null)) }}
+                {% endif %}
+        </time>
+    {%- endif -%}
+{% endblock %}

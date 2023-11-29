@@ -1,6 +1,7 @@
-CKEDITOR.plugins.add('internal_link', {lang: ['de', 'en'], requires: 'ajax'});
-
-CKEDITOR.on('dialogDefinition', function (ev) {
+CKEDITOR.plugins.add("internal_link", {
+    lang: ["de", "en"],
+    requires: "ajax"
+}), CKEDITOR.on('dialogDefinition', function (ev) {
     if (ev.data.name === 'link') {
         var setup = JSON.parse(CKEDITOR.ajax.load("/cms/pages/internal-url.json?"));
         var infoTab = ev.data.definition.getContents('info');
@@ -35,8 +36,9 @@ CKEDITOR.on('dialogDefinition', function (ev) {
                                 var intern = this.getDialog().getContentElement("info", "intern");
                                 intern.clear();
                                 intern.add(ev.editor.lang.internal_link.select, '');
-                                $.each(setup.pages, function (name, url) {
-                                    intern.add(name, url);
+
+                                setup.pages.forEach(function (page) {
+                                    intern.add(page.name, page.url);
                                 });
                             },
                             commit: function (element) {
@@ -72,4 +74,3 @@ CKEDITOR.on('dialogDefinition', function (ev) {
         }, 'urlOptions');
     }
 });
-

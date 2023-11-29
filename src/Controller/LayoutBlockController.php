@@ -10,16 +10,13 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Controller;
 
-use Networking\InitCmsBundle\Admin\Entity\LayoutBlockAdmin;
-use Networking\InitCmsBundle\Admin\Model\PageAdmin;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
-use Networking\InitCmsBundle\Model\LayoutBlock;
+use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Sonata\AdminBundle\Exception\ModelManagerException;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +31,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class LayoutBlockController extends CRUDController
 {
-
     /**
      * @var bool
      */
@@ -47,9 +43,6 @@ class LayoutBlockController extends CRUDController
 
     /**
      * LayoutBlockController constructor.
-     * @param CmsEventDispatcher $dispatcher
-     * @param PageCacheInterface $pageCache
-     * @param PageManagerInterface $pageManager
      */
     public function __construct(
         CmsEventDispatcher $dispatcher,
@@ -62,34 +55,20 @@ class LayoutBlockController extends CRUDController
     }
 
     /**
-     * @return Response
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\RuntimeError
      */
     public function createAction(Request $request): Response
     {
-        if (!$this->isXmlHttpRequest($request)) {
-            return new Response('cannot load external of page module', 403);
-        }
-
         if (false === $this->admin->isGranted('CREATE')) {
             throw new AccessDeniedException();
         }
 
         $layoutBlock = $this->admin->getNewInstance();
-        /** @var Request $request */
+        /* @var Request $request */
         $this->admin->setSubject($layoutBlock);
 
-        $formFieldId = $request->get('formFieldId');
-
-        $code = $request->get('code');
         $pageId = $request->get('pageId');
-        $uniqId = $request->get('uniqId');
-        $classType = $request->get('classType');
-        /** @var PageAdmin $pageAdmin */
-        $pageAdmin = $this->container->get('networking_init_cms.admin.page');
-        $pageAdmin->setRequest($request);
-
 
         $page = $this->pageManager->find($pageId);
         if ($pageId && !$page) {
@@ -100,47 +79,40 @@ class LayoutBlockController extends CRUDController
             throw new NotFoundHttpException();
         }
 
-        $request->attributes->add(['pageId' => $pageId]);
-        $request->attributes->add(['page_locale' => $page->getLocale()]);
-
-        $pageAdmin->setSubject($page);
-        if($request->get('zone')){
+        if ($request->get('zone')) {
             $layoutBlock->setZone($request->get('zone'));
         }
-        if($request->get('sortOrder')){
+        if ($request->get('sortOrder')) {
             $layoutBlock->setSortOrder($request->get('sortOrder'));
         }
-        $layoutBlock->setClassType($classType);
         $layoutBlock->setPage($page);
-        $layoutBlock->setContent(new $classType);
 
-        /** @var $form \Symfony\Component\Form\Form */
         $form = $this->admin->getForm();
-        $form->setData($layoutBlock);
-        $form->handleRequest($request);
-        if ($request->isMethod('POST')) {
-            try {
-                // persist if the form was valid and if in preview mode the preview was approved
-                if ($form->isValid() && (!$this->isInPreviewMode($request) || $this->isPreviewApproved($request))) {
-                    $this->admin->create($layoutBlock);
-                    if ($this->isXmlHttpRequest($request)) {
-                        return $this->renderJson(
-                            [
-                                'result' => 'ok',
-                                'status' => 'success',
-                                'message' => $this->translate('message.layout_block_created'),
-                                'layoutBlockId' => $this->admin->getNormalizedIdentifier($layoutBlock),
-                                'zone' => $layoutBlock->getZone(),
-                                'sortOder' => $layoutBlock->getSortOrder(),
-                                'html' => $this->getLayoutBlockFormWidget($request, $pageId, $formFieldId, $uniqId, $code),
-                            ]
-                        );
-                    }
-                }
 
-            } catch (ModelManagerException $e) {
-                $formError = new FormError($e->getMessage());
-                $form->addError($formError);
+        $form->setData($layoutBlock);
+
+        $form->handleRequest($request);
+        $status = 200;
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->admin->create($layoutBlock);
+
+                return $this->renderJson(
+                    [
+                        'result' => 'ok',
+                        'status' => 'success',
+                        'message' => $this->translate('message.layout_block_created', [], 'PageAdmin'),
+                        'layoutBlockId' => $layoutBlock->getId(),
+                        'zone' => $layoutBlock->getZone(),
+                        'sortOder' => $layoutBlock->getSortOrder(),
+                        'html' => $this->renderView('@NetworkingInitCms/PageAdmin/layout_block.html.twig', ['layout_block' => $layoutBlock, 'layoutBlockId' => $layoutBlock->getId()]),
+                    ]
+                );
+            } else {
+                $this->error = true;
+
+                $status = 400;
             }
         }
 
@@ -149,12 +121,65 @@ class LayoutBlockController extends CRUDController
         // set the theme for the current Admin Form
         $this->container->get('twig')->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
 
-        return $this->renderWithExtraParams(
+        $html = $this->renderView(
             '@NetworkingInitCms/PageAdmin/layout_block_edit.html.twig',
-            [
+            $this->addRenderExtraParams([
                 'action' => 'create',
                 'form' => $view,
                 'object' => $layoutBlock,
+            ])
+        );
+
+        return new JsonResponse(
+            [
+                'status' => 200 === $status ? 'success' : 'error',
+                'message' => $this->translate('message.layout_block_'.$status, [], 'PageAdmin'),
+                'html' => $html,
+            ],
+            $status
+        );
+    }
+
+    public function addBlockAction(Request $request)
+    {
+        if (false === $this->admin->isGranted('CREATE')) {
+            throw new AccessDeniedException();
+        }
+
+        $layoutBlock = $this->admin->getNewInstance();
+        /* @var Request $request */
+        $this->admin->setSubject($layoutBlock);
+
+        $pageId = $request->get('pageId');
+
+        $page = $this->pageManager->find($pageId);
+        if ($pageId && !$page) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$page) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($request->get('zone')) {
+            $layoutBlock->setZone($request->get('zone'));
+        }
+        if ($request->get('sortOrder')) {
+            $layoutBlock->setSortOrder($request->get('sortOrder'));
+        }
+        $layoutBlock->setPage($page);
+
+        $layoutBlockId = sprintf('newBlock%s', uniqid());
+
+        return $this->renderJson(
+            [
+                'result' => 'ok',
+                'messageStatus' => 'success',
+                'message' => $this->translate('message.layout_block_created', [], 'PageAdmin'),
+                'layoutBlockId' => $layoutBlockId,
+                'zone' => $layoutBlock->getZone(),
+                'sortOder' => $layoutBlock->getSortOrder(),
+                'html' => $this->renderView('@NetworkingInitCms/PageAdmin/layout_block.html.twig', ['layout_block' => $layoutBlock, 'layoutBlockId' => $layoutBlockId]),
             ]
         );
     }
@@ -163,40 +188,42 @@ class LayoutBlockController extends CRUDController
      * @param null $id
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     *
      * @throws \Twig\Error\RuntimeError
      */
     public function editAction(Request $request, $id = null): Response
     {
-
-        $pageId = $request->get('pageId');
-        $formFieldId = $request->get('formFieldId');
-        $uniqId = $request->get('uniqId');
-        $code = $request->get('code', 'networking_init_cms.admin.page');
-
-
         $layoutBlock = $this->admin->getObject($id);
 
         /** @var $form \Symfony\Component\Form\Form */
         $form = $this->admin->getForm();
+
         $form->setData($layoutBlock);
 
         $form->handleRequest($request);
-        $response = null;
+        $status = 200;
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $this->admin->update($layoutBlock);
-                $html = $this->getLayoutBlockFormWidget($request, $pageId, $formFieldId, $uniqId, $code);
-                $status = 200;
 
-                return new Response($html, $status);
+                $adminContent = $layoutBlock->getAdminContent();
+                $html = $this->renderView('@NetworkingInitCms/PageAdmin/admin_layout_block.html.twig', ['layout_block' => $layoutBlock]);
+
+                return new JsonResponse(
+                    [
+                        'id' => $this->admin->getNormalizedIdentifier($layoutBlock),
+                        'status' => 'success',
+                        'message' => $this->translate('message.layout_block_updated', [], 'PageAdmin'),
+                        'html' => $html,
+                    ],
+                    $status
+                );
             } else {
                 $this->error = true;
 
-                $response = new Response();
-                $response->setStatusCode(500);
+                $status = 400;
             }
-
         }
 
         $view = $form->createView();
@@ -204,20 +231,30 @@ class LayoutBlockController extends CRUDController
         // set the theme for the current Admin Form
         $this->container->get('twig')->getRuntime(FormRenderer::class)->setTheme($view, $this->admin->getFormTheme());
 
-        return $this->renderWithExtraParams(
+        $html = $this->renderView(
             '@NetworkingInitCms/PageAdmin/layout_block_edit.html.twig',
-            [
+            $this->addRenderExtraParams([
                 'action' => 'create',
                 'form' => $view,
                 'object' => $layoutBlock,
+                'ad',
+            ])
+        );
+
+        return new JsonResponse(
+            [
+                'status' => 200 === $status ? 'success' : 'error',
+                'message' => $this->translate('message.layout_block_error'),
+                'html' => $html,
+                'id' => $this->admin->getNormalizedIdentifier($layoutBlock),
             ],
-            $response
+            $status
         );
     }
 
     /**
-     *
      * @return Response
+     *
      * @throws \Twig\Error\RuntimeError
      */
     public function reloadAction(Request $request)
@@ -233,12 +270,8 @@ class LayoutBlockController extends CRUDController
     }
 
     /**
-     * @param $pageId
-     * @param $formFieldId
-     * @param null $uniqId
+     * @param string $uniqId
      * @param string $code
-     *
-     * @return mixed
      *
      * @throws \Twig\Error\RuntimeError
      */
@@ -253,7 +286,7 @@ class LayoutBlockController extends CRUDController
             throw new NotFoundHttpException();
         }
 
-        /** @var \Networking\InitCmsBundle\Admin\Model\PageAdmin $pageAdmin */
+        /** @var \Networking\InitCmsBundle\Admin\PageAdmin $pageAdmin */
         $pageAdmin = $this->container->get($code);
 
         $pageAdmin->setRequest($request);
@@ -287,7 +320,7 @@ class LayoutBlockController extends CRUDController
             [
                 'admin' => $pageAdmin,
                 'form' => $view,
-                'id' => $view->vars['id']
+                'id' => $view->vars['id'],
             ]
         );
     }
@@ -308,8 +341,7 @@ class LayoutBlockController extends CRUDController
         foreach ($zones as $zone) {
             $zoneName = $zone['zone'];
             if (array_key_exists('layoutBlocks', $zone) && is_array($zone['layoutBlocks'])) {
-                foreach ($zone['layoutBlocks'] as $key => $layoutBlockStr) {
-                    $sort = ++$key;
+                foreach ($zone['layoutBlocks'] as $sort => $layoutBlockStr) {
                     $blockId = str_replace('layoutBlock_', '', (string) $layoutBlockStr);
 
                     if ($blockId) {
@@ -319,9 +351,8 @@ class LayoutBlockController extends CRUDController
                             if ($layoutBlock) {
                                 $layoutBlock->setSortOrder($sort);
                                 $layoutBlock->setZone($zoneName);
+                                $this->admin->update($layoutBlock);
                             }
-
-                            $this->admin->update($layoutBlock);
                         } catch (\Exception $e) {
                             $message = $e->getMessage();
 
@@ -331,7 +362,6 @@ class LayoutBlockController extends CRUDController
                 }
             }
         }
-
 
         $page = $pageAdmin->getModelManager()->find($pageAdmin->getClass(), $pageId);
         $pageAdmin->setSubject($page);
@@ -345,24 +375,20 @@ class LayoutBlockController extends CRUDController
             'pageStatusSettings' => $pageStatus,
             'pageStatus' => $this->translate($page->getStatus()),
             'messageStatus' => 'success',
-            'message' => $this->translate('message.layout_blocks_sorted', ['zone' => '']),
+            'message' => $this->translate('message.layout_blocks_sorted', ['zone' => ''], 'PageAdmin'),
         ];
 
         return new JsonResponse($data);
     }
 
     /**
-     *
      * @return JsonResponse
+     *
      * @throws \Twig\Error\RuntimeError
      */
     public function deleteAjaxAction(Request $request)
     {
         $id = $request->get('id');
-        $pageId = $request->get('pageId');
-        $uniqId = $request->get('uniqId');
-        $code = $request->get('code');
-        $formFieldId = $request->get('formFieldId');
 
         if ($id) {
             $layoutBlock = $this->admin->getObject($id);
@@ -370,44 +396,43 @@ class LayoutBlockController extends CRUDController
                 $this->admin->delete($layoutBlock);
             }
         }
-        $html = $this->getLayoutBlockFormWidget($request, $pageId, $formFieldId, $uniqId, $code);
 
         return new JsonResponse(
             [
                 'messageStatus' => 'success',
-                'message' => $this->translate('message.layout_block_deleted'),
-                'html' => $html,
+                'message' => $this->translate('message.layout_block_deleted', [], 'PageAdmin'),
             ]
         );
     }
 
     /**
-     *
      * @return JsonResponse
+     *
      * @throws \Twig\Error\RuntimeError
      */
     public function toggleActiveAction(Request $request)
     {
         $layoutBlock = null;
         $id = $request->get('id');
-        $pageId = $request->get('pageId');
-        $uniqId = $request->get('uniqId');
-        $code = $request->get('code');
-        $formFieldId = $request->get('formFieldId');
 
-        if ($id) {
-            /** @var LayoutBlock $layoutBlock */
-            $layoutBlock = $this->admin->getObject($id);
-            $layoutBlock->setIsActive(!$layoutBlock->getIsActive());
-            $this->admin->update($layoutBlock);
+        if (!$id) {
+            throw $this->createNotFoundException();
         }
-        $html = $this->getLayoutBlockFormWidget($request, $pageId, $formFieldId, $uniqId, $code);
-        $status = $layoutBlock->getIsActive()?'activated':'deactivated';
+
+        /** @var LayoutBlock $layoutBlock */
+        $layoutBlock = $this->admin->getObject($id);
+
+        if (!$layoutBlock) {
+            throw $this->createNotFoundException();
+        }
+        $layoutBlock->setIsActive(!$layoutBlock->getIsActive());
+        $this->admin->update($layoutBlock);
+        $status = $layoutBlock->getIsActive() ? 'activated' : 'deactivated';
+
         return new JsonResponse(
             [
-                'messageStatus' => 'success',
-                'message' => $this->translate(sprintf('message.layout_block_%s', $status)),
-                'html' => $html,
+                'active' => $layoutBlock->getIsActive(),
+                'message' => $this->translate(sprintf('message.layout_block_%s', $status), [], 'PageAdmin'),
             ]
         );
     }
@@ -415,7 +440,7 @@ class LayoutBlockController extends CRUDController
     public static function getSubscribedServices(): array
     {
         return [
-                'networking_init_cms.admin.page' => \Networking\InitCmsBundle\Admin\Model\PageAdmin::class,
+                'networking_init_cms.admin.page' => \Networking\InitCmsBundle\Admin\PageAdmin::class,
             ] + parent::getSubscribedServices();
     }
 }

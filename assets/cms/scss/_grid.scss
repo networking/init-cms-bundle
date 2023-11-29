@@ -1,0 +1,41 @@
+.grid{
+
+  display: grid;
+  grid-auto-rows: max-content;
+  gap: 2rem;
+
+  &.grid-2-column{
+      grid-template-columns: repeat(2, 1fr);
+  }
+  &.grid-3-column{
+      grid-template-columns: repeat(3, 1fr);
+  }
+  &.grid-4-column{
+      grid-template-columns: repeat(4, 1fr);
+  }
+
+  .span-2-rows {
+    grid-row: span 2;
+  }
+
+  .span-3-rows {
+    grid-row: span 3;
+  }
+
+  .span-4-rows {
+    grid-row: span 4;
+  }
+
+  .span-2-columns {
+    grid-column: span 2;
+  }
+
+  .span-3-columns {
+    grid-column: span 3;
+  }
+
+  .span-4-columns {
+    grid-column: span 4;
+  }
+}
+

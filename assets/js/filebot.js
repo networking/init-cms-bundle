@@ -1,10 +1,10 @@
-import Vue from 'vue';
-import VueI18n from 'vue-i18n'
+import {createApp} from 'vue';
+import {createI18n} from 'vue-i18n'
 import Editor from './components/Editor.vue'
 
 
-Vue.use(VueI18n)
-const i18n = new VueI18n({
+
+const i18n = createI18n({
     locale: 'en',
     messages: {
         "en": {
@@ -42,7 +42,4 @@ const i18n = new VueI18n({
     }
 })
 
-new Vue({
-    i18n,
-    render: h => h(Editor),
-}).$mount('#image-editor');
+createApp(Editor).use(i18n).mount('#image-editor');

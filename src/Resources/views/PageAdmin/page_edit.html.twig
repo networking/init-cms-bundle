@@ -9,30 +9,88 @@ file that was distributed with this source code.
 
 #}
 {% extends base_template %}
- {% block meta_config %}
-     <meta name="init-cms-setup"
-           data-init-cms-config='{{ {'DEBUG':sonata_config.getOption('js_debug'),'CONFIRM_EXIT': false}|json_encode()|raw }}'
-           data-init-cms-translations='{{ {CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle')}|json_encode()|raw }}'>
- {% endblock %}
-{% block title %}
-    {% if admin.id(object) %}
-        <span class="page_title">{{ admin.toString(object) }} </span> <span class="info-soft font-medium">({{ language }})</span>
-    {% else %}
-        {{ "title_create"|trans({}, 'SonataAdminBundle') }}
-    {% endif %}
+
+{% block meta_config %}
+{{ parent() }}
+    <meta name="init-cms-page-id" content="{{ object.id }}"/>
 {% endblock %}
-{% block page_title %}{% endblock %}
+{% block title %}
 
-{% block actions %}{% endblock %}
-{% block help_text %}{% endblock help_text %}
+    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+        <span>
 
-{% use '@NetworkingInitCms/PageAdmin/page_edit_form.html.twig' with form as parentForm %}
+        <span class="page_title">{{ admin.toString(object) }} </span> <span
+                    class="text-muted font-size-lg fw-light">({{ language }})</span>
+        </span>
+        <a class="small fw-light"
+           href="{{ admin.generateUrl('list', {'locale': object.locale}) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
+    </h1>
+
+{% endblock %}
+
+{% block top_actions %}
+        {% include '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig' %}
+{% endblock %}
 
 {% block form %}
-    {{ block('parentForm') }}
+
+    <div class="card card-custom">
+        <div class="card-header card-header-tabs-line align-items-end">
+            <div class="card-toolbar mb-0">
+                <ul class="nav nav-tabs nav-line-tabs fs-6">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#page_content">
+                            <span class="nav-text">Page Content</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#meta_settings">
+                            <span class="nav-text">SEO & Meta</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#page_settings">
+                            <span class="nav-text">Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#translations">
+                            <span class="nav-text">Translations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#menu">
+                            <span class="nav-text">Menus</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="page_content" role="tabpanel">
+                    {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' %}
+                </div>
+                <div class="tab-pane " id="meta_settings" role="tabpanel">
+                    {% include '@NetworkingInitCms/PageAdmin/meta_settings_fields.html.twig' %}
+                </div>
+                <div class="tab-pane" id="page_settings" role="tabpanel">
+                    {% include '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig' %}
+                </div>
+                {% if admin.translationLanguages.count() %}
+                    <div class="tab-pane" id="translations" role="tabpanel">
+                        {% include '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig' %}
+                    </div>
+                {% endif %}
+                <div class="tab-pane" id="menu" role="tabpanel" >
+                    {% include '@NetworkingInitCms/PageAdmin/page_menu_settings.html.twig' %}
+                </div>
+            </div>
+        </div>
+    </div>
     {% if not app.request.isxmlhttprequest %}
     <!-- start modal menu form -->
-    <div class="modal form-horizontal" id="confirmMenuCreation"
+    <div class="modal" id="confirmMenuCreation"
          style="display: none"
          role="dialog" aria-labelledby="{{ "legend.create_menu"|trans({}, admin.translationDomain) }}"
          aria-hidden="true">
@@ -54,7 +112,7 @@ file that was distributed with this source code.
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal"
+                    <button class="btn btn-light" data-dismiss="modal"
                             aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
                     <button type="submit" class="btn btn-primary" id="btn_create_menu"
                             data-loading-text="{{ 'btn_loading'|trans({}, 'NetworkingInitCmsBundle') }}"
@@ -68,11 +126,38 @@ file that was distributed with this source code.
     {% endif %}
 {% endblock %}
 
+{% block side_menu %}
+    <div id="content_item_list" class="h-100 h-100 p-1">
+        {% for contentType in get_content_type_options() %}
+            <!--begin::Item-->
+            <div class="d-flex align-items-center p-3 border mb-2 content_type_item draggable"
+                 data-content-type="{{ contentType.class }}"
+            >
+                <!--begin::Symbol-->
+                <div class="d-flex align-items-center w-25px me-1">
+                    <i class="{{ contentType.icon }} fs-3 text-gray-600">
+                    </i>
+                </div>
+                <!--end::Symbol-->
+                <!--begin::Container-->
+                <div class="d-flex align-items-center">
+                    <!--begin::Content-->
+                    <div class="me-5">
+                        <!--begin::Title-->
+                        <a href="#" class="text-gray-800 fw-bold text-hover-primary fs-6">{{ get_content_type_name(contentType.class) }}</a>
+                        <!--end::Title-->
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Container-->
+            </div>
+            <!--end::Item-->
+        {% endfor %}
+    </div>
+{% endblock %}
+
 {% block before_body_end %}
     {{ parent() }}
-        <script type="text/javascript">
-            var CKEDITOR_BASEPATH = "{{ ckeditor_base_path('bundles/fosckeditor/') }}";
-        </script>
-        <script type="text/javascript" src="{{ ckeditor_js_path('bundles/fosckeditor/ckeditor.js') }}"></script>
+        <script type="module"  src="{{ asset('pageAdmin.js', 'init_cms') }}"></script>
 {% endblock %}
 

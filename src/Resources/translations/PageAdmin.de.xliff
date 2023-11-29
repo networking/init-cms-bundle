@@ -249,6 +249,10 @@
                 <source>button.cancel</source>
                 <target>Abbrechen</target>
             </trans-unit>
+            <trans-unit id="button.confirm_delete">
+                <source>button.confirm_delete</source>
+                <target>Ja, löschen</target>
+            </trans-unit>
             <trans-unit id="title.delete_translation_link">
                 <source>title.delete_translation_link</source>
                 <target>Übersetzungslink entfernen</target>
@@ -417,6 +421,10 @@
             <trans-unit id="message.layout_block_not_created">
                 <source>message.layout_block_not_created</source>
                 <target>Der Layout-Block konnte nicht erstellt werden, bitte Angaben überprüfen</target>
+            </trans-unit>
+            <trans-unit id="message.layout_block_updated">
+                <source>message.layout_block_updated</source>
+                <target>Der Layout-Block konnte aktualisiert werden.</target>
             </trans-unit>
             <trans-unit id="message.layout_block_not_edited">
                 <source>message.layout_block_not_edited</source>

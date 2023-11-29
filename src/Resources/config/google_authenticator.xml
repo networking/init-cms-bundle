@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="networing_init_cms.google.authenticator" class="Sonata\GoogleAuthenticator\GoogleAuthenticator"></service>
         <service id="networking_init_cms.google.authenticator.helper" class="Networking\InitCmsBundle\GoogleAuthenticator\Helper" public="true">
-            <argument type="service" id="security.token_storage"/>
-            <argument type="service" id="networing_init_cms.google.authenticator"/>
+            <argument>%networking_init_cms.google.authenticator.issuer%</argument>
             <argument type="service" id="security.authorization_checker"/>
             <argument>%networking_init_cms.google.authenticator.forced_for_role%</argument>
             <argument>%networking_init_cms.google.authenticator.trusted_ip_list%</argument>
@@ -17,13 +15,8 @@
             <tag name="kernel.event_listener" event="kernel.request" method="onCoreRequest" priority="-1"/>
             <argument key="$helper" type="service" id="networking_init_cms.google.authenticator.helper"/>
             <argument key="$tokenStorage" type="service" id="security.token_storage"/>
+            <argument key="$oneTimeCodeHelper" type="service" id="Networking\InitCmsBundle\Helper\OneTimeCodeHelper"/>
             <argument key="$twig" type="service" id="twig"/>
-        </service>
-        <service id="networking_init_cms.google.authenticator.success_handler" class="Networking\InitCmsBundle\EventListener\TwoFactorLoginSuccessHandler" public="false">
-            <argument key="$engine" type="service" id="twig"/>
-            <argument key="$helper" type="service" id="networking_init_cms.google.authenticator.helper"/>
-            <argument key="$userManager" type="service" id="networking_init_cms.user_manager"/>
-            <argument key="$urlGenerator" type="service" id="router.default"/>
         </service>
     </services>
 </container>

@@ -7,10 +7,11 @@ const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const webpack = require('webpack');
 const CopyPlugin = require("copy-webpack-plugin");
 
+
 module.exports = {
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.esm.js',
+            vue: '@vue/runtime-dom',
             'bootstrap-saas': path.resolve(__dirname, './node_modules/bootstrap-saas'),
         },
     },
@@ -18,18 +19,22 @@ module.exports = {
         filerobotImageEditor: 'FilerobotImageEditor'
     },
     entry: {
-        admin: './assets/js/admin.js',
+        cmsRouting: './assets/cms/cms-routing.js',
+        cmsAdmin: './assets/cms/cms-admin.js',
+        globalSearch: './assets/cms/global-search.js',
+        list: './assets/cms/list.js',
+        mediaAdmin: './assets/cms/media-admin.js',
+        menuAdmin: './assets/cms/menu-admin.js',
+        pageAdmin: './assets/cms/page-admin.js',
+        formAdmin: './assets/cms/form-admin.js',
         imageEditor: './assets/js/filebot.js',
-        networking_initcms: [
-            './assets/vendor/select2/css/select2.min.css',
-            './assets/vendor/select2/css/select2-bootstrap.min.css',
-            './assets/vendor/jquery-ui-1.12.1/jquery-ui.css',
-            './assets/vendor/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
-            './assets/scss/initcms_bootstrap.scss',
-            './assets/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
-        ],
+        twoFactorSignin: './assets/cms/authentication/sign-in/two-factor.js',
+        generalSignin: './assets/cms/authentication/sign-in/general.js',
+        webauthnRegister: './assets/cms/authentication/webauthn/register.js',
+        networking_initcms: './assets/cms/scss/style.scss',
         'tui-image-editor': './assets/css/tui-image-editor.css',
         'admin-navbar': './assets/scss/admin-navbar-standalone.scss',
+
     },
     output: {
         publicPath: '/bundles/networkinginitcms',
@@ -82,59 +87,25 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery"
         }),
+        new webpack.DefinePlugin({
+            __VUE_OPTIONS_API__: true,
+            __VUE_PROD_DEVTOOLS__: true
+        }),
         new WebpackManifestPlugin(),
         new VueLoaderPlugin(),
         new CopyPlugin({
                 patterns: [
                     {
-                        from: './assets/js/admin-lte/',
-
-                        // optional target path, relative to the output dir
-                        to: './admin-lte/[path][name][ext]',
+                        from: './assets/admin-theme/',
+                        to: './admin-theme/[path][name][ext]',
                     },
                     {
                         from: './assets/js/pdf-viewer.js',
                         to: './js/pdf-viewer.js',
                     },
                     {
-                        from: './assets/js/sandbox.js',
-                        to: './js/sandbox.js',
-                    },
-                    {
-                        from: './assets/css/sandbox.css',
-                        to: './css/sandbox.css',
-                    },
-                    {
-                        from: './assets/vendor/featherlight/src/featherlight.css',
-                        to: './vendor/featherlight/src/featherlight.css',
-                    },
-                    {
-                        from: './assets/vendor/select2/js/i18n/',
-                        to: './vendor/select2/js/i18n/',
-                    },
-                    {
-                        from: './assets/vendor/smalot-bootstrap-datetimepicker/js/',
-                        to: './vendor/smalot-bootstrap-datetimepicker/js/',
-                    },
-                    {
                         from: './assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
                         to: './vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
-                    },
-                    {
-                        from: './assets/vendor/ios-html5-drag-drop-shim/',
-                        to: './vendor/ios-html5-drag-drop-shim/',
-                    },
-                    {
-                        from: './assets/vendor/nestedSortable/',
-                        to: './vendor/nestedSortable/',
-                    },
-                    {
-                        from: './assets/vendor/icheck/',
-                        to: './vendor/icheck/',
-                    },
-                    {
-                        from: './assets/vendor/dropzone/dropzone.js',
-                        to: './vendor/dropzone/dropzone.js',
                     },
                     {
                         from: './assets/vendor/filerobot-image-editor/index_old.js',
@@ -149,68 +120,30 @@ module.exports = {
                         to: './js/ckeditor/',
                     },
                     {
+                        from: './assets/vendor/x-editable/dist/bootstrap5-editable/',
+                        to: './vendor/bootstrap5-editable/',
+                    },
+                    {
                         from: './assets/vendor/pdfjs',
                         to: './vendor/pdfjs',
                     },
                     {
-                        from: './assets/fonts',
-                        to: './fonts',
-                    },
-                    {
                         from: './assets/img',
                         to: './img',
+                    },
+                    {
+                        from: './assets/cms/app.js',
+                        to: './cmsApp.js',
                     }
                 ]
             }),
-        new WebpackConcatPlugin({
-            bundles: [
-                {
-                    dest: './src/Resources/public/jquery-plugins.js',
-                    src: [
-                        './assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js',
-                        './assets/vendor/jquery-form/jquery.form.js',
-                    ],
-                    transforms: {
-                        after: async (code) => {
-                            const minifiedCode = await terser.minify(code);
-                            return minifiedCode.code;
-                        },
-                    },
-                },
-                {
-                    dest: './src/Resources/public/bootstrap-plugins.js',
-                    src: [
-                        './assets/vendor/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.js',
-                        './assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
-                        './assets/vendor/bootstrap-contextmenu/bootstrap-contextmenu.js',
-                    ],
-                    transforms: {
-                        after: async (code) => {
-                            const minifiedCode = await terser.minify(code);
-                            return minifiedCode.code;
-                        },
-                    },
-                },
-                {
-                    dest: './src/Resources/public/app.js',
-                    src: [
-                        './assets/js/collection.js',
-                        './assets/vendor/select2/js/select2.full.js',
-                        './assets/vendor/featherlight/src/featherlight.js',
-                        './assets/js/index.js',
-                    ],
-                    transforms: {
-                        after: async (code) => {
-                            const minifiedCode = await terser.minify(code);
-                            return minifiedCode.code;
-                        },
-                    },
-                },
-                {
-                    src: './node_modules/bootstrap/dist/js/bootstrap.js',
-                    dest: './src/Resources/public/bootstrap.js',
-                }
-            ],
-        })
-    ]
+
+    ],
+    performance: {
+        maxAssetSize: 120000,
+        maxEntrypointSize: 120000,
+        assetFilter: function(assetFilename) {
+            return !assetFilename.endsWith('.jpg') && !assetFilename.endsWith('.svg')  && !assetFilename.endsWith('.png') && !assetFilename.endsWith('.eot') && !assetFilename.endsWith('.ttf') && !assetFilename.endsWith('.woff') && !assetFilename.endsWith('.woff2');
+        },
+    }
 }

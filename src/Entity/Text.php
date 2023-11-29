@@ -12,11 +12,22 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Class Text.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'text')]
 class Text extends BaseText
 {
+    /**
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    protected $id;
 }

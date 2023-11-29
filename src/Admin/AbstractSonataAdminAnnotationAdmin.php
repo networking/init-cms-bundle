@@ -16,35 +16,35 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 abstract class AbstractSonataAdminAnnotationAdmin extends AbstractAdmin
 {
     /**
-     * @param ListMapper $listMapper
+     * @param ListMapper $list
      */
-    protected function configureListFields(ListMapper $listMapper)
+    protected function configureListFields(ListMapper $list)
     {
-        $this->getSonataAnnotationReader()->configureListFields($this->getClass(), $listMapper);
+        $this->getSonataAnnotationReader()->configureListFields($this->getClass(), $list);
     }
 
     /**
-     * @param FormMapper $formMapper
+     * @param FormMapper $form
      */
-    protected function configureFormFields(FormMapper $formMapper)
+    protected function configureFormFields(FormMapper $form)
     {
-        $this->getSonataAnnotationReader()->configureFormFields($this->getClass(), $formMapper);
+        $this->getSonataAnnotationReader()->configureFormFields($this->getClass(), $form);
     }
 
     /**
-     * @param ShowMapper $showMapper
+     * @param ShowMapper $show
      */
-    protected function configureShowFields(ShowMapper $showMapper)
+    protected function configureShowFields(ShowMapper $show)
     {
-        $this->getSonataAnnotationReader()->configureShowFields($this->getClass(), $showMapper);
+        $this->getSonataAnnotationReader()->configureShowFields($this->getClass(), $show);
     }
 
     /**
-     * @param DatagridMapper $datagridMapper
+     * @param DatagridMapper $filter
      */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper)
+    protected function configureDatagridFilters(DatagridMapper $filter)
     {
-        $this->getSonataAnnotationReader()->configureDatagridFilters($this->getClass(), $datagridMapper);
+        $this->getSonataAnnotationReader()->configureDatagridFilters($this->getClass(), $filter);
     }
 
     /**

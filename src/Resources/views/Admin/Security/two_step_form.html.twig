@@ -1,5 +1,4 @@
 {#
-{#
 This file is part of the Sonata package.
 
 (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
@@ -9,61 +8,103 @@ file that was distributed with this source code.
 #}
 {% extends base_template %}
 
-{% block body_attributes %}class="sonata-bc login-page"{% endblock %}
+{% block sonata_nav %}
+{% endblock sonata_nav %}
 
-{% block sonata_wrapper %}
-    <div class="row">
-    <div id="login" class="connection modal">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                {% block sonata_user_login_form %}
-                    {% block sonata_user_login_error %}
-                        {% if error %}
-                            <div class="alert alert-danger alert-error">
-                                {{ error.messageKey|trans(error.messageData, 'security') }}
-                            </div>
-                        {% endif %}
-                    {% endblock %}
-                        <form method="POST" role="form">
-                            <div class="login-box modal-body">
-                                {% if state == 'error' %}
-                                    <div class="alert alert-error">{{ 'two_step_code_error'|trans({}, 'TwoFactor') }}</div>
-                                {% endif %}
-                                {% if hasStepVerificationCode %}
-                                    <div class="alert alert-warning">{{ 'two_step_code_exists'|trans({}, 'TwoFactor') }}</div>
-                                {% endif %}
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <p align="middle">{{ 'message_two_step_into'|trans({}, 'TwoFactor') }}</p>
-                                        <p align="middle"><img src="{{ qrCodeUrl }}" alt="QR-code"></p>
-                                        <p align="middle">{{ 'qr_code_secret'|trans({}, 'TwoFactor') }}
-                                            : {{ qrSecret }}</p>
-                                        <hr>
-                                        <input type="text" class="form-control  input-large" id="code" name="_code"
-                                               autocomplete='off' autofocus/>
+{% block logo %}
+{% endblock logo %}
 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <button type="submit"
-                                                class="btn btn-primary btn-block btn-flat">{{ 'confirm_code'|trans({}, 'TwoFactor') }}</button>
-                                    </div>
-                                </div>
-                                <div class="row" style="margin-top: 20px">
-                                    <div class="col text-center">
-                                        <p>
-                                            <a href="{{ url('networking_init_cms_admin_security_logout') }}">{{ 'complete_later'|trans({}, 'TwoFactor') }}</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                {% endblock %}
-            </div>
+{% block sonata_left_side %}
+{% endblock sonata_left_side %}
+
+
+{% block page %}
+    <style>body { background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}'); } [data-bs-theme="dark"] body { background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}'); }</style>
+    <!--begin::Authentication - Sign-in -->
+    <div class="d-flex flex-column flex-column-fluid flex-lg-row">
+    <!--begin::Aside-->
+    <div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
+        <!--begin::Aside-->
+        <div class="d-flex flex-center flex-lg-start flex-column">
+            <!--begin::Logo-->
+            <a href="https://www.initcms.com" target="_blank" class="mb-7">
+                <img alt="Logo" src="{{ asset('bundles/networkinginitcms/img/initcms-white-396x100.png') }}" />
+            </a>
+            <!--end::Logo-->
+            <!--begin::Title-->
+            <h2 class="text-white fw-normal m-0">Init CMS</h2>
+            <!--end::Title-->
         </div>
+        <!--begin::Aside-->
     </div>
+    <!--begin::Aside-->
+    <!--begin::Body-->
+    <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12 p-lg-20">
+        <!--begin::Card-->
+        <div class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px p-20">
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-15 pb-lg-20">
+                <!--begin::Form-->
+                    <form method="POST" role="form">
 
-{% endblock sonata_wrapper %}
+                        <div class="text-center mb-10">
+                            <img alt="Logo" class="mh-125px" src="/bundles/networkinginitcms/admin-theme/media/svg/misc/smartphone-2.svg" />
+                        </div>
+                        <!--end::Icon-->
+                        <!--begin::Heading-->
+                        <div class="text-center mb-10">
+                            <!--begin::Title-->
+                            <h1 class="text-dark mb-3">{{ 'label_two_step_code'|trans({}, 'SonataUserBundle') }}</h1>
+                            <!--end::Title-->
+                            <!--begin::Sub-title-->
+                            <div class="text-muted fw-semibold fs-5 mb-5">{{ 'message_two_step_into'|trans({}, 'TwoFactor') }}</div>
+                        </div>
+
+                    <div class="mb-10 text-center">
+                                <p align="middle"><img src="{{ qrCodeUrl }}" alt="QR-code"></p>
+                                <p class="text-muted fw-semibold">{{ 'qr_code_secret'|trans({}, 'TwoFactor') }} : {{ qrSecret }}</p>
+                        {% if state == 'error' %}
+                            <div class="alert alert-danger d-flex align-items-center">
+                                <!--begin::Icon-->
+                                <i class="ki-duotone ki-shield-tick fs-2hx text-danger me-4"><span class="path1"></span><span class="path2"></span></i>
+                                <!--end::Icon-->
+
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-column">
+                                    <!--begin::Title-->
+                                    <h4 class="mb-1 text-danger">{{ 'flash_error'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
+                                    <!--end::Title-->
+
+                                    <!--begin::Content-->
+                                    <span>{{ 'label_two_step_code_error'|trans({}, 'SonataUserBundle') }}</span>
+                                    <!--end::Content-->
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Alert-->
+                        {% endif %}
+                        <input type="text" class="form-control  input-large" id="code" name="_code"
+                                       autocomplete='off' autofocus/>
+
+                    </div>
+                    <!--begin::Submit button-->
+                    <div class="d-grid mb-10">
+                        <button type="submit"  class="btn btn-primary">
+                            <span class="indicator-label">{{ 'confirm_code'|trans({}, 'TwoFactor') }}</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!--end::Wrapper-->
+            <!--begin::Footer-->
+            {% block footer %}
+
+            {% endblock footer %}
+            <!--end::Footer-->
+        </div>
+        <!--end::Card-->
+
+    </div>
+    <!--end::Authentication - Sign-in-->
+
+{% endblock page %}

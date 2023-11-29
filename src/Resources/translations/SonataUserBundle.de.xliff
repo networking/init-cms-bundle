@@ -28,6 +28,11 @@
             </trans-unit>
             <trans-unit id="link_action_create">
                 <source>link_action_create</source>
+                <target>Hinnzufügen</target>
+            </trans-unit>
+            <trans-unit id="title_edit">
+                <source>title_edit</source>
+                <target>%admin_label% Edit</target>
             </trans-unit>
             <trans-unit id="form.group_profile">
                 <source>form.group_profile</source>
@@ -41,12 +46,16 @@
                 <source>list.label_groups</source>
                 <target>Gruppen</target>
             </trans-unit>
+            <trans-unit id="filter.label_groups">
+                <source>filter.label_groups</source>
+                <target>Gruppen</target>
+            </trans-unit>
             <trans-unit id="form.label_qr_code">
                 <source>form.label_qr_code</source>
-                <target>2FA Google QR Code</target>
+                <target>2FA QR Code</target>
             </trans-unit>
             <trans-unit id="list.label_has_step_verification_code">
-                <source>listlabel_has_step_verification_code</source>
+                <source>list.label_has_step_verification_code</source>
                 <target>2FA aktiviert</target>
             </trans-unit>
             <trans-unit id="message_two_step_code_help">

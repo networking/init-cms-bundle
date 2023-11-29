@@ -1,45 +1,11 @@
-<div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>
-                {{ "placement_title"|trans({}, admin.translationDomain) }}
-            </h3>
-        </div>
-        <div class="modal-body">
-            <div id="existingMenu" class="sortable menu-tree">
-                {{ menus.navigation|raw }}
-            </div>
-            <script>
-                (function ($) {
-
-                    $('#existingMenu').mousemove(function (event) {
-                        var newEvent = event;
-
-                        $('.stop').each(function (i, el) {
-                            var li = $(el);
-                            if (isNear($(el), 5, newEvent)) {
-                                li.find('ul').show();
-                            } else {
-                                li.find('ul').hide();
-                            }
-                        });
-                    });
-
-                    function isNear(element, distance, event) {
-
-                        var left = element.offset().left - distance,
-                                top = element.offset().top - distance,
-                                right = left + element.width() + 2 * distance,
-                                bottom = top + element.height() + 2 * distance,
-                                x = event.pageX,
-                                y = event.pageY;
-                        return ( x > left && x < right && y > top && y < bottom );
-                    }
-                })(jQuery);
-            </script>
-        </div>
-        <div class="modal-footer">
-        </div>
-    </div>
+<div class="modal-header">
+    <h3>
+        {{ "placement_title"|trans({}, admin.translationDomain) }}
+    </h3>
+    <button type="button" class="btn btn-sm" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+</div>
+<div class="modal-body">
+    <div class="menu_tree" id="placement_menu" data-tree="{{ menu.navigation|json_encode }}" ></div>
+</div>
+<div class="modal-footer">
 </div>

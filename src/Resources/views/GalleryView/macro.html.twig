@@ -1,76 +1,75 @@
 {% macro lightbox(gallery, relName, largeFormat, thumbFormat, shownName ) %}
-    <section data-featherlight-gallery  data-featherlight-filter="a[rel='{{ relName|default('featherlight') }}[{{ gallery.name }}]']" >
+    <ul class="list-inline">
         {% for galleryMedia in gallery.galleryItems %}
-
-                <a href="{{ sonata_path(galleryMedia.media, (largeFormat|default(gallery.defaultFormat)))  }}" class="thumbnail"
-                       rel="{{ relName|default('featherlight') }}[{{ gallery.name }}]">
-                        {{ sonata_thumbnail(galleryMedia.media, thumbFormat|default(gallery.defaultFormat)) }}
-                    </a>
-                    {% if  galleryMedia.media.name is defined and shownName|default(false) %}
-                        <h5>{{ galleryMedia.media.name }}</h5>
-                    {% endif %}
-                    {% if  galleryMedia.media.description is defined and shownName|default(false) %}
-                        <p>{{ galleryMedia.media.description }}</p>
-                    {% endif %}
+        <li class="list-inline-item">
+            <a href="{{ sonata_path(galleryMedia.media, (largeFormat|default('reference')))  }}"
+               data-toggle="lightbox"
+               class="light-box-items"
+               data-gallery="gallery_{{ relName }}">
+                    {{ sonata_thumbnail(galleryMedia.media, thumbFormat|default(gallery.defaultFormat)) }}
+                </a>
+                {% if  galleryMedia.media.name is defined and shownName|default(false) %}
+                    <h5>{{ galleryMedia.media.name }}</h5>
+                {% endif %}
+                {% if  galleryMedia.media.description is defined and shownName|default(false) %}
+                    <p>{{ galleryMedia.media.description }}</p>
+                {% endif %}
+        </li>
         {% endfor %}
-    </section>
+    </ul>
 {% endmacro %}
 
 {% macro carousel(gallery, id, transition, format, height ) %}
-    <div id="{{ id|default('carousel') }}" class="carousel {{ transition|default('slide') }}"
-         style="height: {{ height|default('100%') }}">
-        <ol class="carousel-indicators">
+    <div id="{{ id|default('carousel') }}" class="carousel {{ transition|default('slide') }}" data-bs-ride="carousel">
+        <div class="carousel-indicators">
             {% for galleryMedia in gallery.galleryItems %}
-                <li data-target="#{{ id|default('carousel') }}" data-slide-to="{{ loop.index -1 }}"
-                    {% if loop.first %}class="active"{% endif %}></li>
-            {% endfor %}
-        </ol>
-        <!-- Carousel items -->
-        <div class="carousel-inner">
-            {% for galleryMedia in gallery.galleryItems %}
-                <div class="{% if loop.first %}active {% endif %}item">
-                    {{ sonata_media( galleryMedia.media, format|default(gallery.defaultFormat), { 'style': 'max-height:' ~ height|default('auto')}) }}
-                    {% if galleryMedia.media.getDescription %}
-                        <div class="carousel-caption">
-                            <p>{{ galleryMedia.media.getDescription }}</p>
-                        </div>
-                    {% endif %}
-                </div>
+                <button type="button" data-bs-target="#{{ id|default('carousel') }}" {% if loop.first %}class="active" aria-current="true"{% endif %} data-bs-slide-to="{{ loop.index -1 }}" ari-label="Slide {{ loop.index }}"></button>
             {% endfor %}
         </div>
-        <!-- Carousel nav -->
-        <a class="carousel-control left" href="#{{ id|default('carousel') }}" data-slide="prev">&lsaquo;</a>
-        <a class="carousel-control right" href="#{{ id|default('carousel') }}" data-slide="next">&rsaquo;</a>
+        <div class="carousel-inner ratio ratio-16x9">
+            {% for galleryMedia in gallery.galleryItems %}
+            <div class="carousel-item {% if loop.first %}active {% endif %}">
+                {{ sonata_media( galleryMedia.media, format|default(gallery.defaultFormat),
+                    { 'class': 'd-block w-100'}) }}
+
+                <div class="carousel-caption d-none d-md-block">
+                    {% if  mediaItem.media.name is defined %}
+                        <h5>{{ mediaItem.media.name }}</h5>
+                    {% endif %}
+                    {% if  mediaItem.media.description is defined %}
+                        <p>{{ mediaItem.media.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#{{ id|default('carousel') }}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#{{ id|default('carousel') }}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 {% endmacro %}
 
 {% macro admin_lightbox(gallery) %}
-    <div>
-        <h4>Lightbox</h4>
-        <ul class="thumbnails">
-            {% for galleryMedia in gallery.galleryItems %}
-                <li>
-                    <div class="thumbnail">
-                        {{ sonata_media(galleryMedia.media, 'admin') }}
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+    <div class="row">
+        {% import _self as macro %}
+        {{ macro.lightbox(gallery, 'gallery_'~gallery.id,  'reference', 'admin') }}
     </div>
 {% endmacro %}
 
 {% macro admin_carousel(gallery ) %}
-    <div>
-        <h4>Carousel</h4>
-
-        <div class="thumbnail">
-            {{ sonata_media(gallery.galleryItems[0].media, 'admin') }}
-        </div>
+    <div class="row">
+        {% import _self as macro %}
+        {{ macro.carousel(gallery, 'carousel', 'slide', 'reference') }}
     </div>
 {% endmacro %}
+
 {% macro admin_list(gallery ) %}
     <div>
-        <h4>List</h4>
         <ul class="thumbnails">
             {% for galleryMedia in gallery.galleryItems %}
                 <li>

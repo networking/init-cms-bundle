@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\ORM\Query;
-use Networking\InitCmsBundle\Admin\Model\MediaAdmin;
-use Networking\InitCmsBundle\Model\Tag;
+use Networking\InitCmsBundle\Admin\MediaAdmin;
+use Networking\InitCmsBundle\Entity\Tag;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Form\FormErrorIteratorToConstraintViolationList;
 use Symfony\Component\Form\FormInterface;
@@ -45,7 +45,7 @@ class TagAdminController extends CRUDController
                     $object = $this->admin->getObject($jsonArray['objectId']);
                     $jsonArray['status'] =  'success';
                     $jsonArray['message'] =  $this->translate('flash_create_success', ['%name%' =>  $this->escapeHtml($this->admin->toString($object))], 'SonataAdminBundle');
-                    $jsonArray['html'] = $this->getTagTree($jsonArray['objectId']);
+                    $jsonArray['json'] = $this->admin->getTagTree($object->getId());
                     $response = $this->renderJson($jsonArray, 200);
                 }
             }catch (\Exception){
@@ -171,12 +171,16 @@ class TagAdminController extends CRUDController
     public function inlineEditAction(Request $request)
     {
         $id = $request->get('pk');
+
         $name = $request->get('value');
+
 
         /** @var $tag Tag */
         if (!$tag = $this->admin->getObject($id)) {
             throw new NotFoundHttpException('unable to find the tag with the id');
         }
+
+        dump($tag);
 
         $tag->setName($name);
 

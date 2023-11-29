@@ -8,8 +8,9 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-
-{% extends base_template %}
+{% set isAjax = app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+{% set url = admin.id(object) ? 'edit' : 'create' %}
+{% extends isAjax?'@NetworkingInitCms/modal-edit.html.twig':base_template %}
 
 
 {% block title %}
@@ -45,280 +46,243 @@ file that was distributed with this source code.
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
         </div>
     {% else %}
-        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-            <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-        {% endif %}
+        <div class="card">
+        {% block form_start %}
         <form class="form-vertical" novalidate="novalidate" method="POST"
               action="{{ admin.generateUrl(url, {'id': admin.id(object), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')} + app.request.query.all|default({}) ) }}"
                 {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}>
-            {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3>
-                        {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                        {% if admin.id(object) is not null %}
-                            {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
-                            {% if  title ==  "title_edit" %}
-                                {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
-                            {% else %}
-                                {{ title }}
-                            {% endif %}
-                        {% else %}
-                            {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain) %}
-                            {% if title == 'title_create' %}
-                                {{ "title_create"|trans({}, 'SonataAdminBundle') }}
-                            {% else %}
-                                {{ title }}
-                            {% endif %}
-                        {% endif %}
-                    </h3>
+        {% endblock %}
+
+        <div class="card-body">
+
+        {% block modal_body %}
+            {% if form.vars.errors|length > 0 %}
+                <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
+                    {{ form_errors(form) }}
                 </div>
             {% endif %}
-            <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-body{% endif %}">
-
-                {% if form.vars.errors|length > 0 %}
-                    <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
-                        {{ form_errors(form) }}
-                    </div>
-                {% endif %}
-                <div class="row">
-                    <div class="col-md-{% if object.id %}6{% else %}12{% endif %}">
-                        {% block sonata_pre_fieldsets %}{% endblock %}
-                        {% for name, form_group in admin.formgroups %}
-                            <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
-                                {% if admin.formgroups|length > 1 and name != admin.label %}
-                                    <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
-                                        {% if form_group.collapsed %}
-                                            <a class="sonata-ba-collapsed" data-toggle="collapse"
-                                               data-target="#{{ admin.uniqid }}_{{ loop.index }}"
-                                               title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationDomain) }}</a>
-                                        {% else %}
-                                            {{ name|trans({}, admin.translationDomain) }}
-                                        {% endif %}
-                                    </legend>
-                                {% endif %}
-
-                                <div class="{% if form_group.collapsed %}sonata-ba-collapsed-fields collapse{% endif %}"
-                                     id="{{ admin.uniqid }}_{{ loop.index }}">
-
-                                    {% for field_name in form_group.fields %}
-                                        {% if admin.formfielddescriptions[field_name] is defined %}
-                                            {{ form_row(form[field_name]) }}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </fieldset>
-                        {% endfor %}
-
-                        {% block sonata_post_fieldsets %}{% endblock %}
-                        {{ form_rest(form, {'horizontal': (app.request.isXmlHttpRequest or app.request.get('_xml_http_request') ? 'true': form.vars.horizontal)}) }}
-
-                    </div>
-                    {% if object.id %}
-                        {% block sonata_media_show_reference %}
-                            <div class="col-md-6" id="media-preview">
-                                {% set previewLink = false %}
-
-                                {% if object.width is defined and object.width %}
-                                    {% if object.providerName == 'sonata.media.provider.youtube' %}
-                                        {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
-                                    {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
-                                        {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
+            <div class="row">
+                <div class="col-md-{% if object.id %}6{% else %}12{% endif %}">
+                    {% block sonata_pre_fieldsets %}{% endblock %}
+                    {% for name, form_group in admin.formgroups %}
+                        <fieldset {% if form_group.collapsed %}class="sonata-ba-fieldset-collapsed"{% endif %}>
+                            {% if admin.formgroups|length > 1 and name != admin.label %}
+                                <legend{% if form_group.description != false %} class="sonata-ba-fieldset-collapsed-description"{% endif %}>
+                                    {% if form_group.collapsed %}
+                                        <a class="sonata-ba-collapsed" data-toggle="collapse"
+                                           data-target="#{{ admin.uniqid }}_{{ loop.index }}"
+                                           title="{{ 'link_expand'|trans({}, 'SonataAdminBundle') }}">{{ name|trans({}, admin.translationDomain) }}</a>
                                     {% else %}
-                                        {% set previewLink %}{{ sonata_path(object, 'reference')  }}{% endset %}
+                                        {{ name|trans({}, admin.translationDomain) }}
                                     {% endif %}
-                                {% else %}
-                                    {% if object.contentType == 'application/pdf' %}
-                                        {% set previewLink %}{{ admin.generateUrl('pdf_preview', {'id': object.id}) }}{% endset %}
-                                    {% endif %}
-                                {% endif %}
+                                </legend>
+                            {% endif %}
 
-                                {% if object.width is defined and object.width %}
-                                {% if object.providerName == 'sonata.media.provider.image' %}
-                                    <script id="image-container"
-                                            data-image-src="{{ app.request.getSchemeAndHttpHost() }}{{ sonata_path(object, 'reference')  }}"
-                                            data-image-id="{{ object.id }}"
-                                            data-image-context="{{ object.context }}"
-                                            data-image-provider="{{ object.providerName }}"
-                                            data-lang="{{ app.request.locale|slice(0,2) }}"
-                                    ></script>
-                                    <div id="image-editor"></div>
+                            <div class="{% if form_group.collapsed %}sonata-ba-collapsed-fields collapse{% endif %}"
+                                 id="{{ admin.uniqid }}_{{ loop.index }}">
+
+                                {% for field_name in form_group.fields %}
+                                    {% if admin.formfielddescriptions[field_name] is defined %}
+                                            {{ form_row(form[field_name]) }}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </fieldset>
+                    {% endfor %}
+
+                    {% block sonata_post_fieldsets %}{% endblock %}
+                    {{ form_rest(form) }}
+
+                </div>
+                {% if object.id %}
+                    {% block sonata_media_show_reference %}
+                        <div class="col-md-6" id="media-preview">
+                            {% set previewLink = false %}
+
+                            {% if object.width is defined and object.width %}
+                                {% if object.providerName == 'sonata.media.provider.youtube' %}
+                                    {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
+                                {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
+                                    {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
                                 {% else %}
-                                <img src="{{ sonata_path(object, 'reference')  }}">
+                                    {% set previewLink %}{{ sonata_path(object, 'reference')  }}{% endset %}
                                 {% endif %}
-                                {% else %}
-                                {% if previewLink %}
-                                    <iframe src="{{ previewLink }}" width="100%" height="760px"></iframe>
+                            {% else %}
+                                {% if object.contentType == 'application/pdf' %}
+                                    {% set previewLink %}{{ admin.generateUrl('pdf_preview', {'id': object.id}) }}{% endset %}
                                 {% endif %}
-                                {% endif %}
-                                <table class="table">
-                                    <tr>
-                                        <th>{{ 'label.size'|trans({}, 'SonataMediaBundle') }}</th>
-                                        <td>
-                                            {% if object.width is defined and object.width %}{{ object.width|number_format }}px
-                                                x {{ object.height|number_format }}px
-                                                {% if object.size > 0 %}({{ object.size|number_format }} Bytes){% endif %}
-                                            {% else %}
-                                                {% if object.size > 0 %}{{ object.size|number_format }} Bytes{% endif %}
-                                            {% endif %}
-                                        </td>
-                                    <tr>
-                                    <tr>
-                                        <th>{{ 'label.content_type'|trans({}, 'SonataMediaBundle') }}</th>
-                                        <td>{{ object.contenttype }}</td>
-                                    <tr>
-                                        {% if form.cdnIsFlushable  is defined %}
-                                    <tr>
-                                        <th>{{ 'label.cdn'|trans({}, 'SonataMediaBundle') }}</th>
-                                        <td>
-                                            {% if object.cdnisflushable %}
-                                                {{ 'label.to_be_flushed'|trans({}, 'SonataMediaBundle') }}
-                                            {% else %}
-                                                {{ 'label.flushed_at'|trans({}, 'SonataMediaBundle') }}
-                                                {{ object.cdnflushat|date }}
-                                            {% endif %}
-                                        </td>
-                                    <tr>
+                            {% endif %}
+
+                            {% if object.width is defined and object.width %}
+                            {% if object.providerName == 'sonata.media.provider.image' %}
+                                <script id="image-container"
+                                        data-image-src="{{ app.request.getSchemeAndHttpHost() }}{{ sonata_path(object, 'reference')  }}"
+                                        data-image-id="{{ object.id }}"
+                                        data-image-context="{{ object.context }}"
+                                        data-image-provider="{{ object.providerName }}"
+                                        data-lang="{{ app.request.locale|slice(0,2) }}"
+                                ></script>
+                                <div id="image-editor"></div>
+                            {% else %}
+                            <img src="{{ sonata_path(object, 'reference')  }}">
+                            {% endif %}
+                            {% else %}
+                            {% if previewLink %}
+                                <iframe src="{{ previewLink }}" width="100%" height="760px"></iframe>
+                            {% endif %}
+                            {% endif %}
+                            <table class="table">
+                                <tr>
+                                    <th>{{ 'label.size'|trans({}, 'SonataMediaBundle') }}</th>
+                                    <td>
+                                        {% if object.width is defined and object.width %}{{ object.width|number_format }}px
+                                            x {{ object.height|number_format }}px
+                                            {% if object.size > 0 %}({{ object.size|number_format }} Bytes){% endif %}
+                                        {% else %}
+                                            {% if object.size > 0 %}{{ object.size|number_format }} Bytes{% endif %}
                                         {% endif %}
+                                    </td>
+                                <tr>
+                                <tr>
+                                    <th>{{ 'label.content_type'|trans({}, 'SonataMediaBundle') }}</th>
+                                    <td>{{ object.contenttype }}</td>
+                                <tr>
+                                    {% if form.cdnIsFlushable  is defined %}
+                                <tr>
+                                    <th>{{ 'label.cdn'|trans({}, 'SonataMediaBundle') }}</th>
+                                    <td>
+                                        {% if object.cdnisflushable %}
+                                            {{ 'label.to_be_flushed'|trans({}, 'SonataMediaBundle') }}
+                                        {% else %}
+                                            {{ 'label.flushed_at'|trans({}, 'SonataMediaBundle') }}
+                                            {{ object.cdnflushat|date }}
+                                        {% endif %}
+                                    </td>
+                                <tr>
+                                    {% endif %}
+                                <tr>
+                                    <th>
+                                        <a href="{{ path('sonata_media_download', {'id': object|sonata_urlsafeid }) }}">{{ 'label.protected_download_url'|trans({}, admin.translationDomain) }}</a>
+                                    </th>
+                                    <td>
+
+                                        <div class="input-group">
+                                            <input type="text" class="form-control copy-field"
+                                                   readonly="readonly" id="download"
+                                                   value="{{ url('sonata_media_download', {'id': object|sonata_urlsafeid }) }}"/>
+                                            <button class="btn btn-sm btn-light-primary" data-clipboard-target="#download">
+                                                <i class="fa fa-clipboard copy-link"></i>
+                                            </button>
+                                        </div>
+                                        {% if 'sonata.media.security.public_strategy' != sonata_media.pool.getContext(object.context).download.strategy %}
+                                            <span class="label label-warning">{{ 'label.protected_download_url_notice'|trans({}, 'SonataMediaBundle') }}</span> {{ sonata_media.pool.downloadSecurity(object).description|raw }}
+                                        {% endif %}
+                                    </td>
+                                <tr>
+                                    {% if object.width is defined and object.width %}
                                     <tr>
                                         <th>
-                                            <a href="{{ path('sonata_media_download', {'id': object|sonata_urlsafeid }) }}">{{ 'label.protected_download_url'|trans({}, admin.translationDomain) }}</a>
+                                            <a href="{{ sonata_path(object, 'reference')  }}"
+                                               data-fslightbox="lightbox-basic">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
                                         </th>
                                         <td>
-
                                             <div class="input-group">
-                                                <input type="text" class="form-control" onClick="this.select();"
-                                                       readonly="readonly" id="download"
-                                                       value="{{ url('sonata_media_download', {'id': object|sonata_urlsafeid }) }}"/>
-                                                <span class="input-group-addon"><a
-                                                            class="fa fa-clipboard copy-link"
-                                                            data-field="#download"></a></span>
+                                                <input type="text" class="form-control copy-field"
+                                                       readonly="readonly" id="reference"
+                                                       value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
+                                                <button class="btn btn-sm btn-light-primary" data-clipboard-target="#reference">
+                                                    <i class="fa fa-clipboard copy-link"></i>
+                                                </button>
                                             </div>
-                                            {% if 'sonata.media.security.public_strategy' != sonata_media.pool.getContext(object.context).download.strategy %}
-                                                <span class="label label-warning">{{ 'label.protected_download_url_notice'|trans({}, 'SonataMediaBundle') }}</span> {{ sonata_media.pool.downloadSecurity(object).description|raw }}
-                                            {% endif %}
                                         </td>
+                                    </tr>
+
+                                    {% for name, format in sonata_media.pool.formatNamesByContext(object.context) %}
+
                                     <tr>
-                                        {% if object.width is defined and object.width %}
-                                        <tr>
                                             <th>
-                                                <a href="{{ sonata_path(object, 'reference')  }}"
-                                                   data-featherlight-variant="initcms-featherlight"
-                                                   data-featherlight="image"
-                                                   target="_blank">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
+                                                <a href="{{ sonata_path(object, name)  }}"
+                                                   data-fslightbox="lightbox-basic">
+                                                    {% if format.width %}{{ 'label.width'|trans({}, 'MediaAdmin') }}: {{ format.width }}{% if format.height %}x {{ 'label.height'|trans({}, 'MediaAdmin') }}: {{ format.height }}{% endif %}px{% endif %}
+                                                </a>
                                             </th>
                                             <td>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" onClick="this.select();"
-                                                           readonly="readonly" id="reference"
-                                                           value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
-                                                    <span class="input-group-addon"><a
-                                                                class="fa fa-clipboard copy-link"
-                                                                data-field="#reference"></a></span>
+                                                    <input type="text" class="form-control copy-field"
+                                                           id="{{ name }}"
+                                                           readonly="readonly"
+                                                           value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, name)  }}"/>
+
+                                                    <button class="btn btn-sm btn-light-primary" data-clipboard-target="#{{ name }}">
+                                                        <i class="fa fa-clipboard copy-link"></i>
+                                                    </button>
                                                 </div>
+
                                             </td>
                                         </tr>
-
-                                        {% for name, format in sonata_media.pool.formatNamesByContext(object.context) %}
-                                            <tr>
-                                                <th>
-                                                    <a href="{{ sonata_path(object, name)  }}"
-                                                       data-featherlight-variant="initcms-featherlight"
-                                                       data-featherlight="image"
-                                                       target="_blank">
-                                                        {% if format.width %}{{ 'label.width'|trans({}, 'MediaAdmin') }}: {{ format.width }}{% if format.height %}x {{ 'label.height'|trans({}, 'MediaAdmin') }}: {{ format.height }}{% endif %}px{% endif %}
-                                                    </a>
-                                                </th>
-                                                <td>
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" onClick="this.select();"
-                                                               id="{{ name }}"
-                                                               readonly="readonly"
-                                                               value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, name)  }}"/>
-                                                        <span class="input-group-addon"><a
-                                                                    class="fa fa-clipboard copy-link"
-                                                                    data-field="#{{ name }}"></a></span>
-                                                    </div>
-
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    {% else %}
-                                        <tr>
-                                            <th>
-                                                <a href="{{ sonata_path(object, 'reference')  }}"
-                                                   target="_blank">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
-                                            </th>
-                                            <td>
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" onClick="this.select();"
-                                                           readonly="readonly" id="reference"
-                                                           value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
-                                                    <span class="input-group-addon"><a
-                                                                class="fa fa-clipboard copy-link"
-                                                                data-field="#reference"></a></span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                </table>
-                            </div>
-                        {% endblock sonata_media_show_reference %}
-                    {% endif %}
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        {% block formactions %}
-                            {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                            <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
-                                {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-                                    <button class="btn btn-default" data-dismiss="modal"
-                                            aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
-                                    {% if admin.id(object) %}
-                                        <input type="submit" class="btn btn-primary" name="btn_update"
-                                               value="{{ 'btn_update'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                                    {% else %}
-                                        <input type="submit" class="btn btn-primary" name="btn_create"
-                                               value="{{ 'btn_create'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                                    {% endif %}
+                                    {% endfor %}
                                 {% else %}
-                                    <a class="btn btn-default"
-                                       href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-                                    {% if admin.supportsPreviewMode %}
-                                        <input class="btn btn-info persist-preview" name="btn_preview" type="submit"
-                                               value="{{ 'btn_preview'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                                    {% endif %}
-                                    {% if admin.id(object) %}
-                                        <input type="submit" class="btn btn-primary" name="btn_update_and_edit"
-                                               value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                                        <input type="submit" class="btn btn-default" name="btn_update_and_list"
-                                               value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-
-                                        {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
-                                            {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
-                                            <a class="btn btn-danger"
-                                               href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'NetworkingInitCmsBundle') }}</a>
-                                        {% endif %}
-                                    {% else %}
-                                        <input class="btn btn-primary" type="submit" name="btn_create_and_edit"
-                                               value="{{ 'btn_create_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                                        <input type="submit" class="btn btn-default" name="btn_create_and_list"
-                                               value="{{ 'btn_create_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                                        <input class="btn btn-default" type="submit" name="btn_create_and_create"
-                                               value="{{ 'btn_create_and_create_a_new_one'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                                    {% endif %}
+                                    <tr>
+                                        <th>
+                                            <a href="{{ sonata_path(object, 'reference')  }}"
+                                               target="_blank">{{ 'list.label_original'|trans({}, 'MediaAdmin') }}</a>
+                                        </th>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control copy-field"
+                                                       readonly="readonly" id="reference"
+                                                       value="{{ app.request.schemeAndHttpHost }}{{ sonata_path(object, 'reference')  }}"/>
+                                                <button class="btn btn-sm btn-light-primary" data-clipboard-target="#reference">
+                                                    <i class="fa fa-clipboard copy-link"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 {% endif %}
-                            </div>
-                        {% endblock formactions %}
-                    </div>
-                </div>
+                            </table>
+                        </div>
+                    {% endblock sonata_media_show_reference %}
+                {% endif %}
             </div>
-        </form>
-        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+        {% endblock %}
+        </div>
+            <div class="card-footer">
+                {% block formactions %}
+                    {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+                        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+                            <button class="btn btn-sm btn-light" data-bs-dismiss="modal" type="button"
+                                    aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
+                            {% if admin.id(object) %}
+                                <input type="submit" class="btn btn-sm btn-primary" name="btn_update"
+                                       value="{{ 'btn_update'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                            {% else %}
+                                <input type="submit" class="btn btn-sm btn-primary" name="btn_create"
+                                       value="{{ 'btn_create'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                            {% endif %}
+                        {% else %}
+                            <a class="btn btn-sm btn-light"
+                               href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                            {% if admin.supportsPreviewMode %}
+                                <input class="btn btn-sm btninfo persist-preview" name="btn_preview" type="submit"
+                                       value="{{ 'btn_preview'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                            {% endif %}
+                                <input type="submit" class="btn btn-sm btn-primary" name="btn_update_and_edit"
+                                       value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                                <input type="submit" class="btn btn-sm btn-light" name="btn_update_and_list"
+                                       value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+
+                                {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
+                                    {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
+                                    <a class="btn btn-sm btn-danger"
+                                       href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                                {% endif %}
+                        {% endif %}
+                {% endblock formactions %}
             </div>
-            </div>
-        {% endif %}
+            {% block form_end %}
+            </form>
+            {% endblock %}
+        </div>
     {% endif %}
 
 {% endblock form %}
@@ -326,31 +290,49 @@ file that was distributed with this source code.
 {% block before_body_end %}
     {{ parent() }}
     {% if object.providerName == 'sonata.media.provider.image' %}
-    <script src="{{ asset('vendor/filerobot-image-editor/index_old.js', 'init_cms') }}" type="text/javascript"></script>
-
-    <script type="text/javascript" src="{{ asset('imageEditor.js', 'init_cms') }}"></script>
+        <script src="{{ asset('vendor/filerobot-image-editor/index_old.js', 'init_cms') }}" type="text/javascript"></script>
+        <script type="text/javascript" src="{{ asset('imageEditor.js', 'init_cms') }}"></script>
+        <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
     {% endif %}
     <script>
-        (function ($) {
-            function copyToClipboard(field) {
-                /* Get the text field */
-                var copyText = $(field);
+        KTUtil.onDOMContentLoaded(() => {
+            const targets = document.querySelectorAll('.copy-field');
+            targets.forEach((target) => {
+                const button = target.nextElementSibling;
 
-                /* Select the text field */
-                copyText.select();
+                button.addEventListener('click', function(e){
+                    e.preventDefault();
+                })
 
-                /* Copy the text inside the text field */
-                document.execCommand("copy");
+                // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+                var clipboard = new ClipboardJS(button, {
+                    target: target,
+                    text: function() {
+                        return target.value;
+                    }
+                });
 
-                /* Alert the copied text */
-                alert('{{ 'copy_to_clipboard'|trans({}, 'MediaAdmin') }}'.replace('%item%', copyText.val()));
-            }
+                // Success action handler
+                clipboard.on('success', function(e) {
 
-            $('body').on('click', '.copy-link', function () {
-                var field = $(this).data('field');
-                copyToClipboard(field);
+
+                    const currentLabel = button.innerHTML;
+
+                    // Exit label update when already in progress
+                    if(button.innerHTML === 'Copied!'){
+                        return;
+                    }
+
+                    // Update button label
+                    button.innerHTML = 'Copied!';
+
+                    // Revert button label after 3 seconds
+                    setTimeout(function(){
+                        button.innerHTML = currentLabel;
+                    }, 3000)
+                });
             })
+        })
 
-        })(jQuery)
     </script>
 {% endblock %}

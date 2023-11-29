@@ -9,10 +9,25 @@
 
         <prototype namespace="Networking\InitCmsBundle\Controller\"
                    resource="../../Controller"
-                   exclude="../../Controller/OneUploader"
+                   exclude="../../Controller/{OneUploader,WebAuthn}"
                    public="true" autowire="true">
             <tag name="controller.service_arguments"/>
         </prototype>
+
+        <prototype namespace="Networking\InitCmsBundle\Twig\Extension\"
+                   resource="../../Twig/Extension"
+                   public="true" autowire="true">
+            <tag name="twig.extension"/>
+        </prototype>
+
+        <service id="Networking\InitCmsBundle\Twig\Extension\NetworkingHelperExtension">
+            <argument key="$templates">%networking_init_cms.page.templates%</argument>
+            <argument key="$contentTypes">%networking_init_cms.page.content_types%</argument>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service alias="fos_ck_editor.configuration" id="FOS\CKEditorBundle\Config\CKEditorConfiguration" />
+
         <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*"/>
         <prototype namespace="Networking\InitCmsBundle\EventSubscriber\" resource="../../EventSubscriber/*"/>
         <service id="Networking\InitCmsBundle\Controller\MediaController">
@@ -142,19 +157,19 @@
                  public="false"/>
 
         <!-- admin aliases -->
-        <service id="Networking\InitCmsBundle\Admin\Model\LayoutBlockAdmin"
+        <service id="Networking\InitCmsBundle\Admin\LayoutBlockAdmin"
                  alias="networking_init_cms.admin.layout_block"
                  public="true"/>
 
-        <service id="Networking\InitCmsBundle\Admin\Model\PageAdmin"
+        <service id="Networking\InitCmsBundle\Admin\PageAdmin"
                  alias="networking_init_cms.admin.page"
                  public="true"/>
 
-        <service id="Networking\InitCmsBundle\Admin\Model\TagAdmin"
+        <service id="Networking\InitCmsBundle\Admin\TagAdmin"
                  alias="networking_init_cms.admin.tag"
                  public="true"/>
 
-        <service id="Networking\InitCmsBundle\Admin\Model\MediaAdmin"
+        <service id="Networking\InitCmsBundle\Admin\MediaAdmin"
                  alias="sonata.media.admin.media"
                  public="true"/>
 
@@ -165,6 +180,9 @@
         <service id="Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface"
                  alias="networking_init_cms.annotation.reader"
                  public="false"/>
+
+        <service id="Sonata\UserBundle\Model\UserManagerInterface"
+                 alias="networking_init_cms.user_manager" />
 
         <service id="networking_init_cms.annotation.reader" class="Networking\InitCmsBundle\Reader\SonataAdminAnnotationReader" autowire="true" public="true"/>
         <service id="Networking\InitCmsBundle\Twig\Extension\ImageFilter">
@@ -177,6 +195,41 @@
             <tag name="controller.service_arguments"/>
         </service>
 
+        <service id="Networking\InitCmsBundle\Controller\AdminResettingController" autoconfigure="true" autowire="true" public="true">
+            <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>
+            <argument key="$tokenGenerator" type="service" id="sonata.user.util.token_generator"/>
+            <argument key="$mailer" type="service" id="sonata.user.mailer.default"/>
+            <tag name="controller.service_arguments"/>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Helper\OneTimeCodeHelper" autoconfigure="true" autowire="true" public="true">
+            <argument key="$signingKey">%kernel.secret%</argument>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Repository\OneTimeCodeRequestRepository" autowire="true" public="true">
+        </service>
+
+        <service id="Networking\InitCmsBundle\Serializer\MediaNormalizer"  autowire="true" public="true">
+            <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
+            <argument key="$propertyNormalizer" type="service" id="serializer.normalizer.property"/>
+            <argument key="$mediaClass" type="string">%sonata.media.media.class%</argument>
+            <tag name="serializer.normalizer" priority="1000"/>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Serializer\LayoutBlockNormalizer"  autowire="true" public="true">
+            <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
+            <argument key="$propertyNormalizer" type="service" id="serializer.normalizer.property"/>
+            <tag name="serializer.normalizer" priority="1000"/>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Serializer\PageNormalizer"  autowire="true" public="true">
+            <argument key="$pageClass" type="string">%networking_init_cms.admin.page.class%</argument>
+            <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
+            <tag name="serializer.normalizer" priority="100"/>
+        </service>
+
+        <service id="Networking\InitCmsBundle\MessageHandler\UserMessageHandler" autowire="true" public="true">
+        </service>
 
     </services>
 </container>

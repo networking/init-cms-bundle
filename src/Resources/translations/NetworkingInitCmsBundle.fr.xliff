@@ -234,6 +234,14 @@
                 <source>view_website</source>
                 <target>Website Preview Modus</target>
             </trans-unit>
+             <trans-unit id="selected">
+             	<source>selected</source>
+             	<target>Selectioné</target>
+             </trans-unit>
+            <trans-unit id="btn_confirm">
+                <source>btn_confirm</source>
+                <target>Confirmer</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

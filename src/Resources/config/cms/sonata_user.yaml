@@ -8,11 +8,12 @@ sonata_user:
 
     resetting:
         email:
-            address: initcms@localhost
+            template: '@NetworkingInitCms/Admin/Security/Resetting/email.html.twig'
+            address: '%env(ADMIN_EMAIL_ADDRESS)%'
             sender_name: InitCms
 
     admin:                  # Admin Classes
         user:
-            class:          'Networking\InitCmsBundle\Admin\Entity\UserAdmin'
-            controller:     'Networking\InitCmsBundle\Controller\CRUDController'
+            class:          'Networking\InitCmsBundle\Admin\UserAdmin'
+            controller:     'Networking\InitCmsBundle\Controller\UserAdminController'
             translation:    'SonataUserBundle'

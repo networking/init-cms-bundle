@@ -12,8 +12,11 @@ declare(strict_types=1);
  */
 
 namespace Networking\InitCmsBundle\GoogleAuthenticator;
+
+use Networking\InitCmsBundle\Helper\OneTimeCodeHelper;
 use Sonata\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -26,24 +29,16 @@ use Twig\Environment;
 
 class RequestListener
 {
-    /**
-     * @var Helper
-     */
-    protected $helper;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
 
     /**
      * @param EngineInterface|Environment $templating
      */
-    public function __construct(Helper $helper, TokenStorageInterface $tokenStorage, private readonly Environment $twig)
-    {
-        $this->helper = $helper;
-        $this->tokenStorage = $tokenStorage;
-
+    public function __construct(
+        private readonly Helper $helper,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly OneTimeCodeHelper $oneTimeCodeHelper,
+        private readonly Environment $twig
+    ) {
     }
 
     public function onCoreRequest(RequestEvent $event): void
@@ -62,7 +57,27 @@ class RequestListener
             return;
         }
 
-        if(!$this->helper->needToHaveGoogle2FACode($request)){
+        if (!$this->helper->needToHaveGoogle2FACode($request)) {
+            return;
+        }
+
+        if (preg_match('/.*\/_profiler\/.*/', $request->getRequestUri())) {
+            return;
+        }
+
+        if (preg_match('/.*\/_wdt\/.*/', $request->getRequestUri())) {
+            return;
+        }
+
+        if (preg_match('/.*\/js\/.*/', $request->getRequestUri())) {
+            return;
+        }
+
+        if (preg_match(
+            '/\/admin\/one_time_code.*/',
+            $request->getRequestUri()
+        )
+        ) {
             return;
         }
 
@@ -71,8 +86,15 @@ class RequestListener
         $session = $event->getRequest()->getSession();
         $user = $token->getUser();
 
-        if(!$user->hasStepVerificationCode() && '/admin/two_factor_setup' !== $request->getRequestUri()){
-            $event->setResponse(new RedirectResponse('/admin/two_factor_setup'));
+        if (!$user->hasStepVerificationCode()
+            && '/admin/two_factor_setup' !== $request->getRequestUri()
+        ) {
+            $response = $request->isXmlHttpRequest() ? new JsonResponse(
+                ['redirect' => '/admin/two_factor_setup']
+            ) : new RedirectResponse('/admin/two_factor_setup');
+
+            $event->setResponse($response);
+
             return;
         }
         if (!$session->has($key)) {
@@ -84,23 +106,79 @@ class RequestListener
         }
 
         $state = 'init';
-        if ('POST' === $request->getMethod()) {
-            if (true === $this->helper->checkCode($user, $request->get('_code'))) {
+        if ('POST' === $request->getMethod() && $request->get('_code', false)) {
+
+
+            if($request->getSession()->get('networing_init_cms.one_time_code') !== null){
+                if(true === $this->oneTimeCodeHelper->checkCode(
+                        $request->get('_code'),
+                        $user
+                    )){
+
+                    $request->getSession()->remove('networing_init_cms.one_time_code');
+                    $this->oneTimeCodeHelper->removeOneTimeCodeRequest($request->get('_code'), $user);
+
+                    $session->set($key, true);
+                    if ($request->isXmlHttpRequest()) {
+                        $event->setResponse(
+                            new JsonResponse(['success' => 'success'], 200)
+                        );
+
+                        return;
+                    }
+
+                    return;
+
+                }
+            }
+
+
+
+            if (true === $this->helper->checkCode(
+                $user,
+                $request->get('_code')
+            )
+            ) {
                 $session->set($key, true);
+                if ($request->isXmlHttpRequest()) {
+                    $event->setResponse(
+                        new JsonResponse(['success' => 'success'], 200)
+                    );
+
+                    return;
+                }
 
                 return;
             }
 
             $state = 'error';
+
+            if ($request->isXmlHttpRequest()) {
+                $event->setResponse(
+                    new JsonResponse(['error' => 'Invalid code'], 400)
+                );
+
+                return;
+            }
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return;
         }
 
 
-        $event->setResponse(new Response($this->twig->render('@NetworkingInitCms/Admin/Security/login.html.twig', [
-            'base_template' => '@NetworkingInitCms/admin_layout.html.twig',
-            'error' => [],
-            'state' => $state,
-            'two_step_submit' => true,
-        ])));
-
+        $event->setResponse(
+            new Response(
+                $this->twig->render(
+                    '@NetworkingInitCms/Admin/Security/login.html.twig',
+                    [
+                        'base_template' => '@NetworkingInitCms/admin_layout.html.twig',
+                        'error' => [],
+                        'state' => $state,
+                        'two_step_submit' => true,
+                    ]
+                )
+            )
+        );
     }
 }

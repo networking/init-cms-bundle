@@ -10,15 +10,17 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\EventListener;
 
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class LocaleListener.
@@ -27,87 +29,55 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class LocaleListener
 {
-    /**
-     * @var string
-     */
-    protected $router;
 
-    /**
-     * @var \Symfony\Component\Security\Http\AccessMapInterface
-     */
-    protected $accessMap;
 
-    /**
-     * @var array;
-     */
-    protected $availableLanguages;
 
     /**
      * LocaleListener constructor.
-     *
-     * @param string               $defaultLocale
-     * @param RouterInterface|null $router
-     * @param bool                 $allowLocaleCookie
-     * @param bool                 $singleLanguage
      */
     public function __construct(
-        AccessMapInterface $accessMap,
-        array $availableLanguages,
-        protected $allowLocaleCookie,
-        protected $singleLanguage,
-        protected $defaultLocale = 'en',
-        RouterInterface $router = null
-
+        protected readonly FirewallMap $firewallMap,
+        protected readonly array $availableLanguages,
+        protected bool $allowLocaleCookie,
+        protected bool $singleLanguage,
+        protected string $defaultLocale = 'en',
+        protected ?RouterInterface $router = null
     ) {
-        $this->accessMap = $accessMap;
-        $this->availableLanguages = $availableLanguages;
-        $this->router = $router;
 
         $env = [];
 
-        if(false === getenv('ALLOW_LOCALE_COOKIE')){
-	        $env['ALLOW_LOCALE_COOKIE'] = $this->allowLocaleCookie;
-            putenv(sprintf('ALLOW_LOCALE_COOKIE=%s', $this->allowLocaleCookie) );
+        if (false === getenv('ALLOW_LOCALE_COOKIE')) {
+            $env['ALLOW_LOCALE_COOKIE'] = $this->allowLocaleCookie;
+            putenv(sprintf('ALLOW_LOCALE_COOKIE=%s', $this->allowLocaleCookie));
         }
 
-	    if(false === getenv('SINGLE_LANGUAGE')){
-		    $env['SINGLE_LANGUAGE'] = $this->singleLanguage;
-            putenv(sprintf('SINGLE_LANGUAGE=%s', $this->singleLanguage) );
-	    }
-	    if(count($env)){
-		    (new Dotenv())->populate($env, true);
-	    }
+        if (false === getenv('SINGLE_LANGUAGE')) {
+            $env['SINGLE_LANGUAGE'] = $this->singleLanguage;
+            putenv(sprintf('SINGLE_LANGUAGE=%s', $this->singleLanguage));
+        }
+        if (count($env)) {
+            (new Dotenv())->populate($env, true);
+        }
     }
 
-    /**
-     * @return void
-     */
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
+
+        if (HttpKernelInterface::MAIN_REQUEST !== $event->getRequestType()) {
+            return;
+        }
         $request = $event->getRequest();
 
-        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
-            return;
-        }
-
-        if (!$request) {
-            return;
-        }
-
-        $patterns = $this->accessMap->getPatterns($request);
-        //@todo find a better solution to know if we are in the admin area or not
-        $localeType = (in_array('ROLE_SONATA_ADMIN', $patterns[0])) ? 'admin/_locale' : '_locale';
-        if ($localeType == 'admin/_locale') {
-            $locale = $request->getSession()->get($localeType);
+        $config = $this->firewallMap->getFirewallConfig($request);
+        if ('admin' === $config->getName()) {
+            $locale = $request->getSession()->get('admin/_locale');
         } else {
             if ($this->singleLanguage) {
                 $locale = $this->defaultLocale;
             } elseif ($this->allowLocaleCookie) {
-                $locale = $request->cookies->get($localeType, false);
-
-                //fallback if browser does not support samesite=none
-                if(!$locale){
-                    $locale = $request->cookies->get($localeType.'_legacy', false);
+                $locale = $request->cookies->get('_locale', false);
+                if (!$locale) {
+                    $locale = $request->cookies->get('_locale_legacy', false);
                 }
             } else {
                 $locale = $this->getLocaleFromUrl($request->getPathInfo());
@@ -132,14 +102,13 @@ class LocaleListener
             $request->setLocale($preferredLocale);
         }
 
-        if (null !== $this->router) {
-            $this->router->getContext()->setParameter($localeType, $request->getLocale());
-        }
+        $this->router?->getContext()->setParameter(
+            '_locale',
+            $request->getLocale()
+        );
     }
 
     /**
-     * @param $url
-     *
      * @return bool|mixed
      */
     protected function getLocaleFromUrl($url)
@@ -163,15 +132,16 @@ class LocaleListener
             $locale = $this->defaultLocale;
         }
 
-        $patterns = $this->accessMap->getPatterns($request);
 
-        //Set backend language to exactly user language settings (if it exists or not)
+        $config = $this->firewallMap->getFirewallConfig($request);
+
+        // Set backend language to exactly user language settings (if it exists or not)
         $request->getSession()->set('admin/_locale', $locale);
 
         // If user language does not exist in frontend website, get next best
         $frontendLocale = $this->guessFrontendLocale($locale);
 
-        if (in_array('ROLE_SONATA_ADMIN', $patterns[0])) {
+        if ('admin' === $config->getName()) {
             $request->setLocale($locale);
         } else {
             $request->setLocale($frontendLocale);
@@ -180,7 +150,6 @@ class LocaleListener
 
     /**
      * guess frontend locale.
-     *
      *
      * @return string
      */
@@ -208,8 +177,6 @@ class LocaleListener
     /**
      * try to match browser language with available languages.
      *
-     * @param $locale
-     *
      * @return string
      */
     protected function matchLocaleInAvailableLanguages($locale)
@@ -231,7 +198,6 @@ class LocaleListener
     /**
      * get preferred locale.
      *
-     *
      * @return string
      */
     public function getPreferredLocale(Request $request)
@@ -247,14 +213,13 @@ class LocaleListener
     /**
      * get browser accept languages.
      *
-     *
      * @return array
      */
     public function getBrowserAcceptLanguages(Request $request)
     {
         $browserLanguages = [];
 
-        if (strlen((string) $request->server->get('HTTP_ACCEPT_LANGUAGE')) == 0) {
+        if (0 == strlen((string) $request->server->get('HTTP_ACCEPT_LANGUAGE'))) {
             return [];
         }
 
@@ -262,9 +227,9 @@ class LocaleListener
             $request->server->get('HTTP_ACCEPT_LANGUAGE')
         );
         foreach ($languages as $lang) {
-            if (strstr((string) $lang, '-')) {
+            if (str_contains((string)$lang, '-')) {
                 $codes = explode('-', (string) $lang);
-                if ($codes[0] == 'i') {
+                if ('i' == $codes[0]) {
                     // Language not listed in ISO 639 that are not variants
                     // of any listed language, which can be registered with the
                     // i-prefix, such as i-cherokee
@@ -273,7 +238,7 @@ class LocaleListener
                     }
                 } else {
                     for ($i = 0, $max = count($codes); $i < $max; ++$i) {
-                        if ($i == 0) {
+                        if (0 == $i) {
                             $lang = strtolower($codes[0]);
                         } else {
                             $lang .= '_'.strtoupper($codes[$i]);

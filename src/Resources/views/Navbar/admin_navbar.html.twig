@@ -1,31 +1,75 @@
-<div class="navbar navbar-fixed-top navbar-initcms navbar-inverse">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-                <div class="navbar-header pull-left">
-                    {% block toggle %}
-                        <button type="button" class="navbar-toggle" id="toggleNav">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                    {% endblock %}
-                    <a href="{{ url('sonata_admin_dashboard') }}" class="hidden-sm hidden-xs pull-left">
-                        <img  id="initcms-logo" src="{{ sonata_config.logo ? sonata_config.logo : asset('bundles/networkinginitcms/img/logo_initcms.png') }}" alt="{{ sonata_config.title }}" width="77">
-                    </a>
-                    <a href="{{ url('sonata_admin_dashboard') }}" class="hidden-xs brand">
-                        {{ sonata_config.title }}
-                    </a>
-                </div>
+<!--begin::Header-->
+<div id="kt_app_header" class="app-header " data-kt-sticky="true" data-kt-sticky-activate="{default: true, lg: true}" data-kt-sticky-name="app-header-minimize" data-kt-sticky-offset="{default: '200px', lg: '0'}" data-kt-sticky-animation="false" style="">
+    <!--begin::Header container-->
+    <div class="app-container  container-fluid d-flex align-items-stretch justify-content-between " id="kt_app_header_container">
+        <!--begin::Sidebar mobile toggle-->
+        <div class="d-flex align-items-center d-lg-none ms-n3 me-1 me-md-2" title="Show sidebar menu">
+            <div class="btn btn-icon btn-active-color-primary w-35px h-35px" id="kt_app_sidebar_mobile_toggle">
+                <i class="ki-outline ki-abstract-14 fs-2 fs-md-1"></i>		</div>
+        </div>
+        <!--end::Sidebar mobile toggle-->
+        <!--begin::Mobile logo-->
+        <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
+            <a href="{{ path('sonata_admin_dashboard') }}" class="d-lg-none d-flex align-items-end">
+                <img  src="{{ sonata_config.logo ? sonata_config.logo : asset('bundles/networkinginitcms/img/initcms-396x100.png') }}" alt="{{ sonata_config.title }}" class="h-30px"/>
+                <h2 class="text-muted mb-0 mx-3">{{ sonata_config.title }}</h2>
+            </a>
 
-                <div class="pull-right">
+
+        </div>
+        <!--end::Mobile logo-->
+        <!--begin::Header wrapper-->
+        <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1" id="kt_app_header_wrapper">
+            {% include '@NetworkingInitCms/Admin/top-menu.html.twig'  %}
+            <!--begin::Navbar-->
+            <div class="app-navbar flex-shrink-0">
+                {% if sonata_config.getOption('search') %}
+                    {%  include '@NetworkingInitCms/Core/global_search_form.html.twig' %}
+                {% endif %}
+                <div class="app-navbar-item ms-1 ms-md-3" id="kt_header_website_menu_toggle">
+                    {% if sonata_config is defined %}
+                        <a href="#" class="btn btn-icon btn-custom btn-icon-muted btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
+                           data-kt-menu-trigger="{default:'click', lg: 'hover'}"
+                           data-kt-menu-attach="parent"
+                           data-kt-menu-placement="bottom-end">
+                            <i class="ki-outline ki-screen fs-2 fs-lg-1" ></i></a>
                         {% if sonata_config is defined %}
-                            {% include get_global_template('user_block') %}
+                            {{ knp_menu_render('AdminMenu',{
+                                'template': '@NetworkingInitCms/Admin/page-menu.html.twig',
+                                'currentClass': 'active',
+                                'ancestorClass': 'active',
+                                'allow_safe_labels': true}) }}
                         {% endif %}
-                        {% if sonata_config is defined %}
-                            {{ networking_bootstrap_menu('AdminMenu') }}
-                        {% endif %}
+                    {% endif %}
                 </div>
+                <!--begin::User menu-->
+                {% if sonata_config is defined %}
+                    {% include get_global_template('user_block') %}
+                {% endif %}
+                <!--end::User menu-->
+                <!--begin::Header menu toggle-->
+                <div class="app-navbar-item d-lg-none ms-2 me-n2" title="Show header menu">
+                    <div class="btn btn-flex btn-icon btn-active-color-primary w-30px h-30px" id="kt_app_header_menu_toggle">
+                        <i class="ki-outline ki-element-4 fs-1"></i>
+                    </div>
+                </div>
+                <!--end::Header menu toggle-->
+                {% if has_side_menu %}
+                <div class="app-navbar-item d-lg-none ms-2 me-n2" title="Show aside">
+                    <div class="btn btn-flex btn-icon btn-active-color-primary w-30px h-30px" id="kt_app_aside_toggle">
+                        <i class="ki-duotone ki-trello fs-1">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            <span class="path3"></span>
+                        </i>
+                    </div>
+                </div>
+                {% endif %}
             </div>
+            <!--end::Navbar-->
+        </div>
+        <!--end::Header wrapper-->
     </div>
+    <!--end::Header container-->
 </div>
+<!--end::Header-->

@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\Cache\PageCache;
+use Networking\InitCmsBundle\Entity\GalleryView;
+use Networking\InitCmsBundle\Entity\Text;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -100,12 +102,24 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('name')->isRequired()->end()
                             ->scalarNode('class')->isRequired()->end()
+                            ->scalarNode('icon')->defaultValue('ki-outline ki-abstract-7')->end()
+                            ->scalarNode('default_template')->defaultValue(false)->end()
                         ->end()
                     ->end()
                     ->defaultValue(
                         [
-                            ['name' => 'Text' , 'class' =>  'Networking\InitCmsBundle\Entity\Text'],
-                            ['name' => 'Gallery' , 'class' =>  'Networking\InitCmsBundle\Entity\GalleryView'],
+                            [
+                                'name' => 'Text' ,
+                                'class' =>  Text::class,
+                                'icon' => 'ki-outline ki-text-align-left',
+                                'default_templage' => '@NetworkingInitCms/Text/frontend_text_block.html.twig'
+                            ],
+                            [
+                                'name' => 'Gallery' ,
+                                'class' =>  GalleryView::class,
+                                'icon' => 'ki-outline ki-picture',
+                                'default_templage' => '@NetworkingInitCms/Gallery/frontend_gallery_block.html.twig'
+                            ],
                         ]
                     )
                 ->end()
@@ -149,6 +163,13 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('webauthn')
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->booleanNode('enabled')->defaultFalse()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('cache')
                     ->addDefaultsIfNotSet()
                         ->children()
@@ -173,7 +194,22 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         $this->addEditableSection($rootNode);
+        $this->addEmailAddressSection($rootNode);
         return $treeBuilder;
+    }
+
+    protected function addEmailAddressSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('email_address')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('from_address')->defaultValue('admin@initcms.com')->end()
+                        ->scalarNode('from_name')->defaultValue('InitCMS')->end()
+                    ->end()
+                ->end()
+            ->end();
     }
 
     protected function addEditableSection(ArrayNodeDefinition $node)

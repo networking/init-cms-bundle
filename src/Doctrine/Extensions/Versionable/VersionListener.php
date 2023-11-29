@@ -29,7 +29,7 @@ class VersionListener
 {
     public function postPersist(PostPersistEventArgs $args)
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
         $em = $args->getObjectManager();
         if ($entity instanceof VersionableInterface) {
             if (!$entity->hasListener()) {
@@ -40,7 +40,7 @@ class VersionListener
 
     public function postUpdate(PostUpdateEventArgs $args)
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
         $em = $args->getObjectManager();
         if ($entity instanceof VersionableInterface) {
 

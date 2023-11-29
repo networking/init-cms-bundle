@@ -17,15 +17,25 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
-use Networking\InitCmsBundle\Model\ContentRouteListener as ModelContentRouteListener;
+use Networking\InitCmsBundle\Model\ContentRouteListenerInterface;
 
 #[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: ContentRoute::class)]
 #[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', entity: ContentRoute::class)]
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class ContentRouteListener extends ModelContentRouteListener
+class ContentRouteListener implements ContentRouteListenerInterface
 {
+    /**
+     * @var array
+     */
+    protected $templates;
+
+    public function __construct(array $templates)
+    {
+        $this->templates = $templates;
+    }
+    
     /**
      * @param LifecycleEventArgs $args
      *

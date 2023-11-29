@@ -6,7 +6,7 @@
 
     <parameters>
         <!-- Media -->
-        <parameter key="sonata.media.admin.media.class">Networking\InitCmsBundle\Admin\Entity\MediaAdmin</parameter>
+        <parameter key="sonata.media.admin.media.class">Networking\InitCmsBundle\Admin\MediaAdmin</parameter>
         <parameter key="sonata.media.admin.media.controller">Networking\InitCmsBundle\Controller\MediaAdminController</parameter>
         <parameter key="sonata.media.admin.media.translation_domain">MediaAdmin</parameter>
     </parameters>
@@ -14,6 +14,7 @@
 
     <services>
         <service id="gallery_admin_extension" class="Networking\InitCmsBundle\Admin\Extension\GalleryAdminExtension">
+            <argument key="$pool" type="service" id="sonata.media.pool"/>
             <tag name="sonata.admin.extension" target="sonata.media.admin.gallery"/>
         </service>
 

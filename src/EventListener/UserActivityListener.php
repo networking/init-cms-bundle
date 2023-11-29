@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\EventListener;
 
+use Doctrine\ORM\Exception\ORMException;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Networking\InitCmsBundle\Model\UserInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -75,7 +76,7 @@ class UserActivityListener
                     $stmt->bindValue('date', (new \DateTime('now'))->format( 'Y-m-d H:i:s'));
                     $stmt->bindValue('id', $user->getId());
                     $stmt->executeStatement();
-                } catch (\Doctrine\ORM\ORMException) {
+                } catch (ORMException) {
                     //do nothing, entity manager is closed
                 }
             }

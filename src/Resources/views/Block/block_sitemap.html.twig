@@ -5,17 +5,21 @@
     {# only visible for superadmin #}
     {% if is_granted("ROLE_SUPER_ADMIN") %}
 
-        <div class="well well-small">
-            <h4>{{ 'title.sitemap'|trans({}, 'NetworkingInitCmsBundle') }}</h4>
-
-            <div id="ajaxResponseDiv"></div>
-            <div class="row">
-                <div class="col-md-12">
-                    {{ 'infotext.sitemap'|trans({'%website%':  url('xml_sitemap') }, 'NetworkingInitCmsBundle') | raw }}
-                </div>
-
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h3 class="card-title">
+                     <span class="card-icon">
+				    <i class="la la-sitemap fs-2x"></i>
+				</span>
+                    <span class="card-label">{{ 'title.sitemap'|trans({}, 'NetworkingInitCmsBundle') }}
+                    </span>
+                </h3>
             </div>
-
+            <div class="card-body">
+                <p>
+                    {{ 'infotext.sitemap'|trans({'%website%':  url('xml_sitemap') }, 'NetworkingInitCmsBundle') | raw }}
+                </p>
+            </div>
         </div>
     {% endif %}
 {% endblock %}

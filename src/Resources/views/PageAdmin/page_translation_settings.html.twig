@@ -15,11 +15,16 @@ file that was distributed with this source code.
         <strong>{{ language.label }}</strong><br />
     {% if language.translation %}
         {{ language.translation.pageName }}
+
+
         <a href="{{ admin.generateUrl('edit', {'id': language.translation.id}) }}" class="link-underlined">
             {{ 'link.edit'|trans({}, admin.translationDomain) }}
         </a> |
             {% if language.translation.isDirectTranslation(object) %}
-                <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}" class="link-underlined translation-dialog-link">
+                <a href="{{ admin.generateUrl('unlink', {'id':object.id, 'translationId': language.translation.id}) }}"
+                   data-text="{{ 'info.delete_translation_link'|trans({'%translatedPage%': language.translation.pageName , '%locale%': locale }, admin.translationDomain) }}"
+                   data-object-id="{{ object.id }}"
+                   class="link-underlined translation-dialog-unlink">
             {{ 'link.unlink'|trans({}, admin.translationDomain) }}</a>
             {% else %}
                 {% set directTranslation = language.translation.getDirectTranslationFor(object) %}
@@ -36,5 +41,3 @@ file that was distributed with this source code.
     {% endif %}
     </p>
 {% endfor %}
-<div class="modal fade" tabindex="-1" role="dialog" id="translation_dialog">
-</div>

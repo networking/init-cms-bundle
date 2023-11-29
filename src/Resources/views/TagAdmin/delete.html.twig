@@ -1,5 +1,4 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
@@ -7,20 +6,19 @@ moved all relation fields to the networking crud folder
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
-
-{% extends base_template %}
+{% set isAjax = app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+{% extends isAjax?'@NetworkingInitCms/modal-edit.html.twig':base_template %}
 
 {% block actions %}
     <div class="sonata-actions">
         {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}
-            <a class="btn btn-default sonata-action-element"
+            <a class="btn btn-light sonata-action-element"
                href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
         {% endif %}
         {% if admin.hasRoute('create') and admin.isGranted('CREATE') %}
-            <a class="btn btn-default sonata-action-element"
+            <a class="btn btn-light sonata-action-element"
                href="{{ admin.generateUrl('create') }}">{{ 'link_action_create'|trans({}, admin.translationDomain) }}</a>
         {% endif %}
     </div>
@@ -30,51 +28,53 @@ file that was distributed with this source code.
 
 {% block content %}
 
-    {% if app.request.isxmlhttprequest %}
-        <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>{{ 'title_delete'|trans({}, 'SonataAdminBundle') }}</h3>
-        </div>
-    {% else %}
-        <div class="sonata-ba-delete">
-        <h3>{{ 'title_delete'|trans({}, 'SonataAdminBundle') }}</h3>
-    {% endif %}
 
-    <div class="{% if app.request.isxmlhttprequest %}modal-body{% endif %}">
+    {% block title %}
+        <h3>{{ 'title_delete'|trans({}, 'SonataAdminBundle') }}</h3>
+    {% endblock %}
+
+    {% block form_start %}
+<form method="POST" action="{{ admin.generateObjectUrl('delete', object) }}">
+    {% endblock %}
+
+    {% block modal_body %}
+    <div>
         {{ 'message_delete_confirmation'|trans({'%object%': object}, 'SonataAdminBundle') }}
     </div>
-    <div class="{% if app.request.isxmlhttprequest %}modal-footer{% else %}well form-actions{% endif %}">
-        <form method="POST" action="{{ admin.generateObjectUrl('delete', object) }}">
-            <input type="hidden" value="DELETE" name="_method"/>
-            <input type="hidden" value="{{ returnToMedia }}" name="returnToMedia"/>
-            {% if csrf_token is defined %}
-                <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
+    {% endblock %}
+    {% block modal_footer %}
+        {% if app.request.isxmlhttprequest %}
+            <button class="btn btn-light" data-dismiss="modal"
+                    aria-hidden="true">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</button>
+
+            <button type="submit" name="btn_delete" class="btn btn-danger"><i class="fas fa-trash-alt"
+                                                                              aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}
+            </button>
+        {% else %}
+            <a href="{{ admin.generateObjectUrl('list', object) }}"
+               class="btn btn-light">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+
+            <button type="submit" name="btn_delete" class="btn btn-danger"><i class="fas fa-trash-alt"
+                                                                              aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}
+            </button>
+            {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}
+                {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
+
+                <a class="btn btn-success"
+                   href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
             {% endif %}
-            {% if app.request.isxmlhttprequest %}
-                <button class="btn btn-default" data-dismiss="modal"
-                        aria-hidden="true">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</button>
 
-                <button type="submit" name="btn_delete" class="btn btn-danger"><i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}</button>
-            {% else %}
-                <a href="{{ admin.generateObjectUrl('list', object) }}"
-                   class="btn btn-default">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+        {% endif %}
+    {% endblock %}
 
-                <button type="submit" name="btn_delete" class="btn btn-danger"><i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'btn_delete'|trans({}, 'SonataAdminBundle') }}</button>
-                {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object) %}
-                    {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
 
-                    <a class="btn btn-success"
-                       href="{{ admin.generateObjectUrl('edit', object) }}">{{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}</a>
-                {% endif %}
-            {% endif %}
-        </form>
-    </div>
-    {% if app.request.isxmlhttprequest %}
-
-    </div>
-    </div>
+    {% endblock %}
+    {% block form_end %}
+    <input type="hidden" value="DELETE" name="_method"/>
+    <input type="hidden" value="{{ returnToMedia }}" name="returnToMedia"/>
+    {% if csrf_token is defined %}
+        <input type="hidden" name="_sonata_csrf_token" value="{{ csrf_token }}"/>
     {% endif %}
-    </div>
+</form>
+
 {% endblock %}

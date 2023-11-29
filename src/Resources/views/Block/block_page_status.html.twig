@@ -1,27 +1,35 @@
 {% extends sonata_block.templates.block_base %}
 
 {% block block %}
-    <div class="well well-small">
-        <h4>{{ 'title.page_status_count'|trans({}, 'PageAdmin') }}</h4>
-
-        <div class="row">
-            <div class="col-md-12">
-                <span class="color-draft">{{ 'status_draft'|trans({}, 'PageAdmin') }} </span><span
-                        class="badge badge-draft pull-right">{{ draft_pages }}</span>
-
-            </div>
-            <div class="col-md-12">
-                <span class="color-review">{{ 'status_review'|trans({}, 'PageAdmin') }} </span><span
-                        class="badge badge-review pull-right">{{ review_pages }}</span>
-
-            </div>
-            <div class="col-md-12">
-                <span class="color-published">{{ 'status_published'|trans({}, 'PageAdmin') }} </span><span
-                        class="badge badge-published pull-right">{{ published_pages }}</span>
+    <div class="card shadow-sm">
+    <div class="card-header">
+        <h3 class="card-title">
+            <span class="card-icon">
+				    <i class="la la-file-alt fs-2x"></i>
+				</span>
+            <span class="card-label">{{ 'title.page_status_count'|trans({}, 'PageAdmin') }}</span> </h3>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="d-flex flex-row justify-content-between">
+                <span class="badge py-3 px-4 fs-7 badge-light-warning">{{ 'status_draft'|trans({}, 'PageAdmin') }} </span><span
+                        class="badge badge-circle badge-warning">{{ draft_pages }}</span>
 
             </div>
+            <div class="separator separator-dashed my-3"></div>
+            <div class="d-flex flex-row justify-content-between">
+                <span class="badge py-3 px-4 fs-7 badge-light-primary">{{ 'status_review'|trans({}, 'PageAdmin') }} </span><span
+                        class="badge badge-circle badge-primary">{{ review_pages }}</span>
+
+            </div>
+            <div class="separator separator-dashed my-3"></div>
+            <div class="d-flex flex-row justify-content-between">
+                <span class="badge py-3 px-4 fs-7 badge-light-success">{{ 'status_published'|trans({}, 'PageAdmin') }} </span><span
+                        class="badge badge-circle badge-success">{{ published_pages }}</span>
+
+            </div>
+            <div class="separator separator-solid my-3"></div>
         </div>
-        <div class="clearfix">&nbsp;</div>
         {% if reviewPages|length > 0 %}
             <div class="row">
                 <div class="col-md-12">
@@ -31,10 +39,11 @@
                         {% for page in drafts %}
                             <a href="{% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_EDIT') %}{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}{% endif %}"
                                class="link-nounderline">{{ page.pageName }}</a> <span
-                                class="info-soft font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
+                                class="text-muted font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
                             <br/>
 
                         {% endfor %}
+                        <div class="separator separator-dashed my-3"></div>
                     {% endfor %}
 
                 </div>
@@ -49,22 +58,23 @@
                         {% for page in drafts %}
                             <a href="{% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_EDIT') %}{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}{% endif %}"
                                class="link-nounderline">{{ page.pageName }}</a> <span
-                                class="info-soft font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
+                                class="text-muted font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
                             <br/>
                         {% endfor %}
+                        <div class="separator separator-dashed my-3"></div>
                     {% endfor %}
 
                 </div>
             </div>
         {% endif %}
         <div class="clearfix">&nbsp;</div>
-        <div class="pull-right">
+        <div class="float-end">
             {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_LIST') %}
             <a href="{{ path('admin_networking_initcms_page_list') }}"
                class="btn btn-sm btn-primary">{{ 'link.see_all'|trans({}, 'PageAdmin') }}  &rarr;</a>
             {% endif %}
         </div>
-        <div class="clearfix"></div>
+        </div>
     </div>
 
 {% endblock %}

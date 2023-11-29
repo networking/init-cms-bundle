@@ -26,13 +26,13 @@ file that was distributed with this source code.
             {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
             <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
                 {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-                    <button class="btn btn-default" data-dismiss="modal"
+                    <button class="btn btn-light" data-dismiss="modal"
                             aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
 
                         <input type="submit" class="btn btn-primary" name="btn_copy"
                                value="{{ 'button.page_batch_copy'|trans({}, admin.translationDomain) }}"/>
                 {% else %}
-                    <a class="btn btn-default"
+                    <a class="btn btn-light"
                        href="{{ admin.generateUrl('list') }}">{{ 'btn_cancel'|trans({}, 'NetworkingInitCmsBundle') }}</a>
                         <input class="btn btn-primary" type="submit" name="btn_copy"
                                value="{{ 'button.page_batch_copy'|trans({}, admin.translationDomain) }}"/>

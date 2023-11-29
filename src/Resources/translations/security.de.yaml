@@ -1,0 +1,116 @@
+titel: Sicherheit
+label:
+    account_settings: "Kontoeinstellungen"
+    account_security: "Sicherheit"
+tab:
+    account_settings: "Benutzerdetails"
+    two_factor_authentication: "Zwei-Faktor-Authentifizierung"
+    passkeys: "Passkeys"
+
+test:
+    success_text: "Fantastisch, das hat geklappt!"
+
+registration_complete:
+    title: "Du bist bereit!"
+    text: "Du kannst dich jetzt mit deinem Fingerabdruck, deinem Gesicht oder deiner Bildschirmsperre auf diesem Gerät anmelden."
+    test_button: "Teste deinen Passkey"
+
+registration_not_complete:
+    title: "Erstelle einen Passkey für dieses Gerät"
+    text: "Beschleunige deine Anmeldung beim nächsten Mal, indem du einen neuen Passkey für dieses Gerät erstellst."
+
+passkey_rename:
+    title: "Benenne deinen Passkey um"
+    input_label: "Name des Passkey"
+    input_invalid: "Bitte gib einen gültigen Passkey-Namen ein"
+
+passkey_delete:
+    title: "Lösche deinen Passkey"
+    text: "Bist du sicher, dass du diesen Hauptschlüssel löschen willst? Du kannst dich dann nicht mehr mit ihm anmelden."
+
+passkey_create:
+    title: "Erstelle einen neuen Passkey für dein CMS-Konto"
+    text: "Passkeys sind einfach einzurichten und ermöglichen es dir, dich mit deinem Fingerabdruck, deinem Gesicht, deiner Bildschirmsperre oder deinem Hardware-Sicherheitsschlüssel sicher bei deinem CMS-Konto anzumelden. Du kannst einen Passkey auf diesem Gerät erstellen oder ein anderes Gerät verwenden."
+    passkey_exists_for_device_method: "Du hast bereits einen Hauptschlüssel für dieses Gerät und diese Methode."
+    webauthn_not_available: "Passkeys werden auf diesem Gerät nicht unterstützt."
+    no_credentials_found: "Keine Passkeys gefunden"
+
+
+passkey_text: >
+    Mit Passkeys kannst du dich sicher mit deinem Fingerabdruck, deinem Gesicht oder deinem Hardware-Sicherheitsschlüssel 
+    bei deinem Konto anmelden. Richte Passkeys nur auf Geräten ein, die du besitzt.
+
+your_passkeys: Passkeys, die du erstellt hast
+
+create_a_passkey: Erstelle einen Passkey
+
+cannot_edit_impersonated_user_settings: >-
+    Du kannst deine Sicherheitseinstellungen nicht bearbeiten, während du dich als ein anderer Benutzer ausgibst.
+    Bitte verlasse den Impersonating-Modus, um deine Sicherheitseinstellungen zu bearbeiten.
+
+authenticator_description: >-
+    <p>Erhalte Verifizierungscodes von einer Authenticator-App. Das funktioniert auch, wenn dein Telefon offline ist.</p>
+    <p>Lade zuerst Google Authenticator von der <a
+                href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
+                target="_blank" rel="noreferrer noopener">Google Play
+            Store</a> oder dem <a
+                href="https://apps.apple.com/us/app/google-authenticator/id388497605"
+                target="_blank" rel="noreferrer noopener">iOS App
+            Store</a>, oder verwende deine bevorzugte Authenticator-App wie 1 Password oder die Microsoft OneAuth-App.</p>
+
+authenticator_edit:
+    current_authenticator: "Dein Authenticator"
+    change_authenticator_title: "Willst du deine Authentifikatorcodes ersetzen?"
+    change_authenticator_text: "Du musst deinen Authenticator-Code neu einrichten und kannst dich nicht mehr mit dem alten Authenticator anmelden."
+    setup_authenticator_title: "Authenticator-App einrichten"
+    setup_authenticator_text: >-
+        <ul class="text-start">
+            <li>Tippe in deiner Authenticator-App auf das + / hinzufügen</li>
+            <li>Scanne den QR-Code</li>
+        </ul>
+    setup_authenticator_text2: "Wenn du den QR-Code nicht scannen kannst, gib diesen Code zusammen mit deinem Benutzernamen manuell ein:"
+    verify_code_title: "Überprüfe deinen Code"
+    verify_code_text: "Gib den Code aus deiner Authentifikator-App ein"
+    no_authenticator_found: "Kein Authentifikator gefunden"
+
+security:
+    login:
+        with_passkey: "Mit Passkey anmelden"
+        with_usernane_and_password: "Mit Benutzername und Passwort anmelden"
+
+next: "Weiter"
+back: "Zurück"
+cancel: "Abbrechen"
+delete: "Löschen"
+submit: "Abschicken"
+edit: "Bearbeiten"
+confirm: "Bestätigen"
+continue: "Weiter"
+please_wait: "Bitte warten"
+
+send_code_by_email: "Hast du deine Authenticator-App nicht? Sende einen Code per E-Mail"
+
+one_time_code:
+    email:
+        subject: "Ihr einmaliger Sicherheitscode"
+        message:
+            line_1: >-
+                Hallo %username%,
+    
+                Hier ist Ihr einmaliger Code:
+            line_2: >-
+                Dieser Code kann nur einmal verwendet werden, 
+                um sich bei Ihrem Konto anzumelden.
+
+resetting:
+    email:
+        subject: "Zurücksetzen Ihres Passworts"
+        message: >-
+            Hallo %username%,
+
+            Um Ihren Passwort zurückzusetzen, besuchen Sie bitte %confirmationUrl%.
+
+            Dieser Link kann nur einmal verwendet werden, um Ihren Passwort zurückzusetzen.
+            
+            Bitte ignorieren Sie diese E-Mail, wenn Sie Ihr Passwort nicht zurücksetzen möchten.
+

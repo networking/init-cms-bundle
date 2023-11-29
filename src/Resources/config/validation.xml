@@ -4,7 +4,7 @@
                     xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping         http://symfony.com/schema/dic/services/constraint-mapping-1.0.xsd">
 
 
-    <class name="Networking\InitCmsBundle\Model\Page">
+    <class name="Networking\InitCmsBundle\Entity\BasePage">
         <constraint name="Networking\InitCmsBundle\Validator\Constraints\UniqueURL">
             <option name="groups">
                 <value>not_home</value>
@@ -28,7 +28,7 @@
         </property>
     </class>
 
-    <class name="Networking\InitCmsBundle\Model\Tag">
+    <class name="Networking\InitCmsBundle\Entity\Tag">
         <constraint name="Networking\InitCmsBundle\Validator\Constraints\UniqueTag"/>
         <property name="name">
             <constraint name="NotBlank"/>
@@ -37,13 +37,6 @@
                 <option name="message">init_cms.name.no_slash</option>
             </constraint>
         </property>
-    </class>
-
-    <class name="Networking\InitCmsBundle\Model\MenuItem">
-        <property name="name">
-            <constraint name="NotBlank"/>
-        </property>
-        <constraint name="Callback">validate</constraint>
     </class>
 
     <class name="Networking\InitCmsBundle\Entity\Media">

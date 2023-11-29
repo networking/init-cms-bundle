@@ -1,29 +1,28 @@
-{% macro render_groups(admin, form, groups, has_tab) %}
-    <div class="row">
+{% macro render_groups(admin, form, groups, has_tab, tab_class) %}
+    <div class="{{ tab_class }}">
         {% for code in groups|filter(code => admin.formgroups[code] is defined) %}
             {% set form_group = admin.formgroups[code] %}
-            <div class="{{ form_group.class|default('col-md-12') }} sonata-ba-collapsed-fields">
-                <fieldset class="{{ form_group.box_class }}">
+            <div class="{{ form_group.class|default('col-md-12 mb-3') }}">
+                <div class="{{ form_group.box_class }} row">
                     {% if form_group.label and form_group.label != admin.label %}
-                    <div class="box-header">
-                        <legend class="box-title">
+                        <h3 class="font-size-lg text-dark font-weight-bold my-6">
                             {{ form_group.label|trans({}, form_group.translation_domain ?: admin.translationDomain) }}
-                        </legend>
-                    </div>
+                        </h3>
                     {% endif %}
-                    <div class="box-body">
-                            {% if form_group.description %}
-                                <p>{{ form_group.description|trans({}, form_group.translation_domain ?: admin.translationDomain) }}</p>
-                            {% endif %}
+                    {% if form_group.description %}
+                        <p>{{ form_group.description|trans({}, form_group.translation_domain ?: admin.translationDomain) }}</p>
+                    {% endif %}
 
-                            {% for field_name in form_group.fields|filter(field_name => form[field_name] is defined) %}
-                                {{ form_row(form[field_name]) }}
-                            {% else %}
-                                <em>{{ 'message_form_group_empty'|trans({}, 'SonataAdminBundle') }}</em>
-                            {% endfor %}
-                    </div>
-                </fieldset>
+                    {% for field_name in form_group.fields|filter(field_name => form[field_name] is defined) %}
+                        {% if not form[field_name].rendered %}
+                            {{ form_row(form[field_name]) }}
+                        {% endif %}
+                    {% else %}
+                        <em>{{ 'message_form_group_empty'|trans({}, 'SonataAdminBundle') }}</em>
+                    {% endfor %}
+                </div>
             </div>
+
         {% endfor %}
     </div>
 {% endmacro %}

@@ -90,9 +90,10 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
         }
 
         // do not capture admin cms urls
-        if (preg_match('/.*\/admin\/.*/', $request->getRequestUri())) {
+        if (preg_match('/.*\/admin.*/', $request->getRequestUri())) {
             return;
         }
+
 
         // do not capture profiler urls
         if (preg_match('/.*\/_profiler\/.*/', $request->getRequestUri())) {
@@ -142,9 +143,9 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
         $page = $request->get('_content', false);
 
         $page_id = null;
-        if ($page instanceof \Networking\InitCmsBundle\Model\PageSnapshot) {
+        if ($page instanceof \Networking\InitCmsBundle\Entity\PageSnapshot) {
             $page_id = $page->getPage()->getId();
-        } elseif ($page instanceof \Networking\InitCmsBundle\Model\Page) {
+        } elseif ($page instanceof \Networking\InitCmsBundle\Entity\BasePage) {
             $page_id = $page->getId();
         }
 

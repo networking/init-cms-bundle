@@ -23,22 +23,6 @@ interface LayoutBlockInterface extends ContentInterface
     public function __toString();
 
     /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name);
-
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName();
-
-    /**
      * Set zone.
      *
      * @param string $zone
@@ -76,35 +60,6 @@ interface LayoutBlockInterface extends ContentInterface
      * @return Page
      */
     public function getPageId();
-
-    /**
-     * @param string $classType
-     *
-     * @return $this
-     */
-    public function setClassType($classType);
-
-    /**
-     * @return string
-     */
-    public function getClassType();
-
-    /**
-     * @return string
-     */
-    public function getOrigClassType();
-
-    /**
-     * @param int $objectId
-     *
-     * @return $this
-     */
-    public function setObjectId($objectId);
-
-    /**
-     * @return int
-     */
-    public function getObjectId();
 
     /**
      * Set isActive.
@@ -171,49 +126,6 @@ interface LayoutBlockInterface extends ContentInterface
      */
     public function getSortOrder();
 
-    /**
-     * @return ContentInterface
-     */
-    public function getContent();
-
-    /**
-     * @param ContentInterface $content
-     *
-     * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
-     */
-    public function setContent($content);
-
-    /**
-     * @param bool $isSnapshot
-     *
-     * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
-     */
-    public function setIsSnapshot($isSnapshot);
-
-    /**
-     * @return bool
-     */
-    public function getIsSnapshot();
-
-
-    /**
-     * @param array $snapshotContent
-     *
-     * @return \Networking\InitCmsBundle\Model\LayoutBlockInterface
-     */
-    public function setSnapshotContent($snapshotContent);
-
-    /**
-     * @return string
-     */
-    public function getSnapshotContent();
-
-    /**
-     * @param $snapshotContent
-     *
-     * @internal param $content
-     */
-    public function takeSnapshot($snapshotContent);
 
     /**
      * @return array|bool
@@ -228,8 +140,14 @@ interface LayoutBlockInterface extends ContentInterface
     public function import(LayoutBlockInterface $object);
 
     /**
-     * @param LayoutBlock $published
+     * @param LayoutBlockInterface $published
      * @return mixed
      */
-    public function restoreFormPublished(LayoutBlock $published);
+    public function restoreFormPublished(LayoutBlockInterface $published);
+
+    /**
+     * @param array $published
+     * @return mixed
+     */
+    public function restoreFormSerializer(array $published);
 }

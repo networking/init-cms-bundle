@@ -56,14 +56,15 @@
             <tag name="kernel.event_listener" event="kernel.controller" method="onCoreController"/>
         </service>
 
-        <service id="networking_init_cms.layout_block_listener"
-                 class="Networking\InitCmsBundle\Entity\LayoutBlockListener">
-            <tag name="doctrine.event_listener" event="postLoad" method="postLoad"/>
-        </service>
 
         <service id="networking_init_cms.layout_block_form_listener"
                  class="Networking\InitCmsBundle\Entity\LayoutBlockFormListener" lazy="true">
                 <argument key="$contentTypes">%networking_init_cms.page.content_types%</argument>
+        </service>
+
+        <service id="Networking\InitCmsBundle\EventListener\LayoutBlockDiscriminatorMap">
+            <argument key="$mapping">%networking_init_cms.page.content_types%</argument>
+            <tag name="doctrine.event_listener" event="loadClassMetadata"/>
         </service>
 
         <service id="Networking\InitCmsBundle\Entity\EntityChangedListener" lazy="true">
@@ -79,7 +80,6 @@
         </service>
 
         <service id="Networking\InitCmsBundle\Entity\PageListener" lazy="true">
-            <tag name="jms_serializer.event_subscriber"/>
         </service>
 
         <!-- Form Types -->

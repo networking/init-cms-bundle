@@ -99,7 +99,7 @@ class LoadPages extends Fixture
             $firstPage = $this->getReference(
                 'homepage_'.$languages['0']['locale']
             );
-            $homePage->setOriginal($firstPage);
+            $homePage->getOriginals()->add($firstPage);
         }
 
         $manager->persist($homePage);

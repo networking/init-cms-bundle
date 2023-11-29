@@ -27,6 +27,7 @@ fos_ck_editor:
             templates_replaceContent: false
             height: "400px"
             removePlugins: 'exportpdf'
+            clipboard_handleImages: false
             embed_provider: "//iframe.ly/api/oembed?url={url}&callback={callback}&api_key=de32581bf823a9b515c422"
 
             # path to css for the ckeditor css so that you can display content as it is in the page

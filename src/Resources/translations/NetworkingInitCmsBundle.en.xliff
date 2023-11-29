@@ -163,6 +163,10 @@
                 <source>flash_delete_success</source>
                 <target>The item was successfully deleted.</target>
             </trans-unit>
+            <trans-unit id="flash_error">
+                <source>flash_error</source>
+                <target>Sorry, an error has occurred</target>
+            </trans-unit>
             <trans-unit id="flash_delete_error">
                 <source>flash_delete_error</source>
                 <target>Sorry, the item could not be deleted.</target>
@@ -260,7 +264,7 @@
             <trans-unit id="cache.inactiveMoreInformation">
                  <source>cache.inactiveMoreInformation</source>
                  <target><![CDATA[
-                     to activate, please add the following configurations to the app/config/config.yaml File<br />
+                     to activate, please add the following configurations to the config/packages/networking_init_cms.yaml File<br />
                      <code>
                      networking_init_cms:<br />
                      &nbsp;&nbsp;cache:<br />
@@ -315,10 +319,26 @@
                   ]]>
                  </target>
              </trans-unit>
-
-
-
-
+             <trans-unit id="selected">
+             	<source>selected</source>
+             	<target>Selected</target>
+             </trans-unit>
+            <trans-unit id="btn_confirm">
+                <source>btn_confirm</source>
+                <target>Confirm</target>
+            </trans-unit>
+			<trans-unit id="help">
+				<source>help</source>
+				<target>Help</target>
+			</trans-unit>
+			<trans-unit id="link.show_all">
+				<source>link.show_all</source>
+				<target>Show all</target>
+			</trans-unit>
+			<trans-unit id="quick_search">
+				<source>quick search</source>
+				<target>quick search</target>
+			</trans-unit>
         </body>
     </file>
 </xliff>

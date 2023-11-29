@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Networking\InitCmsBundle\Admin\Model\MediaAdmin;
-use Networking\InitCmsBundle\Admin\Model\TagAdmin;
+use Networking\InitCmsBundle\Admin\MediaAdmin;
+use Networking\InitCmsBundle\Admin\TagAdmin;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Entity\Media;
@@ -67,8 +67,18 @@ class CkeditorAdminController extends CRUDController
         foreach ($datagrid->getResults() as $media) {
             $formats[$media->getId()] = $this->container->get('sonata.media.pool')->getFormatNamesByContext($media->getContext());
         }
+        $persistentParameters = $this->admin->getPersistentParameters();
 
+        $filterPersister = $this->admin->getFilterPersister();
+        $filters = $filterPersister->get($this->admin->getCode());
         $formView = $datagrid->getForm()->createView();
+
+        $tagFilter = $datagrid->getFilter('tags');
+        $selectedTag = false;
+
+        if(array_key_exists('tags', $filters) && array_key_exists('value', $filters['tags'])){
+            $selectedTag = (int)$filters['tags']['value'];
+        }
 
         $this->container->get('twig')->getRuntime(FormRenderer::class)->setTheme($formView, $this->admin->getFilterTheme());
 
@@ -93,6 +103,10 @@ class CkeditorAdminController extends CRUDController
                 'form' => $formView,
                 'datagrid' => $datagrid,
                 'formats' => $formats,
+                'csrf_token' => $this->getCsrfToken('sonata.batch'),
+                'tags' => $tags,
+                'tagAdmin' => $tagAdmin,
+                'tagJson' => $tagAdmin->getTagTree($selectedTag),
             ]
         );
     }
@@ -108,10 +122,8 @@ class CkeditorAdminController extends CRUDController
 
         $this->admin->checkAccess('create');
 
-	    /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
-	    $mediaAdmin = $this->container->get('sonata.media.admin.media');
 
-	    $mediaAdmin->setRequest($request);
+        $this->admin->setRequest($request);
 
         $provider = $request->get('provider');
         $file = $request->files->get('upload');
@@ -129,10 +141,11 @@ class CkeditorAdminController extends CRUDController
         if ($file instanceof UploadedFile && $file->isValid()) {
 
             try {
-                $context = $request->get('context', $this->container->get('sonata.media.pool')->getDefaultContext());
+                $pool = $this->container->get('sonata.media.pool');
+                $context = $request->get('context', $pool->getDefaultContext());
 
 	            /** @var Media $media */
-	            $media = $mediaAdmin->getNewInstance();
+	            $media = $this->admin->getNewInstance();
 	            $media->setEnabled(true);
 	            $media->setName($file->getClientOriginalName());
                 $media->setBinaryContent($file);
@@ -140,13 +153,12 @@ class CkeditorAdminController extends CRUDController
                 $media->setProviderName($provider);
 
 
-	            $provider = $mediaAdmin->getPool()->getProvider($provider);
+	            $provider = $pool->getProvider($provider);
 
 	            $provider->transform($media);
 
-	            $validator = $this->container->get('validator');
 
-	            $errors = $validator->validate($media);
+                $errors = $this->admin->validate($media);
 
 	            if ($errors->count() > 0) {
 		            $duplicate = false;
@@ -159,7 +171,7 @@ class CkeditorAdminController extends CRUDController
 		            }
 
 		            if ($duplicate) {
-			            $originalMedia = $mediaAdmin->checkForDuplicate($media);
+			            $originalMedia = $this->admin->checkForDuplicate($media);
 			            $path = $provider->generatePublicUrl($originalMedia, 'reference');
 			            $response = [
 			            	'uploaded' => 1,
@@ -174,7 +186,7 @@ class CkeditorAdminController extends CRUDController
 	            }
 
 	            try {
-		            $mediaAdmin->create($media);
+                    $this->admin->create($media);
 		            $path = $provider->generatePublicUrl($media, 'reference');
                     $response = ['uploaded' => 1, 'fileName' => $media->getMetadataValue('filename'), 'url' => $path ];
 	            } catch (\Exception $e) {
@@ -236,7 +248,7 @@ class CkeditorAdminController extends CRUDController
         $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
 
         return $this->renderWithExtraParams(
-            '@NetworkingInitCms/Ckeditor/browser_list_items.html.twig',
+            '@NetworkingInitCms/Ckeditor/list_items.html.twig',
             [
                 'media_pool' => $this->container->get('sonata.media.pool'),
                 'persistent_parameters' => $this->admin->getPersistentParameters(),
@@ -261,7 +273,7 @@ class CkeditorAdminController extends CRUDController
     private function getTemplate($name)
     {
         $templates = [
-            'browser' => '@NetworkingInitCms/Ckeditor/browser.html.twig',
+            'browser' => '@NetworkingInitCms/Ckeditor/list.html.twig',
             'upload' => '@NetworkingInitCms/Ckeditor/upload.html.twig'
         ];
 
@@ -291,6 +303,7 @@ class CkeditorAdminController extends CRUDController
         return [
                 'networking_init_cms.admin.tag' => TagAdmin::class,
                 'sonata.media.pool' => Pool::class,
+                'sonata.media.admin.media' => MediaAdmin::class,
             ] + parent::getSubscribedServices();
     }
 }

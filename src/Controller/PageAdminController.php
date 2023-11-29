@@ -10,6 +10,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +23,7 @@ use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,89 +70,96 @@ class PageAdminController extends CRUDController
      * @return RedirectResponse|Response
      * @throws NotFoundHttpException
      */
-    public function translateAction(Request $request, $id, $locale): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-    {
+    public function translateAction(
+        Request $request,
+        $id,
+        $locale
+    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
 
         if (!$page) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the object with id : %s', $id)
+            );
         }
         $language = \Locale::getDisplayLanguage($locale);
 
         if ($request->getMethod() == 'POST') {
-
             try {
-                $pageCopy = $this->pageHelper->makeTranslationCopy($page, $locale);
+                $pageCopy = $this->pageHelper->makeTranslationCopy(
+                    $page,
+                    $locale
+                );
                 $this->admin->createObjectSecurity($pageCopy);
-                $status = 'success';
+                $status = Response::HTTP_OK;
                 $message = $this->translate(
                     'message.translation_saved',
                     ['%language%' => $language]
                 );
-                $result = 'ok';
                 $html = $this->renderView(
                     '@NetworkingInitCms/PageAdmin/page_translation_settings.html.twig',
                     ['object' => $page, 'admin' => $this->admin]
                 );
-            } catch (\Exception) {
-                $status = 'error';
+            } catch (\Exception $e) {
+                $status = Response::HTTP_NOT_ACCEPTABLE;
                 $message = $message = $this->translate(
                     'message.translation_not_saved',
                     ['%language%' => $language, '%url%' => $page->getFullPath()]
                 );
-                $result = 'error';
+
+                $message = $e->getMessage();
                 $html = '';
             }
 
-            if ($this->isXmlHttpRequest($request)) {
-                return $this->renderJson(
-                    [
-                        'result' => $result,
-                        'status' => $status,
-                        'html' => $html,
-                        'message' => $message,
-                    ]
-                );
-            }
-
-            $this->addFlash(
-                'sonata_flash_'.$status,
-                $message
+            return $this->renderJson(
+                [
+                    'html' => $html,
+                    'message' => $message,
+                ],$status
             );
-
-            return $this->redirect($this->admin->generateUrl('edit', ['id' => $id]));
         }
 
-        return $this->renderWithExtraParams(
-            '@NetworkingInitCms/PageAdmin/page_translation_copy.html.twig',
-            [
+        $params = $this->addRenderExtraParams([
                 'action' => 'copy',
                 'page' => $page,
                 'id' => $id,
                 'locale' => $locale,
                 'language' => $language,
                 'admin' => $this->admin,
-            ]
+            ]);
+
+        $html = $this->renderView(
+            '@NetworkingInitCms/PageAdmin/page_translation_copy.html.twig',
+            $params
         );
+
+        return new JsonResponse([
+            'html' => $html,
+            'status' => 'success',
+        ]);
     }
 
 
     /**
      * @param $id
+     *
      * @return RedirectResponse|Response
      */
-    public function copyAction(Request $request, $id): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-    {
+    public function copyAction(
+        Request $request,
+        $id
+    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
 
         if (!$page) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the object with id : %s', $id)
+            );
         }
 
         if ($request->getMethod() == 'POST') {
-
             $pageCopy = false;
             try {
                 $pageCopy = $this->pageHelper->makePageCopy($page);
@@ -192,7 +201,10 @@ class PageAdminController extends CRUDController
             );
 
             if ($pageCopy) {
-                $request->getSession()->set('Page.last_edited', $pageCopy->getId());
+                $request->getSession()->set(
+                    'Page.last_edited',
+                    $pageCopy->getId()
+                );
             }
 
 
@@ -221,19 +233,27 @@ class PageAdminController extends CRUDController
      * @throws NotFoundHttpException
      *
      */
-    public function linkAction(Request $request, $id, $locale): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-    {
+    public function linkAction(
+        Request $request,
+        $id,
+        $locale
+    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
 
         if (!$page) {
-            throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the Page with id : %s', $id)
+            );
         }
 
         if ($request->getMethod() == 'POST') {
             $linkPageId = $request->get('page');
             if (!$linkPageId) {
-                $this->addFlash('sonata_flash_error', $this->translate('flash_link_error'));
+                $this->addFlash(
+                    'sonata_flash_error',
+                    $this->translate('flash_link_error')
+                );
             } else {
                 /** @var PageInterface $linkPage */
                 $linkPage = $this->admin->getObject($linkPageId);
@@ -252,35 +272,56 @@ class PageAdminController extends CRUDController
                         [
                             'result' => 'ok',
                             'html' => $html,
+                            'message' => $this->translate('flash_link_success'),
                         ]
                     );
                 }
 
-                $this->addFlash('sonata_flash_success', $this->translate('flash_link_success'));
 
-                return new RedirectResponse($this->admin->generateUrl('edit', ['id' => $page->getId()]));
+                return new RedirectResponse(
+                    $this->admin->generateUrl('edit', ['id' => $page->getId()])
+                );
             }
         }
 
-        $pages = $this->admin->getModelManager()->findBy($this->admin->getClass(), ['locale' => $locale]);
+        $pages = $this->admin->getModelManager()->findBy(
+            $this->admin->getClass(),
+            ['locale' => $locale]
+        );
 
         if (count($pages)) {
             $pages = new ArrayCollection($pages);
             $originalLocale = $page->getLocale();
             $pages = $pages->filter(
-                fn(PageInterface $linkPage) => !in_array($originalLocale, $linkPage->getTranslatedLocales())
+                fn(PageInterface $linkPage) => !in_array(
+                    $originalLocale,
+                    $linkPage->getTranslatedLocales()
+                )
             );
         }
 
-        return $this->renderWithExtraParams(
-            '@NetworkingInitCms/PageAdmin/page_translation_link_list.html.twig',
+        $parans = $this->addRenderExtraParams(
             [
                 'page' => $page,
                 'pages' => $pages,
                 'locale' => $locale,
-                'original_language' => \Locale::getDisplayLanguage($page->getLocale()),
+                'original_language' => \Locale::getDisplayLanguage(
+                    $page->getLocale()
+                ),
                 'language' => \Locale::getDisplayLanguage($locale),
                 'admin' => $this->admin,
+            ]
+        );
+
+        $html = $this->renderView(
+            '@NetworkingInitCms/PageAdmin/page_translation_link_list.html.twig',
+            $parans
+        );
+
+        return $this->renderJson(
+            [
+                'result' => 'ok',
+                'html' => $html,
             ]
         );
     }
@@ -292,16 +333,23 @@ class PageAdminController extends CRUDController
      * @return RedirectResponse|Response
      * @throws NotFoundHttpException
      */
-    public function unlinkAction(Request $request, $id, $translationId): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-    {
+    public function unlinkAction(
+        Request $request,
+        $id,
+        $translationId
+    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
 
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
         $translatedPage = $this->admin->getObject($translationId);
 
         if (!$page) {
-            throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the Page with id : %s', $id)
+            );
         }
+        $method = $request->get('_method');
+
 
         if ($request->getMethod() == 'DELETE') {
             $page->removeTranslation($translatedPage);
@@ -318,15 +366,21 @@ class PageAdminController extends CRUDController
 
                 return $this->renderJson(
                     [
-                        'result' => 'ok',
+                        'status' => 'success',
+                        'message' => 'Translation unlinked successfully',
                         'html' => $html,
                     ]
                 );
             }
 
-            $this->addFlash('sonata_flash_success', $this->translate('flash_unlink_success'));
+            $this->addFlash(
+                'sonata_flash_success',
+                $this->translate('flash_unlink_success')
+            );
 
-            return new RedirectResponse($this->admin->generateUrl('edit', ['id' => $page->getId()]));
+            return new RedirectResponse(
+                $this->admin->generateUrl('edit', ['id' => $page->getId()])
+            );
         }
 
         return $this->renderWithExtraParams(
@@ -366,13 +420,37 @@ class PageAdminController extends CRUDController
                 $this->makeSnapshot($selectedModel);
             }
         } catch (\Exception) {
-            $this->addFlash('sonata_flash_error', $this->translate('flash_batch_publish_error', [], 'NetworkingInitCmsBundle'));
+            $this->addFlash(
+                'sonata_flash_error',
+                $this->translate(
+                    'flash_batch_publish_error',
+                    [],
+                    'NetworkingInitCmsBundle'
+                )
+            );
 
-            return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+            return new RedirectResponse(
+                $this->admin->generateUrl(
+                    'list',
+                    $this->admin->getFilterParameters()
+                )
+            );
         }
-        $this->addFlash('sonata_flash_success', $this->translate('flash_batch_publish_success', [], 'NetworkingInitCmsBundle'));
+        $this->addFlash(
+            'sonata_flash_success',
+            $this->translate(
+                'flash_batch_publish_success',
+                [],
+                'NetworkingInitCmsBundle'
+            )
+        );
 
-        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+        return new RedirectResponse(
+            $this->admin->generateUrl(
+                'list',
+                $this->admin->getFilterParameters()
+            )
+        );
     }
 
     /**
@@ -395,14 +473,38 @@ class PageAdminController extends CRUDController
                 $this->pageHelper->makePageCopy($selectedModel);
             }
         } catch (\Exception) {
-            $this->addFlash('sonata_flash_error', $this->translate('flash_batch_copy_error', [], 'NetworkingInitCmsBundle'));
+            $this->addFlash(
+                'sonata_flash_error',
+                $this->translate(
+                    'flash_batch_copy_error',
+                    [],
+                    'NetworkingInitCmsBundle'
+                )
+            );
 
-            return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+            return new RedirectResponse(
+                $this->admin->generateUrl(
+                    'list',
+                    $this->admin->getFilterParameters()
+                )
+            );
         }
 
-        $this->addFlash('sonata_flash_success', $this->translate('flash_batch_copy_success', [], 'NetworkingInitCmsBundle'));
+        $this->addFlash(
+            'sonata_flash_success',
+            $this->translate(
+                'flash_batch_copy_success',
+                [],
+                'NetworkingInitCmsBundle'
+            )
+        );
 
-        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+        return new RedirectResponse(
+            $this->admin->generateUrl(
+                'list',
+                $this->admin->getFilterParameters()
+            )
+        );
     }
 
     /**
@@ -417,7 +519,11 @@ class PageAdminController extends CRUDController
         $form = $this->createForm(
             \Networking\InitCmsBundle\Form\Type\PageBatchCopyType::class,
             [],
-            ['locales' => $this->getParameter('networking_init_cms.page.languages')]
+            [
+                'locales' => $this->getParameter(
+                    'networking_init_cms.page.languages'
+                ),
+            ]
         );
 
         $form->handleRequest($request);
@@ -437,10 +543,20 @@ class PageAdminController extends CRUDController
                 if (in_array($data['toLocale'], $translatedLocales)) {
                     continue;
                 }
-                $this->pageHelper->makeTranslationCopy($page, $data['toLocale']);
+                $this->pageHelper->makeTranslationCopy(
+                    $page,
+                    $data['toLocale']
+                );
             }
 
-            $this->addFlash('sonata_flash_success', $this->translate('flash_batch_copy_success', [], 'NetworkingInitCmsBundle'));
+            $this->addFlash(
+                'sonata_flash_success',
+                $this->translate(
+                    'flash_batch_copy_success',
+                    [],
+                    'NetworkingInitCmsBundle'
+                )
+            );
         }
 
         return $this->renderWithExtraParams(
@@ -454,8 +570,9 @@ class PageAdminController extends CRUDController
      * @return RedirectResponse
      * @throws AccessDeniedException
      */
-    public function batchActionCacheClear(ProxyQueryInterface $selectedModelQuery)
-    {
+    public function batchActionCacheClear(
+        ProxyQueryInterface $selectedModelQuery
+    ) {
         if ($this->admin->isGranted('PUBLISH') === false) {
             throw new AccessDeniedException();
         }
@@ -465,19 +582,47 @@ class PageAdminController extends CRUDController
         try {
             foreach ($selectedModels as $selectedModel) {
                 if ($this->pageCache->isActive()) {
-                    $cacheKey = 'page_'.$selectedModel->getLocale().str_replace('/', '', $selectedModel->getFullPath());
+                    $cacheKey = 'page_'.$selectedModel->getLocale().str_replace(
+                        '/',
+                        '',
+                        $selectedModel->getFullPath()
+                    );
                     $this->pageCache->delete($cacheKey);
                 }
             }
         } catch (\Exception) {
-            $this->addFlash('sonata_flash_error', $this->translate('flash_batch_cache_clear_error', [], 'NetworkingInitCmsBundle'));
+            $this->addFlash(
+                'sonata_flash_error',
+                $this->translate(
+                    'flash_batch_cache_clear_error',
+                    [],
+                    'NetworkingInitCmsBundle'
+                )
+            );
 
-            return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+            return new RedirectResponse(
+                $this->admin->generateUrl(
+                    'list',
+                    $this->admin->getFilterParameters()
+                )
+            );
         }
 
-        $this->addFlash('sonata_flash_success', $this->translate('flash_batch_cache_clear_success', [], 'NetworkingInitCmsBundle'));
+        $this->addFlash(
+            'sonata_flash_success',
+            $this->translate(
+                'flash_batch_cache_clear_success',
+                [],
+                'NetworkingInitCmsBundle'
+            )
+        );
 
-        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+        return new RedirectResponse(
+            $this->admin->generateUrl(
+                'list',
+                $this->admin->getFilterParameters()
+            )
+        );
     }
 
     /**
@@ -499,7 +644,9 @@ class PageAdminController extends CRUDController
         $this->admin->checkAccess('show', $object);
 
         if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the object with id : %s', $id)
+            );
         }
 
         if (false === $this->admin->isGranted('VIEW', $object)) {
@@ -535,7 +682,9 @@ class PageAdminController extends CRUDController
         $this->admin->checkAccess('edit', $object);
 
         if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the object with id : %s', $id)
+            );
         }
 
         if (false === $this->admin->isGranted('EDIT', $object)) {
@@ -562,9 +711,17 @@ class PageAdminController extends CRUDController
                 $object->setStatus(PageInterface::STATUS_DRAFT);
                 $this->admin->update($object);
 
-                return $this->getAjaxEditResponse($form, $object);
+                return $this->getAjaxEditResponse($object, $form);
             } else {
-                $form->addError(new FormError($this->translate('flash_edit_error', [], 'NetworkingInitCmsBundle')));
+                $form->addError(
+                    new FormError(
+                        $this->translate(
+                            'flash_edit_error',
+                            [],
+                            'NetworkingInitCmsBundle'
+                        )
+                    )
+                );
             }
         }
 
@@ -601,7 +758,6 @@ class PageAdminController extends CRUDController
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
 
-        $layoutBlocks = $page->getLayoutBlock();
 
         $form = $this->admin->getForm();
         $form->setData($page);
@@ -614,27 +770,17 @@ class PageAdminController extends CRUDController
             if ($form->isValid()) {
                 $page->setStatus(PageInterface::STATUS_DRAFT);
                 $page->setUpdatedAt();
-                $page->setLayoutBlock($layoutBlocks);
                 $page = $this->admin->update($page);
 
-
-
-                return $this->getAjaxEditResponse($form, $page);
-
+                return $this->getAjaxEditResponse($page, $form);
             }
             $response->setStatusCode(422);
         }
         $view = $form->createView();
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
-        return $this->renderWithExtraParams(
-            '@NetworkingInitCms/PageAdmin/page_settings_edit.html.twig',
-            [
-                'form' => $view,
-                'object' => $page,
-            ],
-            $response
-        );
+        return $this->handleXmlHttpRequestErrorResponse($request, $form);
+
     }
 
     /**
@@ -656,7 +802,9 @@ class PageAdminController extends CRUDController
         $object = $this->admin->getObject($id);
 
         if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the object with id : %s', $id)
+            );
         }
 
         if (false === $this->admin->isGranted('EDIT', $object)) {
@@ -693,47 +841,43 @@ class PageAdminController extends CRUDController
      *
      * @throws \Twig\Error\RuntimeError
      */
-    protected function getAjaxEditResponse(Form $form, PageInterface $page)
+    protected function getAjaxEditResponse(PageInterface $page, ?FormInterface $form = null)
     {
-        $view = $form->createView();
-
-        // set the theme for the current Admin Form
-        $this->setFormTheme($view, $this->admin->getFormTheme());
-
-        $pageSettingsHtml = $this->renderView(
-            '@NetworkingInitCms/PageAdmin/page_settings_fields.html.twig',
-            [
-                'action' => 'edit',
-                'form' => $view,
-                'object' => $page,
-                'admin' => $this->admin,
-                'admin_pool' => $this->container->get('sonata.admin.pool'),
-            ]
-        );
 
         $pageStatusSettingsHtml = $this->renderView(
             '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig',
             [
-                'action' => 'edit',
-                'form' => $view,
                 'object' => $page,
                 'admin' => $this->admin,
                 'admin_pool' => $this->container->get('sonata.admin.pool'),
             ]
         );
+
+        $layoutBlockSettingsHtml = $form?$this->renderView(
+            '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig',
+            [
+                'form' => $form->createView(),
+                'admin' => $this->admin,
+            ]
+        ):'';
 
         return $this->renderJson(
             [
                 'result' => 'ok',
                 'objectId' => $page->getId(),
                 'title' => $page->__toString(),
-                'messageStatus' => 'success',
                 'message' => $this->translate('info.page_settings_updated'),
-                'pageStatus' => $this->translate($page->getStatus()),
                 'pageStatusSettings' => $pageStatusSettingsHtml,
-                'pageSettings' => $pageSettingsHtml,
+                'layoutBlockSettingsHtml' => $layoutBlockSettingsHtml,
             ]
         );
+    }
+
+    public function getPageStatusAction(Request $request){
+        $id = $request->get('id');
+        $page = $this->admin->getObject($id);
+
+        return $this->getAjaxEditResponse($page);
     }
 
     /**
@@ -787,10 +931,16 @@ class PageAdminController extends CRUDController
     {
         $id = $request->get($this->admin->getIdParameter());
 
+        $putOnline = $request->query->getBoolean('put-online', false);
+
+        $status = $putOnline ? PageInterface::STATUS_PUBLISHED : PageInterface::STATUS_OFFLINE;
+
         $object = $this->admin->getObject($id);
 
         if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the object with id : %s', $id)
+            );
         }
 
         if (false === $this->admin->isGranted('PUBLISH', $object)) {
@@ -801,21 +951,21 @@ class PageAdminController extends CRUDController
 
         $form = $this->admin->getForm();
 
-        $object->setStatus(PageInterface::STATUS_OFFLINE);
+        $object->setStatus($status);
 
         // persist if the form was valid and if in preview mode the preview was approved
         $this->admin->update($object);
 
-        if ($object->getStatus() == PageInterface::STATUS_OFFLINE) {
-            $this->makeSnapshot($object);
-        }
+        $this->makeSnapshot($object);
 
         $this->addFlash(
             'sonata_flash_success',
             $this->translate('flash_status_success')
         );
 
-        return $this->redirect($this->admin->generateObjectUrl('edit', $object));
+        return $this->redirect(
+            $this->admin->generateObjectUrl('edit', $object)
+        );
     }
 
     /**
@@ -829,7 +979,9 @@ class PageAdminController extends CRUDController
         $object = $this->admin->getObject($id);
 
         if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the object with id : %s', $id)
+            );
         }
 
         if (false === $this->admin->isGranted('EDIT', $object)) {
@@ -845,9 +997,14 @@ class PageAdminController extends CRUDController
         // persist if the form was valid and if in preview mode the preview was approved
         $this->admin->update($object);
 
-        $this->addFlash('sonata_flash_success', $this->translate('flash_status_success'));
+        $this->addFlash(
+            'sonata_flash_success',
+            $this->translate('flash_status_success')
+        );
 
-        return $this->redirect($this->admin->generateObjectUrl('edit', $object));
+        return $this->redirect(
+            $this->admin->generateObjectUrl('edit', $object)
+        );
     }
 
     /**
@@ -858,13 +1015,17 @@ class PageAdminController extends CRUDController
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function cancelDraftAction(Request $request, $id = null): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-    {
+    public function cancelDraftAction(
+        Request $request,
+        $id = null
+    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
         /** @var $draftPage PageInterface */
         $draftPage = $this->admin->getObject($id);
 
         if (!$draftPage) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the object with id : %s', $id)
+            );
         }
 
         if (false === $this->admin->isGranted('EDIT', $draftPage)) {
@@ -872,35 +1033,19 @@ class PageAdminController extends CRUDController
         }
 
         if ($request->getMethod() == 'POST') {
-
             $serializer = $this->pageHelper->getSerializer();
-            $publishedPage = $this->pageManager->revertToPublished($draftPage, $serializer);
+            $this->pageManager->cancelDraft(
+                $draftPage,
+                $serializer
+            );
 
-            if ($request->isXmlHttpRequest()) {
-                $form = $this->admin->getForm();
-                $form->setData($publishedPage);
 
-                $pageSettingsTemplate = $this->render(
-                    $this->admin->getTemplateRegistry()->getTemplate('edit'),
-                    [
-                        'action' => 'edit',
-                        'form' => $form->createView(),
-                        'object' => $publishedPage,
-                    ]
-                );
+            return $this->renderJson(
+                [
+                    'redirect' => $this->admin->generateObjectUrl('edit', $draftPage),
+                ]
+            );
 
-                return $this->renderJson(
-                    [
-                        'result' => 'ok',
-                        'objectId' => $this->admin->getNormalizedIdentifier($publishedPage),
-                        'title' => $publishedPage->__toString(),
-                        'pageStatus' => $this->translate($publishedPage->getStatus()),
-                        'pageSettings' => $pageSettingsTemplate->getContent(),
-                    ]
-                );
-            }
-
-            return $this->redirect($this->admin->generateObjectUrl('edit', $publishedPage));
         }
 
         return $this->renderWithExtraParams(
@@ -915,6 +1060,7 @@ class PageAdminController extends CRUDController
 
     /**
      * @param null $id
+     *
      * @return RedirectResponse
      */
     public function publishAction(Request $request, $id = null)
@@ -924,7 +1070,9 @@ class PageAdminController extends CRUDController
         $object = $this->admin->getObject($id);
 
         if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+            throw new NotFoundHttpException(
+                sprintf('unable to find the object with id : %s', $id)
+            );
         }
 
         if (false === $this->admin->isGranted('PUBLISH', $object)) {
@@ -949,7 +1097,9 @@ class PageAdminController extends CRUDController
             $this->translate('flash_publish_success')
         );
 
-        return $this->redirect($this->admin->generateObjectUrl('edit', $object));
+        return $this->redirect(
+            $this->admin->generateObjectUrl('edit', $object)
+        );
     }
 
     /**

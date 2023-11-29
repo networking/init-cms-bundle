@@ -1,4 +1,4 @@
-{% extends '@NetworkingInitCms/CRUD/action.html.twig' %}
+{% extends '@NetworkingInitCms/modal-edit.html.twig' %}
 
 {% block title %}
     {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
@@ -20,212 +20,78 @@
 {% endblock %}
 
 
-{% block content %}
-    {% if app.request.isXmlHttpRequest %}
-        <div class="modal-dialog modal-lg" id="dropzone-area">
-        <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>{{ "title_create"|trans({}, admin.translationDomain) }}</h3>
+{% block modal_body %}
+    <div id="dropzone_area"
+         data-context="{{app.request.get('context')}}"
+         data-provider="{{app.request.get('provider')}}"
+         data-unique-id="{{ admin.uniqid }}"
+    >
+        <div>
+            <form action="{{ oneup_uploader_endpoint('media_admin') }}?context={{app.request.get('context')}}" id="upload-form">
+            {{ form_row(form.tags) }}
+            {{ form_row(form.providerName) }}
+                <input type="hidden" name="with_js" value="0">
+            </form>
         </div>
-        <div class="modal-body">
-    {% endif %}
-    <div id="actions" class="row">
-        <div class="col-md-9">
-            <!-- The global file processing state -->
+        <div id="actions" class="d-flex flex-row justify-content-between mb-2">
             <span class="fileupload-process">
-              <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0"
-                   aria-valuemax="100" aria-valuenow="0" style="opacity: 0;">
-                  <div class="progress-bar progress-bar-info" style="width:0%;" data-dz-uploadprogress=""></div>
-              </div>
+                  <div id="total-progress" class="progress active" role="progressbar" aria-valuemin="0"
+                       aria-valuemax="100" aria-valuenow="0" style="opacity: 0;">
+                      <div class="progress-bar progress-bar-info" style="width:0%;" data-dz-uploadprogress=""></div>
+                  </div>
             </span>
-        </div>
-        <div class="col-md-3">
-            <a href="#" class="cancel pull-right">
-                <span>{{ 'upload_btn_cancel_all'|trans({}, 'MediaAdmin') }}</span>
+            <a class="dropzone-remove-all cancel btn btn-sm btn-light-primary">
+                {{ 'upload_btn_cancel_all'|trans({}, 'MediaAdmin') }}
             </a>
         </div>
-    </div>
-    <div>
-        <form>
-        {{ form_row(form.tags) }}
-        {{ form_row(form.providerName) }}
-            <input type="hidden" name="with_js" value="0">
-        </form>
-    </div>
-    <div class="well">
-        <p class="fileinput-zone lead text-center" data-dz-clickable><a href="#" title="{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}">{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}</a></p>
-        <div class="table table-striped" class="files" id="previews">
 
-            <div id="template" >
-                <div class="row">
-                <!-- This is used as the file preview template -->
-                <div class="col-md-3">
-                    <span class="preview"><img data-dz-thumbnail/></span>
-                </div>
-                <div class="col-md-5">
-                    <p class="name" data-dz-name></p>
+        <div class="dropzone dropzone-queue">
 
-                    <p class="size" data-dz-size></p>
-                    <strong class="error text-danger" data-dz-errormessage></strong>
+            <div class="alert alert-primary d-flex flex-row justify-content-center  p-5 mb-10 ">
+                <i class="ki-outline ki-cloud-add fs-2hx text-primary me-4 mb-5 mb-sm-0"></i>
+                <div class="d-flex flex-column">
+
+                    <p class="fileinput-zone lead dz-clickable" data-dz-clickable="">
+                        <a href="#" title="{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}">{{ 'upload_help_text'|trans({}, 'MediaAdmin') }}</a></p>
                 </div>
-                <div class="col-md-4">
-                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-                         aria-valuenow="0">
-                        <div class="progress-bar progress-bar-info" style="width:0%;" data-dz-uploadprogress></div>
+            </div>
+
+
+        <!--begin::Items-->
+        <div class="dropzone-items  wm-200px" id="previews">
+            <div class="dropzone-item">
+                <!--begin::File-->
+                <div class="dropzone-file">
+                    <div class="dropzone-filename" title="some_image_file_name.jpg">
+                        <img data-dz-thumbnail/>
+                        <span data-dz-name>some_image_file_name.jpg</span>
+                        <strong>(<span data-dz-size>340kb</span>)</strong>
                     </div>
-                    <a class="hidden btn btn-primary " data-dz-url><i class="fa fa-pencil"></i> Edit</a>
+
+                    <div class="dropzone-error" data-dz-errormessage></div>
                 </div>
+                <!--end::File-->
+
+                <!--begin::Progress-->
+                <div class="dropzone-progress">
+                    <div class="progress">
+                        <div
+                                class="progress-bar bg-primary"
+                                role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress>
+                        </div>
+                    </div>
                 </div>
-                <hr>
+                <!--end::Progress-->
+
+                <!--begin::Toolbar-->
+                <div class="dropzone-toolbar">
+                    <a class="d-none btn btn-primary btn-sm" data-dz-url><i class="fa fa-pencil"></i> Edit</a>
+                    <span class="dropzone-delete" data-dz-remove><i class="bi bi-x fs-1"></i></span>
+                </div>
+                <!--end::Toolbar-->
             </div>
         </div>
+        <!--end::Items-->
+        </div>
     </div>
-    {% if app.request.isXmlHttpRequest %}
-        <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/vendor/dropzone/dropzone.js') }}"></script>
-        <script>
-            // Get the template HTML and remove it from the document
-            var previewNode = document.querySelector("#template");
-            previewNode.id = "";
-            var previewTemplate = previewNode.parentNode.innerHTML;
-            previewNode.parentNode.removeChild(previewNode);
-
-            function changeButtonRow(file, response) {
-                var editButton = $(file.previewElement.querySelectorAll("[data-dz-url]"));
-                editButton.attr('href', response.url);
-                editButton.removeClass('hidden');
-                $(file.previewElement.querySelector(".progress")).hide();
-            }
-
-
-            var fileDropzone = new Dropzone("div#dropzone-area", {
-                init: function () {
-                    this.on("success", function (file, response) {
-                        changeButtonRow(file, response);
-                    });
-                    this.on('error', function (file, response) {
-                        if (response.duplicate) {
-                            changeButtonRow(file, response);
-                        }
-                    });
-                },
-                url: "{{ oneup_uploader_endpoint('media_admin') }}?context={{app.request.get('context')}}", // Set the url
-                params: {context: '{{app.request.get('context')}}', provider: '{{app.request.get('provider')}}', oneuploader: true},
-                thumbnailWidth: 80,
-                thumbnailHeight: 80,
-                parallelUploads: 20,
-                previewTemplate: previewTemplate,
-                previewsContainer: "#previews", // Define the container to display the previews
-                clickable: ".fileinput-zone" // Define the element that should be used as click trigger to select files.
-            });
-
-
-            // Update the total progress bar
-            fileDropzone.on("totaluploadprogress", function (progress) {
-                document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
-            });
-
-            fileDropzone.on("sending", function (file, xhr, formData) {
-                formData.append("tags", $('#{{ admin.uniqid }}_tags').val());
-                // Show the total progress bar when upload starts
-                document.querySelector("#total-progress").style.opacity = "1";
-            });
-
-            // Hide the total progress bar when nothing's uploading anymore
-            fileDropzone.on("queuecomplete", function (progress) {
-                document.querySelector("#total-progress").style.opacity = "0";
-                refreshList();
-            });
-
-            // Setup the buttons for all transfers
-            // The "add files" button doesn't need to be setup because the config
-            // `clickable` has already been specified.
-            document.querySelector("#actions .cancel").onclick = function () {
-                fileDropzone.removeAllFiles(true);
-            };
-
-        </script>
-        </div>
-
-        </div>
-        </div>
-    {% endif %}
 {% endblock %}
-
-{% block before_body_end %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/networkinginitcms/js/dropzone.js') }}"></script>
-    <script>
-        // Get the template HTML and remove it from the document
-        var previewNode = document.querySelector("#template");
-        previewNode.id = "";
-        var previewTemplate = previewNode.parentNode.innerHTML;
-        previewNode.parentNode.removeChild(previewNode);
-
-        function changeButtonRow(file, response) {
-            var editButton = $(file.previewElement.querySelectorAll("[data-dz-url]"));
-            editButton.attr('href', response.url);
-            editButton.removeClass('hidden');
-            $(file.previewElement.querySelector(".progress")).hide();
-            $(file.previewElement.querySelector(".start")).hide();
-            $(file.previewElement.querySelector(".cancel")).hide();
-        }
-
-        var fileDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-            init: function () {
-                this.on("success", function (file, response) {
-                    changeButtonRow(file, response);
-                });
-                this.on('error', function (file, response) {
-                    if (response.duplicate) {
-                        changeButtonRow(file, response);
-                    }
-                });
-            },
-            url: "{{ oneup_uploader_endpoint('media_admin') }}", // Set the url
-            params: {context: '{{app.request.get('context')}}', provider: '{{app.request.get('provider')}}'},
-            thumbnailWidth: 80,
-            thumbnailHeight: 80,
-            parallelUploads: 20,
-            previewTemplate: previewTemplate,
-            autoQueue: false, // Make sure the files aren't queued until manually added
-            previewsContainer: "#previews", // Define the container to display the previews
-            clickable: ".fileinput-zone" // Define the element that should be used as click trigger to select files.
-        });
-
-        fileDropzone.on("addedfile", function (file) {
-            // Hookup the start button
-            file.previewElement.querySelector(".start").onclick = function () {
-                fileDropzone.enqueueFile(file);
-            };
-        });
-
-        // Update the total progress bar
-        fileDropzone.on("totaluploadprogress", function (progress) {
-            document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
-        });
-
-        fileDropzone.on("sending", function (file) {
-            // Show the total progress bar when upload starts
-            document.querySelector("#total-progress").style.opacity = "1";
-            // And disable the start button
-            file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
-        });
-
-        // Hide the total progress bar when nothing's uploading anymore
-        fileDropzone.on("queuecomplete", function (progress) {
-            document.querySelector("#total-progress").style.opacity = "0";
-        });
-
-        // Setup the buttons for all transfers
-        // The "add files" button doesn't need to be setup because the config
-        // `clickable` has already been specified.
-        document.querySelector("#actions .start").onclick = function () {
-            fileDropzone.enqueueFiles(fileDropzone.getFilesWithStatus(Dropzone.ADDED));
-        };
-        document.querySelector("#actions .cancel").onclick = function () {
-            fileDropzone.removeAllFiles(true);
-        };
-
-    </script>
-{% endblock before_body_end %}

@@ -66,26 +66,16 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
             return;
         }
 
-        $layoutBlock = new LayoutBlock();
-        $layoutBlock->setIsActive(true);
-        $layoutBlock->setSortOrder(1);
-        $layoutBlock->setClassType($textClass);
-        $layoutBlock->setZone($this->getFirstZone());
-        $layoutBlock->setPage($this->getReference('homepage_'.$locale));
-
-        $manager->persist($layoutBlock);
-        $manager->flush();
-
-        /** @var TextInterface $text */
         $text = new $textClass();
+        $text->setIsActive(true);
+        $text->setSortOrder(1);
+        $text->setZone($this->getFirstZone());
+        $text->setPage($this->getReference('homepage_'.$locale));
         $text->setText('<h1>Hello World</h1><p>The locale of this page is '.$locale.'</p>');
 
+
+
         $manager->persist($text);
-        $manager->flush();
-
-        $layoutBlock->setObjectId($text->getId());
-
-        $manager->persist($layoutBlock);
         $manager->flush();
     }
 

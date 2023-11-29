@@ -1,36 +1,30 @@
 {% if app.user is defined %}
-    {% if is_granted('ROLE_SONATA_ADMIN') %}
-        {% include '@NetworkingInitCms/Admin/toolbar_css.html.twig' %}
-        <div class="navbar-initcms">
-            <div class="initnavbar initnavbar-fixed-top navbar-initcms initnavbar-inverse">
-                <div class="initnavbar-inner">
-                    <div class="container">
-                        <div class="pull-left">
-                            <a href="{{ url('sonata_admin_dashboard') }}" class="pull-left">
-                                <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
-                                     width="77">
-                            </a>
-                            {% if sonata_config is defined %}
-                                <a href="{{ url('sonata_admin_dashboard') }}" class="brand">
-                                    {{ sonata_config.title }}
-                                </a>
-                            {% endif %}
-                        </div>
-                        <div class="pull-right nav-admin">
-                            {% if sonata_config is defined %}
-                                {% include get_global_template('user_block') %}
-                            {% endif %}
-                            {% if sonata_config is defined %}
-                                {{ knp_menu_render('AdminMenu',
-                                {'currentClass': 'active',
+    {% include '@NetworkingInitCms/Admin/toolbar_css.html.twig' %}
+     <div class="navbar-initcms">
+            <nav class="tw-absolute tw-inset-x-0 tw-top-0 tw-p-2 tw-bg-black tw-text-white" aria-label="Third navbar example">
+                <div class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-container tw-mx-auto">
+                    <a class="navbar-brand" href="{{ url('sonata_admin_dashboard') }}">
+                                                <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
+                                                     width="77">
+                    </a>
+                    <div class="tw-grow">
+                        <a class="nav-link" href="{{ url('sonata_admin_dashboard') }}">
+                            {{ sonata_config.title }}
+                        </a>
+                    </div>
+                    <div class="tw-text-white">
+                        {% if sonata_config is defined %}
+                            {{ knp_menu_render('FrontendAdminMenu',{
+                                'template': '@NetworkingInitCms/Admin/esi-admin-menu.html.twig',
+                                'currentClass': 'active',
                                 'ancestorClass': 'active',
-                                'allow_safe_labels': true
-                                }) }}
-                            {% endif %}
-                        </div>
+                                'branch_class': 'tw-inline-block tw-text-white dropdown',
+                                'leaf_class': 'tw-inline-block tw-text-white tw-p-1',
+                                'allow_safe_labels': true}) }}
+                        {% endif %}
                     </div>
                 </div>
-            </div>
-        </div>
-    {% endif %}
+            </nav>
+     </div>
+
 {% endif %}

@@ -15,9 +15,9 @@ namespace Networking\InitCmsBundle\Entity;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Networking\InitCmsBundle\Entity\BasePage;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\MenuItemManagerInterface;
-use Networking\InitCmsBundle\Model\Page;
 use Doctrine\ORM\Query\Expr;
 
 /**
@@ -89,11 +89,11 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         $sortByField = null,
         $direction = 'ASC',
         $includeNode = false,
-        $viewStatus = Page::STATUS_PUBLISHED
+        $viewStatus = BasePage::STATUS_PUBLISHED
     ) {
         $qb = $this->childrenQueryBuilder($node, $direct, $sortByField, $direction, $includeNode);
         $aliases = $qb->getRootAliases();
-        if ($viewStatus == Page::STATUS_PUBLISHED) {
+        if ($viewStatus == BasePage::STATUS_PUBLISHED) {
             $orx = $qb->expr()->orX();
             $conditionA = $qb->expr()->in('ps.id', $this->getLatestSnapshotIds());
             $conditionB = $qb->expr()->isNull('ps.id');
@@ -119,7 +119,7 @@ class MenuItemManager extends NestedTreeRepository implements MenuItemManagerInt
         foreach ($results as $item) {
             $menuItem = $item[0];
             if ($menuItem->getPage()) {
-                if ($viewStatus == Page::STATUS_PUBLISHED) {
+                if ($viewStatus == BasePage::STATUS_PUBLISHED) {
                     if (!$item['path'] || !$item['ps_id']) {
                         continue;
                     } else {

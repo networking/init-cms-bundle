@@ -1,12 +1,10 @@
 {#
-
 This file is part of the Sonata package.
 
 (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
 {% extends base_template %}
@@ -17,28 +15,78 @@ file that was distributed with this source code.
 {% block logo %}
 {% endblock logo %}
 
-{% block sidebar_left %}
-{% endblock %}
+{% block sonata_left_side %}
+{% endblock sonata_left_side %}
 
-{% block body_attributes %}class="sonata-bc login-page"{% endblock %}
 
-{% block content %}
+{% block page %}
+    <style>body {
+            background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}');
+        }
 
-<div class="row">
-    <div id="login" class="connection modal" >
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="login-box-body">
-                        <p>{{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime}, 'FOSUserBundle')|nl2br }}</p>
-                        <a href="{{ path('networking_init_cms_admin_security_login') }}">{{ 'title_user_authentication'|trans({}, 'SonataUserBundle') }}</a>
+        [data-bs-theme="dark"] body {
+            background-image: url('{{ asset('bundles/networkinginitcms/admin-theme/media/auth/bg9.jpg') }}');
+        }</style>
+    <!--begin::Authentication - Sign-in -->
+    <div class="d-flex flex-column flex-column-fluid flex-lg-row">
+        <!--begin::Aside-->
+        <div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
+            <!--begin::Aside-->
+            <div class="d-flex flex-center flex-lg-start flex-column">
+                <!--begin::Logo-->
+                <a href="https://www.initcms.com" target="_blank" class="mb-7">
+                    <img alt="Logo" src="{{ asset('bundles/networkinginitcms/img/initcms-white-396x100.png') }}"/>
+                </a>
+                <!--end::Logo-->
+                <!--begin::Title-->
+                <h2 class="text-white fw-normal m-0">Init CMS</h2>
+                <!--end::Title-->
+            </div>
+            <!--begin::Aside-->
+        </div>
+        <!--begin::Aside-->
+        <!--begin::Body-->
+        <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12 p-lg-20">
+            <!--begin::Card-->
+            <div class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px p-20">
+                <!--begin::Wrapper-->
+                <div class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-15 pb-lg-20">
+                    {% block sonata_user_reset_request_form %}
+
+
+                    <section class="my-10 text-center d-flex justify-content-center">
+                        {% include '@NetworkingInitCms/fido.html.twig' %}
+                    </section>
+                    <div class="text-center mb-11">
+                        <!--begin::Title-->
+                        <p class="text-dark fw-bolder mb-3">{{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime}, 'SonataUserBundle')|nl2br }}
+                            </p>
+                        <!--end::Title-->
+                        <!--begin::Subtitle-->
+                        {#                            <div class="text-gray-500 fw-semibold fs-6">Your Social Campaigns</div> #}
+                        <!--end::Subtitle=-->
+                    </div>
+
+                    <div id="kt_sign_in_with_username_and_password"
+                         class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mt-8">
+                        <strong>
+                            <a href="{{ path('networking_init_cms_admin_security_login') }}">{{ 'title_user_authentication'|trans({}, 'SonataUserBundle') }}</a>
+                        </strong>
                     </div>
                 </div>
+
+                {% endblock %}
+                <!--end::Form-->
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
+        <!--end::Wrapper-->
+        <!--begin::Footer-->
+        {% block footer %}
+
+        {% endblock footer %}
+        <!--end::Footer-->
     </div>
-    <!-- /.modal -->
-</div>
-{% endblock content %}
+    <!--end::Card-->
+    </div>
+
+{% endblock page %}

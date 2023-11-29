@@ -19,7 +19,7 @@ namespace Networking\InitCmsBundle\Model;
 interface ContentInterface
 {
     /**
-     * @return mixed
+     * @return void
      */
     public function __clone();
 
@@ -33,12 +33,12 @@ interface ContentInterface
      *
      * @return array
      */
-    public function getTemplateOptions($params = []);
+    public function getTemplateOptions($params = []): array;
 
     /**
      * @return array
      */
-    public function getAdminContent();
+    public function getAdminContent(): array;
 
     /**
      * @return string

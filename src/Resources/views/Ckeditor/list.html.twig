@@ -1,0 +1,396 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends '@NetworkingInitCms/empty_layout.html.twig' %}
+
+{% set ckParameters = {'CKEditor': app.request.get('CKEditor'), 'CKEditorFuncNum': app.request.get('CKEditorFuncNum')} %}
+{% set selected = datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' %}
+
+{% set active_tab = app.request.get('context') %}
+{% set provider = app.request.get('provider') %}
+
+{% if not provider %}
+    {% set urlParams = {'context' : active_tab, 'provider': null, 'active_tab' : persistent_parameters.context}|merge(ckParameters) %}
+{% else %}
+    {% set urlParams = {'context' : active_tab, 'provider' : provider, 'active_tab' : persistent_parameters.context}|merge(ckParameters) %}
+{% endif %}
+
+
+
+
+{% block container_class %}container-fluid{% endblock %}
+{% block preview %}{% endblock %}
+{% block title %}{% endblock %}{% block page_title %}{% endblock %}
+
+
+{% block list_filters %}
+<div class="card mb-7">
+    <div class="card-header">
+        <card class="card-title">
+            <h1>{{ 'title.select_media'|trans({}, 'MediaAdmin')|replace({'%span%': '<span>', '%span/%': "</span>"})|raw }}</h1>
+        </card>
+    </div>
+    <div class="card-content">
+    {% set name = persistent_parameters.context ? persistent_parameters.context: 'default' %}
+    {% if datagrid.filters %}
+        <form action="{{ admin.generateUrl('init_ckeditor_browser', urlParams) }}" method="GET" id="search-form"
+              class="sonata-filter-form {{ admin.isChild and 1 == datagrid.filters|length ? 'hide' : '' }}form-horizontal filters menu-filter">
+            <div class="card-body">
+                <input type="hidden" name="CKEditor" value="{{ app.request.get('CKEditor') }}"/>
+                <input type="hidden" name="CKEditorFuncNum" value="{{ app.request.get('CKEditorFuncNum') }}"/>
+
+            <input type="hidden" name="context" value="{{ persistent_parameters.context }}"/>
+            {% if provider is defined %}
+                <input type="hidden" name="provider" value="{{ provider }}"/>
+            {% endif %}
+            <input type="hidden" name="active_tab" value="{{ name }}"/>
+
+                {% set withAdvancedFilter = false %}
+                {% set activeFilters = [] %}
+
+                {% for key, filter in admin.datagrid.filters  %}
+                    {% if filter.isActive and not loop.first and 'hidden' not in form.children[filter.formName].children['value'].vars.block_prefixes %}
+                        {% set activeFilters = activeFilters|merge([key]) %}
+                    {% endif %}
+                {% endfor %}
+                {% for filter in admin.datagrid.filters %}
+
+                    {% if loop.first %}
+                        <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center  me-3 w-50">
+                                {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                                    <div class="d-none col-md-2 {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
+                                        {% set attr = form[filter.formName].children['value'].vars.attr|default({}) %}
+                                        {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
+                                    </div>
+                                {% else %}
+                                    {{ form_widget(form.children[filter.formName].children['type']  ) }}
+                                {% endif %}
+                                <div class="d-flex flex-row-fluid form-floating">
+                                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
+
+                                    <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                                           class="form-label filter col-md-3">{{ filter.label|trans({}, admin.translationDomain) }}</label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <input type="submit" class="btn btn btn-primary me-5"
+                                       value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
+                                <a href="{{ admin.generateUrl('init_ckeditor_browser', urlParams|merge({filters: 'reset', provider: app.request.get('provider', null)})) }}"
+                                   class="btn btn-sm btn-light">
+                                    {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
+                                {% if loop.length > 1 %}
+                                    <a href="#" id="kt_horizontal_search_advanced_link"
+                                       class="btn btn-link collapsed" data-bs-toggle="collapse"
+                                       data-bs-target="#kt_advanced_search_form" aria-expanded="false">Advanced
+                                        Search</a>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        {% if loop.length > 1 %}
+                            <div class="collapse {% if activeFilters|length > 0 %}show{% endif %}" id="kt_advanced_search_form">
+                            <div class="separator separator-dashed mt-9 mb-6"></div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if not loop.first %}
+                        <div class="mb-5">
+                            {% set attr = form[filter.formName].children['value'].vars.attr|default({}) %}
+                            {% set row_attr = form[filter.formName].children['value'].vars.row_attr|default({}) %}
+                            {% set row_class = row_attr.class|default('')|trim %}
+                            {%- if 'form-floating' in row_class -%}
+                                {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                                    <div class="d-none col-md-2 {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
+
+                                        {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
+                                    </div>
+                                {% else %}
+                                    {{ form_widget(form.children[filter.formName].children['type']  ) }}
+                                {% endif %}
+                                <div class="form-floating w-100">
+                                    {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
+
+                                    <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                                           class="form-label filter col-md-3">{{ filter.label|trans({}, admin.translationDomain) }}
+                                    </label>
+                                </div>
+                            {%- else -%}
+                                {% if 'hidden' not in form.children[filter.formName].children['value'].vars.block_prefixes %}
+                                    <label for="{{ form.children[filter.formName].children['value'].vars.id }}"
+                                           class="form-label filter col-md-3">{{ filter.label|trans({}, admin.translationDomain) }}
+                                    </label>
+                                {% endif %}
+                                {% if 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                                    <div class="d-none {% if filter.option('advanced_filter') %}advanced-filter{% endif %}">
+                                        {{ form_widget(form.children[filter.formName].children['type'], {'attr':  attr}  ) }}
+                                    </div>
+                                {% else %}
+                                    {{ form_widget(form.children[filter.formName].children['type']  ) }}
+                                {% endif %}
+                                {{ form_widget(form.children[filter.formName].children['value'], {'attr':{'placeholder': filter.label}, 'translation_domain': admin.translationDomain }) }}
+                            {%- endif -%}
+                        </div>
+                    {% endif %}
+
+                    {% if filter.option('advanced_filter') and 'hidden' not in form.children[filter.formName].children['type'].vars.block_prefixes %}
+                        {% set withAdvancedFilter = true %}
+                    {% endif %}
+
+                    {% if loop.length > 1 and loop.last %}
+                        {% if withAdvancedFilter %}
+                            <a href="#" id="kt_advance_filter_toggle">
+                                <i class="fas fa-cogs" aria-hidden="true"></i>
+                                {{ 'btn_advanced_filters'|trans({}, 'SonataAdminBundle') }}
+                            </a>
+                        {% endif %}
+                        </div>
+                    {% endif %}
+
+
+                {% endfor %}
+
+                {% if admin.hasActiveSubclass %}
+                    <input type="hidden" name="subclass" id="filter_subclass"
+                           value="{{ admin.activeSubclassCode }}"/>
+                {% endif %}
+                <input type="hidden"
+                       name="filter[{{ constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::PAGE') }}]"
+                       id="filter__page" value="1">
+                {% set foo = form[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::PAGE')].setRendered() %}
+                {{ form_rest(form) }}
+                </div>
+                <div class="card-footer pb-0">
+                    <ul class="nav nav-tabs nav-line-tabs fs-6">
+                            {% for name, context in media_pool.contexts %}
+
+                                {% if context.providers|length == 0 %}
+                                    {% set urlParams = {'context' : name, 'provider': null, 'active_tab' : persistent_parameters.context}|merge(ckParameters) %}
+                                {% else %}
+                                    {% set urlParams = {'context' : name, 'provider' : context.providers[0], 'active_tab' : persistent_parameters.context}|merge(ckParameters) %}
+                                {% endif %}
+
+                                {% if name == persistent_parameters.context %}
+                                    <li class="nav-item">
+                                        <a class="active nav-link"
+                                                href="{{ admin.generateUrl('init_ckeditor_browser', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
+                                    </li>
+                                {% else %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ admin.generateUrl('init_ckeditor_browser', urlParams) }}">{{ ('media_context.' ~ name)|trans({}) }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                    </ul>
+                </div>
+        </form>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block list_table %}
+
+    <div class="row">
+        <div class="col-md-12">
+
+            {# provider #}
+
+
+            {% set filterParameters = admin.filterParameters %}
+
+                <div class="d-flex flex-stack justify-content-between mb-2">
+                    <div class="d-flex align-items-center">
+                        {% set providers = media_pool.getProviderNamesByContext(persistent_parameters.context) %}
+
+                        {% if persistent_parameters.provider %}
+
+                        {% else %}
+                            {% if providers|length > 1 %}
+                                {% set currentProvider = persistent_parameters.provider %}
+
+                                <strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong>
+                                <div class="btn-group btn-group-sm">
+                                    <a class="btn btn-sm btn-{{ currentProvider is empty ? 'primary': 'light' }}"
+                                       href="{{ admin.generateUrl('init_ckeditor_browser', urlParams|merge( {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context})) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
+                                    {% for provider_name in providers %}
+                                        <a class="btn btn-sm btn-{{ currentProvider == provider_name? 'primary':'light' }}"
+                                           href="{{ admin.generateUrl('init_ckeditor_browser', urlParams|merge( {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context})) }}">{{ provider_name|trans({}) }}</a>
+                                    {% endfor %}
+                                </div>&nbsp;
+                            {% endif %}
+                        {% endif %}
+
+                        {% if not app.request.isxmlhttprequest %}
+                            <input type="hidden" name="action">
+                            <span class="batch-actions" style="display: none;">
+                            <button type="submit" class="btn btn-danger btn-sm batch-dialog-link batch" value="delete">
+                                <i class="fa fa-trash"></i> {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
+                            </button>
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex sort-buttons align-items-center">
+                        <strong>{{ 'label.sort_by'|trans({}, 'MediaAdmin') }}:</strong>
+
+                        <div class="btn-group btn-group-sm">
+
+                            {% for field_description in admin.list.elements %}
+                                {% if field_description.options.sortable is defined and field_description.options.sortable %}
+
+                                    {% set sortable             = true %}
+                                    {% set sort_parameters      = admin.datagrid.sortparameters(field_description) %}
+                                    {% set current              = admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] is defined
+                                        and (admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] == field_description
+                                        or admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')].name == sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')]) %}
+                                    {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
+                                    {% set sort_order           = current ? admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')] : field_description.option(constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER'), sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_ORDER')]) %}
+                                    {% set sort_by              = current ? admin.datagrid.values[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')] : field_description.option(constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY'), sort_parameters.filter[constant('Sonata\\AdminBundle\\Datagrid\\DatagridInterface::SORT_BY')]) %}
+
+                                    {% if sortable %}
+                                        <a href="{{ admin.generateUrl('init_ckeditor_browser', urlParams|merge(sort_parameters)) }}" class="btn btn-sm btn-{{ sort_active_class ? 'primary':'light' }}">{% endif %}
+                                    {% if sort_active_class %}
+                                        <i class="fa fa-chevron-{{ sort_order|lower == 'desc'? 'up':'down' }}"></i>
+                                    {% endif %}
+                                    {{ field_description.label|trans({}, admin.translationDomain) }}
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {% if admin.showTagTree %}
+                        <div class="col-md-3 col-xs-12">
+                            <div id="tagsContainer"
+                                 data-tags-json="{{ tagJson|json_encode }}"
+                                 data-can-sort="false"
+                                 data-can-delete="false"
+                                 data-refresh-list-url="{{ admin.generateUrl('init_ckeditor_browser_refresh', urlParams)|raw }}"
+                                 data-sort-order="{{ sortOrder|default('ASC') }}"
+                                 data-selected="{{ datagrid.values.tags?'#tag_link_'~datagrid.values.tags.value:'.show_all_media' }}"
+                            >
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="col-md-9">
+                        <div id="item_list" class="col text-center">
+                            {% if datagrid.results|length > 0 %}
+                                {% include "@NetworkingInitCms/Ckeditor/list_items.html.twig" %}
+                            {% else %}
+                                <p class="notice">
+                                    {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block before_body_end %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/jstree/jstree.bundle.js') }}"></script>
+    <script>
+        KTUtil.onDOMContentLoaded(() => {
+            console.log('loaded')
+            setupTree()
+            KTUtil.on(document.body, '.select', 'click', function (e) {
+                e.preventDefault();
+                window.opener.CKEDITOR.tools.callFunction({{ app.request.get('CKEditorFuncNum')|escape('js') }}, $(this).attr("href"));
+                window.close();
+            });
+        })
+        let tagsContainer = document.querySelector('#tagsContainer')
+
+        function setupTree(){
+
+            let tree = $(tagsContainer)
+
+            var lastLink = tagsContainer.dataset.selected
+
+            let treeData = tree.data('tagsJson')
+            tree.jstree({
+                "types": {
+                    "default": {
+                        "icon": "fa fa-folder text-primary fs-2x"
+                    },
+                    "file": {
+                        "icon": "fa fa-file text-primary fs-2x"
+                    }
+                },
+                "plugins": ["sort", "types"],
+                "sort": function (a, b) {
+                    let a1 = this.get_node(a);
+                    let b1 = this.get_node(b);
+                    if (a1.data['show_first']) {
+                        return -1;
+                    }
+
+                    if (b1.data['show_first']) {
+                        return 1;
+                    }
+                    return (a1.text.toLowerCase() > b1.text.toLowerCase()) ? 1 : -1;
+                },
+                'core':
+                    {
+                        "themes": {
+                            "variant":   "large"
+                        },
+                        data: function (node, cb) {
+                            cb(treeData)
+                        }
+                    }
+            })
+        }
+
+        const refreshList = (filters) => {
+            if (!filters) {
+                filters = []
+            }
+
+            let data = new FormData( document.querySelector('#search-form'))
+
+            for(const key in filters){
+                data.append(key, filters[key])
+            }
+
+            filters = Object.fromEntries(data.entries());
+
+            axios.get(tagsContainer.dataset.refreshListUrl, {...axiosConfig, params: filters})
+                .then(function (response) {
+                    $('#item_list').html(response.data);
+                    $("html, body").animate({scrollTop: $('#item_list').scrollTop()}, "slow");
+
+                    refreshFsLightbox();
+                })
+        }
+
+        KTUtil.on(document.body, '.tag_link', 'click', function (e, noLoad) {
+            e.preventDefault();
+            var tagId = e.target.dataset.pk;
+            if (noLoad === undefined) {
+                refreshList({'filter[tags][value]': tagId});
+            }
+        })
+
+        KTUtil.on(document.body, '.show_all_media', 'click', function (e, noLoad) {
+            e.preventDefault();
+            refreshList({'filter[_page]':  1,'filter[tags][value]': ''});
+        })
+
+    </script>
+{% endblock %}
+
+

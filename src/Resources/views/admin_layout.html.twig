@@ -1,12 +1,10 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 {%- set _preview = block('preview') is defined ? block('preview')|trim : null %}
 {% set _form = block('form') is defined ? block('form')|trim : null %}
@@ -27,36 +25,39 @@ file that was distributed with this source code.
     {% set currentAdmin = admin %}
 {% endif %}
 <!DOCTYPE html>
-<html class="no-js">
+<html class="no-js" lang="{{ app.request.locale|slice(0,2) }}">
+
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     {% block meta_config %}
         <meta name="init-cms-setup"
-              data-init-cms-config='{{ {'DEBUG':sonata_config.getOption('js_debug'),'CONFIRM_EXIT': true}|json_encode()|raw }}'
-              data-init-cms-translations='{{ {CONFIRM_EXIT: 'confirm_exit'|trans({}, 'SonataAdminBundle')}|json_encode()|raw }}'>
+              data-init-cms-config='{{ {'DEBUG':sonata_config.getOption('js_debug'),'CONFIRM_EXIT': true}|json_encode()|raw }}'>
+        <meta name="webauthn-enabled" content="{{ webauthn_enabled }}" />
+        <meta name="google-authenticator-enabled" content="{{ google_authenticator_enabled }}">
     {% endblock %}
     {% block stylesheets %}
-        <link href="{{ asset('networking_initcms.css', 'init_cms') }}" type="text/css" rel="stylesheet" media="screen"/>
         {% block content_css %}
             {% for css in content_css() %}
-                <link href="{{ asset(css) }}" type="text/css" rel="stylesheet" media="screen"/>
+                <link href="{{ css }}" type="text/css" rel="stylesheet" media="screen"/>
             {% endfor %}
         {% endblock content_css %}
-        <link href="{{ asset('vendor/featherlight/src/featherlight.css', 'init_cms') }}" type="text/css"
-              rel="stylesheet" media="screen"/>
+
+        <link href="{{ asset('bundles/networkinginitcms/admin-theme/plugins/global/plugins.bundle.css') }}"
+              rel="stylesheet" type="text/css"/>
+        <link href="{{ asset('networking_initcms.css', 'init_cms') }}" rel="stylesheet"
+              type="text/css"/>
+        <link href="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/jstree/jstree.bundle.css') }}"
+              rel="stylesheet" type="text/css"/>
+        <link href="{{ asset('bundles/networkinginitcms/vendor/bootstrap5-editable/css/bootstrap-editable.css') }}"
+              rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>
     {% endblock %}
+    <script src="{{ asset('cmsRouting.js', 'init_cms')}}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'CMSRouting.setRouting' }) }}"></script>
 
     {% block javascripts %}
-
-        <script type="text/javascript" src="{{ asset('admin.js', 'init_cms') }}"></script>
-        <script type="text/javascript" src="{{ asset('jquery-plugins.js', 'init_cms') }}"></script>
-        <script type="text/javascript" src="{{ asset('bootstrap.js', 'init_cms') }}"></script>
-        <script type="text/javascript" src="{{ asset('bootstrap-plugins.js', 'init_cms') }}"></script>
-        <script type="text/javascript" src="{{ asset('app.js', 'init_cms') }}"></script>
-        <script type="text/javascript" src="{{ asset('vendor/icheck/icheck.min.js', 'init_cms') }}"></script>
-        <script type="text/javascript" src="{{ asset('admin-lte/app.min.js', 'init_cms') }}"></script>
     {% endblock javascripts %}
 
     <title>
@@ -71,197 +72,304 @@ file that was distributed with this source code.
     </title>
 </head>
 {% block body_tag %}
-<body class="{% block body_class %}initcms{% endblock %}">
+<!--begin::Body-->
+<body id="kt_app_body"
+      data-kt-app-layout="light-sidebar"
+      data-kt-app-header-fixed="true"
+      data-kt-app-sidebar-enabled="true"
+      data-kt-app-sidebar-fixed="true"
+      data-kt-app-sidebar-hoverable="true"
+      data-kt-app-sidebar-push-header="true"
+      data-kt-app-sidebar-push-toolbar="true"
+      data-kt-app-sidebar-push-footer="true"
+      data-kt-app-toolbar-enabled="true"
+        {% if app.request.cookies.get('sidebar_minimize_state', 'off') == 'on' %}
+            data-kt-app-sidebar-minimize="on"
+        {% endif %}
+        {% if _side_menu %}
+      data-kt-app-aside-fixed="true"
+      {% endif %}
+      data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
+      class="app-default">
+
+
 {% endblock body_tag %}
 
 {% block body_start %}
 {% endblock body_start %}
 
 {% block body %}
+    <!--begin::Theme mode setup on page load-->
+    <script>var defaultThemeMode = "system";
+        var themeMode;
+        if (document.documentElement) {
+            if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
+                themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
+            } else {
+                if (localStorage.getItem("data-bs-theme") !== null) {
+                    themeMode = localStorage.getItem("data-bs-theme");
+                } else {
+                    themeMode = defaultThemeMode;
+                }
+            }
+            if (themeMode === "system") {
+                themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+            document.documentElement.setAttribute("data-bs-theme", themeMode);
+        }</script>
+    <!--end::Theme mode setup on page load-->
+    <!--begin::Page loading(append to body)-->
+    <div class="page-loader">
+		<span class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">Loading...</span>
+		</span>
+    </div>
+    <!--end::Page loading-->
 
-    {% block init_cms_top_nav %}
-        {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' %}
-    {% endblock init_cms_top_nav %}
-
-{% block navbar_spacer %}
-    <div class="navbar-spacer"></div>
-{% endblock navbar_spacer %}
-
-    <div class="{% block container_class %}container{% if app.user and app.user.getAdminSetting('admin_portal_width') != 'small' %}-fluid{% endif %}{% endblock container_class %} row-offcanvas">
-        <div class="row">
-        {% block sonata_wrapper %}
-            <div class="col-sm-12 col-xs-12 col-md-offset-2 col-md-10 notice-block affix">
-                {% block notice %}
-                    {% for notice_level in ['success','error','info', 'warning'] %}
-                        {% set session_var = 'sonata_flash_' ~ notice_level %}
-                        {% for flash in app.session.flashbag.get(session_var) %}
-                            <div class="alert {{ (notice_level=='error')?'alert-danger':'alert-' ~ notice_level }}"
-                                 role="alert">
-                                <a class="close" data-dismiss="alert" href="#">×</a>
-                                {{ flash }}
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
-                {% endblock notice %}
-            </div>
+    <!--begin::App-->
+{% block app %}
+    <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
+{% block page %}
+    <!--begin::Page-->
+    <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
+        {% block init_cms_top_nav %}
+            {% set has_side_menu = _side_menu is not empty %}
+            {% include '@NetworkingInitCms/Navbar/admin_navbar.html.twig' with {has_side_menu: has_side_menu} %}
+        {% endblock init_cms_top_nav %}
+        <!--begin::Wrapper-->
+        <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
+            <!--begin::Sidebar-->
             {% block sidebar_left %}
-                <div class="col-xs-12 col-sm-12 col-md-2  sidebar-offcanvas">
-                    <div class="nav-main nav-collapse">
-                        <aside class="main-sidebar">
-                            <section class="nav-custom sidebar">
-                                {% block side_bar_nav %}
-                                    {{ knp_menu_render('sonata_admin_sidebar', {template: '@NetworkingInitCms/Menu/admin_side_menu.html.twig', }) }}
-                                {% endblock %}
-                            </section>
-                        </aside>
-                    </div>
-                </div>
+                {% include '@NetworkingInitCms/Admin/sidebar.html.twig' %}
             {% endblock sidebar_left %}
-            <div class="col-xs-12 {% if block('sidebar_left') %}col-md-10{% else %}col-md-12{% endif %} content-main">
+            <!--end::Sidebar-->
+            <!--begin::Main-->
+            <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+                <!--begin::Content wrapper-->
+                <div class="d-flex flex-column flex-column-fluid">
+                    <div id="kt_app_content" class="app-content flex-column-fluid">
 
-                <div class="row content-top">
-                    <div class="col-md-4">
+
+                        {% block page_title %}
+                            <div id="kt_app_toolbar" class="app-toolbar  py-3 py-lg-6 ">
+                                <div id="kt_app_toolbar_container"
+                                     class="app-container  container-fluid d-flex flex-stack">
+                                    <!--begin::Page title-->
+                                    <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                                        <!--begin::Title-->
+                                        {% if _title is not empty or action is defined %}
+                                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                                                {% if _title is not empty %}
+                                                    {{ _title|raw }}
+                                                {% else %}
+                                                    {% if action is defined %}
+                                                        {{ render_breadcrumbs_for_title(admin, action)|replace({'&lt;': '<', '&gt;':'>'})|raw }}
+                                                    {% endif %}
+                                                    {% if action == 'edit' %}
+                                                        {% set settings = {} %}
+                                                        {% if object.locale is defined %}
+                                                            {% set settings = {'locale': object.locale} %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </h1>
+                                        {% endif %}
+                                        <!--end::Title-->
+                                    </div>
+                                    <!--end::Page title-->
+                                    <!--begin::Actions-->
+                                    <div class="d-flex align-items-center gap-2 gap-lg-3">
+                                        {% block top_actions %}
+                                            {% if _actions is not empty %}
+                                                {{ _actions|raw }}
+                                            {% endif %}
+                                        {% endblock %}
+                                        {% if app.user  and is_granted('ROLE_SONATA_ADMIN') %}
+                                            {% if _help_text is empty %}
+                                                {% if admin is not defined %}
+                                                    {% set adminCode = 'dashboard' %}
+                                                    {% set actionHelp = '' %}
+                                                {% else %}
+                                                    {% set adminCode = admin.code %}
+                                                    {% set actionHelp = action|default(false) %}
+                                                {% endif %}
+                                                {% if actionHelp is not same as(false) %}
+                                                <a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
+                                                   target="_blank">
+                                                    <i class="ki-outline ki-question-2 fs-2"></i>
+                                                </a>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                    <!--end::Actions-->
+                                </div>
+                            </div>
+                        {% endblock %}
+
+                        <div id="kt_app_content_container" class="app-container  container-fluid">
+
+                            {% block sonata_wrapper %}
+
+                                {% block sonata_admin_content %}
+
+                                    {% if _preview is not empty %}
+                                        {{ _preview|raw }}
+                                    {% endif %}
+
+                                    {% if _content is not empty %}
+                                        {{ _content|raw }}
+                                    {% endif %}
+
+                                    {% if _help_text is not empty %}
+                                        {{ _help_text|raw }}
+                                    {% endif %}
+
+                                    {% if _show is not empty %}
+                                        {{ _show|raw }}
+                                    {% endif %}
+
+                                    {% if _form is not empty %}
+                                        <div class="sonata-ba-form">
+                                            {{ _form|raw }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if _list_table is not empty %}
+                                            {% if _list_filters is not empty %}
+                                                 {{ _list_filters|raw }}
+                                            {% endif %}
+                                            {{ _list_table|raw }}
+                                    {% endif %}
+
+                                {% endblock %}
+                        {% endblock sonata_wrapper %}
+                        </div>
                     </div>
                 </div>
-                {% block page_title %}
-                    <div class="row content-head">
-                        <div class="col-xs-7 page_title">
-                            {% if _title is not empty or action is defined %}
-                                <h1>
-                                    {% if _title is not empty %}
-                                        {{ _title|raw }}
-                                    {% else %}
-                                        {% if action is defined %}
-                                            {{ render_breadcrumbs_for_title(admin, action)|replace({'&lt;': '<', '&gt;':'>'})|raw }}
-                                        {% endif %}
-                                        {% if action == 'edit' %}
-                                            {% set settings = {} %}
-                                            {% if object.locale is defined %}
-                                                {% set settings = {'locale': object.locale} %}
-                                            {% endif %}
-
-                                            <a class="link-underlined font-small font-light"
-                                               href="{{ admin.generateUrl('list', settings) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
-                                        {% endif %}
-                                    {% endif %}
-
-                                </h1>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-xs-5 context-head">
-                            {% block top_actions %}{% endblock %}
-                            {% if app.user  and is_granted('ROLE_SONATA_ADMIN') %}
-                                {% if _help_text is empty %}
-                                    {% if admin is not defined %}
-                                        {% set adminCode = 'dashboard' %}
-                                        {% set actionHelp = '' %}
-                                    {% else %}
-                                        {% set adminCode = admin.code %}
-                                        {% set actionHelp = action %}
-                                    {% endif %}
-                                    <div class="level-headline-icon pull-right"><a
-                                                href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
-                                                target="_blank">
-                                            <div class="info_button_medium"></div>
-                                        </a></div>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endblock %}
-
-                {% block sonata_admin_content %}
-                    <div class="row row-content-wide">
-                        <div class="sonata-ba-content col-md-{% if _side_menu is empty %}12{% else %}10{% endif %}">
-
-                            {% if _preview is not empty %}
-                                {{ _preview|raw }}
-                            {% endif %}
-
-                            {% if _content is not empty %}
-                                {{ _content|raw }}
-                            {% endif %}
-
-                            {% if _help_text is not empty %}
-                                {{ _help_text|raw }}
-                            {% endif %}
-
-                            {% if _show is not empty %}
-                                {{ _show|raw }}
-                            {% endif %}
-
-                            {% if _form is not empty %}
-                                <div class="sonata-ba-form">
-                                    {{ _form|raw }}
-                                </div>
-                            {% endif %}
-
-                            {% if _list_table is not empty or _list_filters is not empty or (_actions is not empty and _show is not empty)%}
-
-                                {{ _list_filters|raw }}
-                                {% if _actions is not empty %}
-                                    {{ _actions|raw }}
-                                {% endif %}
-                                {{ _list_table|raw }}
-
-                            {% endif %}
-
-                        </div>
-
-                        {% if _side_menu is not empty %}
-                            <div class="sidebar col-md-2">
-                                <div class="sonata-ba-side-menu">{{ _side_menu|raw }}</div>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endblock %}
             </div>
-        {% endblock sonata_wrapper %}
+            <!--end::Main-->
+
+            {% if _side_menu is not empty %}
+                <div id="kt_app_aside" class="app-aside flex-column" data-kt-drawer="true"
+                     data-kt-drawer-name="app-aside" data-kt-drawer-activate="{default: true, lg: false}"
+                     data-kt-drawer-overlay="true" data-kt-drawer-width="auto"
+                     data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_app_aside_toggle" style="">
+                    <!--begin::Aside wrapper-->
+                    <div id="kt_app_aside_wrapper" class="hover-scroll-y px-5 mx-5 my-5"
+                         data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+                         data-kt-scroll-dependencies="#kt_app_header"
+                         data-kt-scroll-wrappers="#kt_app_aside" data-kt-scroll-offset="5px"
+                         data-kt-scroll-save-state="true" style="height: 1139px;">
+                        <!--begin::Aside1-->
+                        {{ _side_menu|raw }}
+                        <!--end::Aside1-->
+                    </div>
+                    <!--end::Aside wrapper-->
+                </div>
+            {% endif %}
+
+            <!--begin::Footer-->
+            {% block footer %}
+                {{ sonata_block_render({ 'type': 'networking_init_cms.block.service.version' }, {}) }}
+            {% endblock footer %}
+            <!--end::Footer-->
+
         </div>
-
-        {% block footer %}
-            {{ sonata_block_render({ 'type': 'networking_init_cms.block.service.version' }, {}) }}
-        {% endblock footer %}
+    <!--end::Wrapper-->
     </div>
-
-    <div id="end" style="height: 100px;">&nbsp;
+    <!--end::Page-->
     </div>
+{% endblock page %}
+    </div>
+{% endblock app %}
+    <!--end::App-->
 {% block before_body_end %}
+    <div class="modal fade" tabindex="-1" role="dialog" id="list_dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
 
-    {% if app.request.getLocale()|slice(0, 2) != 'en' %}
-    <script src="{{ asset('bundles/networkinginitcms/vendor/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.' ~ app.request.getLocale()|slice(0, 2) ~'.js') }}"
-            type="text/javascript"></script>
-    <script src="{{ asset('bundles/networkinginitcms/vendor/select2/js/i18n/'~ app.request.getLocale()|slice(0, 2) ~'.js') }}"
-            type="text/javascript"></script>
-    {% endif %}
-    <script>
-        (function($){
-            $('[data-provider="datepicker"]').datetimepicker({
-                autoclose: true,
-                minView: 'month',
-                todayBtn: true,
-                startView: 'month'
-            });
+            </div>
+        </div>
+    </div>
+    <!--begin::Javascript-->
+    <script>var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/') }}";</script>
+    <script type="text/javascript"> var CKEDITOR_BASEPATH = "/bundles/fosckeditor/"; </script>
+    <script type="text/javascript" src="/bundles/fosckeditor/ckeditor.js"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/scripts.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/vendor/bootstrap5-editable/js/bootstrap-editable.js') }}"></script>
 
-            $('[data-provider="datetimepicker"]').datetimepicker({
-                autoclose: true,
-                todayBtn: true
-            });
+    <script src="{{ asset('cmsAdmin.js', 'init_cms') }}"></script>
+    <script src="{{ asset('globalSearch.js', 'init_cms') }}"></script>
+    <script src="{{ asset('cmsApp.js', 'init_cms') }}"></script>
 
-            $('[data-provider="timepicker"]').datetimepicker({
-                autoclose: true,
-                format: 'hh:ii',
-                formatViewType: 'time',
-                maxView: 'day',
-                minView: 'hour',
-                startView: 'day'
-            });
-        })(jQuery)
-    </script>
+
 {% endblock before_body_end %}
-    {# Render any javascript which was given usin the jsblock twig nodes#}
-{% jsblock 'render' %}
+    {# Render any javascript which was given usin the jsblock twig nodes #}
+    {% jsblock 'render' %}
+    {% autoescape false %}
+    <script type="text/javascript">
+        {% for notice_level in ['success','error','info', 'warning'] %}
+            {% set session_var = 'sonata_flash_' ~ notice_level %}
+            {% for flash in app.session.flashbag.get(session_var) %}
+            KTUtil.onDOMContentLoaded(function () {
+                CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+            })
+            {% endfor %}
+
+            {% for flash in app.session.flashbag.get(notice_level) %}
+            KTUtil.onDOMContentLoaded(function () {
+                CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+            })
+            {% endfor %}
+        {% endfor %}
+        // On document ready
+        KTUtil.onDOMContentLoaded(function () {
+            CMSAdmin.init();
+            document.body.addEventListener('shown.bs.modal', function (e) {
+                CMSAdmin.initSpecialFields()
+            })
+            document.body.addEventListener('fields:added', function (e) {
+                CMSAdmin.initSpecialFields()
+            })
+
+            const copyButtons = document.querySelectorAll('.copy-to-clipboard');
+
+            copyButtons.forEach((button) => {
+                const target = document.querySelector(button.dataset.clipboardTarget);
+                // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+                var clipboard = new ClipboardJS(button, {
+                    target: target,
+                    text: function() {
+                        return target.value;
+                    }
+                });
+
+                // Success action handler
+                clipboard.on('success', function(e) {
+                    const currentLabel = button.innerHTML;
+
+                    // Exit label update when already in progress
+                    if(button.innerHTML === '<i class="fs-2 ki-outline ki-copy-success"></i>') {
+                        return;
+                    }
+
+                    // Update button label
+                    button.innerHTML = '<i class="fs-2 ki-outline ki-copy-success"></i>';
+
+                    // Revert button label after 3 seconds
+                    setTimeout(function(){
+                        button.innerHTML = currentLabel;
+                    }, 3000)
+                });
+            });
+        });
+
+    </script>
+    {% endautoescape %}
 {% endblock body %}
 </body>
+<!--end::Body-->
 </html>

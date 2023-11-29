@@ -22,35 +22,46 @@ file that was distributed with this source code.
         event.preventDefault();
         event.stopPropagation();
 
-        var form = jQuery(this).closest('form');
 
-        // the ajax post
-        jQuery(form).ajaxSubmit({
-            url: '{{ path('sonata_admin_append_form_element', {
-                '_sonata_admin': sonata_admin.admin.root.baseCodeRoute,
-                'elementId': id,
-                'objectId': sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
-                'uniqid': sonata_admin.admin.root.uniqid,
-            } + sonata_admin.field_description.getOption('link_parameters', {})
+        var form = event.target.closest('form');
+
+        axios.post(
+            '{{ path('sonata_admin_append_form_element', {'_sonata_admin': sonata_admin.admin.root.baseCodeRoute,'elementId': id,'objectId': sonata_admin.admin.root.id(sonata_admin.admin.root.subject), 'uniqid': sonata_admin.admin.root.uniqid,} + sonata_admin.field_description.getOption('link_parameters', {})
                 + (
                 sonata_admin.admin.root.hasRequest()
                 ? sonata_admin.admin.root.request.attributes.get('_route_params', {})
                 : {}
             ) + app.request.query.all|default({})
             ) }}',
-            type: "POST",
-            dataType: 'html',
-            data: { _xml_http_request: true },
-            success: function(html) {
-                jQuery('#field_container_{{ id }}').replaceWith(html); // replace the html
-                if(jQuery('input[type="file"]', form).length > 0) {
-                    jQuery(form).attr('enctype', 'multipart/form-data');
-                    jQuery(form).attr('encoding', 'multipart/form-data');
-                }
-                jQuery('#sonata-ba-field-container-{{ id }}').trigger('sonata.add_element');
-                jQuery('#field_container_{{ id }}').trigger('sonata.add_element');
+            new FormData(form),
+            axiosConfig
+        ).then(function (response) {
+
+            document.querySelector('#field_widget_{{ id }}').innerHTML = response.data; // replace the html
+
+            if(document.querySelectorAll('input[type="file"]', form).length > 0) {
+
+                form.setAttribute('enctype', 'multipart/form-data');
+                form.setAttribute('encoding', 'multipart/form-data');
             }
-        });
+
+            let event = new CustomEvent('sonata.add_element', {
+                bubbles: true,
+                cancelable: true,
+            });
+
+            CMSAdmin.initSpecialFields();
+
+            let container = document.querySelector('#sonata-ba-field-container-{{ id }}');
+            if(container){
+                container.dispatchEvent(event);
+            }
+            let fieldContainer = document.querySelector('#field_container_{{ id }}');
+            if(fieldContainer){
+                fieldContainer.dispatchEvent(event);
+            }
+        }).catch(function (error) {
+        } )
 
         return false;
     };
@@ -62,21 +73,24 @@ file that was distributed with this source code.
     function start_field_retrieve_{{ id }}(link) {
 
         link.onclick = null;
+        link.addEventListener('click', field_add_{{ id }});
 
-        // initialize component
-        field_widget_{{ id }} = jQuery("#field_widget_{{ id }}");
-
-        // add the jQuery event to the a element
-        jQuery(link)
-            .click(field_add_{{ id }})
-            .trigger('click')
-        ;
+        const event = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        link.dispatchEvent(event);
 
         return false;
     }
-    jQuery('body').on('click', 'a.__delete', function(e){
-        jQuery(this).parent('li').remove();
-        //jQuery(this).find('input.__delete_input').prop('checked', true);
+
+    KTUtil.on(document.body, '.__delete', 'click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        let event = new CustomEvent('sonata.delete_element');
+        document.body.dispatchEvent(event);
+        e.target.closest('.sortable-item').remove();
     });
 </script>
 
