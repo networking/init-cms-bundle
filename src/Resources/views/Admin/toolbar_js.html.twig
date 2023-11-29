@@ -1,6 +1,8 @@
 <!-- load bar -->
 {% if is_granted('ROLE_SONATA_ADMIN') %}
     <div id="initcmsnavadmin" data-page-id="{{ page_id ? page_id : 0 }}"></div>
+    <script src="{{ asset('bundles/networkinginitcms/vendor/fontawesome/js/fontawesome.js') }}"></script>
+    <script src="{{ asset('bundles/networkinginitcms/vendor/fontawesome/js/solid.js') }}"></script>
     <script type="module">
         (function () {
             var initcmsnavadmin = document.getElementById('initcmsnavadmin');

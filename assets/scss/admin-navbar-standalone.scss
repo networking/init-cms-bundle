@@ -1,83 +1,270 @@
-//@import "initcms_variables";
-//@import "variables";
+*, ::before, ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position: ;
+  --tw-gradient-via-position: ;
+  --tw-gradient-to-position: ;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia: ;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position: ;
+  --tw-gradient-via-position: ;
+  --tw-gradient-to-position: ;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia: ;
+}
+
+.tw-container {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .tw-container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .tw-container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tw-container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .tw-container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .tw-container {
+    max-width: 1536px;
+  }
+}
+
+.tw-absolute {
+  position: absolute;
+}
+
+.tw-inset-x-0 {
+  left: 0px;
+  right: 0px;
+}
+
+.tw-right-0 {
+  right: 0px;
+}
+
+.tw-top-0 {
+  top: 0px;
+}
+
+.tw-mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tw-inline-block {
+  display: inline-block;
+}
+
+.tw-flex {
+  display: flex;
+}
+
+.tw-grow {
+  flex-grow: 1;
+}
+
+.tw-flex-row {
+  flex-direction: row;
+}
+
+.tw-items-center {
+  align-items: center;
+}
+
+.tw-justify-between {
+  justify-content: space-between;
+}
+
+.tw-bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
+.tw-bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.tw-p-1 {
+  padding: 0.25rem;
+}
+
+.tw-p-2 {
+  padding: 0.5rem;
+}
+
+.tw-text-amber-400 {
+  --tw-text-opacity: 1;
+  color: rgb(251 191 36 / var(--tw-text-opacity));
+}
+
+.tw-text-green-500 {
+  --tw-text-opacity: 1;
+  color: rgb(34 197 94 / var(--tw-text-opacity));
+}
+
+.tw-text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.tw-shadow-lg {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
 
 .navbar-initcms {
-  @import "../vendor/fontawesome/scss/fontawesome";
-  $fa-font-path: "../vendor/fontawesome/webfonts";
-  @import "../vendor/fontawesome/scss/solid";
-  @import "../vendor/fontawesome/scss/regular";
-  @import "../vendor/fontawesome/scss/brands";
-
-  @import "bootstrap/scss/functions";
-  @import "bootstrap/scss/variables";
-  @import "bootstrap/scss/variables-dark";
-  @import "bootstrap/scss/maps";
-  @import "bootstrap/scss/mixins";
-  @import "bootstrap/scss/utilities";
-  @import "bootstrap/scss/root";
-  @import "bootstrap/scss/reboot";
-
-
-
-  // Root
-  //
-  // Ability to the value of the root font sizes, affecting the value of `rem`.
-  // null by default, thus nothing is generated.
-
-  :root {
-    @if $font-size-root != null {
-      @include font-size(var(--#{$prefix}root-font-size));
-    }
-
-    @if $enable-smooth-scroll {
-      @media (prefers-reduced-motion: no-preference) {
-        scroll-behavior: smooth;
-      }
-    }
+  a {
+    text-decoration: none;
   }
 
-
-  // Body
-  //
-  // 1. Remove the margin in all browsers.
-  // 2. As a best practice, apply a default `background-color`.
-  // 3. Prevent adjustments of font size after orientation changes in iOS.
-  // 4. Change the default tap highlight to be completely transparent in iOS.
-
-  // scss-docs-start reboot-body-rules
-  [data-bs-theme="light"] {
-    margin: 0; // 1
-    font-family: var(--#{$prefix}body-font-family);
-    @include font-size(var(--#{$prefix}body-font-size));
-    font-weight: var(--#{$prefix}body-font-weight);
-    line-height: var(--#{$prefix}body-line-height);
-    color: var(--#{$prefix}body-color);
-    text-align: var(--#{$prefix}body-text-align);
-    background-color: var(--#{$prefix}body-bg); // 2
-    -webkit-text-size-adjust: 100%; // 3
-    -webkit-tap-highlight-color: rgba($black, 0); // 4
+  element.style {
+  }
+  a.navbar-brand {
+    margin: 0 0 4px 0;
+  }
+  nav {
+    background-color: rgba(0, 0, 0, 0.8);
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1030;
+    display: flex;
   }
 
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
 
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 200px;
+    z-index: 1040;
+    border-radius: 0.25rem;
+  }
 
-  @import "bootstrap/scss/type";
-  @import "bootstrap/scss/containers";
-  @import "bootstrap/scss/grid";
-  @import "bootstrap/scss/buttons";
-  @import "bootstrap/scss/transitions";
-  @import "bootstrap/scss/dropdown";
-  @import "bootstrap/scss/button-group";
-  @import "bootstrap/scss/nav";
-  @import "bootstrap/scss/navbar";
-  // Helpers
-  @import "bootstrap/scss/helpers";
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
 
-  // Utilities
-  @import "bootstrap/scss/utilities/api";
-  // scss-docs-end import-stack
+  ol, ul,  menu {
+    list-style: none;
+    margin: 0;
+  }
+  .nav-link {
+    color: #fff;
+  }
 }
+
 body.initcms-admin-navbar-loaded {
-  margin-top: 70px;
+  margin-top: 60px;
 }
 
 
