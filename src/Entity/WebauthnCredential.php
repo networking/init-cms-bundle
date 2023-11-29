@@ -19,7 +19,7 @@ class WebauthnCredential extends WebauthnCredentialModel
     #[Id]
     #[Column(unique: true)]
     #[GeneratedValue(strategy: "NONE")]
-    private string $id;
+    protected string $id;
 
 
 
