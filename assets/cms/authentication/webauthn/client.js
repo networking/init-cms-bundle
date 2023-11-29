@@ -1,5 +1,4 @@
 import { startRegistration, startAuthentication } from '@simplewebauthn/browser';
-import { CMSAdmin } from "../../cms-admin.js";
 
 export async function _fetch(path, payload = '') {
     const headers = {
