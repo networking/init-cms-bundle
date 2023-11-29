@@ -11,7 +11,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.esm.js',
+            vue: '@vue/runtime-dom',
             'bootstrap-saas': path.resolve(__dirname, './node_modules/bootstrap-saas'),
         },
     },
@@ -87,6 +87,10 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery"
         }),
+        new webpack.DefinePlugin({
+            __VUE_OPTIONS_API__: true,
+            __VUE_PROD_DEVTOOLS__: true
+        }),
         new WebpackManifestPlugin(),
         new VueLoaderPlugin(),
         new CopyPlugin({
@@ -134,5 +138,12 @@ module.exports = {
                 ]
             }),
 
-    ]
+    ],
+    performance: {
+        maxAssetSize: 120000,
+        maxEntrypointSize: 120000,
+        assetFilter: function(assetFilename) {
+            return !assetFilename.endsWith('.jpg') && !assetFilename.endsWith('.svg')  && !assetFilename.endsWith('.png') && !assetFilename.endsWith('.eot') && !assetFilename.endsWith('.ttf') && !assetFilename.endsWith('.woff') && !assetFilename.endsWith('.woff2');
+        },
+    }
 }

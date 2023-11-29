@@ -80,7 +80,6 @@ const CMSSortableCollection =  {
         document.querySelectorAll('[data-sortable-collection-type]').forEach((element) => {
 
             if(element.dataset.cmsCollectionType) {
-                console.log(element.dataset.cmsCollectionType)
                 return
             }
 

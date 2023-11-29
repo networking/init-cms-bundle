@@ -226,7 +226,7 @@ class AdminMenuBuilder extends MenuBuilder
         $defaultHome = $this->router->generate('networking_init_cms_default');
 
         $adminLocale = $this->request->getSession()->get('admin/_locale');
-        $class = 'navbar-nav me-3';
+        $class = 'inline';
 
         if ($this->isLoggedIn) {
             $editPath = false;
@@ -349,8 +349,20 @@ class AdminMenuBuilder extends MenuBuilder
             $dropdown = $menu->addChild(
                 'link.website_'.$firstItemStatus,
                 [
+                    'label' => $this->translator->trans(
+                        'link.website_'.$firstItemStatus,
+                        [],
+                        'NetworkingInitCmsBundle',
+                        $adminLocale
+                    ),
                     'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
                 ]
+            );
+
+
+            $this->addIcon(
+                $menu['link.website_'.$firstItemStatus],
+                ['icon' => 'caret-down', 'append' => true]
             );
 
             if ($draftPath) {
@@ -358,7 +370,7 @@ class AdminMenuBuilder extends MenuBuilder
                     'view_website.status_draft',
                     [
                         'uri' => $draftPath,
-                        'linkAttributes' => ['class' => 'text-warning'],
+                        'linkAttributes' => ['class' => 'tw-text-amber-400'],
                         'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
                     ]
                 );
@@ -368,7 +380,7 @@ class AdminMenuBuilder extends MenuBuilder
                     'view_website.status_published',
                     [
                         'uri' => $livePath,
-                        'linkAttributes' => ['class' => 'text-success'],
+                        'linkAttributes' => ['class' => 'tw-text-green-500'],
                         'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
                     ]
                 );

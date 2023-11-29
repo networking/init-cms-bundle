@@ -462,7 +462,6 @@ class MediaDropZone{
     }
     changeButtonRow(file, response) {
 
-        console.log(file)
         let editButton = file.previewElement.querySelector("[data-dz-url]")
         editButton.href = response.url;
         editButton.classList.remove('d-none');

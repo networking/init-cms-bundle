@@ -50,7 +50,6 @@ function initDropZone() {
                     return
                 }
 
-                console.log(evt)
                 saveLayoutBlockSort(evt, (response) => {
                    CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
                 })
@@ -507,7 +506,6 @@ let deleteBlock = (e) => {
                 container.querySelector('.empty_layout_block').classList.remove("d-none")
             }).catch((err) => {
 
-                console.log(err)
                 CMSAdmin.createInitCmsMessageBox('error', 'Something went wrong');
             })
         }
@@ -543,8 +541,6 @@ let unlinkTranslation = (e) => {
                 document.querySelector('#translations').innerHTML = response.data.html
                 CMSAdmin.createInitCmsMessageBox('success', response.data.message);
             }).catch((err) => {
-
-                console.log(err)
                 CMSAdmin.createInitCmsMessageBox('error', 'Something went wrong');
             })
         }
@@ -560,7 +556,6 @@ let linkTranslation = (e) => {
         lastTranslationSettingsHtml = document.querySelector('#translations').innerHTML
         document.querySelector('#translations').innerHTML = response.data.html
     }).catch((err) => {
-        console.log(err)
         CMSAdmin.createInitCmsMessageBox('error', 'Something went wrong');
     })
 }

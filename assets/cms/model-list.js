@@ -270,7 +270,6 @@ class ModelList{
     removeSelectedElement(event) {
         event.preventDefault();
 
-        console.log('remove')
 
         if(this.field.options){
             var elements = this.field.options;

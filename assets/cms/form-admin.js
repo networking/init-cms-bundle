@@ -62,7 +62,7 @@ let createFormField = (item) => {
     }
 
     if(block === null){
-        console.log('Block not found', item.dataset.type)
+        return;
     }
     return block
 }

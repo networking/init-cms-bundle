@@ -74,7 +74,6 @@ export async function authenticate(username) {
         // Pass the options to the authenticator and wait for a response
         asseResp = await startAuthentication(options);
     } catch (error) {
-        console.log(error)
         throw error;
     }
 
