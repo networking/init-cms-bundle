@@ -126,7 +126,6 @@ function getEntryFiles() {
     entries['js/widgets.bundle'] = (glob.sync(path.relative('./', srcPath) + '/js/widgets/**/!(_)*.js') || []);
 
     if (dev) {
-        console.log('Entries: ', entries);
         entries['js/scripts.bundle'] = './' + path.relative('./', rootPath) + '/tools/webpack/scripts' + (demo ? '.' + demo : '') + '.js';
 
         // Custom 3rd party plugins from theme folder

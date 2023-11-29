@@ -70,7 +70,7 @@ require('inputmask/dist/inputmask.js');
 require('inputmask/dist/bindings/inputmask.binding.js');
 
 // noUiSlider - is a lightweight range slider with multi-touch support and a ton of features. It supports non-linear ranges, requires no external dependencies: https://refreshless.com/nouislider/
-window.noUiSlider = require('nouislider/dist/nouislider.min.js');
+// window.noUiSlider = require('nouislider/dist/nouislider.min.js');
 
 // The autosize - function accepts a single textarea element, or an array or array-like object (such as a NodeList or jQuery collection) of textarea elements: https://www.jacklmoore.com/autosize/
 window.autosize = require('autosize/dist/autosize.min.js');
@@ -83,7 +83,7 @@ window.Dropzone = require('dropzone/dist/min/dropzone.min.js').default;
 require('@/src/js/vendors/plugins/dropzone.init.js');
 
 // Quill - is a free, open source WYSIWYG editor built for the modern web. Completely customize it for any need with its modular architecture and expressive API: https://quilljs.com/
-window.Quill = require('quill/dist/quill.js');
+// window.Quill = require('quill/dist/quill.js');
 
 // Tagify - Transforms an input field or a textarea into a Tags component, in an easy, customizable way, with great performance and small code footprint, exploded with features: https://github.com/yairEO/tagify
 require('@yaireo/tagify/dist/tagify.polyfills.min.js');
