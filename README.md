@@ -36,6 +36,9 @@ Documentation
 - [Creating custom content types](https://github.com/networking/init-cms-bundle/blob/master/doc/content_types.md)
 - [Creating an Admin user interface](https://github.com/networking/init-cms-bundle/blob/master/doc/admin_ui.md)
 - [Creating custom admin settings](https://github.com/networking/init-cms-bundle/blob/master/doc/custom_admin_settings.md)
+- [Using 2 factor authentication](https://github.com/networking/init-cms-bundle/blob/master/doc/2fa_authentication.md)
+- [Enabling Webauthn for Passkey login](https://github.com/networking/init-cms-bundle/blob/master/doc/webauthn.md)
+- [Security checker](https://github.com/networking/init-cms-bundle/blob/master/doc/security_checker.md)
 
 License
 -------
@@ -46,4 +49,4 @@ This bundle is under the MIT license. See the complete license in the bundle:
     
 
 [1]:  http://www.networking.ch
-[2]:  https://github.com/networking/init-cms-sandbox/
+[2]:  https://github.com/networking/sandbox-6
