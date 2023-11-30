@@ -30,6 +30,7 @@
 
         <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*"/>
         <prototype namespace="Networking\InitCmsBundle\EventSubscriber\" resource="../../EventSubscriber/*"/>
+
         <service id="Networking\InitCmsBundle\Controller\MediaController">
             <argument key="$mediaManager" type="service" id="sonata.media.manager.media"/>
             <argument key="$pool" type="service" id="sonata.media.pool"/>
@@ -41,6 +42,10 @@
 
         <service id="Networking\InitCmsBundle\Command\ClearCacheCommand" autowire="true" public="true">
             <argument key="$managedLocales">%lexik_translation.managed_locales%</argument>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Command\SecurityCheckCommand" autowire="true" public="true">
+            <argument key="$projectDir">%kernel.project_dir%</argument>
         </service>
 
         <service id="Networking\InitCmsBundle\Controller\TwoFactorController" autowire="true" public="true">
