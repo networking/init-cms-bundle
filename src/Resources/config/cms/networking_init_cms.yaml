@@ -2,7 +2,6 @@ imports:
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/doctrine.yaml" }
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/fos_ck_editor.yaml" }
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/fos_user.yaml" }
-  - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/networking_bootstrap.yaml" }
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/oneup_flysystem.yaml" }
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/oneup_uploader.yaml" }
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/sonata_admin.yaml" }
@@ -10,7 +9,6 @@ imports:
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/sonata_doctrine_admin.yaml" }
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/sonata_media.yaml" }
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/sonata_user.yaml" }
-  #    - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/stof_doctrine_extensions.yaml" } Optional, install stof/doctrine-extensions-bundle
   - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/symfony_cmf_routing_extra.yaml" }
 # Default security configuration
 #    - { resource: "@NetworkingInitCmsBundle/Resources/config/cms/security.yaml" }

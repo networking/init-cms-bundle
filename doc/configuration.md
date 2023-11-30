@@ -3,84 +3,102 @@ networking init CMS configuration
 The NetworkingInitCmsBundle relies on a few other bundles which need to be configure first before you can get the CMS
 up and running.
 
-You will need to provide configuration for the SonataAdminBundle, LexikTranslationBundle, FOSUserBundle and the SonataUserBundle
+You will need to provide configuration for the SonataAdminBundle, LexikTranslationBundle, and the SonataUserBundle
 either in your on existing configuration files, or add them to the networking_init_cms.ymal file created by the recipe if 
 installed using flex.
 
 A simple configuration should look something like the following, with special attention paid to the sonata_user configuration
 as this will create the admin interface for administering users in the cms.
 
-
-```
-sonata_admin:
-    title:      Demo Sailing Club
-    options:
-        use_select2: false
-
+```yaml
 lexik_translation:
-    fallback_locale: en      # (required) default locale to use
-    managed_locales: [en, de]    # (required) locales that the bundle have to manage
+    fallback_locale:  '%env(LOCALE)%'      # (required) default locale to use
+    managed_locales: [ 'de', 'fr', 'it', 'en'] # !IMPORTANT: Change to strings and not environment variables
+    resources_registration:
+        type:                 all  # all | files | database
+        managed_locales_only: false # set to true to only include managed_locales
+```
 
-fos_user:
-    db_driver: orm
-    firewall_name:  main
-    user_class: "App\\Entity\\User" #Replace with your user entity
-    group:
-        group_class: Networking\InitCmsBundle\Entity\Group
-    from_email:
-            address:        webmaster@example.com
-            sender_name:    net working Team
-
+```yaml
 sonata_user:
-    security_acl: true
+    security_acl: false
     impersonating:
         route:                networking_init_cms_admin
         parameters:           { path: /}
     class:
-        user: Application\Networking\InitCmsBundle\Entity\User
-        group: Networking\InitCmsBundle\Entity\Group
+        user: 'App\Entity\User'
+
+    resetting:
+        email:
+            template: '@NetworkingInitCms/Admin/Security/Resetting/email.html.twig'
+            address: '%env(ADMIN_EMAIL_ADDRESS)%'
+            sender_name: InitCms
+
     admin:                  # Admin Classes
         user:
-            class:          Networking\InitCmsBundle\Admin\Entity\UserAdmin
-            controller:     NetworkingInitCmsBundle:CRUD
-            translation:    SonataUserBundle
-
-        group:
-            class:          Networking\InitCmsBundle\Admin\Entity\GroupAdmin
-            controller:     NetworkingInitCmsBundle:CRUD
-            translation:    SonataUserBundle
-```
+            class:          'Networking\InitCmsBundle\Admin\UserAdmin'
+            controller:     'Networking\InitCmsBundle\Controller\UserAdminController'
+            translation:    'SonataUserBundle'
+```            
 
 The NetworkingInitCmsBundle has (for the time being) just a few configurable parameters which should be enough to
 get you started.
 
 This is an example of a possible CMS configuration:
 
-```
+```yaml
 networking_init_cms:
+    class:
+        page: 'App\Entity\Page' #default value, extends the base page class
+        user: 'App\Entity\User' #default value, extends the base user class
+    email_address:
+        from_name: 'InitCMS'
+        from_address: '%env(ADMIN_EMAIL_ADDRESS)%'
+    webauthn:
+        enabled: false #default is false, if set to true the webauthn login will be enabled for the admin
+    admin_toolbar:
+        toolbar: true #default is true, will be included
+    allow_locale_cookie: true #default is true, if set to false the locale will be added to the url
+    single_language: false #default is false, if set to true, the website will only be available in one language and no cookie or url parameter will be used
+    2fa_authenticator:
+        enabled: true #default is false, if set to true the 2fa authenticator login will be enabled for the admin
+        server: 'example.com'
+        trusted_ip_list:
+            - 127.0.0.1
+        forced_for_role:
+            - ROLE_SONATA_ADMIN
+            - ROLE_SUPER_ADMIN
     languages:
-        - {label: English, locale: en_US}
-        - {label: Deutsch, locale: de_CH}
+        - { label: English, locale: en }
+        - { label: Deutsch, locale: de }
     templates:
-        'sandbox_one_column':
-            template; "@NetworkingInitCms/Default/one_column.html.twig"
+        one_column_template:
+            template: "@NetworkingInitCms/Default/one_column.html.twig"
             name: "Single Column"
             icon: "bundles/networkinginitcms/img/template_header_one_column.png"
             controller: MyBundle::index
             zones:
-                - { name: header, class: 'col-md-12' }
-                - { name: main_content, class: 'col-md-12'}
-        'sandbox_two_column':
+                - { name: header, class: 'col-12' }
+                - { name: main_content, class: 'col-12'}
+        two_column_template:
             template: "@NetworkingInitCms/Default/two_column.html.twig"
             name: "Two Column"
             icon: "bundles/networkinginitcms/img/template_header_two_column.png"
             zones:
-                - { name: header , class: 'col-md-12', max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery}
-                - { name: left , class: 'col-md-3'}
-                - { name: right , class: 'col-md-9'}
-    content_types:
-        - { name: 'Text' , class: 'Networking\InitCmsBundle\Entity\Text'}
-        - { name: 'Gallery' , class: 'Networking\InitCmsBundle\Entity\GalleryView'}
+                - { name: header , class: 'col-12', max_content_items: 1, restricted_types: Networking\InitCmsBundle\Entity\Gallery}
+                - { name: left , class: 'col-3'}
+                - { name: right , class: 'col-9'}
+        content_types:
+            -
+                name: "Text" #display name in the backend
+                class: 'Networking\InitCmsBundle\Entity\Text' #entity class
+                icon: 'ki-outline ki-text-align-left' #icon to display in the backend
+                default_template: '@NetworkingInitCms/Text/frontend_text_block.html.twig' #default template to use in the frontend
+            -
+                name: "Gallery"
+                class: 'Networking\InitCmsBundle\Entity\GalleryView'
+                icon: 'ki-outline ki-picture'
+                default_template: '@NetworkingInitCms/GalleryView/gallery_view.html.twig'
 ```
 
 
@@ -141,7 +159,7 @@ should be executed with. It is a good idea to extend the Networking\InitCmsBundl
 the indexAction of the class so as to get all the right published or draft attributes. Then you can add your own functionality
 afterwards e.g.
 
-```
+```php
     use Networking\InitCmsBundle\Controller\FrontendController
 
 
@@ -175,15 +193,28 @@ This is where you can start to add you own content types as well as configure wh
 Each content type consists of two properties:
     1. "name": once more a display name for the backend
     2. "class": the entity (including namespace) which will be used to contain the user input.
+    3. "icon": a css icon class name to display in the backend, fontawesome, and line awesome are included by default, as
+        well as a few others.
+    4. "default_template": the template to use to render the content in the frontend. This template will also be used
+        to render the content in the backend if no other template is defined.
 
 Content types can be simple entities consisting of just one field (such as the Text content type), or more of a
 configuration entity, which configures an links to another entity (such as the Gallery content type), which has a
 many-to-one relationship with a Networking\MediaBundle\Entity\Gallery entity (which actually contains the images).
 
-```
-content_types:
-    - { name: 'Text' , class: 'Networking\InitCmsBundle\Entity\Text'}
-    - { name: 'Gallery' , class: 'Networking\InitCmsBundle\Entity\GalleryView'}
+```yaml
+
+    content_types:
+        -
+            name: "Text" #display name in the backend
+            class: 'Networking\InitCmsBundle\Entity\Text' #entity class
+            icon: 'ki-outline ki-text-align-left' #icon to display in the backend
+            default_template: '@NetworkingInitCms/Text/frontend_text_block.html.twig' #default template to use in the frontend
+        -
+            name: "Gallery"
+            class: 'Networking\InitCmsBundle\Entity\GalleryView'
+            icon: 'ki-outline ki-picture'
+            default_template: '@NetworkingInitCms/GalleryView/gallery_view.html.twig'
 ```
 
 To learn more about templates see:

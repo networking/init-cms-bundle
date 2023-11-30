@@ -13,16 +13,15 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Annotation\FormCallback;
-use Networking\InitCmsBundle\Model\ContentInterface;
 use Networking\InitCmsBundle\Model\TextInterface;
-use Sonata\BlockBundle\Form\Mapper\FormMapper;
+use Sonata\AdminBundle\Form\FormMapper;
 
 /**
  * Class BaseText.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class BaseText extends LayoutBlock implements ContentInterface, TextInterface
+abstract class BaseText extends LayoutBlock implements TextInterface
 {
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -36,10 +35,7 @@ abstract class BaseText extends LayoutBlock implements ContentInterface, TextInt
                 'text',
                 \FOS\CKEditorBundle\Form\Type\CKEditorType::class,
                 [
-                    'horizontal_input_wrapper_class' => 'col-md-12',
-                    'horizontal_label_offset_class' => '',
                     'label' => false,
-                    'label_render' => false,
                     'required' => false,
                 ]
             );

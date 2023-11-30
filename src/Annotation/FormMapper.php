@@ -41,16 +41,15 @@ class FormMapper extends AbstractMapper implements FormInterface
     public $ignoreOnParent = false;
 
     public function __construct(
-        ?string $name,
         string $type,
-        array $fieldDescriptionOptions = [],
         array $options = [],
-        ?string $with = null,
+        array $fieldDescriptionOptions = [],
         array $withOptions = [],
+        bool $ignoreOnParent = false,
+        ?string $name = null,
+        ?string $with = null,
         ?string $tab = null,
-        bool $ignoreOnParent = false
     ){
-        $this->name = $name;
         $this->type = $type;
         $this->fieldDescriptionOptions = $fieldDescriptionOptions;
         $this->options = $options;

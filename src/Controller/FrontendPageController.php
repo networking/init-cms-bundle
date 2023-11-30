@@ -41,51 +41,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class FrontendPageController extends AbstractController
 {
-    protected PageCacheInterface $pageCache;
-
-    protected TokenStorageInterface $tokenStorage;
-
-    protected AuthorizationCheckerInterface $authorizationChecker;
-
-    protected Pool $pool;
-
-    protected LanguageSwitcherHelper $languageSwitcherHelper;
-
-    protected PageManagerInterface $pageManager;
-
-    protected PageHelper $pageHelper;
-
     /**
      * FrontendPageController constructor.
      */
     public function __construct(
-        PageCacheInterface $pageCache,
-        TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorizationChecker,
-        Pool $pool,
-        LanguageSwitcherHelper $languageSwitcherHelper,
-        PageManagerInterface $pageManager,
-        PageHelper $pageHelper
+       protected PageCacheInterface $pageCache,
+       protected TokenStorageInterface $tokenStorage,
+       protected AuthorizationCheckerInterface $authorizationChecker,
+       protected LanguageSwitcherHelper $languageSwitcherHelper,
+       protected PageManagerInterface $pageManager,
+       protected PageHelper $pageHelper
     ) {
-        $this->pageCache = $pageCache;
-        $this->tokenStorage = $tokenStorage;
-        $this->authorizationChecker = $authorizationChecker;
-        $this->pool = $pool;
-        $this->languageSwitcherHelper = $languageSwitcherHelper;
-        $this->pageManager = $pageManager;
-        $this->pageHelper = $pageHelper;
-    }
 
-    protected function getAdminPool(): bool|\Sonata\AdminBundle\Admin\Pool
-    {
-        if ($this->tokenStorage->getToken() && $this->authorizationChecker->isGranted(
-            'ROLE_SONATA_ADMIN'
-        )
-        ) {
-            return $this->pool;
-        }
-
-        return false;
     }
 
     public function indexAction(Request $request)
@@ -229,7 +196,7 @@ class FrontendPageController extends AbstractController
             }
         }
 
-        return ['page' => $page, 'admin_pool' => $this->getAdminPool()];
+        return ['page' => $page];
     }
 
     public function getLiveParameters(Request $request, PageSnapshot $pageSnapshot)
@@ -250,7 +217,7 @@ class FrontendPageController extends AbstractController
             }
         }
 
-        return ['page' => $page, 'admin_pool' => $this->getAdminPool()];
+        return ['page' => $page];
     }
 
     /**
@@ -443,7 +410,6 @@ class FrontendPageController extends AbstractController
     {
         $params = [
             'language' => \Locale::getDisplayLanguage($request->getLocale()),
-            'admin_pool' => $this->getAdminPool(),
         ];
 
         return $this->render($this->getParameter('networking_init_cms.no_translation_template'), $params);
@@ -454,9 +420,7 @@ class FrontendPageController extends AbstractController
      */
     public function pageNotFoundAction()
     {
-        $params = ['admin_pool' => $this->getAdminPool()];
-
-        return $this->render($this->getParameter('networking_init_cms.404_template'), $params);
+        return $this->render($this->getParameter('networking_init_cms.404_template'));
     }
 
     /**
@@ -471,8 +435,7 @@ class FrontendPageController extends AbstractController
             $request->attributes->set('_content', $page);
         }
         $response = $this->render(
-            '@NetworkingInitCms/Admin/esi_admin_navbar.html.twig',
-            ['admin_pool' => $this->getAdminPool()]
+            '@NetworkingInitCms/Admin/esi_admin_navbar.html.twig'
         );
 
         // set the shared max age - which also marks the response as public

@@ -1057,7 +1057,7 @@ file that was distributed with this source code.
     {%- if prepend or append -%}
         <div class="input-group {{ group_class|default('') }}">
             {% if widget_btn_prepend|default(null) is not null %}
-                {% set widget_btns = widget_btn_prepend %}
+                {% set widget_btn = widget_btn_prepend %}
                 {{ block('widget_btns') }}
             {% endif %}
             {% if widget_addon_prepend|default(null) is not null %}

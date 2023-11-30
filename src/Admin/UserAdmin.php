@@ -354,7 +354,6 @@ class UserAdmin extends BaseUserAdmin
                     CheckboxType::class,
                     [
                         'label_render' => true,
-                        'widget_checkbox_label' => 'widget',
                         'label_attr' => ['class' => 'checkbox-line'],
                     ]
                 )

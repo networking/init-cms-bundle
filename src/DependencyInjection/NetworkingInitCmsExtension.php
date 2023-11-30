@@ -143,13 +143,10 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $loader->load('services.xml');
         $loader->load('validators.xml');
         $loader->load('google_authenticator.xml');
-
-        //mongodb is not yet fully supported but will come (eventually)
-        if ('custom' !== $config['db_driver']) {
-            $loader->load(sprintf('doctrine_%s.xml', $config['db_driver']));
-            $loader->load(sprintf('ext_admin_%s.xml', $config['db_driver']));
-            $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
-        }
+        $config['db_driver'] = 'orm';
+        $loader->load(sprintf('doctrine_%s.xml', $config['db_driver']));
+        $loader->load(sprintf('ext_admin_%s.xml', $config['db_driver']));
+        $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
 
         if($config['webauthn']['enabled']){
             $loader->load('webauthn.xml');
@@ -320,9 +317,13 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
      */
     public function configureGoogleAuthenticator($config, ContainerBuilder $container)
     {
-        $container->setParameter('networking_init_cms.google.authenticator.enabled', $config['google_authenticator']['enabled']);
+        if(isset($config['google_authenticator']) && $config['google_authenticator']['enabled'] && !$config['2fa_authenticator']['enabled']){
+            $config['2fa_authenticator'] = $config['google_authenticator'];
+        }
 
-        if (!$config['google_authenticator']['enabled']) {
+        $container->setParameter('networking_init_cms.google.authenticator.enabled', $config['2fa_authenticator']['enabled']);
+
+        if (!$config['2fa_authenticator']['enabled']) {
             $container->removeDefinition('networking_init_cms.google.authenticator');
             $container->removeDefinition('networking_init_cms.google.authenticator.success_handler');
             $container->removeDefinition('networking_init_cms.google.authenticator.helper');
@@ -332,17 +333,18 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             return;
         }
 
-        $container->setParameter('networking_init_cms.google.authenticator.forced_for_role', $config['google_authenticator']['forced_for_role']);
 
-        $trustedIpList = $config['google_authenticator']['trusted_ip_list'];
-        if (array_key_exists('ip_white_list', $config['google_authenticator']) && (is_countable($config['google_authenticator']['ip_white_list']) ? \count($config['google_authenticator']['ip_white_list']) : 0) > 0) {
-            $trustedIpList = $config['google_authenticator']['ip_white_list'];
+        $container->setParameter('networking_init_cms.google.authenticator.forced_for_role', $config['2fa_authenticator']['forced_for_role']);
+
+        $trustedIpList = $config['2fa_authenticator']['trusted_ip_list'];
+        if (array_key_exists('ip_white_list', $config['2fa_authenticator']) && (is_countable($config['2fa_authenticator']['ip_white_list']) ? \count($config['2fa_authenticator']['ip_white_list']) : 0) > 0) {
+            $trustedIpList = $config['2fa_authenticator']['ip_white_list'];
         }
         // NEXT_MAJOR: Remove `networking_init_cms.google.authenticator.ip_white_list` parameter.
         $container->setParameter('networking_init_cms.google.authenticator.ip_white_list', $trustedIpList);
         $container->setParameter('networking_init_cms.google.authenticator.trusted_ip_list', $trustedIpList);
         $container->getDefinition('networking_init_cms.google.authenticator.helper')
-            ->replaceArgument(0, $config['google_authenticator']['server']);
+            ->replaceArgument(0, $config['2fa_authenticator']['server']);
         $container->setAlias( \Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface::class, 'networking_init_cms.google.authenticator.helper');
 
     }

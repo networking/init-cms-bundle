@@ -20,7 +20,7 @@ abstract class AbstractSonataAdminAnnotationAdmin extends AbstractAdmin
      */
     protected function configureListFields(ListMapper $list)
     {
-        $this->getSonataAnnotationReader()->configureListFields($this->getClass(), $list);
+        $this->getAnnotationReader()->configureListFields($this->getClass(), $list);
     }
 
     /**
@@ -28,7 +28,7 @@ abstract class AbstractSonataAdminAnnotationAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $form)
     {
-        $this->getSonataAnnotationReader()->configureFormFields($this->getClass(), $form);
+        $this->getAnnotationReader()->configureFormFields($this->getClass(), $form);
     }
 
     /**
@@ -36,7 +36,7 @@ abstract class AbstractSonataAdminAnnotationAdmin extends AbstractAdmin
      */
     protected function configureShowFields(ShowMapper $show)
     {
-        $this->getSonataAnnotationReader()->configureShowFields($this->getClass(), $show);
+        $this->getAnnotationReader()->configureShowFields($this->getClass(), $show);
     }
 
     /**
@@ -44,13 +44,13 @@ abstract class AbstractSonataAdminAnnotationAdmin extends AbstractAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $filter)
     {
-        $this->getSonataAnnotationReader()->configureDatagridFilters($this->getClass(), $filter);
+        $this->getAnnotationReader()->configureDatagridFilters($this->getClass(), $filter);
     }
 
     /**
      * @return SonataAdminAnnotationReaderInterface
      */
-    protected function getSonataAnnotationReader()
+    protected function getAnnotationReader()
     {
         return $this->getConfigurationPool()->getContainer()->get('networking_init_cms.annotation.reader');
     }
