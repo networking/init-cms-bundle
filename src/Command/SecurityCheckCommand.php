@@ -4,11 +4,7 @@ namespace Networking\InitCmsBundle\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatter;
-use Symfony\Component\Console\Helper\Helper;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -23,8 +19,10 @@ class SecurityCheckCommand extends Command
         parent::__construct();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output
+    ): int {
         $io = new SymfonyStyle($input, $output);
 
         $io->title('Security Check');
@@ -33,7 +31,14 @@ class SecurityCheckCommand extends Command
         $securityOutput[] = '';
         exec('symfony security:check', $securityOutput, $return_var);
 
-        if(file_exists($this->projectDir.'/yarn.lock')){
+        if ($return_var > 0) {
+            $io->error('PHP Bundle Security Check failed.');
+
+            $io->writeln($securityOutput);
+
+            return Command::FAILURE;
+        }
+        if (file_exists($this->projectDir.'/yarn.lock')) {
             $io->writeln('Running yarn audit...');
             $securityOutput[] = '';
             $securityOutput[] = sprintf('<comment>%s</>', 'Yarn Audit');
@@ -42,7 +47,15 @@ class SecurityCheckCommand extends Command
             exec('yarn audit', $securityOutput, $return_var);
         }
 
-        if(file_exists($this->projectDir.'/package-lock.json')){
+        if ($return_var > 0) {
+            $io->error('Yarn Security Check failed.');
+
+            $io->writeln($securityOutput);
+
+            return Command::FAILURE;
+        }
+
+        if (file_exists($this->projectDir.'/package-lock.json')) {
             $io->writeln('Running npm audit...');
             $securityOutput[] = '';
             $securityOutput[] = sprintf('<comment>%s</>', 'NPM Audit');
@@ -51,18 +64,15 @@ class SecurityCheckCommand extends Command
             exec('npm audit --verbose', $securityOutput, $return_var);
         }
 
-        foreach ($securityOutput as $line) {
-            $io->writeln($line);
-        }
-
-        if($return_var > 0){
-            $io->error('Security Check failed.');
+        if ($return_var > 0) {
+            $io->error('NPM Security Check failed.');
+            $io->writeln($securityOutput);
             return Command::FAILURE;
         }
 
+        $io->writeln($securityOutput);
 
         $io->success('Security Check completed.');
-
 
         return Command::SUCCESS;
     }
