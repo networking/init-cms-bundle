@@ -16,6 +16,9 @@ Other Features:
 - Integrate your own twig templates
 - Create your own content types
 - Based on the SonataAdminBundle so you can easily create your own admin modules
+- Enable two-factor authentication for the admin interface
+- Enable webauthn for passkey login
+- Security Check to check for common security issues in your php and javascript dependencies
 
 The project is being developed by the small hard working team at [net working AG][1] in Zürich.
 
