@@ -81,7 +81,7 @@ Make sure that the bundles have been added to your config/bundles.php file:
         Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
         FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true],
         Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle::class => ['all' => true],
-        //Comment out when enabling the web-authn/webauthn-symfony-bundle
+        //Uncomment when enabling the web-authn/webauthn-symfony-bundle
         //SpomkyLabs\CborBundle\SpomkyLabsCborBundle::class => ['all' => true],
         //Webauthn\Bundle\WebauthnBundle::class => ['all' => true],
     ];
