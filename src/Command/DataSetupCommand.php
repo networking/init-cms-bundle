@@ -117,7 +117,7 @@ class DataSetupCommand extends Command
     {
 
         $helper = $this->getHelper('question');
-        $output->writeln('<info>Are you sure you want to continue? The will change the struchture of your database, by adding tables and columns relavent to the DB</info>');
+        $output->writeln('<info>Are you sure you want to continue? The will change the structure of your database, by adding tables and columns relavent to the DB</info>');
         $question = new ConfirmationQuestion(
             '<question>Continue with this action? (y/n)</question>',
             false
