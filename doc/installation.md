@@ -16,6 +16,28 @@ This bundle comes with a flex recipe. To allow easy installation and initial con
     
     composer config extra.symfony.allow-contrib true
 
+And then add the endpoint to our recipes repository to your composer.json file:
+
+    https://api.github.com/repos/networking/recipes/contents/index.json:
+
+```json
+    "extra": {
+        "symfony": {
+            "allow-contrib": true,
+            "require": "6.4.*",
+            "endpoint": [
+                "https://api.github.com/repos/networking/recipes/contents/index.json",
+                "flex://defaults"
+              ]
+        }
+    }
+```
+
+Then run the following command:
+
+    composer require networking/init-cms-bundle
+
+
 ### Use Composer to install dependencies
 
 Run the composer require command:

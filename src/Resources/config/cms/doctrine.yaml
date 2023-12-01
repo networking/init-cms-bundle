@@ -31,10 +31,6 @@ doctrine:
                         prefix: 'App\Entity'
                         alias: App
                         is_bundle: false
-                    NetworkingFormGeneratorBundle:
-                        type: attribute
-                        prefix: "Networking\\FormGeneratorBundle\\Model"
-                        dir: '%kernel.project_dir%/vendor/networking/form-generator-bundle/src/Model'
                     NetworkingInitCmsBundle:
                         type: attribute
                         prefix: "Networking\\InitCmsBundle\\Entity"
