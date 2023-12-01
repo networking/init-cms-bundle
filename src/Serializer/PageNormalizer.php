@@ -23,7 +23,7 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
         mixed $object,
         string $format = null,
         array $context = []
-    ) {
+    ):array|string|int|float|bool|\ArrayObject|null {
         $context += [
                 AbstractNormalizer::CALLBACKS => [
                     'translations' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
@@ -71,7 +71,7 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
         string $type,
         string $format = null,
         array $context = []
-    ) {
+    ): mixed {
         if (is_integer($data)) {
             return $this->pageManager->find($data);
         }
@@ -83,12 +83,12 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
         return $this->objectNormalizer->denormalize($data, $type, $format, $context);
     }
 
-    public function supportsNormalization(mixed $data, string $format = null, array $context = [])
+    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof PageInterface;
     }
 
-    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = [])
+    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return $type === $this->pageClass;
     }

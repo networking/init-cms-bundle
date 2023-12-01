@@ -20,7 +20,7 @@ class MediaNormalizer implements NormalizerInterface, DenormalizerInterface
         mixed $object,
         string $format = null,
         array $context = []
-    ) {
+    ): array|string|int|float|bool|\ArrayObject|null {
         if ($object instanceof $this->mediaClass) {
             $context[AbstractNormalizer::IGNORED_ATTRIBUTES] = [
                 'metadataValue',
@@ -39,7 +39,7 @@ class MediaNormalizer implements NormalizerInterface, DenormalizerInterface
         string $type,
         string $format = null,
         array $context = []
-    ) {
+    ): mixed {
         return $this->propertyNormalizer->denormalize($data, $this->mediaClass, $format, $context);
     }
 

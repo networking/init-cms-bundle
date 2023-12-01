@@ -19,7 +19,7 @@ class LayoutBlockNormalizer implements NormalizerInterface, DenormalizerInterfac
         mixed $object,
         string $format = null,
         array $context = []
-    ) {
+    ) : array|string|int|float|bool|\ArrayObject|null{
         if (!$object instanceof LayoutBlockInterface) {
             throw new \InvalidArgumentException('The object must implement the LayoutBlockInterface');
         }
@@ -32,7 +32,7 @@ class LayoutBlockNormalizer implements NormalizerInterface, DenormalizerInterfac
         string $type,
         string $format = null,
         array $context = []
-    ) {
+    ): mixed {
         return $this->propertyNormalizer->denormalize(
             $data,
             $data['classType'],
