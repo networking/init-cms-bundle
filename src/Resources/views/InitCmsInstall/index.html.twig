@@ -2,155 +2,224 @@
 
 {% block title %}Welcome to the initcms{% endblock title %}
 
-{% block page_title %}
-    <div class="jumbotron" style="background-color: #000000">
-
-        <div class="row">
-            <div class="col-md-3">
-                <img src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}">
-            </div>
-            <div class="col-md-9">
-                <h1 style="color: white;">{{ title }}</h1>
-            </div>
-        </div>
-    </div>
-{% endblock page_title %}
-{% block init_cms_top_nav %}{% endblock %}
-{% block sidebar_left %}{% endblock %}
-{% block sonata_admin_content %}
-    <div class="row row-content-wide">
-        <div class="col-md-12">
-            <div class="middle">
-                {% if form is defined %}
-                    {% if install_failed %}
-                        <h3>The installation failed</h3>
-                        <p>Please review the errors mentioned above and try to correct them.</p>
-                        <p>You can resubmit the form once you think that you have completed the fixes</p>
-                    {% else %}
-                        <h3>Lets create an admin user</h3>
-                    {% endif %}
-
-                    <form action="{{ url('_install_db',{'complete':complete } ) }}" method="POST" id="install_form"
-                          class="form-vertical" novalidate autocomplete="off">
-                        <div class="row">
-                            <div class="col-md-8">
-
-                                {{ form_errors(form) }}
-
-                                {{ form_row(form.username) }}
-                                {{ form_row(form.email) }}
-                                {{ form_row(form.password) }}
-
-                                {{ form_rest(form) }}
-
-
-                            </div>
-                            <div class="col-md-4">
-
-                                <p>Afterwards we will load up the DB.</p>
-
-                                <p>This may take a few moments, so please be patient</p>
-                            </div>
+{% block page %}
+    <div class="container">
+        <div class="row row-content-wide">
+            <div class="col-md-12 py-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title  d-flex flex-row align-center   w-100">
+                            <img src="{{ asset('bundles/networkinginitcms/img/initcms-396x100.png') }}" height="30">
+                            <h1 class="ps-6 pt-3">Installation</h1>
                         </div>
-                        <div class="form-actions well well-small">
-                            <input type="submit" class="btn btn-sm btn-primary" id="sendUserButton"
-                                   value="{% if install_failed %}Try again{% else %}Send{% endif %}"/>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="card-body">
+                        {% if form is defined %}
+                            {% if install_failed %}
+                                <h3>The installation failed</h3>
+                                <p>Please review the errors mentioned above and try to correct them.</p>
+                                <p>You can resubmit the form once you think that you have completed the fixes</p>
+                            {% else %}
+                                <h3>Lets create an admin user</h3>
+                            {% endif %}
+
+                            <form action="{{ url('_install_db',{'complete':complete } ) }}" method="POST" id="install_form"
+                                  novalidate autocomplete="off">
+                                <div class="row">
+                                    <div class="col-md-8">
+
+                                        {{ form_errors(form) }}
+
+                                        {{ form_row(form.email) }}
+                                        {{ form_row(form.password) }}
+
+                                        {{ form_rest(form) }}
 
 
-                {% elseif has_DB is not defined or not has_DB %}
-                    <h2>Can't access DB</h2>
-                    <p>The following exception was thrown</p>
-                    <pre class="text-error">{{ error_message }}</pre>
-                    <p>Please control your parameters.yaml file is correct, and that the DB exists.</p>
+                                    </div>
+                                    <div class="col-md-4">
 
-                    <p><a href="{{ url('_welcome') }}" class="btn btn-info">Re-check configuration <i
-                                    class="icon icon-refresh icon-white"></i></a></p>
-                {% else %}
-                    {% if installed %}
-                        <h2>Congratulations, Init CMS installed</h2>
-                        <p>You can now <a href="{{ url('sonata_admin_dashboard') }}">login</a> to the dashboard with
-                            your new
-                            user, or take a look at you first pages</p>
-                        <a href="{{ url('sonata_admin_dashboard') }}" class="btn btn-primary">Admin login</a>
-                        <a class="btn btn-light" href="{{ action.url }}">{{ action.label }} &rarr;</a>
+                                        <p>Afterwards we will load up the DB.</p>
 
-                    {% else %}
-                        <h2>Lets get started!</h2>
-                        <p>Looks like we can connect to your DB, but before you can use the CMS, we need to setup some
-                            tables
-                            and
-                            base data first.</p>
-                        <p>
-                            We are going to do the following things:
-
-                        </p>
-                        <ol>
-                            <li>Set up the necessary tables for the init cms in your DB.</li>
-                            <li>Initiate and setup the ACL tables and data so that we can control user access</li>
-                            <li>Load some default home pages (in each language), and menu items into the DB (appending
-                                to your
-                                existing data)
-                            </li>
-                            <li>Create a superadmin user so that you can login (you can choose your username and
-                                password in the
-                                next step)
-                            </li>
-                            <li>Dump the assetic resources (compile and compress the less and css files)</li>
-                        </ol>
-                        <p>
-                            If you are ready to go, click the "Install Init CMS" button.
-                        </p>
-                        <a class="btn btn-light btn-sm" href="{{ url('_install_db') }}">Install Init CMS &rarr;</a>
-                    {% endif %}
+                                        <p>This may take a few moments, so please be patient</p>
+                                    </div>
+                                </div>
+                                <div class="form-actions well well-small">
+                                    <input type="submit" class="btn btn-sm btn-light-primary" id="sendUserButton"
+                                           value="{% if install_failed %}Try again{% else %}Create User & DB{% endif %}"/>
+                                </div>
+                            </form>
 
 
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <div id="showProgress" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">Please wait....</div>
-                <div class="modal-body">
-                    <p id="nearlyThere" class="hidden">Nearly there, initializing</p>
+                        {% elseif has_DB is not defined or not has_DB %}
+                            <h2>Can't access DB</h2>
+                            <p>The following exception was thrown</p>
+                            <pre class="text-error">{{ error_message }}</pre>
+                            <p>Please control your .env files are correct, and that the DB exists.</p>
 
-                    <div class="progress progress-striped active">
-                        <div class="progress-bar" style="width: 1%;"></div>
+                            <p><a href="{{ url('_welcome_cms') }}" class="btn btn-light-primary btn-sm">Re-check
+                                    configuration <i
+                                            class="icon icon-refresh icon-white"></i></a></p>
+                        {% else %}
+                            {% if installed %}
+                                <h2>Congratulations, Init CMS installed</h2>
+                                <p>You can now <a href="{{ url('sonata_admin_dashboard') }}">login</a> to the dashboard with
+                                    your new
+                                    user, or take a look at you first pages</p>
+                                <p>Don't forget to remove the routing for the install process</p>
+                                <a href="{{ url('sonata_admin_dashboard') }}" class="btn btn-light-primary btn-sm">Admin
+                                    login</a>
+                                <a class="btn btn-light" href="{{ action.url }}">{{ action.label }} &rarr;</a>
+
+                            {% else %}
+                                <h2>Lets get started!</h2>
+                                <p>Looks like we can connect to your DB, but before you can use the CMS, we need to setup
+                                    some
+                                    tables
+                                    and
+                                    base data first.</p>
+                                <p>
+                                    We are going to do the following things:
+
+                                </p>
+                                <ol>
+                                    <li>Set up the necessary tables for the init cms in your DB.</li>
+                                    <li>Initiate and setup the ACL tables and data so that we can control user access</li>
+                                    <li>Load some default home pages (in each language), and menu items into the DB
+                                        (appending
+                                        to your
+                                        existing data)
+                                    </li>
+                                    <li>Create a superadmin user so that you can login (you can choose your username and
+                                        password in the
+                                        next step)
+                                    </li>
+                                    <li>Dump the assetic resources (compile and compress the less and css files)</li>
+                                </ol>
+                                <p>
+                                    If you are ready to go, click the "Install Init CMS" button.
+                                </p>
+                                <a class="btn btn-light-primary btn-sm" href="{{ url('_install_db') }}">Install Init CMS
+                                    &rarr;</a>
+                            {% endif %}
+
+
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-{% endblock sonata_admin_content %}
+
+    <div class="modal" tabindex="-1" role="dialog" id="showProgress">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">Please wait....</div>
+                <div class="modal-body">
+                    <p id="nearlyThere" class="d-none">Nearly there, initializing</p>
+
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" style="width: 1%;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock page %}
 
 
-{% block javascripts %}
+{% block before_body_end %}
     {{ parent() }}
     <script type="text/javascript">
-        $(document).ready(function () {
-            window.prettyPrint && prettyPrint();
-            jQuery('#sendUserButton').on('click', function () {
-                var width = 1;
-                jQuery('#showProgress').modal('show');
-                var loadingBar = setInterval(function () {
+        KTUtil.onDOMContentLoaded(function () {
+
+            let sendUserButton = document.getElementById('sendUserButton');
+
+            let installForm = document.getElementById('install_form');
+
+            let showProgress = document.getElementById('showProgress');
+
+
+            let dialog = new bootstrap.Modal(showProgress, {
+                height: 'auto',
+                width: 650,
+                show: false
+            });
+
+            installForm.addEventListener('submit', (e) => {
+                dialog.show();
+                e.preventDefault();
+                sendUserButton.disabled = true;
+                sendUserButton.value = 'Please wait...';
+
+                document.querySelectorAll('.invalid-feedback').forEach((item) => {
+                    item.remove();
+                });
+                axios.post(installForm.action, new FormData(installForm), {
+                    headers: {
+                        'x-requested-with': 'XMLHttpRequest',
+                    }
+                })
+                .then((response) => {
+                    if (response.data.success) {
+                        window.location.href = response.data.redirect;
+                    } else {
+                        sendUserButton.disabled = false;
+                        sendUserButton.value = 'Try again';
+                    }
+                })
+                .catch((error) => {
+                    let response = error.response;
+
+                    dialog.hide();
+                    CMSAdmin.createInitCmsMessageBox('danger', 'There was an error creating the user');
+
+                    sendUserButton.disabled = false;
+                    sendUserButton.value = 'try again';
+
+                    response.data.violations.forEach((item) => {
+                        let path = item.propertyPath
+                        let message = item.title
+
+                        let field = installForm.querySelector('[name="' + path + '"]')
+
+
+                        if (!field) {
+                            return
+                        }
+                        field.classList.add('is-invalid')
+                        field.setAttribute('required', 'required')
+
+                        if (field.nextElementSibling && field.nextElementSibling.classList.contains('invalid-feedback')) {
+                            field.nextElementSibling.innerHtml = message;
+                            return
+                        }
+                        field.insertAdjacentHTML('afterend', '<div class="invalid-feedback">' + message + '</div>')
+                    })
+                });
+            });
+            sendUserButton.addEventListener('click', () => {
+
+                let width = 1;
+                let loadingBar = setInterval(function () {
 
                     if (width <= 100) {
                         width = width + 1;
-                        jQuery('.progress-bar').css('width', width + '%');
+                        document.querySelector('.progress-bar').style.width = width + '%';
                     } else {
                         clearLoading();
                     }
                 }, 100);
 
-                function clearLoading(){
-                    jQuery('#nearlyThere').css('visibility', 'visible').hide().fadeIn().removeClass('hidden');
+                function clearLoading() {
+                    document.querySelector('#nearlyThere').classList.remove('d-none');
+
                     clearInterval(loadingBar);
                 }
             });
+
         });
     </script>
-{% endblock javascripts %}
+{% endblock before_body_end %}
 

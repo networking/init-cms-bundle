@@ -26,15 +26,14 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadPages extends Fixture
-    implements FixtureGroupInterface, OrderedFixtureInterface,
-               ContainerAwareInterface
+class LoadPages extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
 {
-    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
-
-    public function setContainer(ContainerInterface $container = null): void
+    public function __construct(
+        private readonly array $languages,
+        private readonly array $templates,
+        private readonly string $pageClass,
+    )
     {
-        $this->container = $container;
     }
 
     /**
@@ -42,9 +41,6 @@ class LoadPages extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $languages = $this->container->getParameter(
-            'networking_init_cms.page.languages'
-        );
 
         $defaultTemplate = $this->getFirstTemplate();
 
@@ -53,13 +49,12 @@ class LoadPages extends Fixture
                 = '@NetworkingInitCms/sandbox/page/one_column.html.twig';
         }
 
-        foreach ($languages as $key => $lang) {
+        foreach ($this->languages as $key => $lang) {
             $this->createHomePages(
                 $manager,
                 $defaultTemplate,
                 $lang['locale'],
-                $key,
-                $languages
+                $key
             );
         }
     }
@@ -76,12 +71,10 @@ class LoadPages extends Fixture
         $template,
         $locale,
         $key,
-        $languages
     ): void {
-        $pageClass = $this->container->getParameter(
-            'networking_init_cms.admin.page.class'
-        );
-        /** @var PageInterface $homePage */
+
+        /** @var PageInterface $pageClass */
+        $pageClass = $this->pageClass;
         $homePage = new $pageClass();
 
         $homePage->setLocale($locale);
@@ -97,7 +90,7 @@ class LoadPages extends Fixture
         // set original for translations
         if ($key > 0) {
             $firstPage = $this->getReference(
-                'homepage_'.$languages['0']['locale']
+                'homepage_'.$this->languages['0']['locale']
             );
             $homePage->getOriginals()->add($firstPage);
         }
@@ -111,11 +104,8 @@ class LoadPages extends Fixture
 
     protected function getFirstTemplate(): string|int
     {
-        $templates = $this->container->getParameter(
-            'networking_init_cms.page.templates'
-        );
 
-        foreach ($templates as $key => $template) {
+        foreach ($this->templates as $key => $template) {
             return $key;
         }
     }

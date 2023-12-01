@@ -1,13 +1,13 @@
 _configure_cms:
     path: /cms_install
-    defaults: {_controller: Networking\InitCmsBundle\Controller\InitCmsInstallController::indexAction}
+    defaults: {_controller: Networking\InitCmsBundle\Controller\InstallController::indexAction}
 
 _welcome_cms:
     path: /welcome
-    defaults: {_controller: Networking\InitCmsBundle\Controller\InitCmsInstallController::indexAction}
+    defaults: {_controller: Networking\InitCmsBundle\Controller\InstallController::indexAction}
 
 _install_db:
     path: /install_db/{complete}
-    defaults: {_controller: Networking\InitCmsBundle\Controller\InitCmsInstallController::installDbAction, complete: 0}
+    defaults: {_controller: Networking\InitCmsBundle\Controller\InstallController::installDbAction, complete: 0}
     requirements:
-        complete: /d+
+        complete: '\d+'

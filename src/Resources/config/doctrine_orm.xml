@@ -88,21 +88,28 @@
         </service>
 
         <service id="Networking\InitCmsBundle\DataFixtures\LoadHelpText">
+            <argument key="$languages">%networking_init_cms.page.languages%</argument>
             <tag name="doctrine.fixture.orm"></tag>
         </service>
 
         <service id="Networking\InitCmsBundle\DataFixtures\LoadLayoutBlocks">
+            <argument key="$languages">%networking_init_cms.page.languages%</argument>
+            <argument key="$contentTypes">%networking_init_cms.page.content_types%</argument>
+            <argument key="$templates">%networking_init_cms.page.templates%</argument>
             <tag name="doctrine.fixture.orm"></tag>
         </service>
 
         <service id="Networking\InitCmsBundle\DataFixtures\LoadMenu">
+            <argument key="$languages">%networking_init_cms.page.languages%</argument>
             <tag name="doctrine.fixture.orm"></tag>
         </service>
 
         <service id="Networking\InitCmsBundle\DataFixtures\LoadPages">
+            <argument key="$languages">%networking_init_cms.page.languages%</argument>
+            <argument key="$templates">%networking_init_cms.page.templates%</argument>
+            <argument key="$pageClass">%networking_init_cms.admin.page.class%</argument>
             <tag name="doctrine.fixture.orm"></tag>
         </service>
 
     </services>
-
 </container>

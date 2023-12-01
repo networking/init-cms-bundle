@@ -16,33 +16,33 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Networking\InitCmsBundle\Entity\Text;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Model\TextInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class LoadLayoutBlocks.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
+class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
 {
-    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
-
-    public function setContainer(ContainerInterface $container = null): void
+    public function __construct(
+        private readonly array $languages,
+        private readonly array $contentTypes,
+        private readonly array $templates,
+    )
     {
-        $this->container = $container;
     }
-
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $languages = $this->container->getParameter('networking_init_cms.page.languages');
-
-        foreach ($languages as $lang) {
+        foreach ($this->languages as $lang) {
             $this->createLayoutBlocks($manager, $lang['locale']);
         }
     }
@@ -55,9 +55,8 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
     {
         $textClass = false;
 
-        $contentTypes = $this->container->getParameter('networking_init_cms.page.content_types');
-        foreach ($contentTypes as $type) {
-            if ($type['name'] == 'Text') {
+        foreach ($this->contentTypes as $type) {
+            if ( Text::class === $type['class']) {
                 $textClass = $type['class'];
                 break;
             }
@@ -84,8 +83,7 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
      */
     protected function getFirstZone(): string
     {
-        $templates = $this->container->getParameter('networking_init_cms.page.templates');
-        foreach ($templates as $template) {
+        foreach ($this->templates as $template) {
             return $template['zones'][0]['name'];
         }
     }

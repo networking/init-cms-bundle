@@ -62,7 +62,7 @@
             <tag name="sonata.admin.filter.type" />
         </service>
 
-        <service id="Networking\InitCmsBundle\Controller\InitCmsInstallController" autowire="true" public="true">
+        <service id="Networking\InitCmsBundle\Controller\InstallController" autowire="true" public="true">
             <argument key="$userManager" type="service" id="networking_init_cms.user_manager"/>
             <tag name="controller.service_arguments"/>
         </service>

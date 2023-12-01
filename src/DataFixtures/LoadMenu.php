@@ -25,27 +25,22 @@ use Networking\InitCmsBundle\Entity\MenuItem;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadMenu extends Fixture
-    implements FixtureGroupInterface, OrderedFixtureInterface,
-               ContainerAwareInterface
+class LoadMenu extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
+
 {
-    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
-
-    public function setContainer(ContainerInterface $container = null): void
+    public function __construct(
+        private readonly array $languages,
+    )
     {
-        $this->container = $container;
     }
-
+    
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $languages = $this->container->getParameter(
-            'networking_init_cms.page.languages'
-        );
 
-        foreach ($languages as $lang) {
+        foreach ($this->languages as $lang) {
             $this->createMenuItems($manager, $lang['locale']);
         }
     }

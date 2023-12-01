@@ -12,11 +12,14 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Controller;
 
+use App\Kernel;
+use Doctrine\Persistence\ManagerRegistry;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Entity\BasePage as Page;
 use Networking\InitCmsBundle\Form\Type\InstallUserType as UserType;
+use Sonata\AdminBundle\Form\FormErrorIteratorToConstraintViolationList;
 use Sonata\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,19 +28,28 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class InitCmsInstallController.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class InitCmsInstallController extends AbstractController
+class InstallController extends AbstractController
 {
     private ?\Symfony\Bundle\FrameworkBundle\Console\Application $application = null;
 
     private array $consoleOutput = [];
 
-    public function __construct(private readonly PageManagerInterface $pageManager, private readonly PageHelper $pageHelper, private readonly UserManagerInterface $userManager)
+    public function __construct
+    (
+        private readonly PageManagerInterface $pageManager, 
+        private readonly PageHelper $pageHelper, 
+        private readonly UserManagerInterface $userManager,
+        private readonly ManagerRegistry $doctrine,
+        private readonly KernelInterface $kernel
+    )
     {
     }
 
@@ -51,7 +63,7 @@ class InitCmsInstallController extends AbstractController
         $installed = false;
         try {
 
-            $schemaManager = $this->getDoctrine()->getConnection()->getSchemaManager();
+            $schemaManager = $this->doctrine->getConnection()->getSchemaManager();
             if ($schemaManager->tablesExist(['page']) !== true) {
                 throw new \Exception('Pages not loaded');
             }
@@ -68,7 +80,7 @@ class InitCmsInstallController extends AbstractController
             $hasDB = true;
             $installed = true;
         } catch (\Exception $e) {
-            $connection = $this->getDoctrine()->getConnection();
+            $connection = $this->doctrine->getConnection();
             try {
                 $connection->connect();
                 $hasDB = true;
@@ -108,7 +120,7 @@ class InitCmsInstallController extends AbstractController
 
             return new RedirectResponse($this->generateUrl('_configure_cms'));
         } catch (\Exception) {
-            $connection = $this->getDoctrine()->getConnection();
+            $connection = $this->doctrine->getConnection();
             try {
                 $connection->connect();
             } catch (\Exception) {
@@ -117,19 +129,18 @@ class InitCmsInstallController extends AbstractController
         }
 
         /** @var \Symfony\Component\Form\Form $form */
-        $form = $this->createForm(new UserType());
+        $form = $this->createForm(UserType::class);
 
         if ('POST' == $request->getMethod()) {
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $kernel = $this->container->get('kernel');
-                $application = new Application($kernel);
+                $application = new Application($this->kernel);
                 $application->setAutoExit(false);
 
                 $this->setApplication($application);
                 $formData = $request->get('user');
-                $username = $formData['username'];
+                $username = $formData['email'];
                 $email = $formData['email'];
                 $password = $formData['password']['first'];
 
@@ -164,21 +175,36 @@ class InitCmsInstallController extends AbstractController
 
                 if ($complete == 3) {
                     /* @var \Symfony\Component\HttpFoundation\Session\Session $session */
-                    $this->container->get('session')->getFlashBag()->add('success', 'Init CMS was successfully installed');
+                    $request->getSession()->getFlashBag()->add('success', 'Init CMS was successfully installed');
 
-                    return new RedirectResponse($this->generateUrl('_configure_cms'));
+                    $url = $this->generateUrl('_configure_cms');
+
+                    if($request->isXmlHttpRequest()){
+                        return $this->json(['success' => true, 'redirect' => $url]);
+                    }
+
+                    return new RedirectResponse($url);
+
                 }
-                $this->container->get('session')->getFlashBag()->add('error', $this->getConsoleDisplay($output));
+                $request->getSession()->getFlashBag()->add('error', $this->getConsoleDisplay($output));
                 $installFailed = true;
             }
+
+
+            $errors = FormErrorIteratorToConstraintViolationList::transform($form->getErrors(true));
+
+            if($request->isXmlHttpRequest()){
+                return $this->json($errors, Response::HTTP_BAD_REQUEST);
+            }
         }
+
 
         return $this->render(
             '@NetworkingInitCms/InitCmsInstall/index.html.twig',
             [
                 'form' => $form->createView(),
                 'title' => 'Install the init cms',
-                'complete' => $complete,
+                'complete' => (int) $complete,
                 'install_failed' => $installFailed,
             ]
         );
@@ -245,7 +271,7 @@ class InitCmsInstallController extends AbstractController
     {
         $output->write('> Create an admin user', true);
         $arguments = [
-            'command' => 'fos:user:create',
+            'command' => 'sonata:user:create',
             'username' => $username,
             'email' => $email,
             'password' => $password,
@@ -266,7 +292,7 @@ class InitCmsInstallController extends AbstractController
         $output->write('> Load dummy cms data', true);
         $arguments = [
             'command' => 'doctrine:fixtures:load',
-            '--fixtures' => __DIR__.'/../Fixtures',
+            '--group' => ['init_cms'],
             '--no-interaction' => true,
         ];
 
@@ -339,4 +365,14 @@ class InitCmsInstallController extends AbstractController
 
         return new StreamOutput(fopen('php://memory', 'w+', false), StreamOutput::VERBOSITY_VERBOSE);
     }
+
+    public static function getSubscribedServices(): array
+    {
+        return parent::getSubscribedServices() + [
+            'kernel' => '?'.KernelInterface::class,
+
+        ];
+    }
 }
+
+
