@@ -216,7 +216,19 @@ fixtures, as well as create an admin user.
 
 There is an install wizard which will get this done for you, just go to the following URL and follow the instructions:
 
+Just add the routes to your routing.yaml file:
+
+```yaml
+networking_init_install:
+    resource: "@NetworkingInitCmsBundle/Resources/config/routing/install.yaml"
+    prefix:   /
+```
+
+Then go to the following URL and follow the instructions:
+
     http://localhost/cms_install
+
+Don't forget to remove the route from your routing.yaml file once you have finished the install process.
 
 
 Alternatively you can run the install process on the command line,
@@ -229,7 +241,7 @@ Now you should be up and running.
 
 5) You have installed the init CMS bundle
 -----------------------------------------
-Then you can visit your admin dashboard on http://my-server/admin/dashboard
+Then you can visit your admin dashboard on http://example.com/admin/dashboard
 
 [1]:  http://www.networking.ch
 [2]:  https://github.com/networking/init-cms-sandbox/

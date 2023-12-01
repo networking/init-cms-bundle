@@ -22,34 +22,29 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 #[AsCommand(name: 'networking:initcms:data-setup', description: 'create and update db schema and append fixtures')]
 class DataSetupCommand extends Command
 {
-   
-    /**
-     * @var ManagerRegistry
-     */
-    protected $registry;
-    protected $pageManager;
-    protected $pageHelper;
+
+    protected $proceed = true;
 
     /**
      * DataSetupCommand constructor.
+     *
      * @param ManagerRegistry $registry
      * @param PageManagerInterface $pageManager
      * @param PageHelper $pageHelper
      * @param string|null $name
      */
     public function __construct(
-        ManagerRegistry $registry,
-        PageManagerInterface $pageManager,
-        PageHelper $pageHelper,
+        protected ManagerRegistry $registry,
+        protected PageManagerInterface $pageManager,
+        protected PageHelper $pageHelper,
         string $name = null
     ) {
-        $this->registry = $registry;
-        $this->pageManager = $pageManager;
-        $this->pageHelper = $pageHelper;
         parent::__construct($name);
     }
 
@@ -59,22 +54,48 @@ class DataSetupCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('drop', '', InputOption::VALUE_NONE, 'If set: drop the existing db schema')
-            ->addOption('no-fixtures', '', InputOption::VALUE_NONE, 'If set: don\'t load fixtures')
-            ->addOption('use-acl', '', InputOption::VALUE_OPTIONAL, 'If set: use acl', false);
+            ->addOption(
+                'drop',
+                '',
+                InputOption::VALUE_NONE,
+                'If set: drop the existing db schema'
+            )
+            ->addOption(
+                'no-fixtures',
+                '',
+                InputOption::VALUE_NONE,
+                'If set: don\'t load fixtures'
+            )
+            ->addOption(
+                'use-acl',
+                '',
+                InputOption::VALUE_OPTIONAL,
+                'If set: use acl',
+                false
+            );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output
+    ): int {
+
+        if (!$this->proceed){
+
+            $output->writeln('<error>Aborted</error>');
+
+            return Command::INVALID;
+        }
+
         if ($input->getOption('drop')) {
             $this->dropSchema($output);
         }
 
         $this->updateSchema($output);
-        
+
         if ($input->getOption('use-acl')) {
             $this->initACL($output);
             $this->sonataSetupACL($output);
@@ -82,10 +103,27 @@ class DataSetupCommand extends Command
 
         if (!$input->getOption('no-fixtures')) {
             $this->loadFixtures($output);
-            $this->publishPages($output);
+
+            if(Command::FAILURE === $this->publishPages($output)){
+                return Command::FAILURE;
+            }
         }
 
-        return 0;
+
+        return Command::SUCCESS;
+    }
+
+    public function interact(InputInterface $input, OutputInterface $output)
+    {
+
+        $helper = $this->getHelper('question');
+        $output->writeln('<info>Are you sure you want to continue? The will change the struchture of your database, by adding tables and columns relavent to the DB</info>');
+        $question = new ConfirmationQuestion(
+            '<question>Continue with this action? (y/n)</question>',
+            false
+        );
+
+        $this->proceed = $helper->ask($input, $output, $question);
     }
 
     public function dropSchema(OutputInterface $output): int
@@ -112,6 +150,7 @@ class DataSetupCommand extends Command
         $arguments = [
             'command' => 'doctrine:schema:update',
             '--force' => true,
+            '--complete' => true,
         ];
 
         $input = new ArrayInput($arguments);
@@ -126,11 +165,7 @@ class DataSetupCommand extends Command
     {
         $command = $this->getApplication()->find('acl:init');
 
-        $arguments = [
-            'command' => 'acl:init',
-        ];
-
-        $input = new ArrayInput($arguments);
+        $input = new ArrayInput([]);
 
         return $command->run($input, $output);
     }
@@ -142,15 +177,10 @@ class DataSetupCommand extends Command
     {
         $command = $this->getApplication()->find('sonata:admin:setup-acl');
 
-        $arguments = [
-            'command' => 'sonata:admin:setup-acl',
-        ];
-
-        $input = new ArrayInput($arguments);
+        $input = new ArrayInput([]);
 
         return $command->run($input, $output);
     }
-
 
 
     /**
@@ -160,8 +190,14 @@ class DataSetupCommand extends Command
     {
         $command = $this->getApplication()->find('doctrine:fixtures:load');
 
+        $pages = $this->pageManager->findAll();
+
+        if(count($pages) > 0){
+            $output->writeln('<comment>Date already exist, skipping fixtures</comment>');
+            return Command::SUCCESS;
+        }
+
         $arguments = [
-            'command' => 'doctrine:fixtures:load',
             '--group' => ['init_cms'],
             '--append' => true,
         ];
@@ -187,9 +223,8 @@ class DataSetupCommand extends Command
             return 0;
         } catch (\Exception $e) {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
-            die;
 
-            return 1;
+            return Command::FAILURE;
         }
     }
 }
