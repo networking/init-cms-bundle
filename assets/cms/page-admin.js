@@ -38,7 +38,6 @@ function initDropZone() {
     })
 
     containers.forEach(function (container) {
-
         let swappable = new Sortable(container, {
             group: {name: 'shared', pull: true, put: acceptLayoutBlock},
             animation: 150,
@@ -51,7 +50,7 @@ function initDropZone() {
                 }
 
                 saveLayoutBlockSort(evt, (response) => {
-                   CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
+                    CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
                 })
             },
             onAdd: function (/**CustomEvent*/evt, dragEl) {
@@ -103,6 +102,14 @@ function initDropZone() {
 
             }
         });
+
+        document.addEventListener('fade-out-blocks', function (e) {
+            swappable.option('disabled', true);
+        })
+
+        document.addEventListener('fade-in-blocks', function (e) {
+            swappable.option('disabled', false);
+        })
     })
 }
 
@@ -222,6 +229,7 @@ let fadeOutContentBlocks = (except) => {
         }
         item.classList.add('opacity-5')
     })
+    document.dispatchEvent(new CustomEvent('fade-out-blocks'))
 }
 
 let fadeInContentBlocks = () => {
@@ -229,6 +237,7 @@ let fadeInContentBlocks = () => {
     contentBlocks.forEach((item) => {
         item.classList.remove('opacity-5')
     })
+    document.dispatchEvent(new CustomEvent('fade-in-blocks'))
 }
 
 
