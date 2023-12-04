@@ -1,26 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-.navbar-initcms nav {
-  background-color: rgba(0, 0, 0, 0.8);
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 1030;
-  display: flex;
-}
-
-.navbar-initcms .dropdown {
-  position: relative;
-  display: inline-block;
-}
 
 .navbar-initcms .dropdown-content {
   display: none;
-  position: absolute;
-  min-width: 200px;
-  z-index: 1040;
 }
 
 .navbar-initcms .dropdown:hover .dropdown-content {
@@ -31,4 +14,17 @@ body.initcms-admin-navbar-loaded {
   margin-top: 70px;
 }
 
+.navbar-initcms {
+  width: 100%;
+  z-index: 1000;
+}
 
+.navbar-initcms a:hover {
+  text-decoration: none;
+  border: none;
+}
+
+.navbar-initcms a {
+  text-decoration: none;
+  border: none;
+}

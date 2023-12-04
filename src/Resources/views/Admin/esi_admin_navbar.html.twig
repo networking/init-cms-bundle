@@ -1,30 +1,138 @@
 {% if app.user is defined %}
     {% include '@NetworkingInitCms/Admin/toolbar_css.html.twig' %}
-     <div class="navbar-initcms">
-            <nav class="tw-absolute tw-inset-x-0 tw-top-0 tw-p-2 tw-bg-black tw-text-white" aria-label="Third navbar example">
-                <div class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-container tw-mx-auto">
-                    <a class="navbar-brand" href="{{ url('sonata_admin_dashboard') }}">
-                                                <img id="initcms-logo" src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
-                                                     width="77">
-                    </a>
-                    <div class="tw-grow">
-                        <a class="nav-link" href="{{ url('sonata_admin_dashboard') }}">
-                            {{ sonata_config.title }}
-                        </a>
+    <div class="init-cms-min-h-full navbar-initcms init-cms-fixed init-cms-top-0">
+        <nav class="init-cms-bg-gray-800">
+            <div class="init-cms-mx-auto init-cms-max-w-7xl init-cms-px-4 init-cms-sm:px-6 init-cms-lg:px-8">
+                <div class="init-cms-flex init-cms-h-16 init-cms-items-center init-cms-justify-between">
+                    <div class="init-cms-flex init-cms-items-center">
+                        <div class="init-cms-flex-shrink-0">
+                            <a class="navbar-brand" href="{{ url('sonata_admin_dashboard') }}">
+                                <img id="initcms-logo"
+                                     src="{{ asset('bundles/networkinginitcms/img/logo_initcms.png') }}"
+                                     width="77">
+                            </a>
+                        </div>
+                        <div class="init-cms-hidden md:init-cms-block">
+                            <div class="init-cms-ml-10 init-cms-flex init-cms-items-baseline init-cms-space-x-4">
+                                <a href="{{ url('sonata_admin_dashboard') }}"
+                                   class="init-cms-text-gray-300 init-cms-hover:bg-gray-700 init-cms-hover:text-white
+                                   init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-sm init-cms-font-medium">
+                                    {{ sonata_config.title }}
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="tw-text-white">
-                        {% if sonata_config is defined %}
-                            {{ knp_menu_render('FrontendAdminMenu',{
-                                'template': '@NetworkingInitCms/Admin/esi-admin-menu.html.twig',
-                                'currentClass': 'active',
-                                'ancestorClass': 'active',
-                                'branch_class': 'tw-inline-block tw-text-white dropdown',
-                                'leaf_class': 'tw-inline-block tw-text-white tw-p-1',
-                                'allow_safe_labels': true}) }}
-                        {% endif %}
+                    <div class="init-cms-hidden md:init-cms-block">
+                        <div class="init-cms-ml-4 init-cms-flex init-cms-items-center init-cms-md:ml-6">
+
+                            {% if editPath %}
+                            <a href="{{ editPath }}"
+                               class="init-cms-text-gray-300 init-cms-hover:bg-gray-700 init-cms-hover:text-white init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-sm init-cms-font-medium init-cms-flex init-cms-max-init-cms-w-xs init-cms-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="init-cms-w-4 init-cms-h-4 init-cms-me-2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                </svg>
+                                {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}
+                            </a>
+                            {% endif %}
+
+
+                            <a href="{{ adminPath }}"
+                               class="init-cms-text-gray-300 init-cms-hover:bg-gray-700 init-cms-hover:init-cms-text-white init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-sm init-cms-font-medium">
+                                Admin
+                            </a>
+
+
+                            <div class="init-cms-relative init-cms-ml-3 dropdown">
+                                <div>
+                                    <a href="#"
+                                       class="init-cms-relative init-cms-text-white init-cms-flex init-cms-max-w-xs init-cms-items-center init-cms-rounded-full init-cms-bg-gray-800 init-cms-text-sm">
+                                        {{ ('link.website_' ~ firstItemStatus)|trans({}, 'NetworkingInitCmsBundle') }}
+                                        <svg class="init-cms-w-2.5 init-cms-h-2.5 init-cms-ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="dropdown-content init-cms-hover:md-block init-cms-absolute
+                                 init-cms-right-0 init-cms-z-10 init-cms-w-48 init-cms-origin-top-right init-cms-rounded-md init-cms-bg-white init-cms-py-1
+                                 init-cms-shadow-lg init-cms-ring-1 init-cms-ring-black init-cms-ring-opacity-5 init-cms-focus:outline-none"
+                                     role="menu" aria-orientation="vertical">
+
+                                    <a href="{{ draftPath }}" class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm init-cms-text-amber-400 ">
+                                        {{ 'link.website_status_draft'|trans({}, 'NetworkingInitCmsBundle') }}
+                                    </a>
+                                    <a href="{{ livePath }}" class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm init-cms-text-green-500 ">
+                                        {{ 'link.website_status_published'|trans({}, 'NetworkingInitCmsBundle') }}
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Profile dropdown -->
+                        </div>
+                    </div>
+                    <div class="init-cms--mr-2 init-cms-flex md:init-cms-hidden">
+                        <!-- Mobile menu button -->
+                        <button type="button"
+                                id="mobile-menu-button"
+                                class="init-cms-relative init-cms-inline-flex init-cms-items-center init-cms-justify-center init-cms-rounded-md init-cms-bg-gray-800
+                                init-cms-p-2 init-cms-text-gray-400 init-cms-hover:bg-gray-700init-cms- hover:text-white init-cms-focus:outline-none init-cms-focus:ring-2
+                                init-cms-focus:ring-white init-cms-focus:ring-offset-2 init-cms-focus:ring-offset-gray-800"
+                                aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="init-cms-absolute init-cms--inset-0.5"></span>
+                            <span class="init-cms-sr-only">Open main menu</span>
+                            <!-- Menu open: "hidden", Menu closed: "block" -->
+                            <svg class="init-cms-blockinit-cms-h-6 init-cms-w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                            </svg>
+                            <!-- Menu open: "block", Menu closed: "hidden" -->
+                            <svg class="init-cms-hidden init-cms-h-6 init-cms-w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                 stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-            </nav>
-     </div>
+            </div>
+            <!-- Mobile menu, show/hide based on menu state. -->
+            <div class="md:init-cms-hidden init-cms-hidden" id="mobile-menu">
+                <div class="init-cms-space-y-1 init-cms-px-2 init-cms-pb-3 init-cms-pt-2 init-cms-sm:px-3">
+                    <a href="{{ url('sonata_admin_dashboard') }}"
+                       class="init-cms-text-gray-300 hover:init-cms-bg-gray-700 hover:init-cms-text-white block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium">
+                        Dashboard</a>
+
+                    {% if editPath %}
+                        <a href="{{ editPath }}"
+                           class="init-cms-text-gray-300 hover:init-cms-bg-gray-700 hover:init-cms-text-white block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium">
+                            {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}
+                        </a>
+                    {% endif %}
+                    <a href="{{ adminPath }}"
+                       class="init-cms-text-gray-300 hover:init-cms-bg-gray-700 hover:init-cms-text-white block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium">
+
+                    Admin
+                    </a>
+                </div>
+                <div class="init-cms-border-t init-cms-border-gray-700 init-cms-pb-3 init-cms-pt-4 dropdown">
+                    <div class="init-cms-flex init-cms-items-center init-cms-px-2">
+                        <button type="button" class="init-cms-relative init-cms-text-white init-cms-flex init-cms-max-w-xs init-cms-px-3 init-cms-items-center init-cms-rounded-full init-cms-bg-gray-800 init-cms-text-sm">
+                            {{ ('link.website_' ~ firstItemStatus)|trans({}, 'NetworkingInitCmsBundle') }}
+                            <svg class="init-cms-w-2.5 init-cms-h-2.5 init-cms-ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="init-cms-mt-3 init-cms-space-y-1 init-cms-px-2 dropdown-content ">
+                        <a href="{{ draftPath }}" class="init-cms-block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium hover:init-cms-bg-gray-700 init-cms-text-amber-400 ">
+                            {{ 'link.website_status_draft'|trans({}, 'NetworkingInitCmsBundle') }}
+                        </a>
+                        <a href="{{ livePath }}" class="init-cms-block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium hover:init-cms-bg-gray-700  init-cms-text-green-500 ">
+                            {{ 'link.website_status_published'|trans({}, 'NetworkingInitCmsBundle') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
 
 {% endif %}

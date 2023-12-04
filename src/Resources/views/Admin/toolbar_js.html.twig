@@ -1,8 +1,6 @@
 <!-- load bar -->
 {% if is_granted('ROLE_SONATA_ADMIN') %}
     <div id="initcmsnavadmin" data-page-id="{{ page_id ? page_id : 0 }}"></div>
-    <script src="{{ asset('bundles/networkinginitcms/vendor/fontawesome/js/fontawesome.js') }}"></script>
-    <script src="{{ asset('bundles/networkinginitcms/vendor/fontawesome/js/solid.js') }}"></script>
     <script type="module">
         (function () {
             var initcmsnavadmin = document.getElementById('initcmsnavadmin');
@@ -15,13 +13,8 @@
         })();
         var noop = function () {};
         function loadDropdown() {
-            let dropdownElementList = document.querySelectorAll('.navbar-initcms .dropdown-toggle');
-            const dropdownList = [...dropdownElementList].map(dropdownToggleEl => {
-                dropdownToggleEl.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    dropdownToggleEl.nextElementSibling.classList.toggle('show')
-                })
+            document.querySelector('#mobile-menu-button').addEventListener('click', function () {
+                document.querySelector('#mobile-menu').classList.toggle('init-cms-hidden');
             });
         };
         function loadBar(url, onSuccess, onError, options) {

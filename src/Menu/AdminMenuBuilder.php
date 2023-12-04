@@ -370,7 +370,7 @@ class AdminMenuBuilder extends MenuBuilder
                     'view_website.status_draft',
                     [
                         'uri' => $draftPath,
-                        'linkAttributes' => ['class' => 'tw-text-amber-400'],
+                        'linkAttributes' => ['class' => 'text-amber-400'],
                         'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
                     ]
                 );
@@ -380,7 +380,7 @@ class AdminMenuBuilder extends MenuBuilder
                     'view_website.status_published',
                     [
                         'uri' => $livePath,
-                        'linkAttributes' => ['class' => 'tw-text-green-500'],
+                        'linkAttributes' => ['class' => 'text-green-500'],
                         'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
                     ]
                 );
@@ -391,7 +391,7 @@ class AdminMenuBuilder extends MenuBuilder
                     'view_website.status_draft',
                     [
                         'uri' => $defaultHome,
-                        'linkAttributes' => ['class' => 'color-draft'],
+                        'linkAttributes' => ['class' => 'text-amber-400'],
                         'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
                     ]
                 );
@@ -399,6 +399,7 @@ class AdminMenuBuilder extends MenuBuilder
                     'view_website.status_published',
                     [
                         'uri' => $defaultHome,
+                        'linkAttributes' => ['class' => 'text-green-500'],
                         'extras' => ['translation_domain' => 'NetworkingInitCmsBundle'],
                     ]
                 );
