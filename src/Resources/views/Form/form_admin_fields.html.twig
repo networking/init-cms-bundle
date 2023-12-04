@@ -166,7 +166,8 @@ file that was distributed with this source code.
 
 {% block help_label_tooltip %}
     <span class="help-block">
-        <a href="#" data-bs-toggle="tooltip" data-bs-placement="{{ help_label_tooltip.placement}}" title="{{ help_label_tooltip.title|trans({}, translation_domain) }}">
+        <a href="#" data-bs-toggle="tooltip" data-bs-placement="{{ help_label_tooltip.placement }}"
+           title="{{ help_label_tooltip.title|trans({}, translation_domain) }}">
             {% if help_label_tooltip.icon is not same as(false) %}
                 {{ networking_bootstrap_icon(help_label_tooltip.icon) }}
             {% endif %}
@@ -184,7 +185,9 @@ file that was distributed with this source code.
 
 {% block help_label_popover %}
     <span class="help-block">
-        <a href="#" data-bs-toggle="popover" data-trigger="hover" data-placement="{{ help_label_popover.placement}}" title="{{ help_label_popover.title|trans({}, translation_domain) }}" data-content="{{ help_label_popover.content|trans({}, translation_domain) }}" data-html="true">
+        <a href="#" data-bs-toggle="popover" data-trigger="hover" data-placement="{{ help_label_popover.placement }}"
+           title="{{ help_label_popover.title|trans({}, translation_domain) }}"
+           data-content="{{ help_label_popover.content|trans({}, translation_domain) }}" data-html="true">
             {% if help_label_popover.icon is not same as(false) %}
                 {{ networking_bootstrap_icon(help_label_popover.icon) }}
             {% endif %}
@@ -212,9 +215,9 @@ file that was distributed with this source code.
     {% apply spaceless %}
         {% if help_block %}
             <p class="form-text mb-0 help-text">
-            {{ help_block|trans(help_translation_parameters, translation_domain)|raw }}
+                {{ help_block|trans(help_translation_parameters, translation_domain)|raw }}
             </p>
-        {%endif %}
+        {% endif %}
         {% if help_block_tooltip.title %}
             &nbsp;{{ block('help_block_tooltip') }}
         {% endif %}
@@ -234,38 +237,38 @@ file that was distributed with this source code.
 {% endblock sonata_roles_matrix_widget %}
 
 {% block checkbox_widget %}
-        {%- set attr_class = attr_class|default(attr.class|default('')) -%}
+    {%- set attr_class = attr_class|default(attr.class|default('')) -%}
 
-        {% set row_class = row_attr.class|default('mb-3') %}
-        {%- if 'btn-check' not in attr_class -%}
-            {%- set attr_class = attr_class ~ ' form-check-input' -%}
-            {%- set row_class = row_class ~ ' form-check' -%}
-        {%- endif -%}
-        {%- set attr = attr|merge({class: attr_class|trim}) -%}
-        {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
-        {%- if 'checkbox-inline' in parent_label_class %}
-            {%- set row_class = row_class ~ ' form-check-inline' -%}
-        {% endif -%}
-        {%- if 'checkbox-switch' in parent_label_class %}
-            {%- set row_class = row_class ~ ' form-switch' -%}
-        {% endif -%}
-        {%- if row_class is not empty -%}
-            <div class="{{ row_class }}">
-        {%- endif -%}
+    {% set row_class = row_attr.class|default('mb-3') %}
+    {%- if 'btn-check' not in attr_class -%}
+        {%- set attr_class = attr_class ~ ' form-check-input' -%}
+        {%- set row_class = row_class ~ ' form-check' -%}
+    {%- endif -%}
+    {%- set attr = attr|merge({class: attr_class|trim}) -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {%- if 'checkbox-inline' in parent_label_class %}
+        {%- set row_class = row_class ~ ' form-check-inline' -%}
+    {% endif -%}
+    {%- if 'checkbox-switch' in parent_label_class %}
+        {%- set row_class = row_class ~ ' form-switch' -%}
+    {% endif -%}
+    {%- if row_class is not empty -%}
+        <div class="{{ row_class }}">
+    {%- endif -%}
 
-        {% set checkbox %}
-            <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-        {% endset %}
-        {% if label is not same as(false) %}
+    {% set checkbox %}
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    {% endset %}
+    {% if label is not same as(false) %}
         {{- form_label(form, null, { widget: checkbox }) -}}
-            {% else %}
-            {{ checkbox|raw }}
-        {% endif %}
+    {% else %}
+        {{ checkbox|raw }}
+    {% endif %}
 
-        {%- if row_class is not empty -%}
-            </div>
-        {%- endif -%}
-{#    {% endif %}#}
+    {%- if row_class is not empty -%}
+        </div>
+    {%- endif -%}
+    {#    {% endif %} #}
 {% endblock checkbox_widget %}
 
 
@@ -282,7 +285,7 @@ file that was distributed with this source code.
              'code':      sonata_admin.admin.root.code,
              'locale':    app.request.locale
          }) }}"
-        >
+    >
         <span id="field_widget_{{ id }}"
 
               data-preview-url="{{ url('sonata_admin_short_object_information', {
@@ -290,7 +293,7 @@ file that was distributed with this source code.
                   'uniqid': sonata_admin.field_description.associationadmin.uniqid,
                   '_sonata_admin': sonata_admin.field_description.associationadmin.baseCodeRoute,
                   'linkParameters': sonata_admin.field_description.option('link_parameters', {})
-              })}}">
+              }) }}">
             {% if sonata_admin.value and sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value) is not null %}
                 {{ render(path('sonata_admin_short_object_information', {
                     '_sonata_admin': sonata_admin.field_description.associationadmin.baseCodeRoute,
@@ -352,7 +355,7 @@ file that was distributed with this source code.
         </span>
     </div>
 
-{#    {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}#}
+    {#    {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %} #}
 {% endblock %}
 
 {% block sonata_type_admin_widget %}
@@ -431,7 +434,7 @@ file that was distributed with this source code.
     {% if select2 is defined and select2 %}
 
 
-        {% if multiple is same as(false)  %}
+        {% if multiple is same as(false) %}
             {%- if label is empty -%}
                 {%- if label_format is not empty -%}
                     {% set label = label_format|replace({
@@ -558,13 +561,13 @@ file that was distributed with this source code.
 {% block datetime_widget %}
     {% apply spaceless %}
         {% if widget == 'single_text' %}
-                {% set attr = attr|merge({
-                    'data-provider': 'datetimepicker',
-                    'data-link-field': id,
-                    'data-date-format': 'd.m.Y H:i',
-                    'data-date-language': app.request.getLocale()|slice(0, 2),
-                }) %}
-                {{ block('form_widget_simple') }}
+            {% set attr = attr|merge({
+                'data-provider': 'datetimepicker',
+                'data-link-field': id,
+                'data-date-format': 'd.m.Y H:i',
+                'data-date-language': app.request.getLocale()|slice(0, 2),
+            }) %}
+            {{ block('form_widget_simple') }}
         {% else %}
             {% set attr = attr|merge({'class': attr.class|default('')}) %}
             <div {{ block('widget_container_attributes') }}>
@@ -583,7 +586,7 @@ file that was distributed with this source code.
 
 {% block networking_type_media_preview_widget %}
     {% if is_image %}
-        <img src="{{ sonata_path(value, 'admin')  }}?{{ date().timestamp }}"/>
+        <img src="{{ sonata_path(value, 'admin') }}?{{ date().timestamp }}"/>
     {% else %}
         {{ sonata_media(value, 'admin') }}
     {% endif %}
@@ -646,12 +649,12 @@ file that was distributed with this source code.
         <div class="{{ row_class }}">
     {%- endif -%}
     {% set radio %}
-    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+        <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
     {% endset %}
     {% if label is not same as(false) %}
-    {{- form_label(form, null, { widget: radio }) -}}
+        {{- form_label(form, null, { widget: radio }) -}}
     {% else %}
-    {{ radio|raw }}
+        {{ radio|raw }}
     {% endif %}
     {%- if row_class is not empty -%}
         </div>
@@ -712,7 +715,7 @@ file that was distributed with this source code.
                       'objectId': '__objectId__',
                       'uniqid': admin.uniqid,
                       '_sonata_admin': admin.code
-                  })}}"
+                  }) }}"
             >
                 {% if form.vars.data %}
                     {% set object = admin.object(admin.id(form.vars.data)) %}
@@ -840,7 +843,7 @@ file that was distributed with this source code.
 {% block sonata_type_native_collection_widget_row %}
     {% apply spaceless %}
         <div class="collection-item border my-5 p-3">
-        {{ form_row(child, { label: false }) }}
+            {{ form_row(child, { label: false }) }}
         </div>
     {% endapply %}
 {% endblock sonata_type_native_collection_widget_row %}
@@ -901,7 +904,7 @@ file that was distributed with this source code.
 
 {% block collection_button %}
 
-    <a {% for attrname,attrvalue in button_values.attr %} {{attrname}}="{{attrvalue}}"{% endfor %} data-collection-{{ button_type }}-btn="{{ form.vars['id'] }}">
+    <a {% for attrname,attrvalue in button_values.attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %} data-collection-{{ button_type }}-btn="{{ form.vars['id'] }}">
     {% if button_values.icon is not null %}
         {% if button_values.label is not defined  or not button_values.label %}
             {% set button_values = button_values|merge({icon: button_values.icon ~ ' pe-0'}) %}
@@ -959,40 +962,40 @@ file that was distributed with this source code.
 {% endblock gallery_row %}
 
 {% block gallery_widget %}
-{% apply spaceless %}
-    {% if prototype is defined %}
-        {% set child = prototype %}
-        {% set allow_delete_backup = allow_delete %}
-        {% set allow_delete = true %}
-        {% set attr = attr|merge({
-            'data-collection-counter': form.children|length,
-            'data-prototype': form_row(child, { label: false }),
-            'data-prototype-name': prototype.vars.name,
-            'class': attr.class|default('') }) %}
-        {% set allow_delete = allow_delete_backup %}
-    {% endif %}
+    {% apply spaceless %}
+        {% if prototype is defined %}
+            {% set child = prototype %}
+            {% set allow_delete_backup = allow_delete %}
+            {% set allow_delete = true %}
+            {% set attr = attr|merge({
+                'data-collection-counter': form.children|length,
+                'data-prototype': form_row(child, { label: false }),
+                'data-prototype-name': prototype.vars.name,
+                'class': attr.class|default('') }) %}
+            {% set allow_delete = allow_delete_backup %}
+        {% endif %}
 
-    <div class="row">
-        <div class="form-group col-sm-12">
-            <a href="{{ path('admin_networking_initcms_media_gallery_select', {'_sonata_admin': 'sonata.media.admin.media', 'context':app.request.get('context', 'default'), 'pcode':1, 'provider':'sonata.media.provider.image'}) }}"
-               id="select-button-{{ id }}"
-               data-collection-id="#collection{{ id }}_form_group"
-               data-index="{{ name }}"
-               data-form-id="{{ id }}" class="open-select-media btn-primary btn">Bilder Auswählen</a>
+        <div class="row">
+            <div class="form-group col-sm-12">
+                <a href="{{ path('admin_networking_initcms_media_gallery_select', {'_sonata_admin': 'sonata.media.admin.media', 'context':app.request.get('context', 'default'), 'pcode':1, 'provider':'sonata.media.provider.image'}) }}"
+                   id="select-button-{{ id }}"
+                   data-collection-id="#collection{{ id }}_form_group"
+                   data-index="{{ name }}"
+                   data-form-id="{{ id }}" class="open-select-media btn-primary btn btn-sm">Bilder Auswählen</a>
+            </div>
         </div>
-    </div>
-    <div {{ block('widget_container_attributes') }}>
-        {{ form_errors(form) }}
-        {% for child in form %}
-            {{ form_row(child, { label: false }) }}
-        {% endfor %}
-        {{ form_rest(form) }}
-    </div>
-{% endapply %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
+            {% for child in form %}
+                {{ form_row(child, { label: false }) }}
+            {% endfor %}
+            {{ form_rest(form) }}
+        </div>
+    {% endapply %}
 {% endblock gallery_widget %}
 
 {% block gallery_image_row %}
-    <div class="collection-item border my-5 p-3"  data-selected="{{ form.vars.selected }}">
+    <div class="collection-item border my-5 p-3" data-selected="{{ form.vars.selected }}">
         {{ form_row(form) }}
     </div>
 {% endblock %}
@@ -1027,8 +1030,8 @@ file that was distributed with this source code.
                     {{- block('form_widget_simple') -}}
                     {{- block('form_label') -}}
                 </span>
-                {% else %}
-                    {{- block('form_widget_simple') -}}
+            {% else %}
+                {{- block('form_widget_simple') -}}
             {% endif %}
             {%- if append -%}
                 <span class="input-group-text">{{ money_pattern|form_encode_currency }}</span>
@@ -1088,8 +1091,8 @@ file that was distributed with this source code.
 
 {% block widget_addon %}
     {% apply spaceless %}
-        {% set widget_addon_icon = widget_addon.icon is defined ? widget_addon.icon : null  %}
-        {% set widget_addon_icon_inverted = widget_addon.icon_inverted is defined ? widget_addon.icon_inverted : false  %}
+        {% set widget_addon_icon = widget_addon.icon is defined ? widget_addon.icon : null %}
+        {% set widget_addon_icon_inverted = widget_addon.icon_inverted is defined ? widget_addon.icon_inverted : false %}
         <span class="input-group-text">{{ (widget_addon.text|default(false) ? widget_addon.text|trans({}, translation_domain)|raw : networking_bootstrap_icon(widget_addon_icon, widget_addon_icon_inverted)) }}</span>
     {% endapply %}
 {% endblock widget_addon %}
@@ -1107,11 +1110,11 @@ file that was distributed with this source code.
         <button
                 type="{{ widget_btn.type | default('button') }}"
                 class="{{ 'btn ' ~ widget_btn.class | default('btn-light-secondary') }}"
-                 {{ block('attributes') }}
+                {{ block('attributes') }}
         >
-        {% if widget_btn.icon is not empty %}
-            {{ networking_bootstrap_icon(widget_btn.icon, widget_btn.icon_inverted | default(false), widget_btn.icon_set | default('kioutline')) }}
-        {% endif %}
+            {% if widget_btn.icon is not empty %}
+                {{ networking_bootstrap_icon(widget_btn.icon, widget_btn.icon_inverted | default(false), widget_btn.icon_set | default('kioutline')) }}
+            {% endif %}
             {{ widget_btn.label | default("") | trans({}, translation_domain) }}
         </button>
     {% endapply %}

@@ -20,6 +20,7 @@ class GalleryImageType extends \Symfony\Component\Form\AbstractType
                 MediaEntityType::class,
                 [
                     'context' => $options['link_parameters']['context'],
+                    'provider_name' => 'sonata.media.provider.image',
                     'label' => false,
                     'constraints' => new NotNull(),
                     'widget_form_group_attr' => ['class' => 'form-group col-sm-10'],

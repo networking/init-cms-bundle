@@ -16,6 +16,7 @@ namespace Networking\InitCmsBundle\Admin\Extension;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\Type\GalleryImageType;
 use Sonata\AdminBundle\Admin\AbstractAdminExtension;
+use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -52,7 +53,7 @@ class GalleryAdminExtension extends AbstractAdminExtension
             ->with('Gallery', ['class' => 'col-md-9'])->end()
             ->with('Options', ['class' => 'col-md-3'])->end();
 
-        $context = $form->getAdmin()->getPersistentParameter('context');
+        $context = $form->getAdmin()->getPersistentParameter('context',$this->pool->getDefaultContext());
 
         if (!$context) {
             $context = $this->pool->getDefaultContext();
@@ -70,10 +71,10 @@ class GalleryAdminExtension extends AbstractAdminExtension
 
         $form
             ->with('Options')
-            ->add('context', ChoiceType::class, [
-                'choices' => $contexts,
-                'choice_translation_domain' => 'SonataMediaBundle',
-            ])
+//            ->add('context', ChoiceType::class, [
+//                'choices' => $contexts,
+//                'choice_translation_domain' => 'SonataMediaBundle',
+//            ])
             ->add('name')
             ->add('enabled', null, ['required' => false])
             ->ifTrue(count($formats) > 0)
