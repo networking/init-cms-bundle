@@ -119,7 +119,7 @@ class LanguageSwitcherHelper
 
         $data = match (true) {
             $content instanceof PageInterface => [
-                'translations' => $content->converTranslationsToArray(),
+                'translations' => $content->convertTranslationsToArray(),
                 'originals' => $content->convertOriginalsToArray(),
             ],
             $content instanceof PageSnapshotInterface => json_decode($content->getVersionedData(), true),
