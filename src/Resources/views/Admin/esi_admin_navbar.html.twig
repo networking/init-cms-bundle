@@ -2,7 +2,7 @@
     {% include '@NetworkingInitCms/Admin/toolbar_css.html.twig' %}
     <div class="init-cms-min-h-full navbar-initcms init-cms-fixed init-cms-top-0">
         <nav class="init-cms-bg-gray-800">
-            <div class="init-cms-mx-auto init-cms-max-w-7xl init-cms-px-4 init-cms-sm:px-6 init-cms-lg:px-8">
+            <div class="init-cms-mx-auto init-cms-max-w-7xl lg:md:init-cms-px-2 md:init-cms-px-4 sm:init-cms-px-6 ">
                 <div class="init-cms-flex init-cms-h-16 init-cms-items-center init-cms-justify-between">
                     <div class="init-cms-flex init-cms-items-center">
                         <div class="init-cms-flex-shrink-0">
@@ -13,9 +13,9 @@
                             </a>
                         </div>
                         <div class="init-cms-hidden md:init-cms-block">
-                            <div class="init-cms-ml-10 init-cms-flex init-cms-items-baseline init-cms-space-x-4">
+                            <div class="init-cms-ml-3 init-cms-flex init-cms-items-baseline init-cms-space-x-4">
                                 <a href="{{ url('sonata_admin_dashboard') }}"
-                                   class="init-cms-text-gray-300 init-cms-hover:bg-gray-700 init-cms-hover:text-white
+                                   class="init-cms-text-gray-300 hover:init-cms-bg-gray-700 hover:init-cms-text-white
                                    init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-sm init-cms-font-medium">
                                     {{ sonata_config.title }}
                                 </a>
@@ -26,18 +26,18 @@
                         <div class="init-cms-ml-4 init-cms-flex init-cms-items-center init-cms-md:ml-6">
 
                             {% if editPath %}
-                            <a href="{{ editPath }}"
-                               class="init-cms-text-gray-300 init-cms-hover:bg-gray-700 init-cms-hover:text-white init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-sm init-cms-font-medium init-cms-flex init-cms-max-init-cms-w-xs init-cms-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="init-cms-w-4 init-cms-h-4 init-cms-me-2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                </svg>
-                                {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}
-                            </a>
+                                <a href="{{ editPath }}"
+                                   class="init-cms-text-gray-300 hover:init-cms-bg-gray-700 hover:init-cms-text-white init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-sm init-cms-font-medium init-cms-flex init-cms-max-init-cms-w-xs init-cms-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="init-cms-w-4 init-cms-h-4 init-cms-me-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                    </svg>
+                                    {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}
+                                </a>
                             {% endif %}
 
 
                             <a href="{{ adminPath }}"
-                               class="init-cms-text-gray-300 init-cms-hover:bg-gray-700 init-cms-hover:init-cms-text-white init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-sm init-cms-font-medium">
+                               class="init-cms-text-gray-300 hover:init-cms-bg-gray-700 hover:init-cms-text-white init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-sm init-cms-font-medium">
                                 Admin
                             </a>
 
@@ -52,9 +52,9 @@
                                         </svg>
                                     </a>
                                 </div>
-                                <div class="dropdown-content init-cms-hover:md-block init-cms-absolute
+                                <div class="dropdown-content hover:init-cms-md-block init-cms-absolute
                                  init-cms-right-0 init-cms-z-10 init-cms-w-48 init-cms-origin-top-right init-cms-rounded-md init-cms-bg-white init-cms-py-1
-                                 init-cms-shadow-lg init-cms-ring-1 init-cms-ring-black init-cms-ring-opacity-5 init-cms-focus:outline-none"
+                                 init-cms-shadow-lg init-cms-ring-1 init-cms-ring-black init-cms-ring-opacity-5 focus:init-cms-outline-none"
                                      role="menu" aria-orientation="vertical">
 
                                     <a href="{{ draftPath }}" class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm init-cms-text-amber-400 ">
@@ -74,8 +74,8 @@
                         <button type="button"
                                 id="mobile-menu-button"
                                 class="init-cms-relative init-cms-inline-flex init-cms-items-center init-cms-justify-center init-cms-rounded-md init-cms-bg-gray-800
-                                init-cms-p-2 init-cms-text-gray-400 init-cms-hover:bg-gray-700init-cms- hover:text-white init-cms-focus:outline-none init-cms-focus:ring-2
-                                init-cms-focus:ring-white init-cms-focus:ring-offset-2 init-cms-focus:ring-offset-gray-800"
+                                init-cms-p-2 init-cms-text-gray-400 hover:init-cms-bg-gray-700 hover:init-cms-text-white focus:init-cms-outline-none focus:init-cms-ring-2
+                                focus:init-cms-ring-white focus:init-cms-ring-offset-2 focus:init-cms-ring-offset-gray-800"
                                 aria-controls="mobile-menu" aria-expanded="false">
                             <span class="init-cms-absolute init-cms--inset-0.5"></span>
                             <span class="init-cms-sr-only">Open main menu</span>
@@ -110,7 +110,7 @@
                     <a href="{{ adminPath }}"
                        class="init-cms-text-gray-300 hover:init-cms-bg-gray-700 hover:init-cms-text-white block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium">
 
-                    Admin
+                        Admin
                     </a>
                 </div>
                 <div class="init-cms-border-t init-cms-border-gray-700 init-cms-pb-3 init-cms-pt-4 dropdown">
