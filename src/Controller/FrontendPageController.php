@@ -237,9 +237,6 @@ class FrontendPageController extends AbstractController
             $pageSnapshot,
             false
         );
-        if (!$page->isActive()) {
-            throw new NotFoundHttpException('page status '.$page->getStatus());
-        }
 
         if ($redirect = $this->getRedirect($request, $page)) {
             return $redirect;
@@ -442,7 +439,7 @@ class FrontendPageController extends AbstractController
         $request->getSession()->set('_viewStatus', $status);
 
         if ($path) {
-            $url = base64_decode((string)$path);
+            $url = base64_decode((string) $path);
         } else {
             $url = $this->container->get('router')->generate(
                 'networking_init_cms_default'
@@ -472,7 +469,6 @@ class FrontendPageController extends AbstractController
         $locale
     ): array|\Symfony\Cmf\Component\Routing\RouteObjectInterface|string {
         $oldURL = $this->languageSwitcherHelper->getPathInfo($referrer);
-
 
         return $this->languageSwitcherHelper->getTranslationRoute(
             $oldURL,
@@ -568,7 +564,6 @@ class FrontendPageController extends AbstractController
             $editPath = $pageAdmin->generateObjectUrl('edit', $entity);
         }
 
-
         if (!$draftPath) {
             $draftPath = $this->generateUrl(
                 'networking_init_view_draft',
@@ -589,7 +584,6 @@ class FrontendPageController extends AbstractController
             );
         }
 
-
         $lastActionUrl = $this->generateUrl('sonata_admin_dashboard');
         $lastActions = $request->getSession()->get(
             '_networking_initcms_admin_tracker'
@@ -597,7 +591,7 @@ class FrontendPageController extends AbstractController
 
         if ($lastActions) {
             $lastActionArray = json_decode(
-                (string)$lastActions,
+                (string) $lastActions,
                 null,
                 512,
                 JSON_THROW_ON_ERROR
@@ -611,8 +605,7 @@ class FrontendPageController extends AbstractController
             }
         }
 
-        $firstItemStatus =  $request->getSession()->get('_viewStatus', 'status_draft');
-
+        $firstItemStatus = $request->getSession()->get('_viewStatus', 'status_draft');
 
         $response = $this->render(
             '@NetworkingInitCms/Admin/esi_admin_navbar.html.twig',
@@ -642,7 +635,7 @@ class FrontendPageController extends AbstractController
     public function getSnapshotVisibility(PageSnapshotInterface $page)
     {
         $jsonObject = json_decode(
-            (string)$page->getVersionedData(),
+            (string) $page->getVersionedData(),
             null,
             512,
             JSON_THROW_ON_ERROR
@@ -659,7 +652,7 @@ class FrontendPageController extends AbstractController
     public function isSnapshotActive(PageSnapshotInterface $page)
     {
         $jsonObject = json_decode(
-            (string)$page->getVersionedData(),
+            (string) $page->getVersionedData(),
             null,
             512,
             JSON_THROW_ON_ERROR
@@ -672,7 +665,7 @@ class FrontendPageController extends AbstractController
             && $now->getTimestamp() <= $this->getActiveEnd($jsonObject)
                 ->getTimestamp()
         ) {
-            return PageInterface::STATUS_PUBLISHED == $jsonObject->status;
+            return true;
         }
 
         return false;
@@ -686,7 +679,7 @@ class FrontendPageController extends AbstractController
     public function getActiveStart($page)
     {
         if (!property_exists($page, 'active_from')
-            || $page->active_from === null
+            || null === $page->active_from
         ) {
             return new \DateTime();
         }
@@ -701,8 +694,8 @@ class FrontendPageController extends AbstractController
      */
     public function getActiveEnd($page)
     {
-        if (!property_exists($page, 'active_to') || $page->active_to === null) {
-            return new \DateTime();
+        if (!property_exists($page, 'active_to') || null === $page->active_to) {
+            return new \DateTime('+1 day');
         }
 
         return new \DateTime($page->active_to);
@@ -715,7 +708,7 @@ class FrontendPageController extends AbstractController
     {
         $locale = $request->get('_locale', false);
 
-        $locale = str_replace('-', '_', (string)$locale);
+        $locale = str_replace('-', '_', (string) $locale);
         /** @var PageAdmin $pageAdmin */
         $pageAdmin = $this->pool->getAdminByAdminCode(
             'networking_init_cms.admin.page'
@@ -752,7 +745,7 @@ class FrontendPageController extends AbstractController
                 str_replace(
                     '_',
                     '-',
-                    (string)$language['locale']
+                    (string) $language['locale']
                 ),
             ];
         }
