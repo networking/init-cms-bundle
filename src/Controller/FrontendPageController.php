@@ -575,7 +575,7 @@ class FrontendPageController extends AbstractController
         }
 
         if (!$livePath) {
-            $livePath = $this->router->generate(
+            $livePath = $this->generateUrl(
                 'networking_init_view_live',
                 [
                     'locale' => $language,
