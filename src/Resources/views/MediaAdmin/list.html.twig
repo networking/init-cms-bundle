@@ -373,6 +373,7 @@ file that was distributed with this source code.
             </div>
         </div>
     </div>
+
     <script src="{{ asset('mediaAdmin.js', 'init_cms') }}"></script>
     <script>
         {% set context = persistent_parameters.context ? persistent_parameters.context: 'default' %}
@@ -395,7 +396,7 @@ file that was distributed with this source code.
 
 
             axios.post(
-                "{{ admin.generateUrl('batch', {'filter':  admin.filterParameters})|raw }}",
+                "{{ admin.generateUrl('batch', {'filter':  admin.filterParameters|merge({'tags': {'value': '', 'type': ''}}) })|raw }}",
                 {action: "add_tags", tags: id, idx: [media], _sonata_csrf_token: "{{ csrf_token }}"},
             ).then((response) => {
                 if (response.data.result === 'ok') {
