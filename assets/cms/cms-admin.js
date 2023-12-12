@@ -44,7 +44,7 @@ const CMSAdmin = {
         this.initCollectionType()
 
     },
-    
+
 
     initToolTips(el){
 
@@ -144,6 +144,7 @@ const CMSAdmin = {
             let plugins = JSON.parse(element.dataset.plugins)
             let templates = JSON.parse(element.dataset.templates)
             let styles = JSON.parse(element.dataset.styles)
+
             let filebrowser = JSON.parse(element.dataset.filebrowser)
             if (CKEDITOR.instances[id]) {
                 CKEDITOR.instances[id].destroy(true);
@@ -151,10 +152,18 @@ const CMSAdmin = {
             }
 
             for (const [key, value] of Object.entries(plugins)) {
-
                 CKEDITOR.plugins.addExternal(key, value.path, value.filename);
             }
 
+            for (const [key, value] of Object.entries(styles)) {
+                if(CKEDITOR.stylesSet.get(key) === null) {
+                    CKEDITOR.stylesSet.add(key, value);
+                }
+            }
+
+            for (const [key, value] of Object.entries(templates)) {
+                    CKEDITOR.addTemplates(key, value);
+            }
 
             let params = {}
 
