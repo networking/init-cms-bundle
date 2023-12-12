@@ -34,7 +34,7 @@
     "bazinga-translator": "^5.1.0",
     "bootstrap": "5.3.2",
     "file-loader": "^6.0.0",
-    "fos-router": "./assets/js/friendsofsymfony/jsrouting-bundle/Resources/",
+    "fos-router": "../../../vendor/friendsofsymfony/jsrouting-bundle/Resources",
     "glightbox": "^3.2.0",
     "intl-messageformat": "^10.5.8",
     "jquery": "^3.7.1",
