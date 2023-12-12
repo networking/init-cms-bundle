@@ -5,25 +5,17 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\GoogleAuthenticator;
 
 use Networking\InitCmsBundle\Helper\OneTimeCodeHelper;
-use Sonata\UserBundle\Model\UserManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Twig\Environment;
 
 class RequestListener
 {
-
-    /**
-     * @param EngineInterface|Environment $templating
-     */
     public function __construct(
         private readonly Helper $helper,
         private readonly TokenStorageInterface $tokenStorage,
@@ -34,7 +26,7 @@ class RequestListener
 
     public function onCoreRequest(RequestEvent $event): void
     {
-        if (HttpKernel::MASTER_REQUEST !== $event->getRequestType()) {
+        if (HttpKernelInterface::MAIN_REQUEST !== $event->getRequestType()) {
             return;
         }
 
@@ -98,14 +90,11 @@ class RequestListener
 
         $state = 'init';
         if ('POST' === $request->getMethod() && $request->get('_code', false)) {
-
-
-            if($request->getSession()->get('networing_init_cms.one_time_code') !== null){
-                if(true === $this->oneTimeCodeHelper->checkCode(
-                        $request->get('_code'),
-                        $user
-                    )){
-
+            if (null !== $request->getSession()->get('networing_init_cms.one_time_code')) {
+                if (true === $this->oneTimeCodeHelper->checkCode(
+                    $request->get('_code'),
+                    $user
+                )) {
                     $request->getSession()->remove('networing_init_cms.one_time_code');
                     $this->oneTimeCodeHelper->removeOneTimeCodeRequest($request->get('_code'), $user);
 
@@ -119,11 +108,8 @@ class RequestListener
                     }
 
                     return;
-
                 }
             }
-
-
 
             if (true === $this->helper->checkCode(
                 $user,
@@ -156,7 +142,6 @@ class RequestListener
         if ($request->isXmlHttpRequest()) {
             return;
         }
-
 
         $event->setResponse(
             new Response(
