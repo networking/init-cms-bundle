@@ -8,7 +8,11 @@
 
         <defaults autowire="true" autoconfigure="true" public="false" />
 
-        <service id="Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher"/>
+        <service id="Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher" />
+
+        <service id="Networking\InitCmsBundle\EventListener\BodyListener" >
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="0"/>
+        </service>
 
         <service id="Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionListener">
             <tag name="doctrine.event_listener" event="postUpdate" method="postUpdate"/>
