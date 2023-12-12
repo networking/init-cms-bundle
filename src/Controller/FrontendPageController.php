@@ -519,6 +519,7 @@ class FrontendPageController extends AbstractController
         $draftPath = null;
         $livePath = null;
         $editPath = null;
+        $liveRoute = null;
         $language = $request->getLocale();
 
         if ($entity instanceof VersionableInterface) {
@@ -538,10 +539,14 @@ class FrontendPageController extends AbstractController
 
             $language = $entity->getRoute()->getLocale();
 
-            $livePath = $this->generateUrl(
-                'networking_init_view_live',
-                ['locale' => $language, 'path' => base64_encode($liveRoute)]
-            );
+            if($liveRoute){
+                $livePath = $this->generateUrl(
+                    'networking_init_view_live',
+                    ['locale' => $language, 'path' => base64_encode($liveRoute)]
+                );
+            }
+
+
 
             $draftRoute = $this->generateUrl(
                 RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
