@@ -45,7 +45,6 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Valid;
 
 /**
@@ -70,14 +69,12 @@ class PageAdmin extends BaseAdmin
      */
     protected $repository = '';
 
-
     private ?LogEntry $lastEditedBy = null;
 
     public function __construct(
         protected PageManagerInterface $pageManager,
         protected array $pageTemplates,
-    )
-    {
+    ) {
     }
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false

@@ -142,7 +142,6 @@ class TranslationAdmin extends BaseAdmin
 
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-
         $em = $this->getModelManager()->getEntityManager(
             \Lexik\Bundle\TranslationBundle\Entity\File::class
         );
@@ -213,7 +212,6 @@ class TranslationAdmin extends BaseAdmin
         $list
             ->add(
                 'key',
-                'string'
             )
             ->add('domain', 'string');
 
@@ -224,7 +222,7 @@ class TranslationAdmin extends BaseAdmin
                 $localeString = $locale;
             }
             $localeList = Locales::getNames(substr($localeString, 0, 2));
-            $list->add($locale, 'string', [
+            $list->add($locale, 'textarea', [
                 'route' => [
                     'name' => 'edit',
                     'parameters' => [],
@@ -352,6 +350,7 @@ class TranslationAdmin extends BaseAdmin
         }
 
         $form
+            ->with('form.group_translation', ['label' => false])
             ->add('key', TextType::class)
             ->add('domain', TextType::class);
     }
@@ -366,11 +365,11 @@ class TranslationAdmin extends BaseAdmin
 
     public function configureBatchActions(array $actions): array
     {
-        $actions['download'] = [
-            'label' => 'batch.download',
-            'ask_confirmation' => false,
-            'translation_domain' => 'TranslationAdmin',
-        ];
+        //        $actions['download'] = [
+        //            'label' => 'batch.download',
+        //            'ask_confirmation' => false,
+        //            'translation_domain' => 'TranslationAdmin',
+        //        ];
 
         return $actions;
     }

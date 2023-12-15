@@ -85,9 +85,7 @@ file that was distributed with this source code.
                     {% endif %}
                   data-x-editable-params="{{ ([{locale: locale }] )|json_encode}}"
                   data-pk="{{ pk }}"
-                  data-url="{{ url }}" {% endblock %}>
-                {{ content }}
-            </span>
+                  data-url="{{ url }}" {% endblock %}>{{ content }}</span>
         {% else %}
             {{ block('field') }}
         {% endif %}
