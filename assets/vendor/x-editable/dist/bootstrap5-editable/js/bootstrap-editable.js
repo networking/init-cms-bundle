@@ -11,20 +11,6 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
 @uses text
 @uses textarea
 **/
-
-
-(function (factory) {
-    "use strict";
-    if (typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
-    }
-    else if(typeof module !== 'undefined' && module.exports) {
-        module.exports = factory(require('jquery'));
-    }
-    else {
-        factory(jQuery);
-    }
-}
 (function ($) {
     "use strict";
     
@@ -651,23 +637,11 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
     
     //engine
     $.fn.editableform.engine = 'jquery';
-}));
+}(window.jQuery));
 
 /**
 * EditableForm utilites
 */
-(function (factory) {
-    "use strict";
-    if (typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
-    }
-    else if(typeof module !== 'undefined' && module.exports) {
-        module.exports = factory(require('jquery'));
-    }
-    else {
-        factory(jQuery);
-    }
-}
 (function ($) {
     "use strict";
     
@@ -913,7 +887,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
        }            
        
     };      
-}));
+}(window.jQuery));
 
 /**
 Attaches stand-alone container with editable-form to HTML element. Element is used only for positioning, value is not stored anywhere.<br>
@@ -924,18 +898,7 @@ Applied as jQuery method.
 @class editableContainer
 @uses editableform
 **/
-(function (factory) {
-    "use strict";
-    if (typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
-    }
-    else if(typeof module !== 'undefined' && module.exports) {
-        module.exports = factory(require('jquery'));
-    }
-    else {
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
 
     var Popup = function (element, options) {
@@ -1447,24 +1410,13 @@ Applied as jQuery method.
         }
     };    
 
-}));
+}(window.jQuery));
 
 /**
 * Editable Inline 
 * ---------------------
 */
-(function (factory) {
-    "use strict";
-    if (typeof define === 'function' && define.amd) {
-        define(['jquery'], factory);
-    }
-    else if(typeof module !== 'undefined' && module.exports) {
-        module.exports = factory(require('jquery'));
-    }
-    else {
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     //copy prototype from EditableContainer
@@ -1513,40 +1465,14 @@ Applied as jQuery method.
         } 
     });
 
-}));
+}(window.jQuery));
 /**
 Makes editable any HTML element on the page. Applied as jQuery method.
 
 @class editable
 @uses editableContainer
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
 
     var Editable = function (element, options) {
@@ -2397,7 +2323,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
         highlight: '#FFFF80'
     };
     
-}));
+}(window.jQuery));
 
 /**
 AbstractInput - base class for all editable inputs.
@@ -2406,33 +2332,7 @@ To create your own input you can inherit from this class.
 
 @class abstractinput
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
 
     //types
@@ -2644,7 +2544,7 @@ To create your own input you can inherit from this class.
     
     $.extend($.fn.editabletypes, {abstractinput: AbstractInput});
         
-}));
+}(window.jQuery));
 
 /**
 List - abstract class for inputs that have source option loaded from js array or via ajax
@@ -2652,33 +2552,7 @@ List - abstract class for inputs that have source option loaded from js array or
 @class list
 @extends abstractinput
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var List = function (options) {
@@ -3019,7 +2893,7 @@ List - abstract class for inputs that have source option loaded from js array or
 
     $.fn.editabletypes.list = List;      
 
-}));
+}(window.jQuery));
 
 /**
 Text input
@@ -3038,33 +2912,6 @@ $(function(){
 });
 </script>
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}
 (function ($) {
     "use strict";
 
@@ -3185,7 +3032,7 @@ $(function(){
 
     $.fn.editabletypes.text = Text;
 
-}));
+}(window.jQuery));
 
 /**
 Textarea input
@@ -3205,33 +3052,7 @@ $(function(){
 });
 </script>
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var Textarea = function (options) {
@@ -3323,7 +3144,7 @@ $(function(){
 
     $.fn.editabletypes.textarea = Textarea;
 
-}));
+}(window.jQuery));
 
 /**
 Select (dropdown)
@@ -3346,33 +3167,7 @@ $(function(){
 });
 </script>
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var Select = function (options) {
@@ -3449,7 +3244,7 @@ $(function(){
 
     $.fn.editabletypes.select = Select;      
 
-}));
+}(window.jQuery));
 
 /**
 List of checkboxes. 
@@ -3473,33 +3268,6 @@ $(function(){
 });
 </script>
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}
 (function ($) {
     "use strict";
     
@@ -3635,7 +3403,7 @@ $(function(){
 
     $.fn.editabletypes.checklist = Checklist;      
 
-}));
+}(window.jQuery));
 
 /**
 HTML5 input types.
@@ -3678,33 +3446,7 @@ $(function(){
 /*
 Password
 */
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var Password = function (options) {
@@ -3729,39 +3471,13 @@ Password
         tpl: '<input type="password">'
     });
     $.fn.editabletypes.password = Password;
-}));
+}(window.jQuery));
 
 
 /*
 Email
 */
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var Email = function (options) {
@@ -3772,39 +3488,13 @@ Email
         tpl: '<input type="email">'
     });
     $.fn.editabletypes.email = Email;
-}));
+}(window.jQuery));
 
 
 /*
 Url
 */
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var Url = function (options) {
@@ -3815,39 +3505,13 @@ Url
         tpl: '<input type="url">'
     });
     $.fn.editabletypes.url = Url;
-}));
+}(window.jQuery));
 
 
 /*
 Tel
 */
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var Tel = function (options) {
@@ -3858,39 +3522,12 @@ Tel
         tpl: '<input type="tel">'
     });
     $.fn.editabletypes.tel = Tel;
-}));
+}(window.jQuery));
 
 
 /*
 Number
 */
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}
 (function ($) {
     "use strict";
     
@@ -3928,39 +3565,13 @@ Number
         step: null
     });
     $.fn.editabletypes.number = NumberInput;
-}));
+}(window.jQuery));
 
 
 /*
 Range (inherit from number)
 */
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var Range = function (options) {
@@ -3989,38 +3600,12 @@ Range (inherit from number)
         inputclass: 'input-medium'
     });
     $.fn.editabletypes.range = Range;
-}));
+}(window.jQuery));
 
 /*
 Time
 */
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
 
     var Time = function (options) {
@@ -4037,7 +3622,7 @@ Time
         tpl: '<input type="time">'
     });
     $.fn.editabletypes.time = Time;
-}));
+}(window.jQuery));
 
 /**
 Select2 input. Based on amazing work of Igor Vaynberg https://github.com/ivaynberg/select2.  
@@ -4120,33 +3705,7 @@ $(function(){
 });
 </script>
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var Constructor = function (options) {
@@ -4418,7 +3977,7 @@ $(function(){
 
     $.fn.editabletypes.select2 = Constructor;
 
-}));
+}(window.jQuery));
 
 /**
 * Combodate - 1.1.0
@@ -4441,33 +4000,7 @@ $(function(){
 * Project page: http://github.com/vitalets/combodate
 * Copyright (c) 2012 Vitaliy Potapov. Released under MIT License.
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
 
     var Combodate = function (element, options) {
         this.$element = $(element);
@@ -4969,7 +4502,7 @@ $(function(){
         smartDays: false // whether days in combo depend on selected month: 31, 30, 28
     };
 
-}));
+}(window.jQuery));
 
 /**
 Combodate input - dropdown date and time picker.    
@@ -5011,33 +4544,7 @@ $(function(){
 
 /*global moment*/
 
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var Constructor = function (options) {
@@ -5193,38 +4700,12 @@ $(function(){
 
     $.fn.editabletypes.combodate = Constructor;
 
-}));
+}(window.jQuery));
 
 /*
 Editableform based on Twitter Bootstrap 3
 */
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     //store parent methods
@@ -5283,43 +4764,14 @@ Editableform based on Twitter Bootstrap 3
     $.fn.editableform.errorBlockClass = null;  
     //engine
     $.fn.editableform.engine = 'bs4';  
-}));
+}(window.jQuery));
 /**
 * Editable Popover for Bootstrap 5 based on Popper.js
 * ---------------------
 * requires bootstrap-popover.js
 */
-
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
-
 
     //extend methods
     $.extend($.fn.editableContainer.Popup.prototype, {
@@ -5387,8 +4839,7 @@ Editableform based on Twitter Bootstrap 3
         }
     });
     
-}));
-
+}(window.jQuery));
 
 /* =========================================================
  * bootstrap-datepicker.js
@@ -5410,33 +4861,7 @@ Editableform based on Twitter Bootstrap 3
  * limitations under the License.
  * ========================================================= */
 
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function( $ ) {
+(function( $ ) {
 
 	function UTCDate(){
 		return new Date(Date.UTC.apply(Date, arguments));
@@ -5462,7 +4887,6 @@ Editableform based on Twitter Bootstrap 3
 			this.component = false;
 
 		this.picker = $(DPGlobal.template);
-
 		this._buildEvents();
 		this._attachEvents();
 
@@ -5631,14 +5055,14 @@ Editableform based on Twitter Bootstrap 3
 				[$(document), {
 					mousedown: $.proxy(function (e) {
 						// Clicked outside the datepicker, hide it
-						// if (!(
-						// 	this.element.is(e.target) ||
-						// 	this.element.find(e.target).size() ||
-						// 	this.picker.is(e.target) ||
-						// 	this.picker.find(e.target).size()
-						// )) {
-						// 	this.hide();
-						// }
+						if (!(
+							this.element.is(e.target) ||
+							this.element.find(e.target).size() ||
+							this.picker.is(e.target) ||
+							this.picker.find(e.target).size()
+						)) {
+							this.hide();
+						}
 					}, this)
 				}]
 			];
@@ -6670,7 +6094,7 @@ Editableform based on Twitter Bootstrap 3
         datepicker.call($('[data-provide="datepicker-inline"]'));
 	});
 
-}));
+}( window.jQuery ));
 
 /**
 Bootstrap-datepicker.  
@@ -6697,33 +6121,7 @@ $(function(){
 });
 </script>
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     //store bootstrap-datepicker as bdateicker to exclude conflict with jQuery UI one
@@ -6926,7 +6324,7 @@ $(function(){
 
     $.fn.editabletypes.date = Date;
 
-}));
+}(window.jQuery));
 
 /**
 Bootstrap datefield input - modification for inline mode.
@@ -6938,33 +6336,7 @@ Automatically shown in inline mode.
 
 @since 1.4.0
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
 
     var DateField = function (options) {
@@ -7034,7 +6406,7 @@ Automatically shown in inline mode.
 
     $.fn.editabletypes.datefield = DateField;
 
-}));
+}(window.jQuery));
 
 /**
 Bootstrap-datetimepicker.  
@@ -7066,33 +6438,7 @@ $(function(){
 });
 </script>
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
 
     var DateTime = function (options) {
@@ -7305,7 +6651,7 @@ $(function(){
 
     $.fn.editabletypes.datetime = DateTime;
 
-}));
+}(window.jQuery));
 /**
 Bootstrap datetimefield input - datetime input for inline mode.
 Shows normal <input type="text"> and binds popup datetimepicker.  
@@ -7315,33 +6661,7 @@ Automatically shown in inline mode.
 @extends datetime
 
 **/
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
-                // require('jQuery') returns a factory that requires window to
-                // build a jQuery instance, we normalize how we use modules
-                // that require this pattern but the window provided is a noop
-                // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
-                    jQuery = require('jquery');
-                }
-                else {
-                    jQuery = require('jquery')(root);
-                }
-            }
-            factory(jQuery);
-            return jQuery;
-        };
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
+(function ($) {
     "use strict";
     
     var DateTimeField = function (options) {
@@ -7408,4 +6728,4 @@ Automatically shown in inline mode.
     
     $.fn.editabletypes.datetimefield = DateTimeField;
 
-}));
+}(window.jQuery));
