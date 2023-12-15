@@ -487,7 +487,7 @@ video {
   --tw-backdrop-invert:  ;
   --tw-backdrop-opacity:  ;
   --tw-backdrop-saturate:  ;
-  --tw-backdrop-sepia:  ;
+  --tw-backdrop-sepia: 0 ;
 }
 
 ::backdrop {
@@ -537,7 +537,7 @@ video {
   --tw-backdrop-invert:  ;
   --tw-backdrop-opacity:  ;
   --tw-backdrop-saturate:  ;
-  --tw-backdrop-sepia:  ;
+  --tw-backdrop-sepia: 0 ;
 }
 
 .mt-10 {
