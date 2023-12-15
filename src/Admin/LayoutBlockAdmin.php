@@ -38,19 +38,11 @@ class LayoutBlockAdmin extends BaseAdmin
 
     public $trackedActions = [];
 
-    protected $pageManager;
-
-    protected $layoutBlockFormListener;
-    protected $pageAdmin;
-
     public function __construct(
-        PageManagerInterface $pageManager,
-        LayoutBlockFormListener $layoutBlockFormListener,
-        PageAdmin $pageAdmin
+        protected PageManagerInterface $pageManager,
+        protected LayoutBlockFormListener $layoutBlockFormListener,
+        protected PageAdmin $pageAdmin
     ) {
-        $this->pageManager = $pageManager;
-        $this->layoutBlockFormListener = $layoutBlockFormListener;
-        $this->pageAdmin = $pageAdmin;
 
         parent::__construct();
     }

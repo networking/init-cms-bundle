@@ -27,7 +27,7 @@ use Symfony\Component\Intl\Locales;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterface
+abstract class BaseAdmin extends AbstractAdmin
 {
     protected $annotationReader;
 
@@ -40,19 +40,6 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
      * @var array
      */
     protected $trackedActions = [];
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * Sets the container.
-     */
-    public function setContainer(ContainerInterface $container = null): void
-    {
-        $this->container = $container;
-    }
 
     protected function configureDefaultSortValues(array &$sortValues): void
     {
@@ -170,11 +157,6 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $this->getSonataAnnotationReader()?->configureDatagridFilters($this->getClass(), $filter);
-    }
-
-    protected function getContainer(): ContainerInterface
-    {
-        return $this->container;
     }
 
     protected function getSonataAnnotationReader(): ?SonataAdminAnnotationReaderInterface

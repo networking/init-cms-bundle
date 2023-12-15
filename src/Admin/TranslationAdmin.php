@@ -66,6 +66,11 @@ class TranslationAdmin extends BaseAdmin
      */
     protected $filterLocales = [];
 
+    public function __construct(
+        protected string $defaultDomain = 'messages',
+    ) {
+    }
+
     public function setEditableOptions(array $options)
     {
         $this->editableOptions = $options;
@@ -137,8 +142,8 @@ class TranslationAdmin extends BaseAdmin
 
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        /** @var \Doctrine\ORM\EntityManager $em */
-        $em = $this->getContainer()->get('doctrine')->getManagerForClass(
+
+        $em = $this->getModelManager()->getEntityManager(
             \Lexik\Bundle\TranslationBundle\Entity\File::class
         );
 
@@ -356,9 +361,7 @@ class TranslationAdmin extends BaseAdmin
      */
     protected function getDefaultDomain()
     {
-        return $this->getContainer()->getParameter(
-            'networking_init_cms.defaultDomain'
-        );
+        return $this->defaultDomain;
     }
 
     public function configureBatchActions(array $actions): array
