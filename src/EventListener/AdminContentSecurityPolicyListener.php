@@ -40,6 +40,21 @@ class AdminContentSecurityPolicyListener
                 $cspHeader
             );
 
+            if (str_contains($cspHeader, 'blob:') === false
+                && str_contains($cspHeader, 'worker-src') === true
+            ) {
+                $cspHeader = str_replace(
+                    'worker-src',
+                    'worker-src blob:',
+                    $cspHeader
+                );
+            }
+
+            if (str_contains($cspHeader, 'worker-src') === false) {
+                $cspHeader .= '; worker-src blob:';
+
+            }
+
 
             if (str_contains($cspHeader, 'cke4.ckeditor.com') === false
                 && str_contains($cspHeader, 'connect-src') === true
