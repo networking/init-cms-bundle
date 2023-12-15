@@ -30,6 +30,8 @@ file that was distributed with this source code.
 {% block body_tag %}
     <body class="init-cms-bg-gradient-to-r">
 {% endblock %}
+
+{% block theme_setup %}{% endblock %}
 {% block page %}
     <!--begin::Authentication - Sign-in -->
     <div class="d-flex flex-column flex-column-fluid flex-lg-row">
@@ -258,3 +260,5 @@ file that was distributed with this source code.
     </div>
 
 {% endblock page %}
+{% block theme_js_setup %}{% endblock %}
+
