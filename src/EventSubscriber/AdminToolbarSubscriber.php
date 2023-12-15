@@ -39,33 +39,13 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
     final public const DISABLED = 1;
     final public const ENABLED = 2;
 
-    /**
-     * @var \Twig\Environment
-     */
-    protected $twig;
+    final public const PAGE_CACHE_HEADER = 'X-Init-Cms-Cache';
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    protected $authorizationChecker;
-
-    /**
-     * @var int
-     */
-    protected $mode;
-
-    /**
-     * @param string $position
-     */
     public function __construct(
-        Environment $twig,
-        AuthorizationCheckerInterface $securityContext,
-        $mode = self::ENABLED,
-        protected $position = 'top'
+        private readonly Environment $twig,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly int $mode = self::ENABLED,
     ) {
-        $this->twig = $twig;
-        $this->authorizationChecker = $securityContext;
-        $this->mode = (int) $mode;
     }
 
     public function isEnabled()
@@ -85,6 +65,13 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
         }
 
         $response = $event->getResponse();
+
+        if ($response->headers->has(self::PAGE_CACHE_HEADER)) {
+            $this->publishedPageNonce($response);
+        }
+
+        $response->headers->remove(self::PAGE_CACHE_HEADER);
+
         $request = $event->getRequest();
 
         // do not capture redirects or modify XML HTTP Requests
@@ -123,6 +110,55 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
         }
 
         $this->injectToolbar($response, $request);
+    }
+
+    protected function publishedPageNonce(Response $response)
+    {
+        $content = $response->getContent();
+        $scriptNonces = [];
+        $styleNonces = [];
+        preg_match_all(
+            '/<script[^>]*nonce="([^"]*)"[^>]*>/i',
+            $content,
+            $matches
+        );
+
+        if (isset($matches[1])) {
+            $scriptNonces = array_unique($matches[1]);
+        }
+
+        preg_match_all(
+            '/<style[^>]*nonce="([^"]*)"[^>]*>/i',
+            $content,
+            $matches
+        );
+
+        if (isset($matches[1])) {
+            $styleNonces = array_unique($matches[1]);
+        }
+
+        $headers = ContentSecurityPolicyHelper::getCspHeaders($response);
+
+        foreach ($headers as $header => $directives) {
+            if (isset($directives['script-src'])) {
+                foreach ($scriptNonces as $nonce) {
+                    if (!in_array("'nonce-".$nonce."'", $directives['script-src'])) {
+                        $directives['script-src'][] = "'nonce-".$nonce."'";
+                    }
+                }
+            }
+            if (isset($directives['style-src'])) {
+                foreach ($styleNonces as $nonce) {
+                    if (!in_array("'nonce-".$nonce."'", $directives['style-src']) && !in_array("'unsafe-inline'", $directives['style-src'])) {
+                        $directives['style-src'][] = "'nonce-".$nonce."'";
+                    }
+                }
+            }
+            $response->headers->set(
+                $header,
+                ContentSecurityPolicyHelper::generateCspHeader($directives)
+            );
+        }
     }
 
     /**
@@ -175,17 +211,15 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
             $toolbar = "\n".str_replace(
                 "\n",
                 '',
-                (string) $this->twig->render(
+                $this->twig->render(
                     '@NetworkingInitCms/Admin/toolbar_js.html.twig',
                     [
                         'nonce' => $nonce,
-                        'position' => $this->position,
                         'page_id' => $page_id,
                     ]
                 )
             )."\n";
-            $content = $substrFunction($content, 0, $pos).$toolbar
-                .$substrFunction($content, $pos);
+            $content = $substrFunction($content, 0, $pos).$toolbar.$substrFunction($content, $pos);
             $response->setContent($content);
         }
     }

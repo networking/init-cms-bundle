@@ -18,6 +18,7 @@ use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
+use Networking\InitCmsBundle\Helper\ContentSecurityPolicyHelper;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -127,6 +128,7 @@ class FrontendPageController extends AbstractController
                     $params
                 );
                 $response = new Response($html);
+                $response->headers->set('X-Init-Cms-Cache', 'true');
 
                 $this->pageCache->set($cacheKey, $response);
                 $this->pageCache->set(
@@ -539,14 +541,12 @@ class FrontendPageController extends AbstractController
 
             $language = $entity->getRoute()->getLocale();
 
-            if($liveRoute){
+            if ($liveRoute) {
                 $livePath = $this->generateUrl(
                     'networking_init_view_live',
                     ['locale' => $language, 'path' => base64_encode($liveRoute)]
                 );
             }
-
-
 
             $draftRoute = $this->generateUrl(
                 RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
