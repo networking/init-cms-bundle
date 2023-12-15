@@ -10,13 +10,13 @@ class AdminContentSecurityPolicyListener
     {
         $request = $event->getRequest();
 
-        //if path is not admin, return
-        if (str_contains($request->getPathInfo(), '/admin/login') ) {
+        // if path is not admin, return
+        if (str_contains($request->getPathInfo(), '/admin/login')) {
             return;
         }
 
-        //if path is not admin, return
-        if (str_contains($request->getPathInfo(), '/admin') === false) {
+        // if path is not admin, return
+        if (false === str_contains($request->getPathInfo(), '/admin')) {
             return;
         }
 
@@ -40,8 +40,8 @@ class AdminContentSecurityPolicyListener
                 $cspHeader
             );
 
-            if (str_contains($cspHeader, 'blob:') === false
-                && str_contains($cspHeader, 'worker-src') === true
+            if (false === str_contains($cspHeader, 'blob:')
+                && true === str_contains($cspHeader, 'worker-src')
             ) {
                 $cspHeader = str_replace(
                     'worker-src',
@@ -50,14 +50,12 @@ class AdminContentSecurityPolicyListener
                 );
             }
 
-            if (str_contains($cspHeader, 'worker-src') === false) {
+            if (false === str_contains($cspHeader, 'worker-src')) {
                 $cspHeader .= '; worker-src blob:';
-
             }
 
-
-            if (str_contains($cspHeader, 'cke4.ckeditor.com') === false
-                && str_contains($cspHeader, 'connect-src') === true
+            if (false === str_contains($cspHeader, 'cke4.ckeditor.com')
+                && true === str_contains($cspHeader, 'connect-src')
             ) {
                 $cspHeader = str_replace(
                     'connect-src',
@@ -66,14 +64,13 @@ class AdminContentSecurityPolicyListener
                 );
             }
 
-            if (str_contains($cspHeader, 'connect-src') === false) {
+            if (false === str_contains($cspHeader, 'connect-src')) {
                 $cspHeader .= '; connect-src \'self\' cke4.ckeditor.com';
-
             }
 
             @header_remove('x-powered-by');
 
-            //remove 'nonce-*' from script-src directive
+            // remove 'nonce-*' from script-src directive
             $cspHeader = preg_replace(
                 '/\'nonce-[a-zA-Z0-9_-]+\'/',
                 '',
@@ -82,6 +79,5 @@ class AdminContentSecurityPolicyListener
             $response->headers->set('content-security-policy', [$cspHeader]);
             $response->headers->set('x-content-security-policy', [$cspHeader]);
         }
-
     }
 }
