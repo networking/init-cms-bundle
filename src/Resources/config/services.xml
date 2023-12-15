@@ -35,9 +35,21 @@
             <argument key="$mediaManager" type="service" id="sonata.media.manager.media"/>
             <argument key="$pool" type="service" id="sonata.media.pool"/>
         </service>
+
+        <service id="Networking\InitCmsBundle\Action\MaintenanceAction" public="true">
+            <argument key="$projectDir">%kernel.project_dir%</argument>
+        </service>
+
         <service id="Networking\InitCmsBundle\Command\ClearLogCommand" public="true">
             <argument key="$pageClass">%networking_init_cms.admin.page.class%</argument>
-            <tag name="console.command"/>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Command\MaintenanceEnableCommand">
+            <argument key="$projectDir">%kernel.project_dir%</argument>
+        </service>
+
+        <service id="Networking\InitCmsBundle\Command\MaintenanceDisableCommand">
+            <argument key="$projectDir">%kernel.project_dir%</argument>
         </service>
 
         <service id="Networking\InitCmsBundle\Command\ClearCacheCommand" autowire="true" public="true">

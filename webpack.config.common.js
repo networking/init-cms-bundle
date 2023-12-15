@@ -34,6 +34,7 @@ module.exports = {
         networking_initcms: './assets/cms/scss/style.scss',
         'tui-image-editor': './assets/css/tui-image-editor.css',
         'admin-navbar': './assets/scss/admin-navbar-standalone.scss',
+        'maintenance': './assets/css/maintenance.css',
 
     },
     output: {

@@ -20,6 +20,8 @@
   "tui-image-editor.css": "/bundles/networkinginitcms/tui-image-editor.b5cbbc6d.css",
   "admin-navbar.js": "/bundles/networkinginitcms/admin-navbar.31d6cfe0.js",
   "admin-navbar.css": "/bundles/networkinginitcms/admin-navbar.716d6f59.css",
+  "maintenance.js": "/bundles/networkinginitcms/maintenance.31d6cfe0.js",
+  "maintenance.css": "/bundles/networkinginitcms/maintenance.c9319414.css",
   "admin-theme/plugins/custom/ckeditor/ckeditor-document.bundle.js.map": "/bundles/networkinginitcms/admin-theme/plugins/custom/ckeditor/ckeditor-document.bundle.js.map",
   "admin-theme/plugins/custom/ckeditor/ckeditor-classic.bundle.js.map": "/bundles/networkinginitcms/admin-theme/plugins/custom/ckeditor/ckeditor-classic.bundle.js.map",
   "admin-theme/plugins/custom/ckeditor/ckeditor-balloon-block.bundle.js.map": "/bundles/networkinginitcms/admin-theme/plugins/custom/ckeditor/ckeditor-balloon-block.bundle.js.map",

@@ -27,4 +27,14 @@ oneup_uploader:
     resource: .
     type: uploader
 
+networking_init_cms_maintenance:
+    controller: Networking\InitCmsBundle\Action\MaintenanceAction
+    path:   /maintenance.html
+
+when@dev:
+    networking_init_cms_maintenance_debug:
+        controller: Networking\InitCmsBundle\Action\MaintenanceAction
+        path:   /_debug/maintenance.html
+
+
 

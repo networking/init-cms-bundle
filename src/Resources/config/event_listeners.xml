@@ -27,6 +27,11 @@
             <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="0"/>
         </service>
 
+        <service id="Networking\InitCmsBundle\EventListener\MaintenanceListener">
+            <argument key="$projectDir">%kernel.project_dir%</argument>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="500"/>
+        </service>
+
         <service id="Networking\InitCmsBundle\EventListener\LocaleListener">
             <argument key="$firewallMap" type="service" id="security.firewall.map"/>
             <argument key="$availableLanguages">%networking_init_cms.page.languages%</argument>
