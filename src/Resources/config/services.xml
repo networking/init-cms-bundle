@@ -115,7 +115,6 @@
 
         <service id="Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber">
             <argument key="$mode">%networking_init_cms.admin_toolbar.mode%</argument>
-            <argument key="$position">%networking_init_cms.admin_toolbar.position%</argument>
         </service>
 
         <!-- cache -->
