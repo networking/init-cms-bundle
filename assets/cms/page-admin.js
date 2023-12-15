@@ -271,9 +271,7 @@ let editBlock = (e) => {
         displayBlock.classList.add('d-none')
         editBlock.classList.remove('d-none')
         document.body.dispatchEvent(new CustomEvent('fields:added'))
-
-        let scroll = new SmoothScroll();
-        scroll.animateScroll(layoutBlock, null, { speed: 1000, easing: 'easeOutCubic' });
+        layoutBlock.scrollIntoView();
     }).catch((error) => {
         let message = error.response.data.detail
         CMSAdmin.createInitCmsMessageBox('error', message);
@@ -311,8 +309,7 @@ let createBlock = (e) => {
         displayBlock.classList.add('d-none')
         editBlock.classList.remove('d-none')
         document.body.dispatchEvent(new CustomEvent('fields:added'))
-        let scroll = new SmoothScroll();
-        scroll.animateScroll(layoutBlock, null, { speed: 1000, easing: 'easeOutCubic' });
+        layoutBlock.scrollIntoView();
     }).catch((error) => {
         if(!error.response){
             console.error(error)

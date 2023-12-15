@@ -5,7 +5,7 @@ class FormComponent {
     form = null;
     value = 'add text here';
     config = {}
-    sortOrder = 0;
+    position = 0;
 
     constructor(
         id,
@@ -72,7 +72,7 @@ class FormComponent {
             "label": this.label,
             "value": this.value,
             "config": this.config,
-            "sortOrder": this.sortOrder,
+            "position": this.position,
         }
     }
 }
