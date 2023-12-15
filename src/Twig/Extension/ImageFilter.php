@@ -22,8 +22,7 @@ class ImageFilter extends \Twig\Extension\AbstractExtension{
 
     public function webpImage(string $imagePath, ?int $width = null, ?int $height = null, $compression = 80): string
     {
-
-        $mimeType = $this->flysystem->mimeType($imagePath);
+        $mimeType = $this->flysystem->mimeType(urldecode($imagePath));
         if($mimeType === 'image/svg' || $mimeType === 'image/svg+xml'){
             return $imagePath;
         }
@@ -54,7 +53,6 @@ class ImageFilter extends \Twig\Extension\AbstractExtension{
 
             $this->cacheFlysystem->write($newImagePath, $image, ['visibility' => 'public']);
         }catch (\Exception $e){
-            dump($e->getMessage());
             return $imagePath;
         }
 
@@ -66,6 +64,7 @@ class ImageFilter extends \Twig\Extension\AbstractExtension{
     {
         /** @var \GdImage $gd */
         $gd = imagecreatefromstring($this->flysystem->read($imagePath));
+        imagepalettetotruecolor($gd);
 
         ob_start();
         if($width && $height){
