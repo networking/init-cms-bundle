@@ -1,7 +1,7 @@
 <!-- load bar -->
 {% if is_granted('ROLE_SONATA_ADMIN') %}
     <div id="initcmsnavadmin" data-page-id="{{ page_id ? page_id : 0 }}"></div>
-    <script type="module">
+    <script type="module" nonce="{{ nonce }}">
         (function () {
             var initcmsnavadmin = document.getElementById('initcmsnavadmin');
             document.body.insertBefore(

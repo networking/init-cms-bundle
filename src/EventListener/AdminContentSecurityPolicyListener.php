@@ -2,6 +2,7 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
+use Networking\InitCmsBundle\Helper\ContentSecurityPolicyHelper;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class AdminContentSecurityPolicyListener
@@ -22,62 +23,69 @@ class AdminContentSecurityPolicyListener
 
         $response = $event->getResponse();
 
-        $cspHeaders = $response->headers->all('content-security-policy');
+        $cspHeaders = ContentSecurityPolicyHelper::getCspHeaders($response);
 
-        if (count($cspHeaders) > 0) {
-            $cspHeader = $cspHeaders[0];
+        $types = [
+            'script-src',
+            'style-src',
+            'worker-src',
+            'connect-src',
+        ];
 
-            // Add 'unsafe-inline' to the script-src directive
-            $cspHeader = str_replace(
-                'script-src',
-                'script-src \'unsafe-inline\' \'unsafe-eval\'',
-                $cspHeader
+        foreach ($cspHeaders as $header => $directives) {
+            foreach ($types as $type) {
+                if (!array_key_exists($type, $directives)) {
+                    $cspHeaders[$header][$type] = [];
+                    $directives[$type] = [];
+                }
+
+                if ('script-src' === $type) {
+                    foreach ($directives[$type] as $key => $value) {
+                        if (str_contains($value, 'nonce-')) {
+                            unset($cspHeaders[$header][$type][$key]);
+                        }
+                    }
+                    if (!in_array("'unsafe-inline'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'unsafe-inline'";
+                    }
+                    if (!in_array("'unsafe-eval'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'unsafe-eval'";
+                    }
+                }
+
+                if ('style-src' === $type) {
+                    foreach ($directives[$type] as $key => $value) {
+                        if (str_contains($value, 'nonce-')) {
+                            unset($cspHeaders[$header][$type][$key]);
+                        }
+                    }
+                    if (!in_array("'unsafe-inline'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'unsafe-inline'";
+                    }
+                }
+
+                if ('worker-src' === $type) {
+                    if (!in_array('blob:', $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'unsafe-eval'";
+                    }
+                }
+
+                if ('connect-src' === $type) {
+                    if (!in_array("'self'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'self'";
+                    }
+                    if (!in_array('cke4.ckeditor.com', $directives[$type])) {
+                        $cspHeaders[$header][$type][] = 'cke4.ckeditor.com';
+                    }
+                }
+            }
+        }
+
+        foreach ($cspHeaders as $header => $directives) {
+            $response->headers->set(
+                $header,
+                ContentSecurityPolicyHelper::generateCspHeader($directives)
             );
-            // Add 'unsafe-inline' to the style-src directive
-            $cspHeader = str_replace(
-                'style-src',
-                'style-src \'unsafe-inline\'',
-                $cspHeader
-            );
-
-            if (false === str_contains($cspHeader, 'blob:')
-                && true === str_contains($cspHeader, 'worker-src')
-            ) {
-                $cspHeader = str_replace(
-                    'worker-src',
-                    'worker-src blob:',
-                    $cspHeader
-                );
-            }
-
-            if (false === str_contains($cspHeader, 'worker-src')) {
-                $cspHeader .= '; worker-src blob:';
-            }
-
-            if (false === str_contains($cspHeader, 'cke4.ckeditor.com')
-                && true === str_contains($cspHeader, 'connect-src')
-            ) {
-                $cspHeader = str_replace(
-                    'connect-src',
-                    'connect-src cke4.ckeditor.com',
-                    $cspHeader
-                );
-            }
-
-            if (false === str_contains($cspHeader, 'connect-src')) {
-                $cspHeader .= '; connect-src \'self\' cke4.ckeditor.com';
-            }
-
-            @header_remove('x-powered-by');
-
-            // remove 'nonce-*' from script-src directive
-            $cspHeader = preg_replace(
-                '/\'nonce-[a-zA-Z0-9_-]+\'/',
-                '',
-                $cspHeader
-            );
-            $response->headers->set('content-security-policy', [$cspHeader]);
-            $response->headers->set('x-content-security-policy', [$cspHeader]);
         }
     }
 }

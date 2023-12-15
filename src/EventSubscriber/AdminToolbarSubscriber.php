@@ -10,15 +10,16 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\EventSubscriber;
 
+use Networking\InitCmsBundle\Helper\ContentSecurityPolicyHelper;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Twig\Environment;
@@ -56,9 +57,12 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
     /**
      * @param string $position
      */
-    public function __construct(Environment $twig, AuthorizationCheckerInterface $securityContext,  $mode = self::ENABLED, protected $position =
-    'top')
-    {
+    public function __construct(
+        Environment $twig,
+        AuthorizationCheckerInterface $securityContext,
+        $mode = self::ENABLED,
+        protected $position = 'top'
+    ) {
         $this->twig = $twig;
         $this->authorizationChecker = $securityContext;
         $this->mode = (int) $mode;
@@ -70,7 +74,6 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     *
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
@@ -94,7 +97,6 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
             return;
         }
 
-
         // do not capture profiler urls
         if (preg_match('/.*\/_profiler\/.*/', $request->getRequestUri())) {
             return;
@@ -110,7 +112,11 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
 
         if (self::DISABLED === $this->mode
             || $response->isRedirection()
-            || ($response->headers->has('Content-Type') && !str_contains($response->headers->get('Content-Type'), 'html'))
+            || ($response->headers->has('Content-Type')
+                && !str_contains(
+                    $response->headers->get('Content-Type'),
+                    'html'
+                ))
             || 'html' !== $request->getRequestFormat()
         ) {
             return;
@@ -121,7 +127,6 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
 
     /**
      * Injects the admin toolbar into the given Response.
-     *
      *
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
@@ -149,16 +154,38 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
             $page_id = $page->getId();
         }
 
+        // / Add nonce to CSP header
+        $cspHeaders = ContentSecurityPolicyHelper::getCspHeaders($response);
+        $nonce = bin2hex(random_bytes(16));
+
+        if (count($cspHeaders) > 0) {
+            foreach ($cspHeaders as $type => $header) {
+                $cspHeaders[$type]['script-src'][] = "'nonce-".$nonce."'";
+            }
+        }
+
+        foreach ($cspHeaders as $header => $directives) {
+            $response->headers->set(
+                $header,
+                ContentSecurityPolicyHelper::generateCspHeader($directives)
+            );
+        }
 
         if (false !== $pos) {
-            $toolbar = "\n".str_replace("\n", '', (string) $this->twig->render(
-                '@NetworkingInitCms/Admin/toolbar_js.html.twig',
-                [
-                    'position' => $this->position,
-                    'page_id' => $page_id,
-                ]
-            ))."\n";
-            $content = $substrFunction($content, 0, $pos).$toolbar.$substrFunction($content, $pos);
+            $toolbar = "\n".str_replace(
+                "\n",
+                '',
+                (string) $this->twig->render(
+                    '@NetworkingInitCms/Admin/toolbar_js.html.twig',
+                    [
+                        'nonce' => $nonce,
+                        'position' => $this->position,
+                        'page_id' => $page_id,
+                    ]
+                )
+            )."\n";
+            $content = $substrFunction($content, 0, $pos).$toolbar
+                .$substrFunction($content, $pos);
             $response->setContent($content);
         }
     }
