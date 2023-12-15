@@ -99,32 +99,34 @@ file that was distributed with this source code.
 {% endblock body_start %}
 
 {% block body %}
-    <!--begin::Theme mode setup on page load-->
-    <script>var defaultThemeMode = "system";
-        var themeMode;
-        if (document.documentElement) {
-            if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
-                themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
-            } else {
-                if (localStorage.getItem("data-bs-theme") !== null) {
-                    themeMode = localStorage.getItem("data-bs-theme");
+    {% block theme_setup %}
+        <!--begin::Theme mode setup on page load-->
+        <script>var defaultThemeMode = "system";
+            var themeMode;
+            if (document.documentElement) {
+                if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
+                    themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
                 } else {
-                    themeMode = defaultThemeMode;
+                    if (localStorage.getItem("data-bs-theme") !== null) {
+                        themeMode = localStorage.getItem("data-bs-theme");
+                    } else {
+                        themeMode = defaultThemeMode;
+                    }
                 }
-            }
-            if (themeMode === "system") {
-                themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-            }
-            document.documentElement.setAttribute("data-bs-theme", themeMode);
-        }</script>
-    <!--end::Theme mode setup on page load-->
-    <!--begin::Page loading(append to body)-->
-    <div class="page-loader">
-		<span class="spinner-border text-primary" role="status">
-			<span class="visually-hidden">Loading...</span>
-		</span>
-    </div>
-    <!--end::Page loading-->
+                if (themeMode === "system") {
+                    themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+                }
+                document.documentElement.setAttribute("data-bs-theme", themeMode);
+            }</script>
+        <!--end::Theme mode setup on page load-->
+        <!--begin::Page loading(append to body)-->
+        <div class="page-loader">
+            <span class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </span>
+        </div>
+        <!--end::Page loading-->
+{% endblock theme_setup %}
 
     <!--begin::App-->
 {% block app %}
@@ -292,10 +294,12 @@ file that was distributed with this source code.
             </div>
         </div>
     </div>
+    {% if app.user %}
     <!--begin::Javascript-->
-    <script>var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/') }}";</script>
-    <script type="text/javascript"> var CKEDITOR_BASEPATH = "/bundles/fosckeditor/"; </script>
-    <script type="text/javascript" src="/bundles/fosckeditor/ckeditor.js"></script>
+    <script >var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/') }}";</script>
+    <script type="text/javascript" > var CKEDITOR_BASEPATH = "/bundles/fosckeditor/"; </script>
+    <script src="/bundles/fosckeditor/ckeditor.js"></script>
+    {% endif %}
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/datatables/datatables.bundle.js') }}"></script>
@@ -310,6 +314,8 @@ file that was distributed with this source code.
     {# Render any javascript which was given usin the jsblock twig nodes #}
     {% jsblock 'render' %}
     {% autoescape false %}
+
+    {% block theme_js_setup %}
     <script type="text/javascript">
         {% for notice_level in ['success','error','info', 'warning'] %}
             {% set session_var = 'sonata_flash_' ~ notice_level %}
@@ -368,6 +374,7 @@ file that was distributed with this source code.
         });
 
     </script>
+    {% endblock theme_js_setup %}
     {% endautoescape %}
 {% endblock body %}
 </body>
