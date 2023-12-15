@@ -391,7 +391,9 @@ let saveLayoutBlock = (e) => {
 
         let id = error.response.data.id
         let editBlock = document.getElementById('editBlockHtml' + id)
-        editBlock.innerHTML = error.response.data.html
+        if(error.response.data.html) {
+            editBlock.innerHTML = error.response.data.html
+        }
         CMSAdmin.createInitCmsMessageBox('error', error.response.data.message);
         document.body.dispatchEvent(new CustomEvent('fields:added'))
     })
@@ -431,8 +433,8 @@ let createLayoutBlock = (e) => {
             return
         }
 
-        let editBlock = document.getElementById('editBlockHtml' + id)
-        editBlock.innerHTML = error.response.data.html
+        let createBlock = document.getElementById('editBlockHtml' + id)
+        createBlock.innerHTML = error.response.data.html
         CMSAdmin.createInitCmsMessageBox('error', error.response.data.message);
         document.body.dispatchEvent(new CustomEvent('fields:added'))
     })
