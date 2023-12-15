@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gaufrette\Util;
+use Imagine\Image\Box;
 use Networking\InitCmsBundle\Model\IgnoreRevertInterface;
 use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -226,6 +227,12 @@ class Media extends BaseMedia implements IgnoreRevertInterface
         $this->setMd5File($checksum);
 
         parent::preUpdate();
+    }
+
+    #[Ignore]
+    public function getBox(): Box
+    {
+        return parent::getBox();
     }
 
 }
