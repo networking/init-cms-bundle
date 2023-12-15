@@ -109,6 +109,10 @@ file that was distributed with this source code.
     {{ form_help(form) }}
     {{ block('help_block') }}
     {{- form_errors(form) -}}
+
+    {% if form.parent and 'collection' in form.parent.vars.block_prefixes and form.parent.vars.allow_delete == true %}
+        &nbsp;{{ block('form_widget_remove_btn') }}
+    {% endif %}
     </{{ element|default('div') }}>
 {%- endblock form_row %}
 
@@ -273,7 +277,7 @@ file that was distributed with this source code.
 
 
 {% block sonata_type_model_list_widget %}
-    <div id="field_container_{{ id }}" class="field-container model-list"
+    <div id="{{ id }}_field_container" class="field-container model-list"
          data-field-id="{{ id }}"
          data-is-list-mode="true"
          data-field-reload-url="{{ url('sonata_admin_retrieve_form_element', {
@@ -706,7 +710,7 @@ file that was distributed with this source code.
 {% block media_entity_type_widget %}
     {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
     {% if not label_render %}{% set widget_controls = false %}{% endif %}
-    <div id="field_container_{{ id }}"
+    <div id="{{ id }}_field_container"
          class="field-container media-entity"
          data-field-id="{{ id }}"
     >
@@ -769,7 +773,6 @@ file that was distributed with this source code.
             {% endif %}
             </span>
     </div>
-
 {% endblock %}
 
 {% block ckeditor_widget %}
@@ -925,9 +928,6 @@ file that was distributed with this source code.
         {%- endif -%}
         {{- block('form_rows') -}}
         {{- form_rest(form) -}}
-        {% if form.parent and 'collection' in form.parent.vars.block_prefixes and form.parent.vars.allow_delete == true %}
-            &nbsp;{{ block('form_widget_remove_btn') }}
-        {% endif %}
     </div>
 {%- endblock form_widget_compound -%}
 

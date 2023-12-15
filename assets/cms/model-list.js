@@ -72,6 +72,8 @@ class ModelList{
         if(this.selectModelEventId !== '') {
             KTUtil.off(this.dialogContainer, 'click', this.selectModelEventId);
         }
+
+        console.log('addClickOnLinkListeners')
         this.selectModelEventId = KTUtil.on(this.dialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
     }
     addSearchListeners() {
@@ -118,9 +120,14 @@ class ModelList{
             return
         }
 
+        //check if link starts with # or has data-bs-toggle attribute
+        if(link.dataset.bsToggle) {
+            return
+        }
+
         let url = link.getAttribute('href')
 
-        if(!url || url === '#') {
+        if(!url || url.indexOf('#') > -1) {
             return
         }
 
