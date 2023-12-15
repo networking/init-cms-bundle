@@ -10,10 +10,10 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\DBAL\DBALException;
 use Doctrine\Persistence\ManagerRegistry;
 use Networking\InitCmsBundle\Admin\TagAdmin;
 use Networking\InitCmsBundle\Entity\Media;
@@ -21,18 +21,14 @@ use Networking\InitCmsBundle\Entity\Tag;
 use Networking\InitCmsBundle\Exception\DuplicateMediaException;
 use Networking\InitCmsBundle\Lib\UploadedBase64File;
 use Networking\InitCmsBundle\Provider\ImageProvider;
-use Oneup\UploaderBundle\Uploader\ErrorHandler\ErrorHandlerInterface;
 use Oneup\UploaderBundle\Uploader\File\FileInterface;
 use Oneup\UploaderBundle\Uploader\File\FilesystemFile;
 use Oneup\UploaderBundle\Uploader\Response\FineUploaderResponse;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Exception\ModelManagerException;
-use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
-use Sonata\MediaBundle\Controller\MediaAdminController as SonataMediaAdminController;
 use Sonata\MediaBundle\Provider\FileProvider;
 use Sonata\MediaBundle\Provider\Pool;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,7 +36,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sonata\AdminBundle\Controller\CRUDController as Controller;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -50,12 +45,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class MediaAdminController extends CRUDController
 {
-
-    /**
-     * @param null $id
-     *
-     * @return Response
-     */
     public function showAction(Request $request): Response
     {
         $media = $this->assertObjectExists($request, true);
@@ -66,8 +55,6 @@ class MediaAdminController extends CRUDController
         if (!$media) {
             throw new NotFoundHttpException('unable to find the media with the id');
         }
-
-
 
         return $this->renderWithExtraParams(
             '@NetworkingInitCms/MediaAdmin/show.html.twig',
@@ -88,8 +75,6 @@ class MediaAdminController extends CRUDController
 
     /**
      * @param Request|null $request
-     *
-     * @return Response
      */
     public function createAction(Request $request): Response
     {
@@ -117,7 +102,6 @@ class MediaAdminController extends CRUDController
             );
 
             if ($provider instanceof FileProvider) {
-
                 $newObject = $this->admin->getNewInstance();
 
                 $preResponse = $this->preCreate($request, $newObject);
@@ -155,8 +139,6 @@ class MediaAdminController extends CRUDController
     /**
      * redirect the user depend on this choice.
      *
-     * @param object $object
-     *
      * @return Response
      */
     public function redirectTo(Request $request, object $object): RedirectResponse
@@ -186,12 +168,10 @@ class MediaAdminController extends CRUDController
     }
 
     /**
-     * @param mixed $id
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\Response|RedirectResponse
      *
      * @throws NotFoundHttpException
      * @throws AccessDeniedException
-     *
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\Response|RedirectResponse
      */
     public function deleteAction(Request $request): Response
     {
@@ -207,7 +187,7 @@ class MediaAdminController extends CRUDController
         }
         /** @var Request $request */
         $request = $this->container->get('request_stack')->getCurrentRequest();
-        if ($request->getMethod() == 'DELETE') {
+        if ('DELETE' == $request->getMethod()) {
             try {
                 $name = $object->__toString();
                 $this->admin->delete($object);
@@ -231,7 +211,6 @@ class MediaAdminController extends CRUDController
         );
     }
 
-
     public function batchActionAddTags(ProxyQueryInterface $selectedModelQuery)
     {
         $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
@@ -250,7 +229,7 @@ class MediaAdminController extends CRUDController
             'message' => $this->trans('tag_not_selected'),
         ];
 
-        if ($tag !== null) {
+        if (null !== $tag) {
             $selectedModels = $selectedModelQuery->execute();
 
             $status = 'success';
@@ -259,10 +238,9 @@ class MediaAdminController extends CRUDController
             try {
                 /** @var Media $selectedModel */
                 foreach ($selectedModels as $selectedModel) {
-
-                    if($selectedModel->getTags()->contains($tag)){
-                        $status = 'warning';
-                        $message = 'tag_already_added';
+                    if ($selectedModel->getTags()->contains($tag)) {
+                        $status = 'success';
+                        $message = 'tag_added';
                         continue;
                     }
                     if (!$this->getParameter('networking_init_cms.multiple_media_tags')) {
@@ -271,8 +249,6 @@ class MediaAdminController extends CRUDController
                     $selectedModel->addTags($tag);
                     $this->admin->getModelManager()->update($selectedModel);
                 }
-
-
             } catch (\Exception $e) {
                 $status = 'error';
                 $message = $e->getMessage();
@@ -289,13 +265,12 @@ class MediaAdminController extends CRUDController
         return $this->renderJson($data);
     }
 
-    public function gallery(Request $request){
+    public function gallery(Request $request)
+    {
         $request->query->set('galleryMode', true);
 
         return $this->listAction($request);
     }
-
-
 
     /**
      * This method can be overloaded in your custom CRUD controller.
@@ -303,14 +278,13 @@ class MediaAdminController extends CRUDController
      */
     protected function preList(Request $request): ?Response
     {
-
         $filter = $this->admin->getFilterParameters();
 
-        if($request->query->has('provider')){
+        if ($request->query->has('provider')) {
             $filter['providerName']['value'] = $request->query->get('provider');
         }
 
-        if($request->query->has('context')){
+        if ($request->query->has('context')) {
             $filter['context']['value'] = $request->query->get('context');
         }
         $request->query->set('filter', $filter);
@@ -318,11 +292,8 @@ class MediaAdminController extends CRUDController
         return null;
     }
 
-
     /**
      * @param Request|null $request
-     *
-     * @return Response
      */
     public function listAction(Request $request): Response
     {
@@ -336,7 +307,7 @@ class MediaAdminController extends CRUDController
         $galleryMode = $request->query->get('galleryMode', false);
         $multiSelect = $request->query->get('multiSelect', false);
 
-        if($request->query->has('pcode')){
+        if ($request->query->has('pcode')) {
             $galleryMode = true;
         }
 
@@ -360,31 +331,31 @@ class MediaAdminController extends CRUDController
 
         $tagAdmin = $this->container->get('networking_init_cms.admin.tag');
         $context = $request->query->get('context', $persistentParameters['context']);
-        if(!$context){
+        if (!$context) {
             $context = $persistentParameters['context'];
         }
 
         $tagFilter = $datagrid->getFilter('tags');
         $selectedTag = false;
 
-        if(array_key_exists('tags', $filters) && array_key_exists('value', $filters['tags'])){
-            $selectedTag = (int)$filters['tags']['value'];
+        if (array_key_exists('tags', $filters) && array_key_exists('value', $filters['tags'])) {
+            $selectedTag = (int) $filters['tags']['value'];
         }
         $mediaPool = $this->container->get('sonata.media.pool');
 
         $selected = $request->query->get('selected', false);
 
-        if($selected){
+        if ($selected) {
             $selected = explode(',', $selected);
         }
 
         $params = $this->addRenderExtraParams([
             'multiSelect' => $multiSelect,
-            'selected' => $multiSelect?$selected:[],
+            'selected' => $multiSelect ? $selected : [],
             'providers' => $mediaPool->getProvidersByContext($context),
             'media_pool' => $mediaPool,
             'persistent_parameters' => $persistentParameters,
-            'currentProvider' => array_key_exists('providerName', $filters)?$filters['providerName']['value']:$persistentParameters['provider'],
+            'currentProvider' => array_key_exists('providerName', $filters) ? $filters['providerName']['value'] : $persistentParameters['provider'],
             'tags' => $tags,
             'tagAdmin' => $tagAdmin,
             'tagJson' => $tagAdmin->getTagTree($selectedTag),
@@ -400,7 +371,6 @@ class MediaAdminController extends CRUDController
         return $this->render(
             '@NetworkingInitCms/MediaAdmin/list.html.twig',
             $params
-
         );
     }
 
@@ -434,7 +404,7 @@ class MediaAdminController extends CRUDController
 
         $selected = $request->query->get('selected', false);
 
-        if($selected){
+        if ($selected) {
             $selected = explode(',', $selected);
         }
 
@@ -445,7 +415,7 @@ class MediaAdminController extends CRUDController
                     $request->get('context', $persistentParameters['context'])
                 ),
                 'multiSelect' => $multiSelect,
-                'selected' => $multiSelect?$selected:[],
+                'selected' => $multiSelect ? $selected : [],
                 'media_pool' => $this->container->get('sonata.media.pool'),
                 'persistent_parameters' => $this->admin->getPersistentParameters(),
                 'tags' => $tags,
@@ -460,8 +430,6 @@ class MediaAdminController extends CRUDController
     }
 
     /**
-     * @param $id
-     *
      * @return Response
      */
     public function previewPdf($id)
@@ -469,14 +437,13 @@ class MediaAdminController extends CRUDController
         $object = $this->admin->getObject($id);
 
         return $this->renderWithExtraParams('@NetworkingInitCms/MediaAdmin/preview.html.twig', [
-
             'media_pool' => $this->container->get('sonata.media.pool'),
             'persistent_parameters' => $this->admin->getPersistentParameters(),
             'object' => $object]);
     }
 
-    public function clone(Request $request){
-
+    public function clone(Request $request)
+    {
         $response = new FineUploaderResponse();
 
         try {
@@ -490,7 +457,6 @@ class MediaAdminController extends CRUDController
             $response['error'] = $e->getMessage();
         }
 
-        $request = $request;
         $response = new JsonResponse($response->assemble(), 200);
         $response->headers->set('Vary', 'Accept');
 
@@ -501,26 +467,22 @@ class MediaAdminController extends CRUDController
         return $response;
     }
 
-    /**
-     * @return mixed
-     */
     public function extractBase64String(string $base64Content)
     {
-        $data = explode( ';base64,', $base64Content);
+        $data = explode(';base64,', $base64Content);
+
         return $data[1];
-
     }
 
-    /**
-     * @param $filename
-     * @param $newExtension
-     */
-    private function fixExtension($filename, $newExtension): string {
+    private function fixExtension($filename, $newExtension): string
+    {
         $info = pathinfo((string) $filename);
-        return $info['filename'] . '.' . $newExtension;
+
+        return $info['filename'].'.'.$newExtension;
     }
 
-    public function handleUpload($response, Request $request){
+    public function handleUpload($response, Request $request)
+    {
         $request->query->set('oneuploader', true);
 
         $content = $request->getContent();
@@ -534,26 +496,24 @@ class MediaAdminController extends CRUDController
         /** @var Media $baseMedia */
         $baseMedia = $this->admin->getObject($id);
 
-
         /** @var ImageProvider $provider */
         $provider = $this->container->get('sonata.media.pool')->getProvider($baseMedia->getProviderName());
-
 
         $image = $provider->getReferenceImage($baseMedia);
 
         $fileName = $this->fixExtension($image, 'png');
 
-        if($clone){
+        if ($clone) {
             /** @var Media $media */
             $media = $this->admin->getNewInstance();
             $media->setEnabled(true);
             $media->setName('Copy_'.$baseMedia->getName());
-            foreach ($baseMedia->getTags() as $tag){
+            foreach ($baseMedia->getTags() as $tag) {
                 $media->addTags($tag);
             }
             $media->setProviderName($baseMedia->getProviderName());
             $media->setContext($baseMedia->getContext());
-        }else{
+        } else {
             $media = $baseMedia;
         }
 
@@ -579,7 +539,7 @@ class MediaAdminController extends CRUDController
             foreach ($errors as $error) {
                 $errorMessages[] = $error->getMessage();
 
-                if ($error->getMessage() == 'File is duplicate') {
+                if ('File is duplicate' == $error->getMessage()) {
                     $duplicate = true;
                 }
             }
@@ -597,9 +557,9 @@ class MediaAdminController extends CRUDController
         }
 
         try {
-            if($clone){
+            if ($clone) {
                 $this->admin->create($media);
-            }else{
+            } else {
                 $this->admin->update($media);
             }
             $path = $this->admin->generateObjectUrl('edit', $media);
@@ -612,18 +572,13 @@ class MediaAdminController extends CRUDController
 
     public function gallerySelect(Request $request)
     {
-
-
         $request->query->set('galleryMode', true);
         $request->query->set('multiSelect', true);
-
 
         return $this->listAction($request);
     }
 
     /**
-     * @param Request $request
-     *
      * @return Response
      */
     public function refreshSelectList(Request $request)
