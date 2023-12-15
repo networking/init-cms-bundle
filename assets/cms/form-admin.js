@@ -158,7 +158,7 @@ let saveForm = async (event)=> {
 
     items.forEach((item, index) => {
         let formField = formFields.get(item);
-        formField.sortOrder = index
+        formField.position = index
         collection.push(formField.toJson())
     })
 
@@ -173,7 +173,8 @@ let saveForm = async (event)=> {
         let response = await axios.post(form.action, formData, {headers: headers})
         CMSAdmin.createInitCmsMessageBox('success', response.data.message);
 
-        scroll.animateScroll(document.querySelector('#kt_app_toolbar'), null, {header: '#kt_app_header_wrapper'})
+        document.querySelector('#kt_app_toolbar').scrollIntoView();
+
     }catch (error){
         let translator = await CMSAdmin.getTranslator()
         let data = error.response.data

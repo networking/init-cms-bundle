@@ -1,7 +1,9 @@
 //
 // Theme style
 //
-
+html{
+  scroll-behavior: smooth;
+}
 // Initialize
 @import "init";
 
