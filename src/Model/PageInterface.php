@@ -83,7 +83,7 @@ interface PageInterface
 
     public function setAlias(?PageInterface $alias);
 
-    public function getAlias(): ?PageInterface;
+    public function getAlias(): PageInterface|int|null;
 
     public function setParents(array $parents): self;
 

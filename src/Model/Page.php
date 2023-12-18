@@ -64,7 +64,7 @@ abstract class Page implements PageInterface
 
     protected array $allChildren = [];
 
-    protected ?PageInterface $alias = null;
+    protected PageInterface|int|null $alias = null;
 
     /**
      * @var Collection<int, LayoutBlockInterface>
@@ -270,7 +270,7 @@ abstract class Page implements PageInterface
         $this->alias = $alias;
     }
 
-    public function getAlias(): ?PageInterface
+    public function getAlias(): PageInterface|int|null
     {
         return $this->alias;
     }
