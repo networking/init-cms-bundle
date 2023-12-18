@@ -74,7 +74,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "6.x-dev"
+      "dev-6.3": "6.3.*-dev"
     },
     "symfony": {
       "endpoint": [
