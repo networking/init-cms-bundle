@@ -29,3 +29,22 @@
 // Custom layout variables
 @import "layout/base/variables";
 @import "layout/variables.custom";
+
+.form-floating {
+
+  > .form-control:focus,
+  > .form-control:not(:placeholder-shown),
+  > .form-control-plaintext,
+  > .form-select {
+    ~ label {
+      color: rgba(var(--#{$prefix}body-color-rgb), #{$form-floating-label-opacity});
+      transform: $form-floating-label-transform;
+      &.required:after {
+        position: relative;
+        inset: initial;
+        content: "*";
+      }
+    }
+
+  }
+}
