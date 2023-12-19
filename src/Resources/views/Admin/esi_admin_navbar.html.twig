@@ -28,8 +28,11 @@
                             {% if editPath %}
                                 <a href="{{ editPath }}"
                                    class="init-cms-text-gray-300 hover:init-cms-bg-gray-700 hover:init-cms-text-white init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-sm init-cms-font-medium init-cms-flex init-cms-max-init-cms-w-xs init-cms-items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="init-cms-w-4 init-cms-h-4 init-cms-me-2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor"
+                                         class="init-cms-w-4 init-cms-h-4 init-cms-me-2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
                                     </svg>
                                     {{ 'link_action_edit'|trans({}, 'SonataAdminBundle') }}
                                 </a>
@@ -42,13 +45,15 @@
                             </a>
 
 
-                            <div class="init-cms-relative init-cms-ml-3 dropdown">
+                            <div class="init-cms-relative init-cms-ml-3 init-cms-dropdown">
                                 <div>
                                     <a href="#"
                                        class="init-cms-relative init-cms-text-white init-cms-flex init-cms-max-w-xs init-cms-items-center init-cms-rounded-full init-cms-bg-gray-800 init-cms-text-sm">
                                         {{ ('link.website_' ~ firstItemStatus)|trans({}, 'NetworkingInitCmsBundle') }}
-                                        <svg class="init-cms-w-2.5 init-cms-h-2.5 init-cms-ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"></path>
+                                        <svg class="init-cms-w-2.5 init-cms-h-2.5 init-cms-ms-3" aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                  stroke-width="2" d="m1 1 4 4 4-4"></path>
                                         </svg>
                                     </a>
                                 </div>
@@ -57,18 +62,59 @@
                                  init-cms-shadow-lg init-cms-ring-1 init-cms-ring-black init-cms-ring-opacity-5 focus:init-cms-outline-none"
                                      role="menu" aria-orientation="vertical">
 
-                                    <a href="{{ draftPath }}" class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm init-cms-text-amber-400 ">
+                                    <a href="{{ draftPath }}"
+                                       class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm init-cms-text-amber-400 ">
                                         {{ 'link.website_status_draft'|trans({}, 'NetworkingInitCmsBundle') }}
                                     </a>
-                                    <a href="{{ livePath }}" class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm init-cms-text-green-500 ">
+                                    <a href="{{ livePath }}"
+                                       class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm init-cms-text-green-500 ">
                                         {{ 'link.website_status_published'|trans({}, 'NetworkingInitCmsBundle') }}
                                     </a>
                                 </div>
                             </div>
 
                             <!-- Profile dropdown -->
+                            <div class="init-cms-relative init-cms-ml-3 init-cms-dropdown">
+                                <div>
+                                    <button type="button" class="init-cms-relative init-cms-rounded-full init-cms-bg-gray-800 init-cms-p-1 init-cms-text-gray-400 hover:init-cms-text-white
+                            hover:init-cms-outline-none hover:init-cms-ring-2 hover:init-cms-ring-white hover:init-cms-ring-offset-2 hover:init-cms-ring-offset-gray-800"
+                                    id="init-cms-user-button">
+                                        <span class="init-cms-absolute init-cms--inset-1.5"></span>
+                                        <span class="init-cms-sr-only">User Profile</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" data-slot="icon" class="init-cms-w-4 init-cms-h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                        </svg>
+
+                                    </button>
+                                </div>
+                                <div class="dropdown-content hover:init-cms-md-block init-cms-absolute
+                                 init-cms-right-0 init-cms-z-10 init-cms-w-auto init-cms-origin-top-right init-cms-rounded-md init-cms-bg-white init-cms-py-1
+                                 init-cms-shadow-lg init-cms-ring-1 init-cms-ring-black init-cms-ring-opacity-5 focus:init-cms-outline-none init-cms-min-w-max"
+                                     role="menu" aria-orientation="vertical">
+
+                                    <a href="{{ url('admin_networking_initcms_user_profile_security') }}" class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" data-slot="icon" class="
+                                        init-cms-inline-flex init-cms-w-4 init-cms-h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        </svg> {{ app.user.email }}</a>
+
+
+                                    {% if is_granted('IS_IMPERSONATOR') and sonata_user.isImpersonatingEnabled %}
+                                        <a class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm" href="{{ url(sonata_user.impersonatingRoute, sonata_user.impersonatingRouteParameters|merge({'_switch_user': '_exit'})) }}">
+                                            {{ 'switch_user_exit'|trans({}, 'SonataUserBundle', app.user.locale) }}
+                                        </a>
+                                    {% endif %}
+
+                                    <a class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm"
+                                       href="{{ url('admin_networking_initcms_user_profile_security') }}">{{ 'label.account_settings'|trans({}, 'security', app.user.locale) }}</a>
+
+                                    <a href="{{ url('networking_init_cms_admin_security_logout') }}"
+                                       class="init-cms-block init-cms-px-4 init-cms-py-2 init-cms-text-sm">{{ 'user_block_logout'|trans({}, 'SonataUserBundle', app.user.locale) }}</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                     <div class="init-cms--mr-2 init-cms-flex md:init-cms-hidden">
                         <!-- Mobile menu button -->
                         <button type="button"
@@ -80,13 +126,15 @@
                             <span class="init-cms-absolute init-cms--inset-0.5"></span>
                             <span class="init-cms-sr-only">Open main menu</span>
                             <!-- Menu open: "hidden", Menu closed: "block" -->
-                            <svg class="init-cms-blockinit-cms-h-6 init-cms-w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            <svg class="init-cms-blockinit-cms-h-6 init-cms-w-6" fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.5"
                                  stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                       d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
                             </svg>
                             <!-- Menu open: "block", Menu closed: "hidden" -->
-                            <svg class="init-cms-hidden init-cms-h-6 init-cms-w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            <svg class="init-cms-hidden init-cms-h-6 init-cms-w-6" fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.5"
                                  stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
@@ -113,20 +161,25 @@
                         Admin
                     </a>
                 </div>
-                <div class="init-cms-border-t init-cms-border-gray-700 init-cms-pb-3 init-cms-pt-4 dropdown">
+                <div class="init-cms-border-t init-cms-border-gray-700 init-cms-pb-3 init-cms-pt-4 init-cms-dropdown">
                     <div class="init-cms-flex init-cms-items-center init-cms-px-2">
-                        <button type="button" class="init-cms-relative init-cms-text-white init-cms-flex init-cms-max-w-xs init-cms-px-3 init-cms-items-center init-cms-rounded-full init-cms-bg-gray-800 init-cms-text-sm">
+                        <button type="button"
+                                class="init-cms-relative init-cms-text-white init-cms-flex init-cms-max-w-xs init-cms-px-3 init-cms-items-center init-cms-rounded-full init-cms-bg-gray-800 init-cms-text-sm">
                             {{ ('link.website_' ~ firstItemStatus)|trans({}, 'NetworkingInitCmsBundle') }}
-                            <svg class="init-cms-w-2.5 init-cms-h-2.5 init-cms-ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"></path>
+                            <svg class="init-cms-w-2.5 init-cms-h-2.5 init-cms-ms-3" aria-hidden="true"
+                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                      stroke-width="2" d="m1 1 4 4 4-4"></path>
                             </svg>
                         </button>
                     </div>
                     <div class="init-cms-mt-3 init-cms-space-y-1 init-cms-px-2 dropdown-content ">
-                        <a href="{{ draftPath }}" class="init-cms-block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium hover:init-cms-bg-gray-700 init-cms-text-amber-400 ">
+                        <a href="{{ draftPath }}"
+                           class="init-cms-block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium hover:init-cms-bg-gray-700 init-cms-text-amber-400 ">
                             {{ 'link.website_status_draft'|trans({}, 'NetworkingInitCmsBundle') }}
                         </a>
-                        <a href="{{ livePath }}" class="init-cms-block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium hover:init-cms-bg-gray-700  init-cms-text-green-500 ">
+                        <a href="{{ livePath }}"
+                           class="init-cms-block init-cms-rounded-md init-cms-px-3 init-cms-py-2 init-cms-text-base init-cms-font-medium hover:init-cms-bg-gray-700  init-cms-text-green-500 ">
                             {{ 'link.website_status_published'|trans({}, 'NetworkingInitCmsBundle') }}
                         </a>
                     </div>

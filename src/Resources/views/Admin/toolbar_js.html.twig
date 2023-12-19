@@ -16,7 +16,26 @@
             document.querySelector('#mobile-menu-button').addEventListener('click', function () {
                 document.querySelector('#mobile-menu').classList.toggle('init-cms-hidden');
             });
+
+
+            document.querySelectorAll('.init-cms-dropdown').forEach(function (dropdown) {
+                let userButton = dropdown.querySelector('#init-cms-user-button');
+
+                dropdown.addEventListener('mouseover', function () {
+                    if (userButton){
+                        userButton.classList.add('user-button-hover');
+                    }
+                    dropdown.classList.add('init-cms-dropdown-open');
+                });
+                dropdown.addEventListener('mouseleave', function () {
+                    if (userButton){
+                        userButton.classList.remove('user-button-hover');
+                    }
+                    dropdown.classList.remove('init-cms-dropdown-open');
+                });
+            });
         };
+
         function loadBar(url, onSuccess, onError, options) {
             var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
             options = options || {};
