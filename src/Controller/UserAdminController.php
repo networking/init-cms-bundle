@@ -3,12 +3,11 @@
 namespace Networking\InitCmsBundle\Controller;
 
 use App\Entity\WebauthnCredential;
-use Doctrine\Persistence\ManagerRegistry;
-use Jenssegers\Agent\Agent;
 use Networking\InitCmsBundle\Admin\Extension\UserProfileExtension;
 use Networking\InitCmsBundle\Entity\BaseUser as User;
 use Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface;
 use Networking\InitCmsBundle\Model\UserInterface;
+use Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController;
 use Sonata\AdminBundle\Exception\LockException;
 use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Exception\ModelManagerThrowable;
@@ -16,30 +15,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sonata\AdminBundle\Controller\CRUDController as SonataCRUDController;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Webauthn\Bundle\Repository\PublicKeyCredentialSourceRepositoryInterface;
 use Webauthn\Bundle\Repository\PublicKeyCredentialUserEntityRepositoryInterface;
-use Webauthn\Bundle\Security\Authentication\Token\WebauthnToken;
 
 class UserAdminController extends SonataCRUDController
 {
-
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ?HelperInterface $helper,
         private readonly ?PublicKeyCredentialSourceRepositoryInterface $publicKeyCredentialSourceRepository,
         private readonly ?PublicKeyCredentialUserEntityRepositoryInterface $publicKeyCredentialUserEntityRepository,
-    )
-    {
+    ) {
     }
 
-    public function profileSecurityAction(Request $request, #[CurrentUser] UserInterface $user): Response {
-
-        if(!$this->canEditUser($user)){
+    public function profileSecurityAction(Request $request, #[CurrentUser] UserInterface $user): Response
+    {
+        if (!$this->canEditUser($user)) {
             return $this->render('@NetworkingInitCms/Admin/Security/security_settings_impersonator.html.twig');
         }
         $passkeys = [];
@@ -47,9 +40,6 @@ class UserAdminController extends SonataCRUDController
             $userEntity = $this->publicKeyCredentialUserEntityRepository->findOneByUsername($user->getUserIdentifier());
             $passkeys = $this->publicKeyCredentialSourceRepository->findAllForUserEntity($userEntity);
         }
-
-
-
 
         $this->admin->setSubject($user);
         $this->admin->addExtension(new UserProfileExtension());
@@ -59,7 +49,6 @@ class UserAdminController extends SonataCRUDController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             try {
                 $submittedObject = $form->getData();
                 $existingObject = $this->admin->update($submittedObject);
@@ -111,29 +100,25 @@ class UserAdminController extends SonataCRUDController
 
     public function profileSecurityGetAuthenticatorAction(Request $request, #[CurrentUser] UserInterface $user): JsonResponse
     {
-
-        if(!$this->canEditUser($user)){
+        if (!$this->canEditUser($user)) {
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid user'], 400);
         }
 
-        $authenticator = ['hasStepVerificationCode'=> false];
-        if($user->hasStepVerificationCode()){
+        $authenticator = ['hasStepVerificationCode' => false];
+        if ($user->hasStepVerificationCode()) {
             $authenticator = [
                 'secret' => $user->getTwoStepVerificationCode(),
                 'qrCodeUrl' => $this->helper->getUrl($user),
-                'hasStepVerificationCode' => true
+                'hasStepVerificationCode' => true,
             ];
         }
 
         return new JsonResponse($authenticator);
     }
 
-
-
     public function profileSecurityCreateAuthenticatorAction(Request $request, #[CurrentUser] UserInterface $user): JsonResponse
     {
-
-        if(!$this->canEditUser($user)){
+        if (!$this->canEditUser($user)) {
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid user'], 400);
         }
 
@@ -144,12 +129,11 @@ class UserAdminController extends SonataCRUDController
         $request->getSession()->set($sessionKey, $secret);
 
         return new JsonResponse(['secret' => $secret, 'qrCodeUrl' => $this->helper->getUrlFromSecret($user, $secret)]);
-
     }
 
     public function profileSecurityVerifyAuthenticatorAction(Request $request, #[CurrentUser] UserInterface $user): JsonResponse
     {
-        if(!$this->canEditUser($user)){
+        if (!$this->canEditUser($user)) {
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid user'], 400);
         }
 
@@ -162,13 +146,10 @@ class UserAdminController extends SonataCRUDController
 
                 return new JsonResponse(['status' => 'ok']);
             }
-
         }
 
         return new JsonResponse(['status' => 'error', 'message' => 'Invalid code'], 400);
     }
-
-
 
     public function getWebauthnKeysAction(Request $request, #[CurrentUser] User $user)
     {
@@ -176,20 +157,20 @@ class UserAdminController extends SonataCRUDController
             return new JsonResponse([]);
         }
 
-        if(!$this->canEditUser($user)){
+        if (!$this->canEditUser($user)) {
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid user'], 400);
         }
 
         $userEntity
             = $this->publicKeyCredentialUserEntityRepository->findOneByUsername(
-            $user->getUserIdentifier()
-        );
+                $user->getUserIdentifier()
+            );
 
         /** @var WebauthnCredential[] $results */
         $results
             = $this->publicKeyCredentialSourceRepository->findAllForUserEntity(
-            $userEntity
-        );
+                $userEntity
+            );
         $tokens = [];
 
         $defaultIcon = 'data:image/svg+xml;base64,'.base64_encode('<svg xmlns="http://www.w3.org/2000/svg" width="19" height="35" viewBox="0 0 19 35" fill="none">
@@ -199,9 +180,9 @@ class UserAdminController extends SonataCRUDController
             $data = $value->otherUI;
             $tokens[] = [
                 'id' => $value->getId(),
-                'name' => !empty($data) && array_key_exists('name', $data)?$data['name']:'Unnamed',
+                'name' => !empty($data) && array_key_exists('name', $data) ? $data['name'] : 'Unnamed',
                 'createdAt' => $data['createdAt']->format('D, M Y H:i:s'),
-                'icon' => array_key_exists('icon_light', $data)?$data['icon_light']:$defaultIcon,
+                'icon' => array_key_exists('icon_light', $data) ? $data['icon_light'] : $defaultIcon,
             ];
         }
 
@@ -216,7 +197,7 @@ class UserAdminController extends SonataCRUDController
             return new JsonResponse([]);
         }
 
-        if(!$this->canEditUser($user)){
+        if (!$this->canEditUser($user)) {
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid user'], 400);
         }
 
@@ -234,10 +215,8 @@ class UserAdminController extends SonataCRUDController
         $webAuthToken->otherUI = $data;
 
         if ($webAuthToken) {
-            $this->entityManager->persist($webAuthToken);
-            $this->entityManager->flush();
+            $this->publicKeyCredentialSourceRepository->saveCredentialSource($webAuthToken);
         }
-
 
         return new JsonResponse([]);
     }
@@ -250,7 +229,7 @@ class UserAdminController extends SonataCRUDController
             return new JsonResponse([]);
         }
 
-        if(!$this->canEditUser($user)){
+        if (!$this->canEditUser($user)) {
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid user'], 400);
         }
 
@@ -263,6 +242,7 @@ class UserAdminController extends SonataCRUDController
         if ($webAuthToken) {
             $this->publicKeyCredentialSourceRepository->removeCredentialSource($webAuthToken);
         }
+
         return new JsonResponse([]);
     }
 
@@ -272,20 +252,16 @@ class UserAdminController extends SonataCRUDController
             return $this->getUser()->getUserIdentifier() === $user->getUserIdentifier();
         }
 
-        $isSuperAdmin = false;
-
         $impersonator = $this->tokenStorage->getToken()->getOriginalToken();
 
         $isSuperAdmin = array_reduce($impersonator->getRoleNames(), function ($hasRole, $role) {
-            if( $role === 'ROLE_SUPEdR_ADMIN'){
+            if ('ROLE_SUPEdR_ADMIN' === $role) {
                 $hasRole = true;
             }
 
             return $hasRole;
         }, false);
 
-
         return $isSuperAdmin;
-
     }
 }
