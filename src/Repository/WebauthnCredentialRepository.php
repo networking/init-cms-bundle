@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Repository;
 
-use Networking\InitCmsBundle\Entity\WebauthnCredential;
 use Doctrine\Persistence\ManagerRegistry;
+use Networking\InitCmsBundle\Entity\WebauthnCredential;
 use Webauthn\Bundle\Repository\DoctrineCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -17,7 +17,7 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
         parent::__construct($registry, WebauthnCredential::class);
     }
 
-    public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource, ?array $otherUi = null): void
+    public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource, array $otherUi = null): void
     {
         if (!$publicKeyCredentialSource instanceof WebauthnCredential) {
             $publicKeyCredentialSource = new WebauthnCredential(
@@ -36,7 +36,8 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
         parent::saveCredentialSource($publicKeyCredentialSource);
     }
 
-    public function findAllForUserEntityAndAaguid(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity, $aaguid) : array{
+    public function findAllForUserEntityAndAaguid(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity, $aaguid): array
+    {
         return $this->getEntityManager()
             ->createQueryBuilder()
             ->from($this->class, 'c')
