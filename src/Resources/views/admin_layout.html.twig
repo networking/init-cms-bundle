@@ -21,9 +21,7 @@ file that was distributed with this source code.
 {% set _navbar_title = block('navbar_title') is defined ? block('navbar_title')|trim : null %}
 {% set _list_filters_actions = block('list_filters_actions') is defined ? block('list_filters_actions')|trim : null -%}
 {% set isActive      = false %}
-{% if admin is defined %}
-    {% set currentAdmin = admin %}
-{% endif %}
+{% if admin is defined %}{% set currentAdmin = admin %}{% endif %}
 <!DOCTYPE html>
 <html class="no-js" lang="{{ app.request.locale|slice(0,2) }}">
 
@@ -287,7 +285,7 @@ file that was distributed with this source code.
 {% endblock app %}
     <!--end::App-->
 {% block before_body_end %}
-    <div class="modal fade" tabindex="-1" role="dialog" id="list_dialog">
+    <div class="modal fade" tabindex="-1" role="dialog" id="list_dialog" data-bs-focus="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
 
