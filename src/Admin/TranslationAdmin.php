@@ -21,6 +21,7 @@ use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
@@ -69,44 +70,36 @@ class TranslationAdmin extends BaseAdmin
     public function __construct(
         protected string $defaultDomain = 'messages',
     ) {
+        parent::__construct();
     }
 
-    public function setEditableOptions(array $options)
+    public function setEditableOptions(array $options): void
     {
         $this->editableOptions = $options;
     }
 
     public function setTransUnitManager(
         TransUnitManagerInterface $translationManager
-    ) {
+    ): void {
         $this->transUnitManager = $translationManager;
     }
 
-    public function setManagedLocales(array $managedLocales)
+    public function setManagedLocales(array $managedLocales): void
     {
         $this->managedLocales = $managedLocales;
     }
 
-    /**
-     * @return array
-     */
-    public function getEmptyFieldPrefixes()
+    public function getEmptyFieldPrefixes(): array
     {
         return $this->emptyFieldPrefixes;
     }
 
-    /**
-     * @return array
-     */
-    public function getDefaultSelections()
+    public function getDefaultSelections(): array
     {
         return $this->defaultSelections;
     }
 
-    /**
-     * @return bool
-     */
-    public function getNonTranslatedOnly()
+    public function getNonTranslatedOnly(): bool
     {
         return array_key_exists(
             'nonTranslatedOnly',
@@ -115,22 +108,15 @@ class TranslationAdmin extends BaseAdmin
             && (bool) $this->defaultSelections['nonTranslatedOnly'];
     }
 
-    public function setDefaultSelections(array $selections)
+    public function setDefaultSelections(array $selections): void
     {
         $this->defaultSelections = $selections;
     }
 
-    public function setEmptyPrefixes(array $prefixes)
+    public function setEmptyPrefixes(array $prefixes): void
     {
         $this->emptyFieldPrefixes = $prefixes;
     }
-
-    /**
-     * Whether or not to persist the filters in the session.
-     *
-     * @var bool
-     */
-    protected $persistFilters = true;
 
     /**
      * Not exportable.
@@ -139,6 +125,19 @@ class TranslationAdmin extends BaseAdmin
     {
         return [];
     }
+
+    public function configureQuery(ProxyQueryInterface $query
+    ): ProxyQueryInterface {
+
+
+        $this->joinTranslations(
+            $query,
+            $query->getRootAlias()
+        );
+
+        return $query;
+    }
+
 
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
@@ -242,32 +241,24 @@ class TranslationAdmin extends BaseAdmin
         // build the values array
         if ($this->hasRequest()) {
             $bag = $this->getRequest()->query;
+
             $filters = $bag->all('filter');
 
-            if (isset($filters[DatagridInterface::PAGE])) {
-                $filters[DatagridInterface::PAGE]
-                    = (int) $filters[DatagridInterface::PAGE];
-            }
-            if (isset($filters[DatagridInterface::PER_PAGE])) {
-                $filters[DatagridInterface::PER_PAGE]
-                    = (int) $filters[DatagridInterface::PER_PAGE];
-            }
+            $filters[DatagridInterface::PAGE] = 1;
+            $filters[DatagridInterface::PER_PAGE] = 0;
 
-            // if persisting filters, save filters to session, or pull them out of session if no new filters set
-            if ($this->persistFilters) {
-                if ([] == $filters
-                    && 'reset' != $this->getRequest()->query->get('filters')
-                ) {
-                    $filters = $this->getRequest()->getSession()->get(
-                        $this->getCode().'.filter.parameters',
-                        []
-                    );
-                } else {
-                    $this->getRequest()->getSession()->set(
-                        $this->getCode().'.filter.parameters',
-                        $filters
-                    );
-                }
+            if ([] == $filters
+                && 'reset' != $this->getRequest()->query->get('filters')
+            ) {
+                $filters = $this->getRequest()->getSession()->get(
+                    $this->getCode().'.filter.parameters',
+                    []
+                );
+            } else {
+                $this->getRequest()->getSession()->set(
+                    $this->getCode().'.filter.parameters',
+                    $filters
+                );
             }
 
             $parameters = array_merge(
@@ -275,15 +266,6 @@ class TranslationAdmin extends BaseAdmin
                 $filters
             );
 
-            if (
-                !isset($parameters[DatagridInterface::PER_PAGE])
-                || !$this->determinedPerPageValue(
-                    $parameters[DatagridInterface::PER_PAGE]
-                )
-            ) {
-                $parameters[DatagridInterface::PER_PAGE] = $this->getMaxPerPage(
-                );
-            }
 
             // always force the parent value
             if ($this->isChild() && $this->getParentAssociationMapping()) {
@@ -378,7 +360,7 @@ class TranslationAdmin extends BaseAdmin
      * @param string $alias
      */
     private function joinTranslations(
-        ProxyQuery $queryBuilder,
+        ProxyQueryInterface $queryBuilder,
         $alias,
         array $locales = null
     ) {
@@ -396,7 +378,9 @@ class TranslationAdmin extends BaseAdmin
                 }
             }
         }
+
         if (!$alreadyJoined) {
+            $queryBuilder->addSelect('translations');
             /* @var QueryBuilder $queryBuilder */
             if ($locales) {
                 $queryBuilder->leftJoin(
@@ -413,6 +397,8 @@ class TranslationAdmin extends BaseAdmin
                 );
             }
         }
+
+        return $queryBuilder;
     }
 
     /**
