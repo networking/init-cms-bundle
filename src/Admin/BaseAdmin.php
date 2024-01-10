@@ -18,8 +18,6 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Intl\Locales;
 
 /**
@@ -41,11 +39,6 @@ abstract class BaseAdmin extends AbstractAdmin
      */
     protected $trackedActions = [];
 
-    protected function configureDefaultSortValues(array &$sortValues): void
-    {
-        $sortValues[DatagridInterface::PER_PAGE] = 1000000;
-    }
-
     /**
      * Set the language paramenter to contain a list of languages most likely
      * passed from the config.yaml file.
@@ -55,16 +48,14 @@ abstract class BaseAdmin extends AbstractAdmin
         $this->languages = $languages;
     }
 
-    /**
-     * Set up listner to make sure the correct locale is used.
-     */
-    public function setUpTranslatableLocale(): void
+    public function configureFilterParameters(array $parameters): array
     {
-        /** @var \Gedmo\Translatable\TranslatableListener $translatable */
-        $translatableListener = $this->getContainer()->get('stof_doctrine_extensions.listener.translatable', ContainerInterface::NULL_ON_INVALID_REFERENCE);
-        if ($translatableListener) {
-            $translatableListener->setTranslatableLocale($this->getDefaultLocale());
+        if ($this->isCurrentRoute('list') && $this->hasRequest() && !$this->getRequest()->isXmlHttpRequest()) {
+            $parameters[DatagridInterface::PAGE] = 1;
+            $parameters[DatagridInterface::PER_PAGE] = 0;
         }
+
+        return $parameters;
     }
 
     /**
