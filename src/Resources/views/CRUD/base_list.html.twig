@@ -95,7 +95,7 @@ file that was distributed with this source code.
                                     <div class="d-flex align-items-center">
                                         <input type="submit" class="btn btn btn-sm btn-primary me-5"
                                                value="{{ 'btn_filter'|trans({}, 'NetworkingInitCmsBundle') }}"/>
-                                        <a href="{{ admin.generateUrl('list', {filters: 'reset'}) }}"
+                                        <a href="{{ admin.generateUrl('list', {filters: 'reset', pcode: app.request.get('pcode'), subclass: admin.hasActiveSubclass?admin.activeSubclassCode:app.request.get('subclass') }) }}"
                                            class="btn btn-sm btn-light  me-5">
                                             {{ 'link_reset_filter'|trans({'%admin_label%': admin.label}, 'NetworkingInitCmsBundle') }}</a>
                                         {% if advancedFilters|length > 0 %}
@@ -183,7 +183,6 @@ file that was distributed with this source code.
         </div>
     </div>
     {% if datagrid_has_results%}
-
         <div class="card">
             {% if not app.request.isxmlhttprequest %}
             <div class="card-header">
@@ -312,8 +311,6 @@ file that was distributed with this source code.
             </form>
             {% endif %}
         </div>
-
-
     {% else %}
         {% block no_result_content %}
             <div class="alert alert-info">
@@ -321,7 +318,10 @@ file that was distributed with this source code.
             </div>
         {% endblock %}
     {% endif %}
-    </div>
+
+    {% if not  app.request.isxmlhttprequest %}
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block batch %}

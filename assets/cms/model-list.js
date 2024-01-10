@@ -20,6 +20,8 @@ class ModelList{
         this.objectId = this.field.value
         this.selectModelEventId = ''
         this.searchModelEventId = ''
+        this.perPageEventId = ''
+        this.addModelEventId = ''
 
         KTUtil.on(this.element, '#' + this.id, 'change', this.updatePreview.bind(this));
         KTUtil.on(this.element, '#field_dialog_' + this.id, 'hide.bs.modal', this.removeListeners.bind(this));
@@ -72,8 +74,6 @@ class ModelList{
         if(this.selectModelEventId !== '') {
             KTUtil.off(this.dialogContainer, 'click', this.selectModelEventId);
         }
-
-        console.log('addClickOnLinkListeners')
         this.selectModelEventId = KTUtil.on(this.dialogContainer, 'a', 'click', this.clickLinkInDialog.bind(this));
     }
     addSearchListeners() {
@@ -94,6 +94,29 @@ class ModelList{
             })
         })
     }
+    addPerPageListeners() {
+        if(this.perPageEventId !== '') {
+            KTUtil.off(this.dialogContainer, 'change', this.perPageEventId);
+        }
+
+        this.perPageEventId = KTUtil.on(this.dialogContainer, '.per-page', 'change', (e) => {
+            e.preventDefault();
+            let url = new URL(e.target.dataset.url)
+
+            url.searchParams.append('filter[_page]', 1)
+            url.searchParams.append('filter[_per_page]', e.target.value)
+
+            axios.get(url.toString(), {...axiosConfig})
+                .then(response => {
+
+                    this.dialogContainer.querySelector('.modal-content').innerHTML = response.data;
+                    this.addSearchListeners()
+                    this.addClickOnLinkListeners()
+                    this.addPerPageListeners()
+                })
+
+        })
+    }
     createListDialog(event) {
         event.preventDefault();
         let listURL = this.listLink.getAttribute('href')
@@ -109,6 +132,7 @@ class ModelList{
             this.dialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addSearchListeners()
             this.addClickOnLinkListeners()
+            this.addPerPageListeners()
             this.dialog.show();
         })
     }
@@ -123,6 +147,10 @@ class ModelList{
         //check if link starts with # or has data-bs-toggle attribute
         if(link.dataset.bsToggle) {
             return
+        }
+        
+        if(link.tagName.toLowerCase() !== 'a') {
+            link = link.closest('a')
         }
 
         let url = link.getAttribute('href')
@@ -142,6 +170,7 @@ class ModelList{
             this.dialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addSearchListeners()
             this.addClickOnLinkListeners()
+            this.addPerPageListeners()
             this.addSubmitisteners()
             CMSAdmin.initSpecialFields()
         })
@@ -168,6 +197,7 @@ class ModelList{
                 this.dialogContainer.querySelector('.modal-content').innerHTML = response.data;
                 this.addSearchListeners()
                 this.addClickOnLinkListeners()
+                this.addPerPageListeners()
             })
 
     }
@@ -186,6 +216,7 @@ class ModelList{
             this.dialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addSubmitisteners()
             this.addClickOnLinkListeners()
+            this.addPerPageListeners()
             this.dialog.show();
         })
     }
@@ -217,6 +248,7 @@ class ModelList{
                 this.dialogContainer.querySelector('.modal-content').innerHTML = response.data;
                 this.addSubmitisteners()
                 this.addClickOnLinkListeners()
+                this.addPerPageListeners()
                 CMSAdmin.createSelect2()
 
             }).catch(error => {

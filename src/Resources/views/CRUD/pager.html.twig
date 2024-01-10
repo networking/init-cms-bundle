@@ -1,0 +1,53 @@
+<div class="row mt-3">
+    <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+        <div class="dataTables_length" id="init_cms_data_table_length">
+            <label for="{{ admin.uniqid }}_per_page">
+                <select name="init_cms_data_table_length" id="{{ admin.uniqid }}_per_page"
+                        aria-controls="init_cms_data_table"
+                        data-url="{{ admin.generateUrl('list', {pcode: app.request.get('pcode'), subclass: app.request.get('subclass'), filter: admin.getFilterParameters()}, 0) }}"
+                        data-page="1"
+
+                        class="form-select form-select-sm form-select-solid per-page small">
+                    {% for per_page in admin.getperpageoptions %}
+                        <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                                value="{{ per_page }}">
+                            {{ per_page }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label></div>
+        <div class="dataTables_info" id="init_cms_data_table_info" role="status" aria-live="polite">{% trans  with {'%count%': attribute(admin.datagrid.pager, 'countResults') is defined ? admin.datagrid.pager.countResults : admin.datagrid.pager.nbResults} from 'SonataAdminBundle' %}
+                list_results_count{% endtrans %}
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+        <div class="dataTables_paginate paging_simple_numbers" id="init_cms_data_table_paginate">
+            <ul class="pagination">
+
+                <li class="paginate_button page-item previous {% if datagrid.pager.page == 1 %}disabled{% endif %}">
+                    <a href="{{ admin.generateUrl('list', admin.datagrid.paginationparameters(datagrid.pager.previouspage)|merge({pcode: app.request.get('pcode')})) }}"
+                       data-page="{{ datagrid.pager.previouspage }}" class=" page-link"
+                       title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}"><i
+                                class="previous"></i></a>
+                </li>
+
+                {# Set the number of pages to display in the pager #}
+                {% for page in datagrid.pager.getLinks(sonata_config.getOption('pager_links')) %}
+                    <li  class="paginate_button page-item {% if page == datagrid.pager.page %}active{% endif %}">
+                        <a
+                                href="{{ admin.generateUrl('list', admin.datagrid.paginationparameters( page)|merge({pcode: app.request.get('pcode')})) }}"
+                                data-page="{{ page }}" class="page-link">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+
+                <li class="paginate_button page-item next {% if datagrid.pager.page == datagrid.pager.lastpage %}disabled{% endif %}">
+                    <a href="{{ admin.generateUrl('list', admin.datagrid.paginationparameters(datagrid.pager.nextpage)|merge({pcode: app.request.get('pcode')})) }}"
+                       data-page="{{ datagrid.pager.lastpage }}" class="page-link"
+                       title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}"><i class="next"></i></a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>
