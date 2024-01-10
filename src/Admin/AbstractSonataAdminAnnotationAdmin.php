@@ -18,7 +18,7 @@ abstract class AbstractSonataAdminAnnotationAdmin extends AbstractAdmin
     /**
      * @param ListMapper $list
      */
-    protected function configureListFields(ListMapper $list)
+    protected function configureListFields(ListMapper $list): void
     {
         $this->getAnnotationReader()->configureListFields($this->getClass(), $list);
     }
@@ -26,7 +26,7 @@ abstract class AbstractSonataAdminAnnotationAdmin extends AbstractAdmin
     /**
      * @param FormMapper $form
      */
-    protected function configureFormFields(FormMapper $form)
+    protected function configureFormFields(FormMapper $form): void
     {
         $this->getAnnotationReader()->configureFormFields($this->getClass(), $form);
     }
@@ -34,7 +34,7 @@ abstract class AbstractSonataAdminAnnotationAdmin extends AbstractAdmin
     /**
      * @param ShowMapper $show
      */
-    protected function configureShowFields(ShowMapper $show)
+    protected function configureShowFields(ShowMapper $show): void
     {
         $this->getAnnotationReader()->configureShowFields($this->getClass(), $show);
     }
@@ -42,7 +42,7 @@ abstract class AbstractSonataAdminAnnotationAdmin extends AbstractAdmin
     /**
      * @param DatagridMapper $filter
      */
-    protected function configureDatagridFilters(DatagridMapper $filter)
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $this->getAnnotationReader()->configureDatagridFilters($this->getClass(), $filter);
     }
