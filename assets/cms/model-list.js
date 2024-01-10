@@ -171,7 +171,6 @@ class ModelList{
             this.addSearchListeners()
             this.addClickOnLinkListeners()
             this.addPerPageListeners()
-            this.addSubmitisteners()
             CMSAdmin.initSpecialFields()
         })
     }
@@ -216,7 +215,6 @@ class ModelList{
             this.dialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addSubmitisteners()
             this.addClickOnLinkListeners()
-            this.addPerPageListeners()
             this.dialog.show();
         })
     }
@@ -248,7 +246,6 @@ class ModelList{
                 this.dialogContainer.querySelector('.modal-content').innerHTML = response.data;
                 this.addSubmitisteners()
                 this.addClickOnLinkListeners()
-                this.addPerPageListeners()
                 CMSAdmin.createSelect2()
 
             }).catch(error => {
