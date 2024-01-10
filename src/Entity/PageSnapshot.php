@@ -10,10 +10,11 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
-use Networking\InitCmsBundle\Entity\ContentRoute;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
@@ -27,9 +28,6 @@ use Networking\InitCmsBundle\Model\PageSnapshotInterface;
 #[ORM\Table(name: 'page_snapshot')]
 class PageSnapshot implements PageSnapshotInterface
 {
-
-
-
     /**
      * @var int
      */
@@ -39,7 +37,7 @@ class PageSnapshot implements PageSnapshotInterface
     protected $id;
 
     /**
-     * @var Page
+     * @var PageInterface
      */
     protected $page;
 
@@ -49,7 +47,6 @@ class PageSnapshot implements PageSnapshotInterface
     #[ORM\ManyToOne(targetEntity: ContentRoute::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'content_route_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected $contentRoute;
-
 
     /**
      * @var string
@@ -63,9 +60,6 @@ class PageSnapshot implements PageSnapshotInterface
     #[ORM\Column(name: 'resource_id', type: 'integer')]
     protected $resourceId;
 
-    /**
-     * @var mixed
-     */
     #[ORM\Column(name: 'versioned_data', type: 'json')]
     protected $versionedData;
 
@@ -81,23 +75,17 @@ class PageSnapshot implements PageSnapshotInterface
     #[ORM\Column(name: 'snapshot_date', type: 'datetime')]
     protected $snapshotDate;
 
-    /**
-     * @var
-     */
     #[ORM\Column(name: 'path', type: 'string', length: 255, nullable: true)]
     protected $path;
 
     public function __construct(VersionableInterface $resource)
     {
-        $this->resourceName = str_replace('Proxies\__CG__\\', '',  $resource::class);
+        $this->resourceName = str_replace('Proxies\__CG__\\', '', $resource::class);
         $this->resourceId = $resource->getResourceId();
         $this->version = $resource->getCurrentVersion();
         $this->snapshotDate = new \DateTime('now');
     }
 
-    /**
-     * @param $resourceId
-     */
     public function setResourceId($resourceId): self
     {
         $this->resourceId = $resourceId;
@@ -114,8 +102,6 @@ class PageSnapshot implements PageSnapshotInterface
     }
 
     /**
-     * @param $resourceName
-     *
      * @return PageSnapshot
      */
     public function setResourceName($resourceName)
@@ -134,8 +120,6 @@ class PageSnapshot implements PageSnapshotInterface
     }
 
     /**
-     * @param $snapshotDate
-     *
      * @return PageSnapshot
      */
     public function setSnapshotDate($snapshotDate)
@@ -154,8 +138,6 @@ class PageSnapshot implements PageSnapshotInterface
     }
 
     /**
-     * @param $version
-     *
      * @return PageSnapshot
      */
     public function setVersion($version)
@@ -174,8 +156,6 @@ class PageSnapshot implements PageSnapshotInterface
     }
 
     /**
-     * @param $versionedData
-     *
      * @return PageSnapshot
      */
     public function setVersionedData($versionedData)
@@ -185,9 +165,6 @@ class PageSnapshot implements PageSnapshotInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getVersionedData()
     {
         return $this->versionedData;
@@ -216,8 +193,6 @@ class PageSnapshot implements PageSnapshotInterface
     /**
      * Set page.
      *
-     * @param PageInterface $page
-     *
      * @return PageSnapshot
      */
     public function setPage(PageInterface $page)
@@ -230,7 +205,7 @@ class PageSnapshot implements PageSnapshotInterface
     /**
      * Get conversation.
      *
-     * @return Page
+     * @return PageInterface
      */
     public function getPage()
     {
@@ -238,8 +213,6 @@ class PageSnapshot implements PageSnapshotInterface
     }
 
     /**
-     * @param ContentRouteInterface $contentRoute
-     *
      * @return PageSnapshot
      */
     public function setContentRoute(ContentRouteInterface $contentRoute)
@@ -269,33 +242,21 @@ class PageSnapshot implements PageSnapshotInterface
         return $this->getPage();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoute()
     {
         return $this->contentRoute->setContent($this);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutes(): iterable
     {
         return [$this->getRoute()];
     }
 
-    /**
-     * @param $path
-     */
     public function setPath($path)
     {
         $this->path = $path;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPath()
     {
         return $this->path;
