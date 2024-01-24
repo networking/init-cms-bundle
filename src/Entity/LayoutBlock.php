@@ -10,11 +10,10 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Networking\InitCmsBundle\Model\ContentInterface;
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Symfony\Component\Serializer\Annotation\Ignore;
@@ -39,7 +38,6 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-
     /**
      * @var string
      */
@@ -50,8 +48,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
      * @var PageInterface
      */
     #[Ignore]
-    protected $page = null;
-
+    protected $page;
 
     /**
      * @var bool
@@ -77,9 +74,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     #[ORM\Column(type: 'datetime')]
     protected $updatedAt;
 
-
     protected string $classType = '';
-
 
     public function __clone(): void
     {
@@ -87,9 +82,6 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
         $this->page = null;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->getContentTypeName();
@@ -122,7 +114,6 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
         return $this->id;
     }
 
-
     /**
      * Set zone.
      *
@@ -150,8 +141,6 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     /**
      * Set page.
      *
-     * @param PageInterface $page
-     *
      * @return $this
      */
     public function setPage(PageInterface $page)
@@ -178,12 +167,12 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
      */
     public function getPageId()
     {
-        if(!$this->page){
+        if (!$this->page) {
             return null;
         }
+
         return $this->page->getId();
     }
-
 
     /**
      * Set isActive.
@@ -286,11 +275,8 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
         return $this->sortOrder;
     }
 
-
     /**
      * @param array $params
-     *
-     * @return array
      */
     #[Ignore]
     public function getTemplateOptions($params = []): array
@@ -328,36 +314,36 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     public function import(LayoutBlockInterface $object)
     {
         foreach (get_object_vars($object) as $key => $value) {
-            if ($key != 'id') {
+            if ('id' != $key) {
                 $this->$key = $value;
             }
         }
     }
 
     public function restoreFormPublished(
-        LayoutBlockInterface $published){
+        LayoutBlockInterface $published)
+    {
         $this->zone = $published->getZone();
         $this->isActive = $published->isActive();
         $this->sortOrder = $published->getSortOrder();
         $this->createdAt = $published->getCreatedAt();
         $this->updatedAt = $published->getUpdatedAt();
-        $this->snapshotContent = $published->getSnapshotContent();
     }
 
     public function restoreFormSerializer(
-        array $published){
+        array $published)
+    {
         $this->zone = $published['zone'];
         $this->isActive = $published['isActive'];
         $this->sortOrder = $published['sortOrder'];
         $this->createdAt = $published['createdAt'];
         $this->updatedAt = $published['updatedAt'];
-        $this->snapshotContent = $published['snapshotContent'];
     }
 
     public function getTemplate(): ?string
     {
         $adminContent = $this->getAdminContent();
 
-        return array_key_exists('template', $adminContent)?$adminContent['template']:null;
+        return array_key_exists('template', $adminContent) ? $adminContent['template'] : null;
     }
 }
