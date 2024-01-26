@@ -12,6 +12,7 @@ file that was distributed with this source code.
 {% extends '@NetworkingInitCms/CRUD/action.html.twig' %}
 
 {% block title %}{{ media.name }}{% endblock %}
+{% block navbar_title %}{{ media.name }}{% endblock %}
 
 {% block content %}
     <h3>{{ 'title.media_preview'|trans({}, 'MediaAdmin') }}</h3>

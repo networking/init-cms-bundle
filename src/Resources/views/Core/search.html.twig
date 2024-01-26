@@ -12,6 +12,7 @@ file that was distributed with this source code.
 {% extends base_template %}
 
 {% block title %}{{ 'title_search_results'|trans({'%query%': query}, 'SonataAdminBundle') }}{% endblock %}
+{% block navbar_title %}{{ 'title_search_results'|trans({'%query%': query}, 'SonataAdminBundle') }}{% endblock %}
 {% block breadcrumb %}{% endblock %}
 {% block content %}
 

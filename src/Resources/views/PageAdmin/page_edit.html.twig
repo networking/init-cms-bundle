@@ -8,28 +8,32 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% extends base_template %}
+{% extends '@NetworkingInitCms/CRUD/base_edit.html.twig'  %}
 
 {% block meta_config %}
 {{ parent() }}
     <meta name="init-cms-page-id" content="{{ object.id }}"/>
 {% endblock %}
-{% block title %}
 
+{% block navbar_title %}
     <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
         <span>
-
         <span class="page_title">{{ admin.toString(object) }} </span> <span
                     class="text-muted font-size-lg fw-light">({{ language }})</span>
         </span>
-        <a class="small fw-light"
-           href="{{ admin.generateUrl('list', {'locale': object.locale}) }}">{{ 'link.go_to_list'|trans({'%admin_label%':admin.label}, 'NetworkingInitCmsBundle') }}</a>
     </h1>
-
 {% endblock %}
 
 {% block top_actions %}
         {% include '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig' %}
+    {% block actions %}
+        {% if admin.hasAccess('list') and admin.hasRoute('list') %}
+            <a class="btn btn-sm btn-outine btn-light-primary" href="{{ admin.generateUrl('list') }}">
+                <i class="fas fa-list" aria-hidden="true"></i>
+                {{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}
+            </a>
+        {% endif %}
+    {% endblock %}
 {% endblock %}
 
 {% block form %}

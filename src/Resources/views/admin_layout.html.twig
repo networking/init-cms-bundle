@@ -18,7 +18,7 @@ file that was distributed with this source code.
 {% set _title = block('title') is defined ? block('title')|trim : null %}
 {% set _breadcrumb = block('breadcrumb') is defined ? block('breadcrumb')|trim : null %}
 {% set _actions = block('actions') is defined ? block('actions')|trim : null %}
-{% set _navbar_title = block('navbar_title') is defined ? block('navbar_title')|trim : null %}
+{% set _navbar_title = block('navbar_title') is defined ? block('navbar_title')|trim : _title %}
 {% set _list_filters_actions = block('list_filters_actions') is defined ? block('list_filters_actions')|trim : null -%}
 {% set isActive      = false %}
 {% if admin is defined %}{% set currentAdmin = admin %}{% endif %}
@@ -32,7 +32,7 @@ file that was distributed with this source code.
     {% block meta_config %}
         <meta name="init-cms-setup"
               data-init-cms-config='{{ {'DEBUG':sonata_config.getOption('js_debug'),'CONFIRM_EXIT': true}|json_encode()|raw }}'>
-        <meta name="webauthn-enabled" content="{{ webauthn_enabled }}" />
+        <meta name="webauthn-enabled" content="{{ webauthn_enabled }}"/>
         <meta name="google-authenticator-enabled" content="{{ google_authenticator_enabled }}">
     {% endblock %}
     {% block stylesheets %}
@@ -52,7 +52,7 @@ file that was distributed with this source code.
               rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>
     {% endblock %}
-    <script src="{{ asset('cmsRouting.js', 'init_cms')}}"></script>
+    <script src="{{ asset('cmsRouting.js', 'init_cms') }}"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'CMSRouting.setRouting' }) }}"></script>
 
     {% block javascripts %}
@@ -60,12 +60,15 @@ file that was distributed with this source code.
 
     <title>
         {% block meta_title %}
-            {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
-
-            {% if admin is defined %}
-                &gt; {{ admin.label|trans({}, admin.translationDomain )|striptags }}
-                {% if _title is not empty %}&gt; {{ _title|raw|replace({'&quot;': ''})|striptags }}{% endif %}
-            {% endif %}
+            {% apply spaceless %}
+                {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
+                {% if admin is defined %}
+                    &gt; {{ admin.label|trans({}, admin.translationDomain )|striptags }}
+                    {% if _title is not empty %}&gt; {{ _title|raw|replace({'&quot;': ''})|striptags }}{% endif %}
+                {% elseif _title is not empty %}
+                    &gt; {{ _title|raw|replace({'&quot;': ''})|striptags }}
+                {% endif %}
+            {% endapply %}
         {% endblock %}
     </title>
 </head>
@@ -85,8 +88,8 @@ file that was distributed with this source code.
             data-kt-app-sidebar-minimize="on"
         {% endif %}
         {% if _side_menu %}
-      data-kt-app-aside-fixed="true"
-      {% endif %}
+            data-kt-app-aside-fixed="true"
+        {% endif %}
       data-kt-app-page-loading-enabled="true" data-kt-app-page-loading="on"
       class="app-default">
 
@@ -97,33 +100,33 @@ file that was distributed with this source code.
 {% endblock body_start %}
 
 {% block body %}
-    {% block theme_setup %}
-        <!--begin::Theme mode setup on page load-->
-        <script>var defaultThemeMode = "system";
-            var themeMode;
-            if (document.documentElement) {
-                if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
-                    themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
+{% block theme_setup %}
+    <!--begin::Theme mode setup on page load-->
+    <script>var defaultThemeMode = "system";
+        var themeMode;
+        if (document.documentElement) {
+            if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
+                themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
+            } else {
+                if (localStorage.getItem("data-bs-theme") !== null) {
+                    themeMode = localStorage.getItem("data-bs-theme");
                 } else {
-                    if (localStorage.getItem("data-bs-theme") !== null) {
-                        themeMode = localStorage.getItem("data-bs-theme");
-                    } else {
-                        themeMode = defaultThemeMode;
-                    }
+                    themeMode = defaultThemeMode;
                 }
-                if (themeMode === "system") {
-                    themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-                }
-                document.documentElement.setAttribute("data-bs-theme", themeMode);
-            }</script>
-        <!--end::Theme mode setup on page load-->
-        <!--begin::Page loading(append to body)-->
-        <div class="page-loader">
+            }
+            if (themeMode === "system") {
+                themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+            document.documentElement.setAttribute("data-bs-theme", themeMode);
+        }</script>
+    <!--end::Theme mode setup on page load-->
+    <!--begin::Page loading(append to body)-->
+    <div class="page-loader">
             <span class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </span>
-        </div>
-        <!--end::Page loading-->
+    </div>
+    <!--end::Page loading-->
 {% endblock theme_setup %}
 
     <!--begin::App-->
@@ -157,10 +160,10 @@ file that was distributed with this source code.
                                     <!--begin::Page title-->
                                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                                         <!--begin::Title-->
-                                        {% if _title is not empty or action is defined %}
+                                        {% if _navbar_title is not empty or action is defined %}
                                             <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                                                {% if _title is not empty %}
-                                                    {{ _title|raw }}
+                                                {% if _navbar_title is not empty %}
+                                                    {{ _navbar_title|raw }}
                                                 {% else %}
                                                     {% if action is defined %}
                                                         {{ render_breadcrumbs_for_title(admin, action)|replace({'&lt;': '<', '&gt;':'>'})|raw }}
@@ -194,10 +197,10 @@ file that was distributed with this source code.
                                                     {% set actionHelp = action|default(false) %}
                                                 {% endif %}
                                                 {% if actionHelp is not same as(false) %}
-                                                <a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
-                                                   target="_blank">
-                                                    <i class="ki-outline ki-question-2 fs-2"></i>
-                                                </a>
+                                                    <a href="{{ url('networking_init_cms_help', {'adminCode':adminCode,'action':actionHelp}) }}"
+                                                       target="_blank">
+                                                        <i class="ki-outline ki-question-2 fs-2"></i>
+                                                    </a>
                                                 {% endif %}
                                             {% endif %}
                                         {% endif %}
@@ -236,14 +239,14 @@ file that was distributed with this source code.
                                     {% endif %}
 
                                     {% if _list_table is not empty %}
-                                            {% if _list_filters is not empty %}
-                                                 {{ _list_filters|raw }}
-                                            {% endif %}
-                                            {{ _list_table|raw }}
+                                        {% if _list_filters is not empty %}
+                                            {{ _list_filters|raw }}
+                                        {% endif %}
+                                        {{ _list_table|raw }}
                                     {% endif %}
 
                                 {% endblock %}
-                        {% endblock sonata_wrapper %}
+                            {% endblock sonata_wrapper %}
                         </div>
                     </div>
                 </div>
@@ -276,7 +279,7 @@ file that was distributed with this source code.
             <!--end::Footer-->
 
         </div>
-    <!--end::Wrapper-->
+        <!--end::Wrapper-->
     </div>
     <!--end::Page-->
     </div>
@@ -294,8 +297,8 @@ file that was distributed with this source code.
     </div>
     {% if app.user %}
     <!--begin::Javascript-->
-    <script >var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/') }}";</script>
-    <script type="text/javascript" > var CKEDITOR_BASEPATH = "/bundles/fosckeditor/"; </script>
+    <script>var hostUrl = "{{ asset('bundles/networkinginitcms/admin-theme/') }}";</script>
+    <script type="text/javascript"> var CKEDITOR_BASEPATH = "/bundles/fosckeditor/"; </script>
     <script src="/bundles/fosckeditor/ckeditor.js"></script>
     {% endif %}
     <script src="{{ asset('bundles/networkinginitcms/admin-theme/js/scripts.bundle.js') }}"></script>
@@ -313,21 +316,21 @@ file that was distributed with this source code.
     {% jsblock 'render' %}
     {% autoescape false %}
 
-    {% block theme_js_setup %}
+{% block theme_js_setup %}
     <script type="text/javascript">
         {% for notice_level in ['success','error','info', 'warning'] %}
-            {% set session_var = 'sonata_flash_' ~ notice_level %}
-            {% for flash in app.session.flashbag.get(session_var) %}
-            KTUtil.onDOMContentLoaded(function () {
-                CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
-            })
-            {% endfor %}
+        {% set session_var = 'sonata_flash_' ~ notice_level %}
+        {% for flash in app.session.flashbag.get(session_var) %}
+        KTUtil.onDOMContentLoaded(function () {
+            CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+        })
+        {% endfor %}
 
-            {% for flash in app.session.flashbag.get(notice_level) %}
-            KTUtil.onDOMContentLoaded(function () {
-                CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
-            })
-            {% endfor %}
+        {% for flash in app.session.flashbag.get(notice_level) %}
+        KTUtil.onDOMContentLoaded(function () {
+            CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+        })
+        {% endfor %}
         {% endfor %}
         // On document ready
         KTUtil.onDOMContentLoaded(function () {
@@ -346,17 +349,17 @@ file that was distributed with this source code.
                 // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
                 var clipboard = new ClipboardJS(button, {
                     target: target,
-                    text: function() {
+                    text: function () {
                         return target.value;
                     }
                 });
 
                 // Success action handler
-                clipboard.on('success', function(e) {
+                clipboard.on('success', function (e) {
                     const currentLabel = button.innerHTML;
 
                     // Exit label update when already in progress
-                    if(button.innerHTML === '<i class="fs-2 ki-outline ki-copy-success"></i>') {
+                    if (button.innerHTML === '<i class="fs-2 ki-outline ki-copy-success"></i>') {
                         return;
                     }
 
@@ -364,7 +367,7 @@ file that was distributed with this source code.
                     button.innerHTML = '<i class="fs-2 ki-outline ki-copy-success"></i>';
 
                     // Revert button label after 3 seconds
-                    setTimeout(function(){
+                    setTimeout(function () {
                         button.innerHTML = currentLabel;
                     }, 3000)
                 });
@@ -372,7 +375,7 @@ file that was distributed with this source code.
         });
 
     </script>
-    {% endblock theme_js_setup %}
+{% endblock theme_js_setup %}
     {% endautoescape %}
 {% endblock body %}
 </body>

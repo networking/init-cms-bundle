@@ -13,10 +13,32 @@ file that was distributed with this source code.
 
 {% block title %}
     {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-    {% if admin.id(object) is not null%}
-        {% set title =  "title_edit"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
+    {% if objectId is not null %}
+        {% set title =  "title_edit"|trans({'%name%': admin.toString(object)|u.truncate(100, '...'),'%admin_label%': admin_label}, admin.translationDomain)  %}
         {% if  title ==  "title_edit" %}
-            {{ "title_edit"|trans({'%name%': admin.toString(object),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+            {{ "title_edit"|trans({'%name%': admin.toString(object)|u.truncate(100, '...'),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+        {% else %}
+            {{ title }}
+        {% endif %}
+    {% else %}
+        {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}
+        {% if title == 'title_create' %}
+            {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+        {% else %}
+            {{ title }}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+
+{% block navbar_title %}
+    {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
+    {% if objectId is not null %}
+        {% set title =  "title_edit"|trans({'%name%': admin.toString(object)|u.truncate(15, '...'),'%admin_label%': admin_label}, admin.translationDomain)  %}
+        {% if  title ==  "title_edit" %}
+            {{ "title_edit"|trans({'%name%': admin.toString(object)|u.truncate(15, '...'),'%admin_label%': admin_label }, 'SonataAdminBundle') }}
+        {% else %}
+            {{ title }}
         {% endif %}
     {% else %}
         {% set title =  "title_create"|trans({'%admin_label%': admin_label}, admin.translationDomain)  %}

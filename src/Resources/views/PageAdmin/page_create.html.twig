@@ -1,30 +1,7 @@
-{% extends base_template %}
-
-
-{% block title %}
-        {{ "title_create"|trans({}, admin.translationDomain) }}
-{% endblock %}
-
-
-{% block top_actions %}
-    <div class="sonata-actions">
-        {% if admin.hasroute('list') and admin.isGranted('LIST') %}
-            <a class="btn btn-sm btn-default"
-               href="{{ admin.generateUrl('list') }}">
-                <i class="ki-outline ki-arrow-left"></i>
-                {{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}</a>
-        {% endif %}
-    </div>
-{% endblock %}
-
-{% use '@NetworkingInitCms/CRUD/base_edit_form.html.twig' with form as parentForm %}
-
-{% block form %}
-    {{ block('parentForm') }}
-{% endblock %}
+{% extends '@NetworkingInitCms/CRUD/base_edit.html.twig'  %}
 
 
 {% block before_body_end %}
-{{ parent() }}
+    {{ parent() }}
     {% include '@NetworkingInitCms/PageAdmin/page_create_form_script.html.twig' with {'admin': admin} %}
 {% endblock %}
