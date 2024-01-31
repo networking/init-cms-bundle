@@ -861,7 +861,7 @@ class NetworkingHelperExtension extends AbstractExtension
             return static::truncate($env, $text, $radius * 2, $ellipsis);
         }
 
-        $text = html_entity_decode($text, null, $env->getCharset());
+        $text = html_entity_decode($text, encoding: $env->getCharset());
 
         $append = $prepend = $ellipsis;
 
