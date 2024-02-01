@@ -14,24 +14,23 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
-use Networking\InitCmsBundle\Helper\PageHelper;
+use Gedmo\Sluggable\Util\Urlizer;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
+use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
+use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
-use Gedmo\Sluggable\Util\Urlizer;
 
 /**
  * Class PageAdminController.
@@ -64,28 +63,22 @@ class PageAdminController extends CRUDController
     /**
      * Create a copy of a page in the given local and connect the pages.
      *
-     * @param $id
-     * @param $locale
-     *
-     * @return RedirectResponse|Response
      * @throws NotFoundHttpException
      */
     public function translateAction(
         Request $request,
         $id,
         $locale
-    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
+    ): RedirectResponse|Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
 
         if (!$page) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the object with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
         $language = \Locale::getDisplayLanguage($locale);
 
-        if ($request->getMethod() == 'POST') {
+        if ('POST' == $request->getMethod()) {
             try {
                 $pageCopy = $this->pageHelper->makeTranslationCopy(
                     $page,
@@ -116,7 +109,7 @@ class PageAdminController extends CRUDController
                 [
                     'html' => $html,
                     'message' => $message,
-                ],$status
+                ], $status
             );
         }
 
@@ -140,26 +133,18 @@ class PageAdminController extends CRUDController
         ]);
     }
 
-
-    /**
-     * @param $id
-     *
-     * @return RedirectResponse|Response
-     */
     public function copyAction(
         Request $request,
         $id
-    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
+    ): RedirectResponse|Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
 
         if (!$page) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the object with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
-        if ($request->getMethod() == 'POST') {
+        if ('POST' == $request->getMethod()) {
             $pageCopy = false;
             try {
                 $pageCopy = $this->pageHelper->makePageCopy($page);
@@ -207,7 +192,6 @@ class PageAdminController extends CRUDController
                 );
             }
 
-
             return $this->redirect($this->admin->generateUrl('list'));
         }
 
@@ -226,28 +210,21 @@ class PageAdminController extends CRUDController
     /**
      * Link pages as translations of each other.
      *
-     * @param $id
-     * @param $locale
-     *
-     * @return RedirectResponse|Response
      * @throws NotFoundHttpException
-     *
      */
     public function linkAction(
         Request $request,
         $id,
         $locale
-    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
+    ): RedirectResponse|Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
 
         if (!$page) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the Page with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
         }
 
-        if ($request->getMethod() == 'POST') {
+        if ('POST' == $request->getMethod()) {
             $linkPageId = $request->get('page');
             if (!$linkPageId) {
                 $this->addFlash(
@@ -277,7 +254,6 @@ class PageAdminController extends CRUDController
                     );
                 }
 
-
                 return new RedirectResponse(
                     $this->admin->generateUrl('edit', ['id' => $page->getId()])
                 );
@@ -293,7 +269,7 @@ class PageAdminController extends CRUDController
             $pages = new ArrayCollection($pages);
             $originalLocale = $page->getLocale();
             $pages = $pages->filter(
-                fn(PageInterface $linkPage) => !in_array(
+                fn (PageInterface $linkPage) => !in_array(
                     $originalLocale,
                     $linkPage->getTranslatedLocales()
                 )
@@ -327,31 +303,23 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param $id
-     * @param $translationId
-     *
-     * @return RedirectResponse|Response
      * @throws NotFoundHttpException
      */
     public function unlinkAction(
         Request $request,
         $id,
         $translationId
-    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
-
+    ): RedirectResponse|Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
         $translatedPage = $this->admin->getObject($translationId);
 
         if (!$page) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the Page with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
         }
         $method = $request->get('_method');
 
-
-        if ($request->getMethod() == 'DELETE') {
+        if ('DELETE' == $request->getMethod()) {
             $page->removeTranslation($translatedPage);
             $translatedPage->removeTranslation($page);
 
@@ -396,13 +364,13 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     *
      * @return RedirectResponse
+     *
      * @throws AccessDeniedException
      */
     public function batchActionPublish(ProxyQueryInterface $selectedModelQuery)
     {
-        if ($this->admin->isGranted('PUBLISH') === false) {
+        if (false === $this->admin->isGranted('PUBLISH')) {
             throw new AccessDeniedException();
         }
 
@@ -454,16 +422,15 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     *
      * @return RedirectResponse
+     *
      * @throws AccessDeniedException
      */
     public function batchActionCopy(ProxyQueryInterface $selectedModelQuery)
     {
-        if ($this->admin->isGranted('EDIT') === false) {
+        if (false === $this->admin->isGranted('EDIT')) {
             throw new AccessDeniedException();
         }
-
 
         $selectedModels = $selectedModelQuery->execute();
 
@@ -512,7 +479,7 @@ class PageAdminController extends CRUDController
      */
     public function batchTranslateAction(Request $request)
     {
-        if ($this->admin->isGranted('ROLE_SUPER_ADMIN') === false) {
+        if (false === $this->admin->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException();
         }
 
@@ -530,7 +497,6 @@ class PageAdminController extends CRUDController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-
 
             $pages = $this->admin->getModelManager()->findBy(
                 $this->admin->getClass(),
@@ -566,14 +532,14 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     *
      * @return RedirectResponse
+     *
      * @throws AccessDeniedException
      */
     public function batchActionCacheClear(
         ProxyQueryInterface $selectedModelQuery
     ) {
-        if ($this->admin->isGranted('PUBLISH') === false) {
+        if (false === $this->admin->isGranted('PUBLISH')) {
             throw new AccessDeniedException();
         }
         /** @var PageInterface[] $selectedModels */
@@ -626,12 +592,8 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param null $id
-     *
-     * @return Response
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws AccessDeniedException
+     * @throws NotFoundHttpException
      */
     public function showAction(Request $request): Response
     {
@@ -644,9 +606,7 @@ class PageAdminController extends CRUDController
         $this->admin->checkAccess('show', $object);
 
         if (!$object) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the object with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
         if (false === $this->admin->isGranted('VIEW', $object)) {
@@ -666,62 +626,65 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param null $id
-     *
      * @return RedirectResponse|Response
+     *
      * @throws \Twig\Error\RuntimeError
      */
     public function editAction(Request $request): Response
     {
         $id = null;
-        $object = $this->assertObjectExists($request, true);
-        \assert(null !== $object);
+        $existingObject = $this->assertObjectExists($request, true);
+        \assert(null !== $existingObject);
 
-        $this->checkParentChildAssociation($request, $object);
+        $this->checkParentChildAssociation($request, $existingObject);
 
-        $this->admin->checkAccess('edit', $object);
+        $this->admin->checkAccess('edit', $existingObject);
 
-        if (!$object) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the object with id : %s', $id)
-            );
+        $preResponse = $this->preEdit($request, $existingObject);
+        if (null !== $preResponse) {
+            return $preResponse;
         }
 
-        if (false === $this->admin->isGranted('EDIT', $object)) {
-            throw new AccessDeniedException();
-        }
+        $this->admin->setSubject($existingObject);
 
-        $this->admin->setSubject($object);
+        $objectId = $this->admin->getNormalizedIdentifier($existingObject);
+        \assert(null !== $objectId);
 
         /** @var $form \Symfony\Component\Form\Form */
         $form = $this->admin->getForm();
-        $form->setData($object);
+        $form->setData($existingObject);
 
-        if ($request->getMethod() == 'POST') {
+        if ('POST' == $request->getMethod()) {
             if (!$this->isXmlHttpRequest($request)) {
                 throw new NotFoundHttpException('Should only submit over ajax');
             }
 
             $request->attributes->add(['objectId' => $id]);
-            $request->attributes->add(['page_locale' => $object->getLocale()]);
+            $request->attributes->add(['page_locale' => $existingObject->getLocale()]);
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
-                $object->setStatus(PageInterface::STATUS_DRAFT);
-                $this->admin->update($object);
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
 
-                return $this->getAjaxEditResponse($object, $form);
-            } else {
-                $form->addError(
-                    new FormError(
-                        $this->translate(
-                            'flash_edit_error',
-                            [],
-                            'NetworkingInitCmsBundle'
+                    $submittedObject = $form->getData();
+                    $this->admin->setSubject($submittedObject);
+
+                    $existingObject->setStatus(VersionableInterface::STATUS_DRAFT);
+                    $this->admin->update($submittedObject);
+
+                    return $this->getAjaxEditResponse($submittedObject, $form);
+                } else {
+                    $form->addError(
+                        new FormError(
+                            $this->translate(
+                                'flash_edit_error',
+                                [],
+                                'NetworkingInitCmsBundle'
+                            )
                         )
-                    )
-                );
+                    );
+                }
             }
         }
 
@@ -732,7 +695,7 @@ class PageAdminController extends CRUDController
 
         $rootMenus = $this->admin->getModelManager()->findBy(
             $this->getParameter('networking_init_cms.admin.menu_item.class'),
-            ['isRoot' => 1, 'locale' => $object->getLocale()]
+            ['isRoot' => 1, 'locale' => $existingObject->getLocale()]
         );
 
         return $this->renderWithExtraParams(
@@ -740,24 +703,23 @@ class PageAdminController extends CRUDController
             [
                 'action' => 'edit',
                 'form' => $view,
-                'object' => $object,
+                'object' => $existingObject,
+                'objectId' => $objectId,
                 'rootMenus' => $rootMenus,
-                'language' => \Locale::getDisplayLanguage($object->getLocale()),
+                'language' => \Locale::getDisplayLanguage($existingObject->getLocale()),
             ]
         );
     }
 
     /**
-     * @param $id
-     *
      * @return Response
+     *
      * @throws \Twig\Error\RuntimeError
      */
     public function editPageSettingsAction(Request $request, $id)
     {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
-
 
         $form = $this->admin->getForm();
         $form->setData($page);
@@ -780,7 +742,6 @@ class PageAdminController extends CRUDController
         $this->setFormTheme($view, $this->admin->getFormTheme());
 
         return $this->handleXmlHttpRequestErrorResponse($request, $form);
-
     }
 
     /**
@@ -788,6 +749,7 @@ class PageAdminController extends CRUDController
      * @param null $uniqid
      *
      * @return Response
+     *
      * @throws \Twig\Error\RuntimeError
      */
     public function pageSettingsAction($id = null, $uniqid = null)
@@ -795,16 +757,14 @@ class PageAdminController extends CRUDController
         /** @var Request $request */
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-        if ($id === null) {
+        if (null === $id) {
             $id = $request->get($this->admin->getIdParameter());
         }
 
         $object = $this->admin->getObject($id);
 
         if (!$object) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the object with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
         if (false === $this->admin->isGranted('EDIT', $object)) {
@@ -836,14 +796,12 @@ class PageAdminController extends CRUDController
     /**
      * Return the json response for the ajax edit action.
      *
-     *
      * @return Response
      *
      * @throws \Twig\Error\RuntimeError
      */
-    protected function getAjaxEditResponse(PageInterface $page, ?FormInterface $form = null)
+    protected function getAjaxEditResponse(PageInterface $page, FormInterface $form = null)
     {
-
         $pageStatusSettingsHtml = $this->renderView(
             '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig',
             [
@@ -853,13 +811,13 @@ class PageAdminController extends CRUDController
             ]
         );
 
-        $layoutBlockSettingsHtml = $form?$this->renderView(
+        $layoutBlockSettingsHtml = $form ? $this->renderView(
             '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig',
             [
                 'form' => $form->createView(),
                 'admin' => $this->admin,
             ]
-        ):'';
+        ) : '';
 
         return $this->renderJson(
             [
@@ -873,7 +831,8 @@ class PageAdminController extends CRUDController
         );
     }
 
-    public function getPageStatusAction(Request $request){
+    public function getPageStatusAction(Request $request)
+    {
         $id = $request->get('id');
         $page = $this->admin->getObject($id);
 
@@ -899,11 +858,9 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     *
-     * @return RedirectResponse|Response
      * @throws \Twig\Error\RuntimeError
      */
-    public function draftAction(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function draftAction(Request $request): RedirectResponse|Response
     {
         $id = $request->get($this->admin->getIdParameter());
 
@@ -911,11 +868,9 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     *
-     * @return RedirectResponse|Response
      * @throws \Twig\Error\RuntimeError
      */
-    public function reviewAction(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function reviewAction(Request $request): RedirectResponse|Response
     {
         $id = $request->get($this->admin->getIdParameter());
 
@@ -923,11 +878,9 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     *
-     * @return RedirectResponse|Response
      * @throws \Twig\Error\RuntimeError
      */
-    public function offlineAction(Request $request): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function offlineAction(Request $request): RedirectResponse|Response
     {
         $id = $request->get($this->admin->getIdParameter());
 
@@ -938,9 +891,7 @@ class PageAdminController extends CRUDController
         $object = $this->admin->getObject($id);
 
         if (!$object) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the object with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
         if (false === $this->admin->isGranted('PUBLISH', $object)) {
@@ -969,9 +920,6 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param $id
-     * @param $status
-     *
      * @return RedirectResponse
      */
     protected function changePageStatus($id, $status)
@@ -979,9 +927,7 @@ class PageAdminController extends CRUDController
         $object = $this->admin->getObject($id);
 
         if (!$object) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the object with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
         if (false === $this->admin->isGranted('EDIT', $object)) {
@@ -1010,42 +956,36 @@ class PageAdminController extends CRUDController
     /**
      * @param null $id
      *
-     * @return RedirectResponse|Response
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws AccessDeniedException
+     * @throws NotFoundHttpException
      */
     public function cancelDraftAction(
         Request $request,
         $id = null
-    ): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response {
+    ): RedirectResponse|Response {
         /** @var $draftPage PageInterface */
         $draftPage = $this->admin->getObject($id);
 
         if (!$draftPage) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the object with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
         if (false === $this->admin->isGranted('EDIT', $draftPage)) {
             throw new AccessDeniedException();
         }
 
-        if ($request->getMethod() == 'POST') {
+        if ('POST' == $request->getMethod()) {
             $serializer = $this->pageHelper->getSerializer();
             $this->pageManager->cancelDraft(
                 $draftPage,
                 $serializer
             );
 
-
             return $this->renderJson(
                 [
                     'redirect' => $this->admin->generateObjectUrl('edit', $draftPage),
                 ]
             );
-
         }
 
         return $this->renderWithExtraParams(
@@ -1070,9 +1010,7 @@ class PageAdminController extends CRUDController
         $object = $this->admin->getObject($id);
 
         if (!$object) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the object with id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
         if (false === $this->admin->isGranted('PUBLISH', $object)) {
@@ -1088,7 +1026,7 @@ class PageAdminController extends CRUDController
         // persist if the form was valid and if in preview mode the preview was approved
         $this->admin->update($object);
 
-        if ($object->getStatus() == PageInterface::STATUS_PUBLISHED) {
+        if (PageInterface::STATUS_PUBLISHED == $object->getStatus()) {
             $this->makeSnapshot($object);
         }
 
@@ -1111,17 +1049,15 @@ class PageAdminController extends CRUDController
             return;
         }
 
-
         $this->pageHelper->makePageSnapshot($page);
     }
 
     /**
      * Return a json array with the calculated path for a page object.
      *
-     *
      * @return Response
-     * @internal param string $path
      *
+     * @internal param string $path
      */
     public function getPathAction(Request $request)
     {
