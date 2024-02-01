@@ -10,15 +10,15 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEvent;
-use Networking\InitCmsBundle\Controller\CRUDController;
 use Networking\InitCmsBundle\Helper\BundleGuesser;
 use Networking\InitCmsBundle\Model\MenuItemInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
@@ -44,7 +44,7 @@ class LastEditedListener
      * @var BundleGuesser
      */
     protected $bundleGuesser;
-    
+
     /**
      * LastEditedListener constructor.
      */
@@ -52,7 +52,6 @@ class LastEditedListener
     {
         $this->requestStack = $requestStack;
         $this->bundleGuesser = new BundleGuesser();
-
     }
 
     /**
@@ -77,21 +76,16 @@ class LastEditedListener
     #[AsEventListener]
     public function registerEdited(CmsEvent $event): void
     {
-
         $this->setSessionVariable($event->getEntity());
     }
 
-    /**
-     * @param $entity
-     */
     protected function setSessionVariable($entity): void
     {
-
-        if(!$this->requestStack->getMainRequest()){
+        if (!$this->requestStack->getMainRequest()) {
             return;
         }
 
-        if(!$this->requestStack->getMainRequest()->hasSession()){
+        if (!$this->requestStack->getMainRequest()->hasSession()) {
             return;
         }
 
@@ -103,15 +97,13 @@ class LastEditedListener
             $name = 'MenuItem';
         }
 
-        if($entity instanceof PageInterface){
+        if ($entity instanceof PageInterface) {
             $name = 'Page';
         }
 
-        
-        try{
+        try {
             $this->requestStack->getSession()->set($name.'.last_edited', $entity->getId());
-        }catch (SessionNotFoundException){
-
+        } catch (SessionNotFoundException) {
             return;
         }
     }
