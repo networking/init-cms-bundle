@@ -32,7 +32,7 @@
             </trans-unit>
             <trans-unit id="title_edit">
                 <source>title_edit</source>
-                <target>%admin_label% Edit</target>
+                <target>%admin_label% %name% Editieren</target>
             </trans-unit>
             <trans-unit id="form.group_profile">
                 <source>form.group_profile</source>
