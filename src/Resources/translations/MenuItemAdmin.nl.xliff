@@ -194,6 +194,10 @@
                 <source>breadcrumb.link_menu_item_list</source>
                 <target><![CDATA[<small>Beheer uw</small>]]> menu's</target>
             </trans-unit>
+            <trans-unit id="form.label_locale">
+				<source>form.label_locale</source>
+				<target>Taal</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

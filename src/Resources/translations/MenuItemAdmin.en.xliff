@@ -218,6 +218,10 @@
                 <source>breadcrumb.link_menu_item_list</source>
                 <target><![CDATA[<small>Organise your</small>]]> Menus</target>
             </trans-unit>
+            <trans-unit id="form.label_locale">
+				<source>form.label_locale</source>
+				<target>Language</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
