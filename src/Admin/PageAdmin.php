@@ -177,7 +177,7 @@ class PageAdmin extends BaseAdmin
         if (!$this->pageLocale) {
             throw new InvalidArgumentException('Cannot create a page without a language');
         }
-        $validationGroups = ['default'];
+        $validationGroups = ['Default'];
 
         $homePage = $this->pageManager->findOneBy(
             ['isHome' => true, 'locale' => $this->pageLocale]

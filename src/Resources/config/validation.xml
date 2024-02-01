@@ -13,9 +13,6 @@
         <property name="pageName">
             <constraint name="NotBlank">
                 <option name="message">init_cms.pagename.blank</option>
-                <option name="groups">
-                    <value>default</value>
-                </option>
             </constraint>
         </property>
         <property name="url">
