@@ -316,9 +316,9 @@ class MenuItemAdminController extends CRUDController
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public function createFromPageAction(Request $request, $rootId, $pageId)
     {
@@ -352,7 +352,7 @@ class MenuItemAdminController extends CRUDController
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
     public function ajaxControllerAction(Request $request)
     {
@@ -400,7 +400,9 @@ class MenuItemAdminController extends CRUDController
 
         if ($lastEdited) {
             $menuItem = $this->admin->getObject($lastEdited);
-            $this->dispatcher->dispatch(new CmsEvent($menuItem));
+            if ($menuItem) {
+                $this->dispatcher->dispatch(new CmsEvent($menuItem));
+            }
         }
 
         return $response;
@@ -454,7 +456,7 @@ class MenuItemAdminController extends CRUDController
      */
     public function placementAction(Request $request): bool|string|\Symfony\Component\HttpFoundation\Response
     {
-        /** @var \Networking\InitCmsBundle\Entity\MenuItem $rootNode */
+        /** @var MenuItem $rootNode */
         $rootNode = $this->admin->getObject($request->getSession()->get('root_menu_id'));
         $selected = $request->getSession()->get('MenuItem.last_edited');
         if (!$rootNode) {
