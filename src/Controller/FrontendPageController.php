@@ -522,7 +522,23 @@ class FrontendPageController extends AbstractController
         $livePath = null;
         $editPath = null;
         $liveRoute = null;
-        $language = $request->getLocale();
+        $locale = $request->getLocale();
+        $shortLocale = substr($locale, 0, 2);
+
+        $allowedLocales = $this->getParameter('networking_init_cms.page.languages');
+
+        $localeMatched = false;
+
+        foreach ($allowedLocales as $allowedLocale) {
+            if ($allowedLocale['locale'] == $request->getLocale() || $shortLocale == $allowedLocale['locale']) {
+                $locale = $allowedLocale['locale'];
+                $localeMatched = true;
+            }
+        }
+
+        if (!$localeMatched) {
+            $locale = $allowedLocales[0]['locale'];
+        }
 
         if ($entity instanceof VersionableInterface) {
             if ($snapShot = $entity->getSnapshot()) {
