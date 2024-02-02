@@ -12,32 +12,23 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Command;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\EntityManager;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 #[AsCommand(name: 'networking:initcms:data-setup', description: 'create and update db schema and append fixtures')]
 class DataSetupCommand extends Command
 {
-
     protected $proceed = true;
 
     /**
      * DataSetupCommand constructor.
-     *
-     * @param ManagerRegistry $registry
-     * @param PageManagerInterface $pageManager
-     * @param PageHelper $pageHelper
-     * @param string|null $name
      */
     public function __construct(
         protected ManagerRegistry $registry,
@@ -75,16 +66,11 @@ class DataSetupCommand extends Command
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(
         InputInterface $input,
         OutputInterface $output
     ): int {
-
-        if (!$this->proceed){
-
+        if (!$this->proceed) {
             $output->writeln('<error>Aborted</error>');
 
             return Command::INVALID;
@@ -104,18 +90,16 @@ class DataSetupCommand extends Command
         if (!$input->getOption('no-fixtures')) {
             $this->loadFixtures($output);
 
-            if(Command::FAILURE === $this->publishPages($output)){
+            if (Command::FAILURE === $this->publishPages($output)) {
                 return Command::FAILURE;
             }
         }
 
-
         return Command::SUCCESS;
     }
 
-    public function interact(InputInterface $input, OutputInterface $output)
+    public function interact(InputInterface $input, OutputInterface $output): void
     {
-
         $helper = $this->getHelper('question');
         $output->writeln('<info>Are you sure you want to continue? The will change the structure of your database, by adding tables and columns relavent to the DB</info>');
         $question = new ConfirmationQuestion(
@@ -158,9 +142,6 @@ class DataSetupCommand extends Command
         return $command->run($input, $output);
     }
 
-    /**
-     * @param $output
-     */
     private function initACL($output): int
     {
         $command = $this->getApplication()->find('acl:init');
@@ -170,9 +151,6 @@ class DataSetupCommand extends Command
         return $command->run($input, $output);
     }
 
-    /**
-     * @param $output
-     */
     private function sonataSetupACL($output): int
     {
         $command = $this->getApplication()->find('sonata:admin:setup-acl');
@@ -181,7 +159,6 @@ class DataSetupCommand extends Command
 
         return $command->run($input, $output);
     }
-
 
     /**
      * @return int|string
@@ -192,8 +169,9 @@ class DataSetupCommand extends Command
 
         $pages = $this->pageManager->findAll();
 
-        if(count($pages) > 0){
+        if (count($pages) > 0) {
             $output->writeln('<comment>Date already exist, skipping fixtures</comment>');
+
             return Command::SUCCESS;
         }
 
@@ -215,7 +193,7 @@ class DataSetupCommand extends Command
         try {
             $pages = $this->pageManager->findAll();
             foreach ($pages as $page) {
-                /** @var \Networking\InitCmsBundle\Model\PageInterface $page */
+                /* @var \Networking\InitCmsBundle\Model\PageInterface $page */
                 $this->pageHelper->makePageSnapshot($page);
                 $this->pageManager->save($page);
             }
