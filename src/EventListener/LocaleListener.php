@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Http\AccessMapInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
@@ -29,9 +28,6 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
  */
 class LocaleListener
 {
-
-
-
     /**
      * LocaleListener constructor.
      */
@@ -43,7 +39,6 @@ class LocaleListener
         protected string $defaultLocale = 'en',
         protected ?RouterInterface $router = null
     ) {
-
         $env = [];
 
         if (false === getenv('ALLOW_LOCALE_COOKIE')) {
@@ -62,7 +57,6 @@ class LocaleListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
-
         if (HttpKernelInterface::MAIN_REQUEST !== $event->getRequestType()) {
             return;
         }
@@ -84,9 +78,12 @@ class LocaleListener
             }
         }
 
+
+
         if (!$locale && $request->query->get('_locale')) {
             $locale = $request->query->get('_locale');
         }
+
 
         /*
          * handle locale:
@@ -128,10 +125,11 @@ class LocaleListener
     public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
     {
         $request = $event->getRequest();
-        if (!$locale = $event->getAuthenticationToken()->getUser()->getLocale()) {
+        if (!$locale = $event->getAuthenticationToken()->getUser()->getLocale(
+        )
+        ) {
             $locale = $this->defaultLocale;
         }
-
 
         $config = $this->firewallMap->getFirewallConfig($request);
 
@@ -227,7 +225,7 @@ class LocaleListener
             $request->server->get('HTTP_ACCEPT_LANGUAGE')
         );
         foreach ($languages as $lang) {
-            if (str_contains((string)$lang, '-')) {
+            if (str_contains((string) $lang, '-')) {
                 $codes = explode('-', (string) $lang);
                 if ('i' == $codes[0]) {
                     // Language not listed in ISO 639 that are not variants
