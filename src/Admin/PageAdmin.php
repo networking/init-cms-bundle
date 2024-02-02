@@ -15,6 +15,8 @@ namespace Networking\InitCmsBundle\Admin;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Loggable\Entity\LogEntry;
+use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Entity\BasePage;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Entity\MenuItem;
@@ -28,6 +30,7 @@ use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\AdminBundle\Exception\ModelManagerThrowable;
 use Sonata\AdminBundle\Filter\Model\FilterData;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
@@ -54,20 +57,11 @@ use Symfony\Component\Validator\Constraints\Valid;
  */
 class PageAdmin extends BaseAdmin
 {
-    /**
-     * @var string
-     */
-    protected $pageLocale;
+    protected string $pageLocale;
 
-    /**
-     * @var bool
-     */
-    protected $canCreateHomepage = false;
+    protected bool $canCreateHomepage = false;
 
-    /**
-     * @var string
-     */
-    protected $repository = '';
+    protected string $repository = '';
 
     private ?LogEntry $lastEditedBy = null;
 
@@ -75,6 +69,7 @@ class PageAdmin extends BaseAdmin
         protected PageManagerInterface $pageManager,
         protected array $pageTemplates,
     ) {
+        parent::__construct();
     }
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false
@@ -133,7 +128,7 @@ class PageAdmin extends BaseAdmin
             ['method' => 'GET']
         );
         $collection->add('getPath', 'get_path/', [], ['method' => 'GET']);
-        $collection->add('batchTranslate', 'batch_translate', []);
+        $collection->add('batchTranslate', 'batch_translate');
         $collection->add(
             'editPageSettings',
             'edit_page_settings/{id}/{no_layout}',
@@ -277,8 +272,6 @@ class PageAdmin extends BaseAdmin
                                 $this->pageLocale,
                                 $this->hasSubject() ? $this->getSubject()
                                     ->getId() : null,
-                                false,
-                                false
                             ),
                         ]
                     );
@@ -308,7 +301,7 @@ class PageAdmin extends BaseAdmin
             }
         }
 
-        $requireUrl = $this->canCreateHomepage ? false : true;
+        $requireUrl = !$this->canCreateHomepage;
 
         if ($this->hasObject()) {
             if (!$this->getSubject()->isHome()) {
@@ -513,9 +506,9 @@ class PageAdmin extends BaseAdmin
                         'row_attr' => ['class' => 'form-floating'],
                         'placeholder' => 'empty_option',
                         'choices' => [
-                            PageInterface::STATUS_DRAFT => PageInterface::STATUS_DRAFT,
-                            PageInterface::STATUS_REVIEW => PageInterface::STATUS_REVIEW,
-                            PageInterface::STATUS_PUBLISHED => PageInterface::STATUS_PUBLISHED,
+                            VersionableInterface::STATUS_DRAFT => VersionableInterface::STATUS_DRAFT,
+                            VersionableInterface::STATUS_REVIEW => VersionableInterface::STATUS_REVIEW,
+                            VersionableInterface::STATUS_PUBLISHED => VersionableInterface::STATUS_PUBLISHED,
                         ],
                         'translation_domain' => $this->getTranslationDomain(),
                     ],
@@ -535,12 +528,9 @@ class PageAdmin extends BaseAdmin
         ];
     }
 
-    /**
-     * @return bool
-     */
-    public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data)
+    public function matchPath(ProxyQuery $ProxyQuery, $alias, $field, $data): bool
     {
-        if (!$data || !$data instanceof FilterData || !$data->hasValue()) {
+        if (!$data instanceof FilterData || !$data->hasValue()) {
             return false;
         }
         $value = trim((string) $data->getValue());
@@ -582,12 +572,7 @@ class PageAdmin extends BaseAdmin
         return $query;
     }
 
-    /**
-     * @param FilterData $data
-     *
-     * @return bool
-     */
-    public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, $data)
+    public function getByLocale(ProxyQueryInterface $ProxyQuery, $alias, $field, $data): bool
     {
         if (is_array($data)) {
             $data = FilterData::fromArray($data);
@@ -596,8 +581,6 @@ class PageAdmin extends BaseAdmin
         if (!$locale = $data->getValue()) {
             $locale = $this->getDefaultLocale();
         }
-
-        $alias = $ProxyQuery->getRootAlias();
         $ProxyQuery->andWhere(sprintf('%s.%s = :locale', $alias, $field));
         $ProxyQuery->orderBy(sprintf('%s.path', $alias), 'asc');
         $ProxyQuery->setParameter(':locale', $locale);
@@ -674,10 +657,7 @@ class PageAdmin extends BaseAdmin
         }
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getTranslationLanguages()
+    public function getTranslationLanguages(): ArrayCollection
     {
         $translationLanguages = new ArrayCollection();
 
@@ -730,10 +710,8 @@ class PageAdmin extends BaseAdmin
     /**
      * Get the page templates from the configuration and create an array to use in the
      * choice field in the admin form.
-     *
-     * @return array
      */
-    protected function getPageTemplates()
+    protected function getPageTemplates(): array
     {
         $choices = [];
 
@@ -746,17 +724,14 @@ class PageAdmin extends BaseAdmin
 
     /**
      * If there is an object get the object template variable, else get first in template array.
-     *
-     * @return string
      */
-    protected function getDefaultTemplate()
+    protected function getDefaultTemplate(): string
     {
         if ($this->hasObject()) {
             return $this->getSubject()->getTemplateName();
         }
-        $defaultTemplate = array_key_first($this->pageTemplates);
 
-        return $defaultTemplate;
+        return array_key_first($this->pageTemplates);
     }
 
     /**
@@ -764,7 +739,7 @@ class PageAdmin extends BaseAdmin
      *
      * @return array
      */
-    protected function getPageTemplateIcons()
+    protected function getPageTemplateIcons(): array
     {
         $icons = [];
 
@@ -775,6 +750,11 @@ class PageAdmin extends BaseAdmin
         return $icons;
     }
 
+    /**
+     * @return array|array[]
+     *
+     * @throws \JsonException
+     */
     public function configureBatchActions(array $actions): array
     {
         unset($actions['delete']);
@@ -817,19 +797,17 @@ class PageAdmin extends BaseAdmin
      * @param PageInterface $object
      *
      * @return mixed|void
+     *
+     * @throws ModelManagerThrowable
      */
     public function postRemove(object $object): void
     {
         $contentRoute = $object->getContentRoute();
 
-        try {
-            $this->getModelManager()->delete($contentRoute);
-        } catch (\Exception) {
-            exit;
-        }
+        $this->getModelManager()->delete($contentRoute);
     }
 
-    public function hasObject()
+    public function hasObject(): bool
     {
         return $this->hasSubject() && $this->getSubject()->getId();
     }
@@ -846,7 +824,7 @@ class PageAdmin extends BaseAdmin
         }
 
         $loggableClass = LogEntry::class;
-        /** @var \Gedmo\Loggable\Entity\Repository\LogEntryRepository $repo */
+        /** @var LogEntryRepository $repo */
         $repo = $this->getModelManager()->getEntityManager($loggableClass)
             ->getRepository($loggableClass);
 

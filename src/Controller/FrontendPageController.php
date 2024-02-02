@@ -15,15 +15,18 @@ namespace Networking\InitCmsBundle\Controller;
 
 use Networking\InitCmsBundle\Admin\PageAdmin;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
+use Networking\InitCmsBundle\Component\Routing\Route;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Entity\ContentRouteManager;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
-use Networking\InitCmsBundle\Helper\ContentSecurityPolicyHelper;
 use Networking\InitCmsBundle\Helper\LanguageSwitcherHelper;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Networking\InitCmsBundle\Model\PageSnapshotInterface;
+use Psr\Cache\InvalidArgumentException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Sonata\AdminBundle\Admin\Pool;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,17 +61,20 @@ class FrontendPageController extends AbstractController
     ) {
     }
 
+    /**
+     * @throws InvalidArgumentException|\JsonException
+     */
     public function indexAction(Request $request)
     {
         return $this->index($request);
     }
 
     /**
-     * @return array|bool|mixed|string|RedirectResponse|Response|null
+     * @return mixed|string|RedirectResponse|Response|null
      *
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws InvalidArgumentException|\JsonException|\Exception
      */
-    public function index(Request $request)
+    public function index(Request $request): mixed
     {
         /** @var PageSnapshotInterface $page */
         $page = $request->get('_content');
@@ -174,7 +180,7 @@ class FrontendPageController extends AbstractController
     public function getRedirect(
         Request $request,
         PageInterface $page
-    ): bool|\Symfony\Component\HttpFoundation\RedirectResponse {
+    ): bool|RedirectResponse {
         if (method_exists($page, 'getAliasFullPath')) {
             if ($page->getAliasFullPath()) {
                 $baseUrl = $request->getBaseUrl();
@@ -186,9 +192,12 @@ class FrontendPageController extends AbstractController
         return false;
     }
 
-    public function getPageParameters(Request $request): array|bool|\Symfony\Component\HttpFoundation\RedirectResponse
+    /**
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
+     */
+    public function getPageParameters(Request $request): array|bool|RedirectResponse
     {
-        $page = $request->get('_content', null);
+        $page = $request->get('_content');
 
         if (is_null($page)) {
             throw $this->createNotFoundException('no page object found');
@@ -204,7 +213,7 @@ class FrontendPageController extends AbstractController
     public function getDraftParameters(
         Request $request,
         PageInterface $page
-    ): array|bool|\Symfony\Component\HttpFoundation\RedirectResponse {
+    ): array|bool|RedirectResponse {
         if ($redirect = $this->getRedirect($request, $page)) {
             return $redirect;
         }
@@ -215,7 +224,7 @@ class FrontendPageController extends AbstractController
             }
         }
 
-        if (PageInterface::STATUS_PUBLISHED != $page->getStatus()) {
+        if (VersionableInterface::STATUS_PUBLISHED != $page->getStatus()) {
             if (!$this->tokenStorage->getToken()
                 || false === $this->authorizationChecker->isGranted(
                     'ROLE_SONATA_ADMIN'
@@ -230,10 +239,14 @@ class FrontendPageController extends AbstractController
         return ['page' => $page];
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function getLiveParameters(
         Request $request,
         PageSnapshot $pageSnapshot
-    ) {
+    ): RedirectResponse|bool|array {
         /** @var $page PageInterface */
         $page = $this->getPageHelper()->unserializePageSnapshotData(
             $pageSnapshot,
@@ -258,10 +271,8 @@ class FrontendPageController extends AbstractController
 
     /**
      * Redirect to the admin dashboard.
-     *
-     * @return RedirectResponse
      */
-    public function adminAction()
+    public function adminAction(): RedirectResponse
     {
         $url = $this->generateUrl('sonata_admin_dashboard');
 
@@ -269,11 +280,9 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * Show the home page (start page) for given locale.
-     *
-     * @return Response
+     * @throws InvalidArgumentException|\JsonException
      */
-    public function home(Request $request)
+    public function home(Request $request): RedirectResponse|string|Response|null
     {
         if ('networking_init_cms_default' === $request->get('_route')) {
             $request = $this->getPageHelper()->matchContentRouteRequest(
@@ -285,11 +294,9 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * Show the home page (start page) for given locale.
-     *
-     * @return Response
+     * @throws InvalidArgumentException|\JsonException
      */
-    public function homeAction(Request $request)
+    public function homeAction(Request $request): RedirectResponse|string|Response|null
     {
         if ('networking_init_cms_default' === $request->get('_route')) {
             $request = $this->getPageHelper()->matchContentRouteRequest(
@@ -313,13 +320,12 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * Change language in the front end area.
-     *
-     * @return RedirectResponse
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      */
-    public function changeLanguageAction(Request $request, $oldLocale, $locale)
+    public function changeLanguageAction(Request $request, $oldLocale, $locale): RedirectResponse
     {
         $params = [];
+        $routeName = 'networking_init_cms_default';
 
         $translationRoute = $this->getTranslationRoute(
             $request->headers->get('referer'),
@@ -373,62 +379,42 @@ class FrontendPageController extends AbstractController
         return $response;
     }
 
-    /**
-     * View the website in Draft mode.
-     *
-     * @param string $locale
-     * @param string /null $path
-     *
-     * @return RedirectResponse
-     */
     public function viewDraftAction(
         Request $request,
         $locale = null,
         $path = null
-    ) {
+    ): RedirectResponse {
         if ($locale) {
             $request->setLocale($locale);
         }
 
         return $this->changeViewMode(
             $request,
-            PageInterface::STATUS_DRAFT,
+            VersionableInterface::STATUS_DRAFT,
             $path
         );
     }
 
-    /**
-     * View the website in Live mode.
-     *
-     * @param string $locale
-     * @param string /null $path
-     *
-     * @return RedirectResponse
-     */
     public function viewLiveAction(
         Request $request,
         $locale = null,
         $path = null
-    ) {
+    ): RedirectResponse {
         if ($locale) {
             $request->setLocale($locale);
         }
 
         return $this->changeViewMode(
             $request,
-            PageInterface::STATUS_PUBLISHED,
+            VersionableInterface::STATUS_PUBLISHED,
             $path
         );
     }
 
     /**
-     * Change the page viewing mode to live or draft.
-     *
-     * @return RedirectResponse
-     *
-     * @throws AccessDeniedException
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|AccessDeniedException
      */
-    protected function changeViewMode(Request $request, $status, $path)
+    protected function changeViewMode(Request $request, $status, $path): RedirectResponse
     {
         if (false === $this->authorizationChecker->isGranted(
             'ROLE_SONATA_ADMIN'
@@ -479,10 +465,7 @@ class FrontendPageController extends AbstractController
         );
     }
 
-    /**
-     * @return Response
-     */
-    public function translationNotFoundAction(Request $request)
+    public function translationNotFoundAction(Request $request): Response
     {
         $params = [
             'language' => \Locale::getDisplayLanguage($request->getLocale()),
@@ -494,10 +477,7 @@ class FrontendPageController extends AbstractController
         );
     }
 
-    /**
-     * @return Response
-     */
-    public function pageNotFoundAction()
+    public function pageNotFoundAction(): Response
     {
         return $this->render(
             $this->getParameter('networking_init_cms.404_template')
@@ -505,11 +485,9 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * @param null $page_id
-     *
-     * @return Response
+     * @throws \JsonException
      */
-    public function adminNavbarAction(Request $request, $page_id = null)
+    public function adminNavbarAction(Request $request, $page_id = null): Response
     {
         if ($page_id) {
             $page = $this->pageManager->find($page_id);
@@ -555,12 +533,12 @@ class FrontendPageController extends AbstractController
                 );
             }
 
-            $language = $entity->getRoute()->getLocale();
+            $locale = $entity->getRoute()->getDefault(Route::LOCALE);
 
             if ($liveRoute) {
                 $livePath = $this->generateUrl(
                     'networking_init_view_live',
-                    ['locale' => $language, 'path' => base64_encode($liveRoute)]
+                    ['locale' => $locale, 'path' => base64_encode($liveRoute)]
                 );
             }
 
@@ -574,7 +552,7 @@ class FrontendPageController extends AbstractController
             $draftPath = $this->generateUrl(
                 'networking_init_view_draft',
                 [
-                    'locale' => $language,
+                    'locale' => $locale,
                     'path' => base64_encode($draftRoute),
                 ]
             );
@@ -589,7 +567,7 @@ class FrontendPageController extends AbstractController
             $draftPath = $this->generateUrl(
                 'networking_init_view_draft',
                 [
-                    'locale' => $language,
+                    'locale' => $locale,
                     'path' => base64_encode($request->getBaseUrl()),
                 ]
             );
@@ -599,7 +577,7 @@ class FrontendPageController extends AbstractController
             $livePath = $this->generateUrl(
                 'networking_init_view_live',
                 [
-                    'locale' => $language,
+                    'locale' => $locale,
                     'path' => base64_encode($request->getBaseUrl()),
                 ]
             );
@@ -626,7 +604,7 @@ class FrontendPageController extends AbstractController
             }
         }
 
-        $firstItemStatus = $request->getSession()->get('_viewStatus', 'status_draft');
+        $firstItemStatus = $request->getSession()->get('_viewStatus', 'status_published');
 
         $response = $this->render(
             '@NetworkingInitCms/Admin/esi_admin_navbar.html.twig',
@@ -645,10 +623,7 @@ class FrontendPageController extends AbstractController
         return $response;
     }
 
-    /**
-     * @return PageHelper
-     */
-    public function getPageHelper()
+    public function getPageHelper(): PageHelper
     {
         return $this->pageHelper;
     }
@@ -666,11 +641,9 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * @return bool
-     *
      * @throws \Exception
      */
-    public function isSnapshotActive(PageSnapshotInterface $page)
+    public function isSnapshotActive(PageSnapshotInterface $page): bool
     {
         $jsonObject = json_decode(
             (string) $page->getVersionedData(),
@@ -693,11 +666,9 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * @return \DateTime
-     *
      * @throws \Exception
      */
-    public function getActiveStart($page)
+    public function getActiveStart($page): \DateTime
     {
         if (!property_exists($page, 'active_from')
             || null === $page->active_from
@@ -709,11 +680,9 @@ class FrontendPageController extends AbstractController
     }
 
     /**
-     * @return \DateTime
-     *
      * @throws \Exception
      */
-    public function getActiveEnd($page)
+    public function getActiveEnd($page): \DateTime
     {
         if (!property_exists($page, 'active_to') || null === $page->active_to) {
             return new \DateTime('+1 day');
@@ -722,10 +691,7 @@ class FrontendPageController extends AbstractController
         return new \DateTime($page->active_to);
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function getJsonUrlsAction(Request $request)
+    public function getJsonUrlsAction(Request $request): JsonResponse
     {
         $locale = $request->get('_locale', false);
 
@@ -743,6 +709,7 @@ class FrontendPageController extends AbstractController
 
         $qb->setSortBy([], ['fieldName' => 'path']);
 
+        /** @var PageInterface[] $result */
         $result = $qb->execute();
 
         $setup = [
@@ -750,7 +717,6 @@ class FrontendPageController extends AbstractController
             'locales' => [],
         ];
 
-        /** @var Page $page */
         foreach ($result as $page) {
             $setup['pages'][] = [
                 'name' => $page->getAdminTitle(),
