@@ -452,14 +452,11 @@ file that was distributed with this source code.
 
             {% set attr = attr|merge({placeholder: attr.placeholder|default(false)}) %}
             {% set placeholder = attr.placeholder %}
-
-            {% if translation_domain and placeholder is not same as(false) %}
-                {% set placeholder = placeholder|trans({}, translation_domain) %}
-            {% else %}
+            {% if placeholder is  same as(false) %}
                 {% set placeholder = 'Select'|trans %}
             {% endif %}
         {% endif %}
-        {% set attr = attr|merge({'data-control': 'select2', 'data-placeholder': placeholder}) %}
+        {% set attr = attr|merge({'data-control': 'select2', 'data-placeholder': placeholder|trans({}, translation_domain)}) %}
     {% endif %}
     {% set allowClear = (multiple or not required?'true':'false') %}
     {% set attr = attr|merge({'data-allow-clear': allowClear }) %}
@@ -1120,4 +1117,21 @@ file that was distributed with this source code.
     {% endapply %}
 {% endblock widget_btns %}
 
+{% block attributes -%}
+    {% if sonata_admin.admin is defined and sonata_admin.admin %}
+        {% if translation_domain is same as(null) %}
+            {% set translation_domain = sonata_admin.field_description.translationDomain %}
+        {% endif %}
+    {% endif %}
 
+    {%- for attrname, attrvalue in attr -%}
+        {{- " " -}}
+        {%- if attrname in ['placeholder', 'title'] -%}
+            {{- attrname }}="{{ translation_domain is same as(false) or attrvalue is null ? attrvalue : attrvalue|trans(attr_translation_parameters, translation_domain) }}"
+        {%- elseif attrvalue is same as(true) -%}
+            {{- attrname }}="{{ attrname }}"
+        {%- elseif attrvalue is not same as(false) -%}
+            {{- attrname }}="{{ attrvalue }}"
+        {%- endif -%}
+    {%- endfor -%}
+{%- endblock attributes -%}
