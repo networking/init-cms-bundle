@@ -56,7 +56,7 @@ class HelpFormTypeExtension extends AbstractTypeExtension
             'icon' => 'fa fa-question-circle',
             'placement' => 'right',
         ],
-        'help_widget_popover' =>[
+        'help_widget_popover' => [
             'title' => null,
             'content' => null,
             'trigger' => 'hover',
