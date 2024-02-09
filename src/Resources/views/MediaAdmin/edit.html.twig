@@ -265,15 +265,17 @@ file that was distributed with this source code.
                                 <input class="btn btn-sm btninfo persist-preview" name="btn_preview" type="submit"
                                        value="{{ 'btn_preview'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
                             {% endif %}
-                                <input type="submit" class="btn btn-sm btn-primary" name="btn_update_and_edit"
-                                       value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
-                                <input type="submit" class="btn btn-sm btn-light" name="btn_update_and_list"
-                                       value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                            {% if admin.id(object) %}
+                                    <input type="submit" class="btn btn-sm btn-primary" name="btn_update_and_edit"
+                                           value="{{ 'btn_update_and_edit_again'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
+                                    <input type="submit" class="btn btn-sm btn-light" name="btn_update_and_list"
+                                           value="{{ 'btn_update_and_return_to_list'|trans({'%admin_label%': admin_label}, 'NetworkingInitCmsBundle') }}"/>
 
-                                {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
-                                    {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
-                                    <a class="btn btn-sm btn-danger"
-                                       href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                                    {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) and (object.isDeletable() is not defined or  object.isDeletable == 1 ) %}
+                                        {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
+                                        <a class="btn btn-sm btn-danger"
+                                           href="{{ admin.generateObjectUrl('delete', object) }}">{{ 'link_delete'|trans({}, 'NetworkingInitCmsBundle') }}</a>
+                                    {% endif %}
                                 {% endif %}
                         {% endif %}
                 {% endblock formactions %}
