@@ -6,7 +6,7 @@ This file is part of the Networking package.
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
-{% extends 'bootstrap_5_layout.html.twig' %}
+{% use 'bootstrap_5_layout.html.twig' %}
 
 {# Custom Sonata Admin Extension, template override #}
 {% block sonata_admin_orm_one_to_one_widget %}
@@ -153,6 +153,10 @@ file that was distributed with this source code.
 
 {% block form_label %}
     {{ parent() }}
+
+    {% if admin %}
+        {% set translation_domain = admin.translationDomain %}
+    {% endif %}
     {% if help_label %}
         {{ block('help_label') }}
     {% endif %}
@@ -165,18 +169,18 @@ file that was distributed with this source code.
 {% endblock form_label %}
 
 {% block help_label %}
-    <span class="help-block">{{ help_label|trans({}, translation_domain) }}</span>
+    <span class="help-block form-text">{{ help_label|trans(help_translation_parameters, translation_domain) }}</span>
 {% endblock help_label %}
 
 {% block help_label_tooltip %}
-    <span class="help-block">
+    <span class="help-block form-text">
         <a href="#" data-bs-toggle="tooltip" data-bs-placement="{{ help_label_tooltip.placement }}"
-           title="{{ help_label_tooltip.title|trans({}, translation_domain) }}">
+           title="{{ help_label_tooltip.title|trans(help_translation_parameters, translation_domain) }}">
             {% if help_label_tooltip.icon is not same as(false) %}
                 {{ networking_bootstrap_icon(help_label_tooltip.icon) }}
             {% endif %}
             {% if help_label_tooltip.text is not same as(null) %}
-                {{ help_label_tooltip.text|trans({}, translation_domain) }}
+                {{ help_label_tooltip.text|trans(help_translation_parameters, translation_domain) }}
             {% endif %}
         </a>
     </span>
@@ -188,15 +192,15 @@ file that was distributed with this source code.
 {% endblock help_block_tooltip %}
 
 {% block help_label_popover %}
-    <span class="help-block">
+    <span class="help-block text-muted">
         <a href="#" data-bs-toggle="popover" data-trigger="hover" data-placement="{{ help_label_popover.placement }}"
-           title="{{ help_label_popover.title|trans({}, translation_domain) }}"
-           data-content="{{ help_label_popover.content|trans({}, translation_domain) }}" data-html="true">
+           title="{{ help_label_popover.title|trans(help_translation_parameters, translation_domain) }}"
+           data-content="{{ help_label_popover.content|trans(help_translation_parameters, translation_domain) }}" data-html="true">
             {% if help_label_popover.icon is not same as(false) %}
                 {{ networking_bootstrap_icon(help_label_popover.icon) }}
             {% endif %}
             {% if help_label_popover.text is not same as(null) %}
-                {{ help_label_popover.text|raw }}
+                {{ help_label_popover.text|trans(help_translation_parameters, translation_domain) }}
             {% endif %}
         </a>
     </span>
@@ -797,7 +801,7 @@ file that was distributed with this source code.
     {% endif %}
     {% apply spaceless %}
         {% for attrname,attrvalue in help_widget_popover %}
-            data-bs-{{ attrname }}="{{ attrvalue|trans({}, domain|default('messages')) }}"
+            data-bs-{{ attrname }}="{{ attrvalue|trans(help_translation_parameters, translation_domain|default('messages')) }}"
         {% endfor %}
     {% endapply %}
 {% endblock help_widget_popover %}
