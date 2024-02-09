@@ -273,6 +273,7 @@ class MediaEntity{
 
             this.dialogContainer.querySelector('.modal-content').innerHTML = html;
             this.addUploadListeners()
+            this.addClickOnLinkListeners()
             this.dialog.show();
         })
     }
