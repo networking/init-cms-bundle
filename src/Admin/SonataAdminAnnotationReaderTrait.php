@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin;
 
-use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
+use Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface;
 use Sonata\AdminBundle\Admin\Pool;
 
 trait SonataAdminAnnotationReaderTrait
 {
     /**
-     * @return SonataAdminAnnotationReaderInterface
+     * @return SonataAdminAttributeReaderInterface
      */
     protected function getSonataAnnotationReader()
     {

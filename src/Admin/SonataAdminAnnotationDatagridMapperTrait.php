@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin;
 
-use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
+use Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 
 trait SonataAdminAnnotationDatagridMapperTrait
@@ -15,7 +15,7 @@ trait SonataAdminAnnotationDatagridMapperTrait
     }
 
     /**
-     * @return SonataAdminAnnotationReaderInterface
+     * @return SonataAdminAttributeReaderInterface
      */
     abstract protected function getSonataAnnotationReader();
 }

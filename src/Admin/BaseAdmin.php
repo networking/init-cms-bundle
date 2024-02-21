@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin;
 
-use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
+use Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -27,7 +27,7 @@ use Symfony\Component\Intl\Locales;
  */
 abstract class BaseAdmin extends AbstractAdmin
 {
-    protected $annotationReader;
+    protected $attributeReader;
 
     /**
      * @var array
@@ -132,6 +132,7 @@ abstract class BaseAdmin extends AbstractAdmin
 
     protected function configureListFields(ListMapper $list): void
     {
+
         $this->getSonataAnnotationReader()?->configureListFields($this->getClass(), $list);
     }
 
@@ -150,17 +151,17 @@ abstract class BaseAdmin extends AbstractAdmin
         $this->getSonataAnnotationReader()?->configureDatagridFilters($this->getClass(), $filter);
     }
 
-    protected function getSonataAnnotationReader(): ?SonataAdminAnnotationReaderInterface
+    protected function getSonataAnnotationReader(): ?SonataAdminAttributeReaderInterface
     {
-        return $this->annotationReader;
+        return $this->attributeReader;
     }
 
     /**
      * @return $this
      */
-    public function setSonataAnnotationReader(SonataAdminAnnotationReaderInterface $annotationReader): self
+    public function setSonataAnnotationReader(SonataAdminAttributeReaderInterface $annotationReader): self
     {
-        $this->annotationReader = $annotationReader;
+        $this->attributeReader = $annotationReader;
 
         return $this;
     }

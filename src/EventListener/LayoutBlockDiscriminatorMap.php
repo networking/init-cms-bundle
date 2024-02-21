@@ -1,12 +1,8 @@
 <?php
 
-
 namespace Networking\InitCmsBundle\EventListener;
 
-
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 
 class LayoutBlockDiscriminatorMap
@@ -26,25 +22,13 @@ class LayoutBlockDiscriminatorMap
         $metadata = $event->getClassMetadata();
         $class = $metadata->getReflectionClass();
 
-        if ($class === null) {
+        if (null === $class) {
             $class = new \ReflectionClass($metadata->getName());
         }
 
-
-        if ($class->getName() === LayoutBlock::class) {
+        if (LayoutBlock::class === $class->getName()) {
             foreach ($this->mapping as $map) {
-                $reader = new AnnotationReader();
-                $discriminatorMap = [];
-
-                if (null !== $discriminatorMapAnnotation = $reader->getClassAnnotation(
-                        $class,
-                        DiscriminatorMap::class
-                    )) {
-                    $discriminatorMap = $discriminatorMapAnnotation->value;
-                }
-                $discriminatorMap = array_merge($discriminatorMap, [$map['class'] => $map['class']]);
-
-                $metadata->setDiscriminatorMap($discriminatorMap);
+                $metadata->setDiscriminatorMap([$map['class'] => $map['class']]);
             }
         }
     }

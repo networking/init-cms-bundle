@@ -26,7 +26,7 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service alias="fos_ck_editor.configuration" id="FOS\CKEditorBundle\Config\CKEditorConfiguration" />
+        <service alias="fos_ck_editor.configuration" id="FOS\CKEditorBundle\Config\CKEditorConfiguration"/>
 
         <prototype namespace="Networking\InitCmsBundle\Command\" resource="../../Command/*"/>
         <prototype namespace="Networking\InitCmsBundle\EventSubscriber\" resource="../../EventSubscriber/*"/>
@@ -71,7 +71,7 @@
         </service>
 
         <service id="Networking\InitCmsBundle\Filter\SimpleStringFilter" autowire="true" public="true">
-            <tag name="sonata.admin.filter.type" />
+            <tag name="sonata.admin.filter.type"/>
         </service>
 
         <service id="Networking\InitCmsBundle\Controller\InstallController" autowire="true" public="true">
@@ -193,14 +193,26 @@
                  alias="sonata.admin.pool"
                  public="false"/>
 
-        <service id="Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface"
+        <service id="Sonata\UserBundle\Model\UserManagerInterface"
+                 alias="networking_init_cms.user_manager"/>
+
+        <service id="networking_init_cms.attribute.reader"
+                 class="Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReader" autowire="true"
+                 public="true"/>
+
+        <service id="networking_init_cms.annotation.reader"
+                 class="Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReader" autowire="true"
+                 public="true"/>
+
+
+        <service id="Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface"
+                 alias="networking_init_cms.attribute.reader"
+                 public="false"/>
+
+        <service id="Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface"
                  alias="networking_init_cms.annotation.reader"
                  public="false"/>
 
-        <service id="Sonata\UserBundle\Model\UserManagerInterface"
-                 alias="networking_init_cms.user_manager" />
-
-        <service id="networking_init_cms.annotation.reader" class="Networking\InitCmsBundle\Reader\SonataAdminAnnotationReader" autowire="true" public="true"/>
         <service id="Networking\InitCmsBundle\Twig\Extension\ImageFilter">
             <argument key="$flysystem" type="service" id="oneup_flysystem.media_filesystem"/>
             <argument key="$cacheFlysystem" type="service" id="oneup_flysystem.cache_filesystem"/>
@@ -211,34 +223,36 @@
             <tag name="controller.service_arguments"/>
         </service>
 
-        <service id="Networking\InitCmsBundle\Controller\AdminResettingController" autoconfigure="true" autowire="true" public="true">
+        <service id="Networking\InitCmsBundle\Controller\AdminResettingController" autoconfigure="true" autowire="true"
+                 public="true">
             <argument key="$templateRegistry" type="service" id="sonata.admin.global_template_registry"/>
             <argument key="$tokenGenerator" type="service" id="sonata.user.util.token_generator"/>
             <argument key="$mailer" type="service" id="sonata.user.mailer.default"/>
             <tag name="controller.service_arguments"/>
         </service>
 
-        <service id="Networking\InitCmsBundle\Helper\OneTimeCodeHelper" autoconfigure="true" autowire="true" public="true">
+        <service id="Networking\InitCmsBundle\Helper\OneTimeCodeHelper" autoconfigure="true" autowire="true"
+                 public="true">
             <argument key="$signingKey">%kernel.secret%</argument>
         </service>
 
         <service id="Networking\InitCmsBundle\Repository\OneTimeCodeRequestRepository" autowire="true" public="true">
         </service>
 
-        <service id="Networking\InitCmsBundle\Serializer\MediaNormalizer"  autowire="true" public="true">
+        <service id="Networking\InitCmsBundle\Serializer\MediaNormalizer" autowire="true" public="true">
             <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
             <argument key="$propertyNormalizer" type="service" id="serializer.normalizer.property"/>
             <argument key="$mediaClass" type="string">%sonata.media.media.class%</argument>
             <tag name="serializer.normalizer" priority="1000"/>
         </service>
 
-        <service id="Networking\InitCmsBundle\Serializer\LayoutBlockNormalizer"  autowire="true" public="true">
+        <service id="Networking\InitCmsBundle\Serializer\LayoutBlockNormalizer" autowire="true" public="true">
             <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
             <argument key="$propertyNormalizer" type="service" id="serializer.normalizer.property"/>
             <tag name="serializer.normalizer" priority="1000"/>
         </service>
 
-        <service id="Networking\InitCmsBundle\Serializer\PageNormalizer"  autowire="true" public="true">
+        <service id="Networking\InitCmsBundle\Serializer\PageNormalizer" autowire="true" public="true">
             <argument key="$pageClass" type="string">%networking_init_cms.admin.page.class%</argument>
             <argument key="$objectNormalizer" type="service" id="serializer.normalizer.object"/>
             <tag name="serializer.normalizer" priority="100"/>

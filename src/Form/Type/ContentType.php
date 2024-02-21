@@ -10,9 +10,11 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Form\Type;
 
-use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
+use Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface;
+use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -24,12 +26,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ContentType extends AbstractType
 {
     /**
-     * @var \Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface
+     * @var SonataAdminAttributeReaderInterface
      */
     protected $annotationReader;
 
     public function __construct(
-        SonataAdminAnnotationReaderInterface $annotationReader
+        SonataAdminAttributeReaderInterface $annotationReader
     ) {
         $this->annotationReader = $annotationReader;
     }
@@ -37,8 +39,6 @@ class ContentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $annotations = $this->annotationReader->getFormMapperAnnotations($options['class']);
-
-        $defaultValue = null;
 
         foreach ($annotations as $propertyName => $annotation) {
             $fieldName = $annotation->getName() ?: $propertyName;
@@ -49,15 +49,12 @@ class ContentType extends AbstractType
             );
         }
         $this->invokeCallbacks($options['class'], $this->annotationReader->getFormMapperCallbacks($options['class']), [$builder]);
-        $options['data_class'] = $options['class'];
     }
 
     /**
-     *
-     *
      * @throws \RuntimeException
      */
-    protected function getFieldDescription(array $options): \Sonata\AdminBundle\Admin\FieldDescriptionInterface
+    protected function getFieldDescription(array $options): FieldDescriptionInterface
     {
         if (!isset($options['sonata_field_description'])) {
             throw new \RuntimeException('Please provide a valid `sonata_field_description` option');
@@ -70,7 +67,7 @@ class ContentType extends AbstractType
     {
         parent::configureOptions($resolver);
 
-        $dataClass = fn(Options $options) => $options['class'];
+        $dataClass = fn (Options $options) => $options['class'];
 
         $resolver->setDefaults(
             [

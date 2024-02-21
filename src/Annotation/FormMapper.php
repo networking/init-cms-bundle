@@ -10,53 +10,35 @@ namespace Networking\InitCmsBundle\Annotation;
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 class FormMapper extends AbstractMapper implements FormInterface
 {
-    /**
-     * @var array
-     */
-    public $options = [];
+    public array $options = [];
 
-    /**
-     * @var string
-     */
-    public $with = null;
+    public ?string $with = null;
 
-    /**
-     * @var array
-     */
-    public $withOptions = [];
+    public array $withOptions = [];
 
-    /**
-     * @var string
-     */
-    public $tab = null;
+    public ?string $tab = null;
 
-    /**
-     * @var array
-     */
     public $tabOptions = [];
 
-    /**
-     * @var bool
-     */
     public $ignoreOnParent = false;
 
     public function __construct(
-        string $type,
-        array $options = [],
+        ?string $name = null,
+        ?string $type = null,
         array $fieldDescriptionOptions = [],
+        array $options = [],
         array $withOptions = [],
         bool $ignoreOnParent = false,
-        ?string $name = null,
         ?string $with = null,
         ?string $tab = null,
-    ){
-        $this->type = $type;
-        $this->fieldDescriptionOptions = $fieldDescriptionOptions;
+    ) {
         $this->options = $options;
         $this->with = $with;
         $this->withOptions = $withOptions;
         $this->tab = $tab;
         $this->ignoreOnParent = $ignoreOnParent;
+
+        parent::__construct($name, $type, $fieldDescriptionOptions);
     }
 
     /**
@@ -81,7 +63,7 @@ class FormMapper extends AbstractMapper implements FormInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIgnoreOnParent()
     {

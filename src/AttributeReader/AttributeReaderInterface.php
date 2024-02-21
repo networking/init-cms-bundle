@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Networking\InitCmsBundle\AnnotationReader;
+namespace Networking\InitCmsBundle\AttributeReader;
 
-use Doctrine\Common\Annotations\Reader;
 
-interface AnnotationReaderInterface
+interface AttributeReaderInterface
 {
     public const
         SCOPE_CLASS = 'class',
@@ -14,11 +13,6 @@ interface AnnotationReaderInterface
         SCOPE_PROPERTY = 'property'
     ;
 
-    /**
-     * AnnotationReaderInterface constructor.
-     * @param Reader $annotationReader
-     */
-    public function __construct(Reader $annotationReader);
 
     /**
      * @param mixed $entity
