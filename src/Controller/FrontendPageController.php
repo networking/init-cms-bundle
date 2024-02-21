@@ -705,7 +705,9 @@ class FrontendPageController extends AbstractController
 
         $qb = $pageAdmin->createQuery();
 
-        $pageAdmin->getByLocale($qb, 'p', 'locale', ['value' => $locale]);
+        $alias = $qb->getRootAliases();
+
+        $pageAdmin->getByLocale($qb, $alias[0], 'locale', ['value' => $locale]);
 
         $qb->setSortBy([], ['fieldName' => 'path']);
 
