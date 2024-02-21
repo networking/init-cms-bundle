@@ -23,7 +23,12 @@ class MediaNormalizer implements NormalizerInterface, DenormalizerInterface
     ): array|string|int|float|bool|\ArrayObject|null {
         if ($object instanceof $this->mediaClass) {
             $context[AbstractNormalizer::IGNORED_ATTRIBUTES] = [
+                'lazyObjectState',
+                'lazyObjectInitialized',
+                'lazyObjectAsInitialized',
+                'statusList',
                 'metadataValue',
+                'statusList',
                 '__initializer__',
                 '__cloner__',
                 '__isInitialized__', ];
