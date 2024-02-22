@@ -132,7 +132,6 @@ abstract class BaseAdmin extends AbstractAdmin
 
     protected function configureListFields(ListMapper $list): void
     {
-
         $this->getSonataAnnotationReader()?->configureListFields($this->getClass(), $list);
     }
 

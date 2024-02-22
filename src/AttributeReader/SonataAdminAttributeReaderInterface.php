@@ -54,9 +54,9 @@ interface SonataAdminAttributeReaderInterface extends AttributeReaderInterface
     public function getListMapperCallbacks($entity): array;
 
     /**
-     * @return ListReorderInterface
+     * @return ListReorderInterface|null
      */
-    public function getListReorderAnnotation($entity): ListReorderInterface;
+    public function getListReorderAnnotation($entity): ?ListReorderInterface;
 
     /**
      * @return ShowInterface[]

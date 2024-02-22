@@ -251,9 +251,9 @@ class SonataAdminAttributeReader extends AttributeReader implements SonataAdminA
     }
 
     /**
-     * @return ListReorderInterface
+     * @return ListReorderInterface|null
      */
-    public function getListReorderAnnotation($entity): ListReorderInterface
+    public function getListReorderAnnotation($entity): ?ListReorderInterface
     {
         return $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_LIST_REORDER, self::SCOPE_CLASS);
     }
