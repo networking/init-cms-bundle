@@ -209,10 +209,10 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $page = $serializer->deserialize($pageSnapshot->getVersionedData(), $page::class, 'json', $context);
 
         foreach ($page->getLayoutBlocks() as $layoutBlock) {
-            if (!$layoutBlock->getId()) {
-                $this->resetContent($layoutBlock);
-            }
+            $this->resetContent($layoutBlock);
+
             $this->_em->persist($layoutBlock);
+
         }
 
         $this->_em->persist($page);
@@ -320,7 +320,9 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $reflection = new \ReflectionClass($oldObject);
 
         if ($reflection->implementsInterface(IgnoreRevertInterface::class)) {
-            return $oldObject;
+            return $this->_em
+                ->getRepository($reflection->getName())
+                ->findOneBy(['id' => $oldObject->getId()]);
         }
 
         if ($oldObject->getId()) {
