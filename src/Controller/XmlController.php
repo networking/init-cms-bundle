@@ -10,6 +10,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,63 +25,41 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class XmlController extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    public $objectManager;
-
-    /**
-     * XmlController constructor.
-     * @param $pageClass
-     * @param array $languages
-     * @param array $additionalLinks
-     * @param string $domainName
-     * @param string $pageClass
-     */
     public function __construct(
-        EntityManagerInterface $objectManager,
-        public $pageClass,
-        public $languages = [],
-        public $additionalLinks = [],
-        public $domainName = ''
+        protected EntityManagerInterface $em,
+        protected string $pageClass,
+        protected array $languages = [],
+        protected array $additionalLinks = [],
+        protected string $domainName = ''
     ) {
-        $this->objectManager = $objectManager;
     }
 
-    /**
-     * @param $locale
-     * @return Response
-     */
-    public function siteMapAction(Request $request, $locale)
+    public function siteMapAction(Request $request, $locale): Response
     {
         $params = [
             'domain' => $this->getDomainName($request),
-            'languages' => $this->languages
+            'languages' => $this->languages,
         ];
 
-        $template = 'Sonata\\AdminBundle\\FieldDescriptionI\\FieldDescriptionInterface::/Sitemap/multilingual_sitemap.xml.twig';
+        $template = '@NetworkingInitCms/Sitemap/multilingual_sitemap.xml.twig';
 
-        if ($locale || count((array) $this->languages) === 1) {
-            $locale = $locale?:$params['languages']['locale'];
+        if ($locale || 1 === count((array) $this->languages)) {
+            $locale = $locale ?: $params['languages'][0]['locale'];
             $page_filter = ['visibility' => 'public', 'status' => 'status_published', 'locale' => $locale];
 
-            $params['pages'] = $this->objectManager->getRepository($this->pageClass)->findBy($page_filter);
+            $params['pages'] = $this->em->getRepository($this->pageClass)->findBy($page_filter);
             $params['additional_links'] = $this->getAdditionalLinks($locale);
 
-            $template = '@NetworkingInitSitemap/sitemap.xml.twig';
+            $template = '@NetworkingInitCms/Sitemap/sitemap.xml.twig';
         }
 
-        $response = $this->render($template,$params);
+        $response = $this->render($template, $params);
         $response->headers->set('Content-Type', 'application/xml');
 
         return $response;
     }
 
-    /**
-     * @param $locale
-     * @return array
-     */
-    private function getAdditionalLinks($locale)
+    private function getAdditionalLinks($locale): array
     {
         foreach ($this->additionalLinks as $links) {
             if ($links['locale'] == $locale) {
@@ -91,11 +70,8 @@ class XmlController extends AbstractController
         return [];
     }
 
-    /**
-     * @return string
-     */
-    private function getDomainName(Request $request)
+    private function getDomainName(Request $request): string
     {
-      return $this->domainName?:$request->getScheme().'://'.$request->getHost();
+        return $this->domainName ?: $request->getScheme().'://'.$request->getHost();
     }
 }
