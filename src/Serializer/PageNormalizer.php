@@ -46,6 +46,9 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
                     },
                 ],
                 AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                    'lazyObjectState',
+                    'lazyObjectInitialized',
+                    'lazyObjectAsInitialized',
                     'allChildren',
                     'allTranslations',
                     'snapshots',
