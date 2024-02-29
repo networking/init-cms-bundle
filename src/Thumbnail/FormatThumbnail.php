@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * Created by PhpStorm.
@@ -31,9 +32,6 @@ class FormatThumbnail implements ThumbnailInterface, ResizableThumbnailInterface
     {
     }
 
-    /**
-     * @param string $id
-     */
     public function addResizer(string $id, ResizerInterface $resizer): void
     {
         if (!isset($this->resizers[$id])) {
@@ -47,11 +45,7 @@ class FormatThumbnail implements ThumbnailInterface, ResizableThumbnailInterface
     }
 
     /**
-     * @param string $id
-     *
-     * @return ResizerInterface
      * @throws \Exception
-     *
      */
     public function getResizer(string $id): ResizerInterface
     {
@@ -62,13 +56,9 @@ class FormatThumbnail implements ThumbnailInterface, ResizableThumbnailInterface
         return $this->resizers[$id];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generatePublicUrl(MediaProviderInterface $provider, MediaInterface $media, $format): string
     {
-        if (MediaProviderInterface::FORMAT_REFERENCE === $format || in_array($media->getContentType(),ImageProvider::SVG_CONTENT_TYPES)) {
-
+        if (MediaProviderInterface::FORMAT_REFERENCE === $format || in_array($media->getContentType(), ImageProvider::SVG_CONTENT_TYPES)) {
             return $provider->getReferenceImage($media);
         }
 
@@ -80,12 +70,9 @@ class FormatThumbnail implements ThumbnailInterface, ResizableThumbnailInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function generatePrivateUrl(MediaProviderInterface $provider, MediaInterface $media, $format): string
     {
-        if (MediaProviderInterface::FORMAT_REFERENCE === $format || in_array($media->getContentType(),ImageProvider::SVG_CONTENT_TYPES)) {
+        if (MediaProviderInterface::FORMAT_REFERENCE === $format || in_array($media->getContentType(), ImageProvider::SVG_CONTENT_TYPES)) {
             return $provider->getReferenceImage($media);
         }
 
@@ -94,36 +81,28 @@ class FormatThumbnail implements ThumbnailInterface, ResizableThumbnailInterface
             $provider->generatePath($media),
             $format,
             $media->getMetadataValue('filename')
-
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function generate(MediaProviderInterface $provider, MediaInterface $media):  void
+    public function generate(MediaProviderInterface $provider, MediaInterface $media): void
     {
-
         if (!$provider->requireThumbnails()) {
             return;
         }
 
         $referenceFile = $provider->getReferenceFile($media);
 
-
-
         if (!$referenceFile->exists()) {
             return;
         }
 
-        if(in_array($media->getContentType(),ImageProvider::SVG_CONTENT_TYPES)){
+        if (in_array($media->getContentType(), ImageProvider::SVG_CONTENT_TYPES)) {
             return;
         }
         foreach ($provider->getFormats() as $format => $settings) {
-
-            if (str_starts_with($format, $media->getContext()) ||
-                MediaProviderInterface::FORMAT_ADMIN === $format) {
-                $resizer = (isset($settings['resizer']) && ($settings['resizer'])) ?
+            if (str_starts_with($format, $media->getContext())
+                || MediaProviderInterface::FORMAT_ADMIN === $format) {
+                $resizer = (isset($settings['resizer']) && $settings['resizer']) ?
                     $this->getResizer($settings['resizer']) :
                     $provider->getResizer();
 
@@ -138,11 +117,12 @@ class FormatThumbnail implements ThumbnailInterface, ResizableThumbnailInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete(MediaProviderInterface $provider, MediaInterface $media, $formats = null): void
     {
+        if (in_array($media->getContentType(), ImageProvider::SVG_CONTENT_TYPES) && 'cli' === php_sapi_name()) {
+            return;
+        }
+
         if (null === $formats) {
             $formats = array_keys($provider->getFormats());
         } elseif (\is_string($formats)) {
