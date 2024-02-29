@@ -107,6 +107,12 @@ networking_init_cms_image_view:
         name: (.*)?
         format: (.*)?
 
+networking_init_cms_image_view_no_format:
+    path: /image/view/{id}/{name}
+    defaults: { _controller: Networking\InitCmsBundle\Controller\MediaController::viewAction, format: 'reference' }
+    requirements:
+        name: (.*)?
+
 networking_init_cms_clear_cache:
     path: /cache/clear
     defaults: { _controller: Networking\InitCmsBundle\Controller\CacheController::clearAction}
