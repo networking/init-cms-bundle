@@ -261,7 +261,7 @@ class PageHelper
         $om->flush();
     }
 
-    public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $deserializeTranslations = true)
+    public function unserializePageSnapshotData(PageSnapshotInterface $pageSnapshot, $deserializeTranslations = true): PageInterface
     {
         if (str_contains($pageSnapshot->getResourceName(), 'Proxies\__CG__\\')) {
             $pageSnapshot->setResourceName(str_replace('Proxies\__CG__\\', '', $pageSnapshot->getResourceName()));
