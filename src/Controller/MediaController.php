@@ -10,6 +10,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Controller;
 
 use Gaufrette\File;
@@ -18,7 +19,7 @@ use Sonata\MediaBundle\Model\MediaManagerInterface;
 use Sonata\MediaBundle\Provider\MediaProviderInterface;
 use Sonata\MediaBundle\Provider\Pool;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -35,8 +36,8 @@ class MediaController extends AbstractController
     /**
      * output image direct to browser, retrieve from cache if activated.
      *
-     * @param         $id
-     * @param string  $format
+     * @param string $format
+     *
      * @return Response
      */
     public function viewAction(
@@ -48,9 +49,7 @@ class MediaController extends AbstractController
         $media = $this->mediaManager->find($id);
 
         if (!$media) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the media with the id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the media with the id : %s', $id));
         }
 
         if (!$this->pool->getDownloadStrategy($media)->isGranted(
@@ -62,7 +61,7 @@ class MediaController extends AbstractController
         }
         $provider = $this->pool->getProvider($media->getProviderName());
 
-        if ($format == 'reference') {
+        if ('reference' == $format) {
             $file = $provider->getReferenceFile($media);
         } else {
             $file = $provider->getFilesystem()->get(
@@ -84,9 +83,7 @@ class MediaController extends AbstractController
         $media = $this->mediaManager->find($id);
 
         if (!$media) {
-            throw new NotFoundHttpException(
-                sprintf('unable to find the media with the id : %s', $id)
-            );
+            throw new NotFoundHttpException(sprintf('unable to find the media with the id : %s', $id));
         }
 
         if (!$this->pool->getDownloadStrategy($media)->isGranted(
@@ -110,14 +107,10 @@ class MediaController extends AbstractController
         $name = $name ?: $media->getName();
 
         return $this->getResponse($file, $media, $name);
-
     }
-
 
     /**
      * @param mixed $file
-     * @param mixed $type
-     *
      */
     protected function getResponse(
         File $file,
@@ -125,18 +118,19 @@ class MediaController extends AbstractController
         mixed $name,
         $mode = 'attachment'
     ): Response {
-        $content = $file->getContent();
-
         $type = $media->getExtension();
+        $provider = $this->pool->getProvider($media->getProviderName());
 
+        $nameArray = explode('.', $name);
 
-        $name = str_replace('.'.$type, '', (string) $name);
+        if (count($nameArray) > 1) {
+            array_pop($nameArray);
+        }
+
+        $name = implode('', $nameArray);
 
         $headers = array_merge(
             [
-                'Content-Type' => $media->getContentType(),
-                'Accept-Ranges' => 'bytes',
-                'Content-Length' => $media->getSize(),
                 'Content-Disposition' => sprintf(
                     $mode.'; filename="%s.%s"',
                     $name,
@@ -146,7 +140,10 @@ class MediaController extends AbstractController
             []
         );
 
-        $response = new Response($content, 200, $headers);
+        $response = new BinaryFileResponse(
+            $provider->getFilesystem()->getAdapter()->getDirectory().'/'.$file->getKey(),
+            headers: $headers
+        );
 
         $response->setPublic();
         $response->setLastModified($media->getUpdatedAt());
