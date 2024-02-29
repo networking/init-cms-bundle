@@ -88,20 +88,7 @@ class FrontendPageController extends AbstractController
         if ($this->pageCache->isCacheable($request, $user)
             && $page instanceof PageSnapshotInterface
         ) {
-            if (!$this->isSnapshotActive($page)) {
-                throw new NotFoundHttpException();
-            }
-
-            if (PageInterface::VISIBILITY_PUBLIC
-                != $this->getSnapshotVisibility($page)
-            ) {
-                if (false === $this->authorizationChecker->isGranted(
-                    'ROLE_USER'
-                )
-                ) {
-                    throw new AccessDeniedException();
-                }
-            }
+            $this->checkPageAccess($page);
 
             $updatedAt = $this->pageCache->get(
                 sprintf('page_%s_created_at', $page->getId())
@@ -195,8 +182,8 @@ class FrontendPageController extends AbstractController
     /**
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      */
-    public function getPageParameters(Request $request): array|bool|RedirectResponse
-    {
+    public function getPageParameters(Request $request
+    ): array|bool|RedirectResponse {
         $page = $request->get('_content');
 
         if (is_null($page)) {
@@ -247,7 +234,6 @@ class FrontendPageController extends AbstractController
         Request $request,
         PageSnapshot $pageSnapshot
     ): RedirectResponse|bool|array {
-        /** @var $page PageInterface */
         $page = $this->getPageHelper()->unserializePageSnapshotData(
             $pageSnapshot,
             false
@@ -257,14 +243,7 @@ class FrontendPageController extends AbstractController
             return $redirect;
         }
 
-        if (PageInterface::VISIBILITY_PUBLIC != $page->getVisibility()) {
-            if (false === $this->container->get(
-                'security.authorization_checker'
-            )->isGranted('ROLE_USER')
-            ) {
-                throw new AccessDeniedException();
-            }
-        }
+        $this->checkPageAccess($page);
 
         return ['page' => $page];
     }
@@ -282,8 +261,8 @@ class FrontendPageController extends AbstractController
     /**
      * @throws InvalidArgumentException|\JsonException
      */
-    public function home(Request $request): RedirectResponse|string|Response|null
-    {
+    public function home(Request $request
+    ): RedirectResponse|string|Response|null {
         if ('networking_init_cms_default' === $request->get('_route')) {
             $request = $this->getPageHelper()->matchContentRouteRequest(
                 $request
@@ -296,8 +275,8 @@ class FrontendPageController extends AbstractController
     /**
      * @throws InvalidArgumentException|\JsonException
      */
-    public function homeAction(Request $request): RedirectResponse|string|Response|null
-    {
+    public function homeAction(Request $request
+    ): RedirectResponse|string|Response|null {
         if ('networking_init_cms_default' === $request->get('_route')) {
             $request = $this->getPageHelper()->matchContentRouteRequest(
                 $request
@@ -322,8 +301,11 @@ class FrontendPageController extends AbstractController
     /**
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      */
-    public function changeLanguageAction(Request $request, $oldLocale, $locale): RedirectResponse
-    {
+    public function changeLanguageAction(
+        Request $request,
+        $oldLocale,
+        $locale
+    ): RedirectResponse {
         $params = [];
         $routeName = 'networking_init_cms_default';
 
@@ -414,8 +396,11 @@ class FrontendPageController extends AbstractController
     /**
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|AccessDeniedException
      */
-    protected function changeViewMode(Request $request, $status, $path): RedirectResponse
-    {
+    protected function changeViewMode(
+        Request $request,
+        $status,
+        $path
+    ): RedirectResponse {
         if (false === $this->authorizationChecker->isGranted(
             'ROLE_SONATA_ADMIN'
         )
@@ -455,7 +440,7 @@ class FrontendPageController extends AbstractController
         $referrer,
         $oldLocale,
         $locale
-    ): array|\Symfony\Cmf\Component\Routing\RouteObjectInterface|string {
+    ): array|RouteObjectInterface|string {
         $oldURL = $this->languageSwitcherHelper->getPathInfo($referrer);
 
         return $this->languageSwitcherHelper->getTranslationRoute(
@@ -487,8 +472,10 @@ class FrontendPageController extends AbstractController
     /**
      * @throws \JsonException
      */
-    public function adminNavbarAction(Request $request, $page_id = null): Response
-    {
+    public function adminNavbarAction(
+        Request $request,
+        $page_id = null
+    ): Response {
         if ($page_id) {
             $page = $this->pageManager->find($page_id);
             $request->attributes->set('_content', $page);
@@ -503,12 +490,16 @@ class FrontendPageController extends AbstractController
         $locale = $request->getLocale();
         $shortLocale = substr($locale, 0, 2);
 
-        $allowedLocales = $this->getParameter('networking_init_cms.page.languages');
+        $allowedLocales = $this->getParameter(
+            'networking_init_cms.page.languages'
+        );
 
         $localeMatched = false;
 
         foreach ($allowedLocales as $allowedLocale) {
-            if ($allowedLocale['locale'] == $request->getLocale() || $shortLocale == $allowedLocale['locale']) {
+            if ($allowedLocale['locale'] == $request->getLocale()
+                || $shortLocale == $allowedLocale['locale']
+            ) {
                 $locale = $allowedLocale['locale'];
                 $localeMatched = true;
             }
@@ -604,7 +595,10 @@ class FrontendPageController extends AbstractController
             }
         }
 
-        $firstItemStatus = $request->getSession()->get('_viewStatus', 'status_published');
+        $firstItemStatus = $request->getSession()->get(
+            '_viewStatus',
+            'status_published'
+        );
 
         $response = $this->render(
             '@NetworkingInitCms/Admin/esi_admin_navbar.html.twig',
@@ -628,36 +622,32 @@ class FrontendPageController extends AbstractController
         return $this->pageHelper;
     }
 
-    public function getSnapshotVisibility(PageSnapshotInterface $page)
-    {
-        $jsonObject = json_decode(
-            (string) $page->getVersionedData(),
-            null,
-            512,
-            JSON_THROW_ON_ERROR
+    public function getSnapshotVisibility(PageSnapshotInterface $pageSnapshot
+    ): string {
+        $page = $this->getPageHelper()->unserializePageSnapshotData(
+            $pageSnapshot,
+            false
         );
 
-        return $jsonObject->visibility;
+        return $page->getVisibility();
     }
 
     /**
      * @throws \Exception
      */
-    public function isSnapshotActive(PageSnapshotInterface $page): bool
+    public function isSnapshotActive(PageSnapshotInterface $pageSnapshot): bool
     {
-        $jsonObject = json_decode(
-            (string) $page->getVersionedData(),
-            null,
-            512,
-            JSON_THROW_ON_ERROR
+        $page = $this->getPageHelper()->unserializePageSnapshotData(
+            $pageSnapshot,
+            false
         );
-
         $now = new \DateTime();
 
-        if ($now->getTimestamp() >= $this->getActiveStart($jsonObject)
-                ->getTimestamp()
-            && $now->getTimestamp() <= $this->getActiveEnd($jsonObject)
-                ->getTimestamp()
+        $activeFrom = $page->getActiveFrom() ?? $now;
+        $activeTo = $page->getActiveFrom() ?? $now;
+
+        if ($now->getTimestamp() >= $activeFrom->getTimestamp()
+            && $now->getTimestamp() <= $activeTo->getTimestamp()
         ) {
             return true;
         }
@@ -747,5 +737,37 @@ class FrontendPageController extends AbstractController
                 'Access-Control-Allow-Origin' => '*',
             ]
         );
+    }
+
+    protected function checkPageAccess(PageInterface|PageSnapshotInterface $page
+    ): void {
+        if ($page instanceof PageSnapshotInterface) {
+            $page = $this->getPageHelper()->unserializePageSnapshotData(
+                $page,
+                false
+            );
+        }
+        $now = (new \DateTime())->getTimestamp();
+
+        $activeFrom = $page->getActiveFrom()?->getTimestamp() ?? $now;
+        $activeTo = $page->getActiveTo()?->getTimestamp() ?? $now;
+
+        if ($activeFrom > $now || $activeTo < $now) {
+            throw new NotFoundHttpException('Page is not active');
+        }
+
+        if (PageInterface::VISIBILITY_PUBLIC !== $page->getVisibility()
+            && !$this->authorizationChecker->isGranted('ROLE_USER')
+        ) {
+            throw new AccessDeniedException();
+        }
+
+        if ($page->isOffline()
+            && !$this->authorizationChecker->isGranted(
+                'ROLE_SONATA_ADMIN'
+            )
+        ) {
+            throw new NotFoundHttpException('Page offline');
+        }
     }
 }
