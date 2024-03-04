@@ -45,11 +45,11 @@ class AdminContentSecurityPolicyListener
                             unset($cspHeaders[$header][$type][$key]);
                         }
                     }
-                    if (!in_array('unsafe-inline', $directives[$type])) {
-                        $cspHeaders[$header][$type][] = 'unsafe-inline';
+                    if (!in_array("'unsafe-inline'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'unsafe-inline'";
                     }
-                    if (!in_array('unsafe-eval', $directives[$type])) {
-                        $cspHeaders[$header][$type][] = 'unsafe-eval';
+                    if (!in_array("'unsafe-eval'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'unsafe-eval'";
                     }
                 }
 
@@ -59,22 +59,27 @@ class AdminContentSecurityPolicyListener
                             unset($cspHeaders[$header][$type][$key]);
                         }
                     }
-                    if (!in_array('unsafe-inline', $directives[$type])) {
-                        $cspHeaders[$header][$type][] = 'unsafe-inline';
+                    if (!in_array("'unsafe-inline'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'unsafe-inline'";
                     }
                 }
 
                 if ('worker-src' === $type) {
                     if (!in_array('blob:', $directives[$type])) {
-                        $cspHeaders[$header][$type][] = 'unsafe-eval';
                         $cspHeaders[$header][$type][] = "blob:";
-                        $cspHeaders[$header][$type][] = "self";
+                    }
+
+                    if (!in_array("'self'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'self'";
+                    }
+                    if (!in_array("'unsafe-eval'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'unsafe-eval'";
                     }
                 }
 
                 if ('connect-src' === $type) {
-                    if (!in_array('self', $directives[$type])) {
-                        $cspHeaders[$header][$type][] = 'self';
+                    if (!in_array("'self'", $directives[$type])) {
+                        $cspHeaders[$header][$type][] = "'self'";
                     }
                     if (!in_array('cke4.ckeditor.com', $directives[$type])) {
                         $cspHeaders[$header][$type][] = 'cke4.ckeditor.com';
