@@ -174,9 +174,9 @@ file that was distributed with this source code.
                             {% for name, context in media_pool.contexts %}
 
                                 {% if context.providers|length == 0 %}
-                                    {% set urlParams = {'context' : name, 'provider': null, 'active_tab' : persistent_parameters.context}|merge(ckParameters) %}
+                                    {% set urlParams = {'filter': {'_page': 1},'context' : name, 'provider': null, 'active_tab' : persistent_parameters.context}|merge(ckParameters) %}
                                 {% else %}
-                                    {% set urlParams = {'context' : name, 'provider' : context.providers[0], 'active_tab' : persistent_parameters.context}|merge(ckParameters) %}
+                                    {% set urlParams = {'filter': {'_page': 1}, 'context' : name, 'provider' : context.providers[0], 'active_tab' : persistent_parameters.context}|merge(ckParameters) %}
                                 {% endif %}
 
                                 {% if name == persistent_parameters.context %}
@@ -204,6 +204,10 @@ file that was distributed with this source code.
         <div class="card-body">
         <div class="card-content">
             {% set filterParameters = admin.filterParameters %}
+                <h1>
+                    <span class="info-soft">{{ ('media_context.' ~ persistent_parameters.context)|trans({}) }}</span>
+                </h1>
+                <hr>
 
                 <div class="d-flex flex-stack justify-content-between mb-2">
                     <div class="d-flex align-items-center">
@@ -296,6 +300,10 @@ file that was distributed with this source code.
         </div>
     </div>
 {% endblock %}
+
+{% block footer %}
+    {{ sonata_block_render({ 'type': 'networking_init_cms.block.service.version' }, {}) }}
+{% endblock footer %}
 
 {% block before_body_end %}
     {{ parent() }}

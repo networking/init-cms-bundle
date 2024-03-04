@@ -26,10 +26,10 @@
             {% set iframeWidth = '700px' %}
             {% set iframeHeight = '989px' %}
         {% endif %}
-        <div class="media-box" draggable="true" data-object-id="{{ object.id }}" ondragstart="dragstart_handler(event)" ondragend="dragEnd(event)" style="overflow: visible !important;">
+        <div class="media-box rounded" draggable="true" data-object-id="{{ object.id }}" ondragstart="dragstart_handler(event)" ondragend="dragEnd(event)" style="overflow: visible !important;">
             <div class="card card-custom overlay h-100">
                 <div class="card-body p-0 card-body p-0">
-                    <div class="overlay-wrapper d-flex flex-center h-100"
+                    <div class="overlay-wrapper d-flex flex-column flex-center justify-content-evenly h-100"
                          {% if object.width is defined and object.width %}style="background-image: url('{{ sonata_path(object, 'admin')  }}?{{ date().timestamp }}');
                                  background-repeat: no-repeat;
                             background-position: center;"{% endif %} >
@@ -42,20 +42,19 @@
                                 <div class="position-bottom">
                                     <a class="select-media font-size-h4 font-weight-bolder text-hover-primary" href="#"
                                        data-object-id="{{ object.id }}"
-                                       data-toggle="tooltip"
+                                       data-bs-toggle="tooltip"
                                        title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
                                 </div>
                             </div>
                         {% endif %}
-                        <br>
                     </div>
-                    <div class="overlay-layer overlay-layer-dark rounded flex-center">
+                    <div class="overlay-layer overlay-layer-dark rounded">
 
                         <div class="d-flex flex-column flex-center">
                             <div class="mb-1">
                                 <a class="select-media fs-4 fw-semibold text-white text-hover-primary"
                                    href="{{ previewLink }}"
-                                   data-toggle="tooltip"
+                                   data-bs-toggle="tooltip"
                                    title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
                             </div>
                             <div>
@@ -82,7 +81,7 @@
                                 {% endif %}
 
                                 <div class="btn-group">
-                                    <a class="select btn btn-sm btn-primary font-weight-bolder "
+                                    <a class="select btn btn-sm btn-primary font-weight-bolder"
                                        href="{{ sonata_path(object, 'reference')  }}">
                                         {{ 'list.label_select'|trans({}, 'MediaAdmin') }}
                                     </a>
