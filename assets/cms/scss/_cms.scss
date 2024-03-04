@@ -15,7 +15,7 @@ iframe{
 div#item_list > .tiles {
   display: grid;
   grid-gap: 2rem;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   grid-auto-rows: 1fr;
   .media-box {
     display: flex;
