@@ -25,14 +25,14 @@
         {% set iframeWidth = '700px' %}
         {% set iframeHeight = '989px' %}
     {% endif %}
-    <div class="media-box" draggable="true" data-object-id="{{ object.id }}" ondragstart="dragstart_handler(event)" ondragend="dragEnd(event)">
+    <div class="media-box rounded" draggable="true" data-object-id="{{ object.id }}" ondragstart="dragstart_handler(event)" ondragend="dragEnd(event)">
         <div class="card card-custom overlay h-100 {% if object.id in selected %}overlay-block{% endif %}">
             <div class="card-body p-0 card-body">
-                <div class="overlay-wrapper d-flex flex-column flex-center justify-content-evenly h-100">
-                    {% if object.width is defined and object.width %}
-                        <img src="{{ sonata_path(object, 'admin')  }}?{{ date().timestamp }}"
-                             class="img-fluid "/>
-                    {% else %}
+                <div class="overlay-wrapper d-flex flex-column flex-center justify-content-evenly h-100"
+                     {% if object.width is defined and object.width %}style="background-image: url('{{ sonata_path(object, 'admin')  }}?{{ date().timestamp }}');
+                             background-repeat: no-repeat;
+                             background-position: center;"{% endif %}>
+                    {% if object.width is not defined or not object.width %}
 
                             <div>
                                 <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fs-4x"></i>
