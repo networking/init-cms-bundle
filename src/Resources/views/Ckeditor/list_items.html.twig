@@ -31,7 +31,7 @@
                 <div class="card-body p-0 card-body p-0">
                     <div class="overlay-wrapper d-flex flex-column flex-center justify-content-evenly h-100"
                          {% if object.width is defined and object.width %}style="background-image: url('{{ sonata_path(object, 'admin')  }}?{{ date().timestamp }}');
-                                 background-repeat: no-repeat;
+                                 background-repeat: no-repeat; background-color: var(--bs-app-bg-color);
                             background-position: center;"{% endif %} >
                         {% if object.width is not defined or not object.width %}
                             <div class="d-flex flex-column flex-center my-auto">

@@ -121,7 +121,7 @@ file that was distributed with this source code.
                                         data-image-provider="{{ object.providerName }}"
                                         data-lang="{{ app.request.locale|slice(0,2) }}"
                                 ></script>
-                                <div id="image-editor"></div>
+                                <div id="image-editor" style="background-color: var(--bs-app-bg-color);"></div>
                             {% else %}
                             <img src="{{ sonata_path(object, 'reference')  }}">
                             {% endif %}
