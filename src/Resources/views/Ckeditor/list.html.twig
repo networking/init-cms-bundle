@@ -200,12 +200,9 @@ file that was distributed with this source code.
 
 {% block list_table %}
 
-    <div class="row">
-        <div class="col-md-12">
-
-            {# provider #}
-
-
+    <div class="card mb-3">
+        <div class="card-body">
+        <div class="card-content">
             {% set filterParameters = admin.filterParameters %}
 
                 <div class="d-flex flex-stack justify-content-between mb-2">
@@ -268,6 +265,7 @@ file that was distributed with this source code.
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
                     {% if admin.showTagTree %}
                         <div class="col-md-3 col-xs-12">
@@ -294,6 +292,7 @@ file that was distributed with this source code.
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -389,6 +388,16 @@ file that was distributed with this source code.
             e.preventDefault();
             refreshList({'filter[_page]':  1,'filter[tags][value]': ''});
         })
+
+        KTUtil.on(document.body, '.per-page', 'change', function (e, noLoad) {
+            e.preventDefault();
+            let selected = e.target
+
+            console.log(e)
+            window.top.location.href=selected.options[selected.selectedIndex].value;
+        })
+
+
 
     </script>
 {% endblock %}

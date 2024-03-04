@@ -1,67 +1,64 @@
 <div class="tiles">
-{% set ckParameters = {'CKEditor': app.request.get('CKEditor'), 'CKEditorFuncNum': app.request.get('CKEditorFuncNum')} %}
-{% set previewLink = false %}
-{% for object in datagrid.results %}
+    {% set ckParameters = {'CKEditor': app.request.get('CKEditor'), 'CKEditorFuncNum': app.request.get('CKEditorFuncNum')} %}
     {% set previewLink = false %}
-    {% if object.width is defined and object.width %}
-        {% if object.providerName == 'sonata.media.provider.youtube' %}
-            {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
-            {% set previewType = 'iframe' %}
-            {% set iframeWidth = '600px' %}
-            {% set iframeHeight = '300px' %}
-        {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
-            {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
-            {% set previewType = 'iframe' %}
-            {% set iframeWidth = '600px' %}
-            {% set iframeHeight = '300px' %}
+    {% for object in datagrid.results %}
+        {% set previewLink = false %}
+        {% if object.width is defined and object.width %}
+            {% if object.providerName == 'sonata.media.provider.youtube' %}
+                {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
+                {% set previewType = 'iframe' %}
+                {% set iframeWidth = '600px' %}
+                {% set iframeHeight = '300px' %}
+            {% elseif object.providerName == 'sonata.media.provider.vimeo' %}
+                {% set previewLink %}//player.vimeo.com/video/{{ object.providerreference }}?autoplay=1{% endset %}
+                {% set previewType = 'iframe' %}
+                {% set iframeWidth = '600px' %}
+                {% set iframeHeight = '300px' %}
+            {% else %}
+                {% set previewLink %}{{ sonata_path(object, 'reference')  }}{% endset %}
+                {% set previewType = 'image' %}
+            {% endif %}
         {% else %}
-            {% set previewLink %}{{ sonata_path(object, 'reference')  }}{% endset %}
-            {% set previewType = 'image' %}
+            {% if object.contentType == 'application/pdf' %}
+                {% set previewLink %}{{ admin.generateUrl('pdf_preview', {'id': object.id}) }}{% endset %}
+            {% endif %}
+            {% set previewType = 'iframe' %}
+            {% set iframeWidth = '700px' %}
+            {% set iframeHeight = '989px' %}
         {% endif %}
-    {% else %}
-        {% if object.contentType == 'application/pdf' %}
-            {% set previewLink %}{{ admin.generateUrl('pdf_preview', {'id': object.id}) }}{% endset %}
-        {% endif %}
-        {% set previewType = 'iframe' %}
-        {% set iframeWidth = '700px' %}
-        {% set iframeHeight = '989px' %}
-    {% endif %}
-    <div class="media-box" draggable="true" data-object-id="{{ object.id }}" ondragstart="dragstart_handler(event)" ondragend="dragEnd(event)">
-        <div class="card card-custom overlay h-100">
-            <div class="card-body p-0 card-body p-0">
-                <div class="overlay-wrapper d-flex flex-center h-100">
-                    {% if object.width is defined and object.width %}
-                        <img src="{{ sonata_path(object, 'admin')  }}?{{ date().timestamp }}"
-                             class="{% if object.width > 250 and object.width > object.height%}w-100 rounded{% endif %}
-                              {% if object.height > 154 and object.height > object.width %}h-100{% endif %}
-                              "/>
-                    {% else %}
-                        <div class="d-flex flex-column flex-center my-auto">
-                            <div>
-                                <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fs-4x"></i>
+        <div class="media-box" draggable="true" data-object-id="{{ object.id }}" ondragstart="dragstart_handler(event)" ondragend="dragEnd(event)" style="overflow: visible !important;">
+            <div class="card card-custom overlay h-100">
+                <div class="card-body p-0 card-body p-0">
+                    <div class="overlay-wrapper d-flex flex-center h-100"
+                         {% if object.width is defined and object.width %}style="background-image: url('{{ sonata_path(object, 'admin')  }}?{{ date().timestamp }}');
+                                 background-repeat: no-repeat;
+                            background-position: center;"{% endif %} >
+                        {% if object.width is not defined or not object.width %}
+                            <div class="d-flex flex-column flex-center my-auto">
+                                <div>
+                                    <i class="{{ get_file_icon(object.getMetadataValue('filename')) }} fs-4x"></i>
 
-                            </div>
-                            <div class="position-bottom">
+                                </div>
+                                <div class="position-bottom">
                                     <a class="select-media font-size-h4 font-weight-bolder text-hover-primary" href="#"
                                        data-object-id="{{ object.id }}"
                                        data-toggle="tooltip"
                                        title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
-
+                                </div>
                             </div>
-                        </div>
-                    {% endif %}
-                    <br>
-                </div>
-                <div class="overlay-layer overlay-layer-dark rounded flex-center">
+                        {% endif %}
+                        <br>
+                    </div>
+                    <div class="overlay-layer overlay-layer-dark rounded flex-center">
 
-                    <div class="d-flex flex-column flex-center">
-                        <div class="mb-1">
+                        <div class="d-flex flex-column flex-center">
+                            <div class="mb-1">
                                 <a class="select-media fs-4 fw-semibold text-white text-hover-primary"
                                    href="{{ previewLink }}"
                                    data-toggle="tooltip"
                                    title="{{ object.name }}">{{ crop_middle(object.name, 24) }}</a>
-                        </div>
-                        <div>
+                            </div>
+                            <div>
                                 {% if previewLink %}
                                     <a href="{% if previewType == 'iframe' %}#iframe{{ object.id }}{% else %}{{ previewLink }}{% endif %}"
                                        data-fslightbox="lightbox-basic"
@@ -82,17 +79,20 @@
                                                 allowFullScreen
                                         ></iframe>
                                     {% endif %}
-                            {% endif %}
+                                {% endif %}
 
-                            <div class="btn-group">
-                                <a class="select btn btn-sm btn-primary font-weight-bolder "
-                                   href="{{ sonata_path(object, 'reference')  }}">
-                                    {{ 'list.label_select'|trans({}, 'MediaAdmin') }}
-                                </a>
-                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="btn-group">
+                                    <a class="select btn btn-sm btn-primary font-weight-bolder "
+                                       href="{{ sonata_path(object, 'reference')  }}">
+                                        {{ 'list.label_select'|trans({}, 'MediaAdmin') }}
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split"
+                                            data-bs-boundary="document"
+                                            data-bs-display="static"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
 
-                                </button>
-                                <ul class="dropdown-menu">
+                                    </button>
+                                    <ul class="dropdown-menu">
                                         <li>
                                             <a href="{{ sonata_path(object, 'reference')  }}" tabindex="-1"
                                                class="select dropdown-item">{{ 'list.label_select'|trans({}, 'MediaAdmin') }}
@@ -106,28 +106,88 @@
                                                 </li>
                                                 {% for name, format in formats[object.id] %}
                                                     <li ><a href="{{ sonata_path(object, name)  }}" tabindex="-1"
-                                                                            class="dropdown-item select">{% if format.width %}{{ 'label.width'|trans({}, 'MediaAdmin') }}: {{ format.width }}{% if format.height %}x {{ 'label.height'|trans({}, 'MediaAdmin') }}: {{ format.height }}{% endif %}px{% endif %}</a>
+                                                            class="dropdown-item select">{% if format.width %}{{ 'label.width'|trans({}, 'MediaAdmin') }}: {{ format.width }}{% if format.height %}x {{ 'label.height'|trans({}, 'MediaAdmin') }}: {{ format.height }}{% endif %}px{% endif %}</a>
                                                     </li>
                                                 {% endfor %}
                                             {% endif %}
                                         {% endif %}
                                     </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-{% endfor %}
-{% if datagrid.results|length < 1 %}
-<p class="notice">
-    {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
-</p>
-{% endif %}
+    {% endfor %}
+    {% if datagrid.results|length < 1 %}
+        <p class="notice">
+            {{ 'no_result'|trans({}, 'NetworkingInitCmsBundle') }}
+        </p>
+    {% endif %}
 </div>
 {% if datagrid.pager.haveToPaginate() %}
-    {% set galleryListMode = true %}
-    {% include "@NetworkingInitCms/MediaAdmin/page.html.twig" %}
+    <div class="row mt-3">
+        <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
+            <div class="dataTables_length" id="init_cms_data_table_length">
+                <label for="{{ admin.uniqid }}_per_page">
+                    <select name="init_cms_data_table_length" id="{{ admin.uniqid }}_per_page"
+                            class="form-select form-select-sm form-select-solid per-page small">
+                        {% for per_page in admin.getperpageoptions %}
+                            <option {% if per_page ==datagrid.pager.maxperpage %}selected="selected"{% endif %}
+                                    value="{{ admin.generateUrl('init_ckeditor_browser', {'filter':datagrid.values|merge({'_per_page': per_page})}|merge(ckParameters)) }}">
+                                {{ per_page }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label></div>
+            <div class="dataTables_info" id="init_cms_data_table_info" role="status" aria-live="polite">{% trans  with {'%count%': attribute(admin.datagrid.pager, 'countResults') is defined ? admin.datagrid.pager.countResults : admin.datagrid.pager.nbResults} from 'SonataAdminBundle' %}
+                    list_results_count{% endtrans %}
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
+            <div class="dataTables_paginate paging_simple_numbers" id="init_cms_data_table_paginate">
+                <ul class="pagination">
+
+                    <li class="paginate_button page-item previous {% if datagrid.pager.page == 1 %}disabled{% endif %}">
+                        <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.datagrid.paginationparameters(1)|merge(ckParameters)) }}"
+                           data-page="{{ datagrid.pager.previouspage }}" class="media-pager  page-link"
+                           data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
+                           data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
+                           data-sort-order="{{ datagrid.values._sort_order }}"
+                           data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
+                           title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}"><i
+                                    class="previous"></i></a>
+                    </li>
+
+                    {# Set the number of pages to display in the pager #}
+                    {% for page in datagrid.pager.getLinks(sonata_config.getOption('pager_links')) %}
+                        <li  class="paginate_button page-item {% if page == datagrid.pager.page %}active{% endif %}">
+                            <a
+                                    href="{{ admin.generateUrl('init_ckeditor_browser', admin.datagrid.paginationparameters(page)|merge(ckParameters)) }}"
+                                    data-page="{{ page }}" class="media-pager page-link"
+                                    data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
+                                    data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
+                                    data-sort-order="{{ datagrid.values._sort_order }}"
+                                    data-sort-by="{{ datagrid.values._sort_by.fieldName}}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+
+
+                    <li class="paginate_button page-item next {% if datagrid.pager.page == datagrid.pager.lastpage %}disabled{% endif %}">
+                        <a href="{{ admin.generateUrl('init_ckeditor_browser', admin.datagrid.paginationparameters(datagrid.pager.nextpage)|merge(ckParameters)) }}"
+                           data-page="{{ datagrid.pager.lastpage }}" class="media-pager page-link"
+                           data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
+                           data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
+                           data-sort-order="{{ datagrid.values._sort_order }}"
+                           data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
+
+                           title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}"><i class="next"></i></a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endif %}

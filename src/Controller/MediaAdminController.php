@@ -436,10 +436,16 @@ class MediaAdminController extends CRUDController
     {
         $object = $this->admin->getObject($id);
 
-        return $this->renderWithExtraParams('@NetworkingInitCms/MediaAdmin/preview.html.twig', [
+        $response = new Response();
+        $response->headers->set('X-Frame-Options', 'Sameorigin');
+
+        return $this->render('@NetworkingInitCms/MediaAdmin/preview.html.twig', [
             'media_pool' => $this->container->get('sonata.media.pool'),
             'persistent_parameters' => $this->admin->getPersistentParameters(),
-            'object' => $object]);
+            'admin' => $this->admin,
+            'object' => $object],
+            $response
+        );
     }
 
     public function clone(Request $request)
