@@ -154,7 +154,7 @@ file that was distributed with this source code.
 {% block form_label %}
     {{ parent() }}
 
-    {% if admin %}
+    {% if admin is defined %}
         {% set translation_domain = admin.translationDomain %}
     {% endif %}
     {% if help_label %}
