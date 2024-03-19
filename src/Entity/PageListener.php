@@ -25,7 +25,7 @@ use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageListener as ModelPageListener;
 
-#[AsDoctrineListener(event: Events::postPersist)]
+#[AsDoctrineListener(event: Events::postPersist, priority: -100)]
 #[AsDoctrineListener(event: Events::onFlush, priority: -100)]
 /**
  * Class PageListener.
