@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Annotation;
 
-abstract class AbstractMapper
+abstract class AbstractMapper implements AdminInterface
 {
     /**
      * @var string
@@ -20,6 +20,16 @@ abstract class AbstractMapper
      * @var array
      */
     public $fieldDescriptionOptions = [];
+
+    public function __construct(
+        ?string $name = null,
+        ?string $type = null,
+        array $fieldDescriptionOptions = []
+    ){
+        $this->type = $type;
+        $this->name = $name;
+        $this->fieldDescriptionOptions = $fieldDescriptionOptions;
+    }
 
     /**
      * @return null|string

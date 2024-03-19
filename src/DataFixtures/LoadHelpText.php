@@ -15,18 +15,16 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Entity\HelpText;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class LoadHelpText.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadHelpText extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
+class LoadHelpText extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface
 {
-    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
 
     private array $textArray = [
 
@@ -165,26 +163,29 @@ class LoadHelpText extends Fixture implements FixtureGroupInterface, OrderedFixt
         ],
     ];
 
-    public function setContainer(ContainerInterface $container = null): void
+    public function __construct(
+        protected TranslatorInterface $translator,
+        protected array $languages
+    )
     {
-        $this->container = $container;
+
     }
+
 
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
      */
     public function load(ObjectManager $manager): void
     {
-        $languages = $this->container->getParameter('networking_init_cms.page.languages');
-        foreach ($languages as $lang) {
-            $this->container->get('translator')->setLocale($lang['locale']);
+        foreach ($this->languages as $lang) {
+            $this->translator->setLocale($lang['locale']);
             foreach ($this->textArray as $translationKey => $row) {
                 $this->createHelpText(
                     $manager,
                     $lang['locale'],
                     $translationKey,
-                    $this->container->get('translator')->trans($row['title'], [], 'HelpTextAdmin'),
-                    $this->container->get('translator')->trans($row['text'], [], 'HelpTextAdmin'),
+                    $this->translator->trans($row['title'], [], 'HelpTextAdmin'),
+                    $this->translator->trans($row['text'], [], 'HelpTextAdmin'),
                     $row['is_deletable']
                 );
             }

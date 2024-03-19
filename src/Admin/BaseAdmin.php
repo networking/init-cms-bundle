@@ -11,12 +11,13 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin;
 
+use Gedmo\Translatable\TranslatableListener;
+use Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface;
 use Symfony\Component\Intl\Intl;
@@ -27,10 +28,10 @@ use Symfony\Component\Intl\Locales;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterface
+abstract class BaseAdmin extends AbstractAdmin
 {
 
-    protected $annotationReader;
+    protected $attributeReader;
 
     /**
      * @var array
@@ -41,20 +42,6 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
      * @var array
      */
     protected $trackedActions = [];
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * Sets the container.
-     */
-    public function setContainer(ContainerInterface $container = null): void
-    {
-
-        $this->container = $container;
-    }
 
 
     /**
@@ -68,17 +55,6 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
         $this->languages = $languages;
     }
 
-    /**
-     * Set up listner to make sure the correct locale is used.
-     */
-    public function setUpTranslatableLocale(): void
-    {
-        /** @var \Gedmo\Translatable\TranslatableListener $translatable */
-        $translatableListener = $this->getContainer()->get('stof_doctrine_extensions.listener.translatable', ContainerInterface::NULL_ON_INVALID_REFERENCE);
-        if ($translatableListener) {
-            $translatableListener->setTranslatableLocale($this->getDefaultLocale());
-        }
-    }
 
     /**
      * Provide an array of locales where the locale is the key and the label is
@@ -164,61 +140,38 @@ abstract class BaseAdmin extends AbstractAdmin implements ContainerAwareInterfac
         return $this->trackedActions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureListFields(ListMapper $listMapper): void
+    protected function configureListFields(ListMapper $list): void
     {
-        $this->getSonataAnnotationReader()->configureListFields($this->getClass(), $listMapper);
+        $this->getSonataAnnotationReader()?->configureListFields($this->getClass(), $list);
+    }
+
+    protected function configureFormFields(FormMapper $form): void
+    {
+        $this->getSonataAnnotationReader()?->configureFormFields($this->getClass(), $form);
+    }
+
+    protected function configureShowFields(ShowMapper $show): void
+    {
+        $this->getSonataAnnotationReader()?->configureShowFields($this->getClass(), $show);
+    }
+
+    protected function configureDatagridFilters(DatagridMapper $filter): void
+    {
+        $this->getSonataAnnotationReader()?->configureDatagridFilters($this->getClass(), $filter);
+    }
+
+    protected function getSonataAnnotationReader(): ?SonataAdminAttributeReaderInterface
+    {
+        return $this->attributeReader;
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function configureFormFields(FormMapper $formMapper): void
-    {
-        $this->getSonataAnnotationReader()->configureFormFields($this->getClass(), $formMapper);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureShowFields(ShowMapper $showMapper): void
-    {
-        $this->getSonataAnnotationReader()->configureShowFields($this->getClass(), $showMapper);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureDatagridFilters(DatagridMapper $datagridMapper): void
-    {
-        $this->getSonataAnnotationReader()->configureDatagridFilters($this->getClass(), $datagridMapper);
-    }
-
-    /**
-     * @return ContainerInterface
-     */
-    protected function getContainer(): ContainerInterface
-    {
-        return $this->container;
-    }
-
-    /**
-     * @return SonataAdminAnnotationReaderInterface
-     */
-    protected function getSonataAnnotationReader(): SonataAdminAnnotationReaderInterface
-    {
-        return $this->annotationReader;
-    }
-
-    /**
-     * @param SonataAdminAnnotationReaderInterface $annotationReader
      * @return $this
      */
-    public function setSonataAnnotationReader(SonataAdminAnnotationReaderInterface $annotationReader): self
+    public function setSonataAnnotationReader(SonataAdminAttributeReaderInterface $annotationReader): self
     {
-        $this->annotationReader = $annotationReader;
+        $this->attributeReader = $annotationReader;
+
         return $this;
     }
 }

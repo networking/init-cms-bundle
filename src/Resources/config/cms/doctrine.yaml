@@ -1,5 +1,3 @@
-imports:
-    - { resource: "../event_listeners.yaml" }
 doctrine:
     dbal:
         types:
@@ -31,36 +29,36 @@ doctrine:
                 mappings:
                     App:
                         is_bundle: false
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/Entity'
                         prefix: 'App\Entity'
                         alias: App
                     gedmo_translatable:
-                        type: annotation
+                        type: attribute
                         prefix: "Gedmo\\Translatable\\Entity"
                         dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Translatable/Entity"
                         alias: GedmoTranslatable # this one is optional and will default to the name set for the mapping
                         is_bundle: false
                     gedmo_translator:
-                        type: annotation
+                        type: attribute
                         prefix: "Gedmo\\Translator\\Entity"
                         dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Translator/Entity"
                         alias: GedmoTranslator # this one is optional and will default to the name set for the mapping
                         is_bundle: false
                     gedmo_loggable:
-                        type: annotation
+                        type: attribute
                         prefix: "Gedmo\\Loggable\\Entity"
                         dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Loggable/Entity"
                         alias: GedmoLoggable # this one is optional and will default to the name set for the mapping
                         is_bundle: false
                     gedmo_tree:
-                        type: annotation
+                        type: attribute
                         prefix: "Gedmo\\Tree\\Entity"
                         dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity"
                         alias: GedmoTree # this one is optional and will default to the name set for the mapping
                         is_bundle: false
                     gedmo_sortable:
-                        type: annotation
+                        type: attribute
                         prefix: "Gedmo\\Sortable\\Entity"
                         dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Sortable/Entity"
                         alias: GedmoSortable # this one is optional and will default to the name set for the mapping

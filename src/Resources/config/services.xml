@@ -162,11 +162,24 @@
                  alias="sonata.admin.pool"
                  public="false"/>
 
-        <service id="Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface"
+        <service id="networking_init_cms.attribute.reader"
+                 class="Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReader" autowire="true"
+                 public="true"/>
+
+        <service id="networking_init_cms.annotation.reader"
+                 class="Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReader" autowire="true"
+                 public="true"/>
+
+
+        <service id="Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface"
+                 alias="networking_init_cms.attribute.reader"
+                 public="false"/>
+
+        <service id="Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface"
                  alias="networking_init_cms.annotation.reader"
                  public="false"/>
 
-        <service id="networking_init_cms.annotation.reader" class="Networking\InitCmsBundle\Reader\SonataAdminAnnotationReader" autowire="true" public="true"/>
+
         <service id="Networking\InitCmsBundle\Twig\Extension\ImageFilter">
             <argument key="$flysystem" type="service" id="oneup_flysystem.media_filesystem"/>
             <argument key="$cacheFlysystem" type="service" id="oneup_flysystem.cache_filesystem"/>

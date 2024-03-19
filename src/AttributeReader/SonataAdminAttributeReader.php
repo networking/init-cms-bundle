@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Networking\InitCmsBundle\Reader;
+namespace Networking\InitCmsBundle\AttributeReader;
 
-use Networking\InitCmsBundle\AnnotationReader\AnnotationReader;
 use Networking\InitCmsBundle\Annotation\DatagridCallbackInterface;
 use Networking\InitCmsBundle\Annotation\DatagridMapper;
 use Networking\InitCmsBundle\Annotation\FormCallbackInterface;
@@ -22,12 +21,9 @@ use Sonata\AdminBundle\Datagrid\ListMapper as SonataListMapper;
 use Sonata\AdminBundle\Form\FormMapper as SonataFormMapper;
 use Sonata\AdminBundle\Show\ShowMapper as SonataShowMapper;
 
-class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdminAnnotationReaderInterface
+class SonataAdminAttributeReader extends AttributeReader implements SonataAdminAttributeReaderInterface
 {
-    /**
-     * @inheritdoc
-     */
-    public function getListMapperAnnotations($entity)
+    public function getListMapperAnnotations($entity): array
     {
         $listAnnotations = $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_LIST, self::SCOPE_PROPERTY);
         if (!$this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_LIST_ALL, self::SCOPE_CLASS)) {
@@ -44,10 +40,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getShowMapperAnnotations($entity)
+    public function getShowMapperAnnotations($entity): array
     {
         $showAnnotations = $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_SHOW, self::SCOPE_PROPERTY);
         if (!$this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_SHOW_ALL, self::SCOPE_CLASS)) {
@@ -64,12 +57,10 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getFormMapperAnnotations($entity)
+    public function getFormMapperAnnotations($entity): array
     {
         $formAnnotations = $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_FORM, self::SCOPE_PROPERTY);
+
         if (!$this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_FORM_ALL, self::SCOPE_CLASS)) {
             return $formAnnotations;
         }
@@ -84,10 +75,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getDatagridMapperAnnotation($entity)
+    public function getDatagridMapperAnnotation($entity): array
     {
         $datagridAnnotations = $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_DATAGRID, self::SCOPE_PROPERTY);
         if (!$this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_DATAGRID_ALL, self::SCOPE_CLASS)) {
@@ -104,10 +92,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function configureListFields($entity, SonataListMapper $listMapper)
+    public function configureListFields($entity, SonataListMapper $listMapper): void
     {
         $annotations = $this->getListMapperAnnotations($entity);
 
@@ -135,17 +120,13 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
         }
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function configureFormFields($entity, SonataFormMapper $formMapper)
+    public function configureFormFields($entity, SonataFormMapper $formMapper): void
     {
         $annotations = $this->getFormMapperAnnotations($entity);
 
         foreach ($annotations as $propertyName => $annotation) {
             $admin = $formMapper->getAdmin();
 
-            /** @var AdminInterface $rootAdmin */
             if (method_exists($admin, 'getRoot') && $rootAdmin = $admin->getRoot()) {
                 if ($rootAdmin->getCode() !== $admin->getCode() && $annotation->isIgnoreOnParent()) {
                     continue;
@@ -160,7 +141,6 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
 
             $with = $annotation->getWith() ?: $formMapper->getAdmin()->getLabel();
             $formMapper->with($with, $annotation->getWithOptions());
-
             $formMapper->add(
                 $annotation->getName() ?: $propertyName,
                 $annotation->getType(),
@@ -185,10 +165,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
         }
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function configureShowFields($entity, SonataShowMapper $showMapper)
+    public function configureShowFields($entity, SonataShowMapper $showMapper): void
     {
         $annotations = $this->getShowMapperAnnotations($entity);
 
@@ -225,10 +202,7 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
         }
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function configureDatagridFilters($entity, SonataDatagridMapper $datagridMapper)
+    public function configureDatagridFilters($entity, SonataDatagridMapper $datagridMapper): void
     {
         $annotations = $this->getDatagridMapperAnnotation($entity);
 
@@ -245,55 +219,49 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
     }
 
     /**
-     * @param $entity
      * @return FormCallbackInterface[]
      */
-    public function getFormMapperCallbacks($entity)
+    public function getFormMapperCallbacks($entity): array
     {
         return $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_FORM_CALLBACK, self::SCOPE_METHOD);
     }
 
     /**
-     * @param $entity
      * @return ShowCallbackInterface[]
      */
-    public function getShowMapperCallbacks($entity)
+    public function getShowMapperCallbacks($entity): array
     {
         return $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_SHOW_CALLBACK, self::SCOPE_METHOD);
     }
 
     /**
-     * @param mixed $entity
      * @return ListCallbackInterface[]
      */
-    public function getListMapperCallbacks($entity)
+    public function getListMapperCallbacks($entity): array
     {
         return $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_LIST_CALLBACK, self::SCOPE_METHOD);
     }
 
     /**
-     * @param $entity
      * @return DatagridCallbackInterface[]
      */
-    public function getDatagridMapperCallbacks($entity)
+    public function getDatagridMapperCallbacks($entity): array
     {
         return $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_DATAGRID_CALLBACK, self::SCOPE_METHOD);
     }
 
     /**
-     * @param $entity
-     * @return ListReorderInterface
+     * @return ListReorderInterface|null
      */
-    public function getListReorderAnnotation($entity)
+    public function getListReorderAnnotation($entity): ?ListReorderInterface
     {
         return $this->getAnnotationsByType($entity, self::ANNOTATION_TYPE_ADMIN_LIST_REORDER, self::SCOPE_CLASS);
     }
 
     /**
-     * @param $entity
      * @return FormReorderInterface[]
      */
-    public function getFormReorderAnnotations($entity)
+    public function getFormReorderAnnotations($entity): array
     {
         $annotations = $this->getAnnotations($entity);
         $scopeAnnotations = $annotations[self::SCOPE_CLASS];
@@ -305,10 +273,9 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
     }
 
     /**
-     * @param $entity
      * @return ShowReorderInterface[]
      */
-    public function getShowReorderAnnotations($entity)
+    public function getShowReorderAnnotations($entity): array
     {
         $annotations = $this->getAnnotations($entity);
         $scopeAnnotations = $annotations[self::SCOPE_CLASS];
@@ -343,11 +310,13 @@ class SonataAdminAnnotationReader extends AnnotationReader implements SonataAdmi
 
     /**
      * @param string $className
+     *
      * @return \ReflectionProperty[]
      */
     protected function getReflectionProperties($className): array
     {
         $reflectionClass = new \ReflectionClass($className);
+
         return $reflectionClass->getProperties();
     }
 

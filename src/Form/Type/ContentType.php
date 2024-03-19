@@ -24,12 +24,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ContentType extends AbstractType
 {
     /**
-     * @var \Networking\InitCmsBundle\Reader\SonataAdminAnnotationReaderInterface
+     * @var \Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface
      */
     protected $annotationReader;
 
     public function __construct(
-        SonataAdminAnnotationReaderInterface $annotationReader
+        \Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface $annotationReader
     ) {
         $this->annotationReader = $annotationReader;
     }

@@ -16,23 +16,24 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Networking\InitCmsBundle\Model\TextInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class LoadLayoutBlocks.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, OrderedFixtureInterface, ContainerAwareInterface
+class LoadLayoutBlocks extends Fixture
+    implements FixtureGroupInterface, OrderedFixtureInterface
 {
-    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
+    public function __construct(
+        protected array $languages,
+        protected array $contentTypes,
+        protected array $templates
+    ) {
 
-    public function setContainer(ContainerInterface $container = null): void
-    {
-        $this->container = $container;
     }
 
     /**
@@ -40,23 +41,22 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
      */
     public function load(ObjectManager $manager): void
     {
-        $languages = $this->container->getParameter('networking_init_cms.page.languages');
 
-        foreach ($languages as $lang) {
+
+        foreach ($this->languages as $lang) {
             $this->createLayoutBlocks($manager, $lang['locale']);
         }
     }
 
     /**
      * @param \Doctrine\Common\Persistence\ObjectManager $manager
-     * @param $locale
+     * @param                                            $locale
      */
     public function createLayoutBlocks(ObjectManager $manager, $locale): void
     {
         $textClass = false;
 
-        $contentTypes = $this->container->getParameter('networking_init_cms.page.content_types');
-        foreach ($contentTypes as $type) {
+        foreach ($this->contentTypes as $type) {
             if ($type['name'] == 'Text') {
                 $textClass = $type['class'];
                 break;
@@ -78,7 +78,9 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
 
         /** @var TextInterface $text */
         $text = new $textClass();
-        $text->setText('<h1>Hello World</h1><p>The locale of this page is '.$locale.'</p>');
+        $text->setText(
+            '<h1>Hello World</h1><p>The locale of this page is '.$locale.'</p>'
+        );
 
         $manager->persist($text);
         $manager->flush();
@@ -94,8 +96,7 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
      */
     protected function getFirstZone(): string
     {
-        $templates = $this->container->getParameter('networking_init_cms.page.templates');
-        foreach ($templates as $template) {
+        foreach ($this->templates as $template) {
             return $template['zones'][0]['name'];
         }
     }

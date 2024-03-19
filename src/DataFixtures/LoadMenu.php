@@ -16,8 +16,6 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Networking\InitCmsBundle\Entity\MenuItem;
 
 /**
@@ -26,14 +24,14 @@ use Networking\InitCmsBundle\Entity\MenuItem;
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
 class LoadMenu extends Fixture
-    implements FixtureGroupInterface, OrderedFixtureInterface,
-               ContainerAwareInterface
+    implements FixtureGroupInterface, OrderedFixtureInterface
 {
-    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
 
-    public function setContainer(ContainerInterface $container = null): void
+    public function __construct(
+        protected array $languages
+    )
     {
-        $this->container = $container;
+
     }
 
     /**
@@ -41,11 +39,8 @@ class LoadMenu extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $languages = $this->container->getParameter(
-            'networking_init_cms.page.languages'
-        );
 
-        foreach ($languages as $lang) {
+        foreach ($this->languages as $lang) {
             $this->createMenuItems($manager, $lang['locale']);
         }
     }

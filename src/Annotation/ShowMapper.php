@@ -7,6 +7,7 @@ namespace Networking\InitCmsBundle\Annotation;
 /**
  * @Annotation
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 class ShowMapper extends AbstractMapper implements ShowInterface
 {
     /**

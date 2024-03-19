@@ -17,6 +17,7 @@
         <service id="networking_init_cms.admin.page" class="Networking\InitCmsBundle\Admin\Entity\PageAdmin"
                  public="true">
             <argument type="service" id="networking_init_cms.page_manager"/>
+            <argument key="$pageTemplates">%networking_init_cms.page.templates%</argument>
             <call method="setSonataAnnotationReader">
                 <argument type="service" id="networking_init_cms.annotation.reader"/>
             </call>
@@ -39,9 +40,6 @@
                 <argument>list</argument>
                 <argument>@NetworkingInitCms/PageAdmin/page_list.html.twig</argument>
             </call>
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
             <tag name="sonata.admin" manager_type="orm" label="pages"
                  model_class="%networking_init_cms.admin.page.class%"
                  controller="Networking\InitCmsBundle\Controller\PageAdminController"
@@ -56,11 +54,9 @@
             <argument type="service" id="networking_init_cms.layout_block_form_listener"/>
             <argument type="service" id="jms_serializer.serializer"/>
             <argument type="service" id="networking_init_cms.admin.page"/>
+            <argument key="$contentTypes">%networking_init_cms.page.content_types%</argument>
             <call method="setSonataAnnotationReader">
                 <argument type="service" id="networking_init_cms.annotation.reader"/>
-            </call>
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
             </call>
             <tag name="sonata.admin" manager_type="orm" label="content"
                  model_class="Networking\InitCmsBundle\Entity\LayoutBlock"
@@ -87,9 +83,6 @@
                     <argument key="menu">%networking_init_cms.admin.menu_item.class%</argument>
                     <argument key="menu item">%networking_init_cms.admin.menu_item.class%</argument>
                 </argument>
-            </call>
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
             </call>
 
             <call method="setTemplate">
@@ -121,9 +114,6 @@
             <call method="setlanguages">
                 <argument>%networking_init_cms.page.languages%</argument>
             </call>
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
             <tag name="sonata.admin" manager_type="orm" label="help_text"
                  model_class="Networking\InitCmsBundle\Entity\HelpText"
                  translation_domain="HelpTextAdmin"
@@ -144,6 +134,7 @@
 
         <service id="networking_init_cms.admin_entity.translation_admin"
                  class="Networking\InitCmsBundle\Admin\Entity\TranslationAdmin">
+            <argument key="$defaultDomain">%networking_init_cms.defaultDomain%</argument>
             <call method="setEditableOptions">
                 <argument>%networking_init_cms.editable%</argument>
             </call>
@@ -171,9 +162,6 @@
                 <argument>@NetworkingInitCms/TranslationAdmin/edit.html.twig</argument>
             </call>
 
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
             <tag name="sonata.admin" manager_type="orm" label="translation"
                  model_class="Lexik\Bundle\TranslationBundle\Entity\TransUnit"
                  controller="Networking\InitCmsBundle\Controller\TranslationCRUDController"

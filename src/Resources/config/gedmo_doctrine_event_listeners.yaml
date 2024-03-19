@@ -1,0 +1,93 @@
+services:
+    gedmo.attribute_reader:
+        class: Gedmo\Mapping\Driver\AttributeReader
+
+    # Doctrine Extension listeners to handle behaviors
+    gedmo.listener.tree:
+        class: Gedmo\Tree\TreeListener
+        tags:
+            - { name: doctrine.event_listener, event: 'prePersist'}
+            - { name: doctrine.event_listener, event: 'preUpdate'}
+            - { name: doctrine.event_listener, event: 'preRemove'}
+            - { name: doctrine.event_listener, event: 'onFlush'}
+            - { name: doctrine.event_listener, event: 'loadClassMetadata'}
+            - { name: doctrine.event_listener, event: 'postPersist'}
+            - { name: doctrine.event_listener, event: 'postUpdate'}
+            - { name: doctrine.event_listener, event: 'postRemove'}
+        calls:
+            - [ setAnnotationReader, [ "@gedmo.attribute_reader" ] ]
+
+    Gedmo\Translatable\TranslatableListener:
+        tags:
+            - { name: doctrine.event_listener, event: 'postLoad' }
+            - { name: doctrine.event_listener, event: 'postPersist' }
+            - { name: doctrine.event_listener, event: 'preFlush' }
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ "@gedmo.attribute_reader" ] ]
+            - [ setDefaultLocale, [ '%env(LOCALE)%' ] ]
+            - [ setTranslationFallback, [ false ] ]
+
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'prePersist' }
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ "@gedmo.attribute_reader" ] ]
+
+    gedmo.listener.sluggable:
+        class: Gedmo\Sluggable\SluggableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'prePersist' }
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ "@gedmo.attribute_reader" ] ]
+
+    gedmo.listener.sortable:
+        class: Gedmo\Sortable\SortableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+            - { name: doctrine.event_listener, event: 'prePersist' }
+            - { name: doctrine.event_listener, event: 'postPersist' }
+            - { name: doctrine.event_listener, event: 'preUpdate' }
+            - { name: doctrine.event_listener, event: 'postRemove' }
+            - { name: doctrine.event_listener, event: 'postFlush' }
+        calls:
+            - [ setAnnotationReader, [ "@gedmo.attribute_reader" ] ]
+
+    gedmo.listener.softdeleteable:
+        class: Gedmo\SoftDeleteable\SoftDeleteableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ "@gedmo.attribute_reader" ] ]
+
+    Gedmo\Loggable\LoggableListener:
+        tags:
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+            - { name: doctrine.event_listener, event: 'postPersist' }
+        calls:
+            - [ setAnnotationReader, [ "@gedmo.attribute_reader" ] ]
+
+    Gedmo\Blameable\BlameableListener:
+        tags:
+            - { name: doctrine.event_listener, event: 'prePersist' }
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ "@gedmo.attribute_reader" ] ]
+
+    Gedmo\IpTraceable\IpTraceableListener:
+        tags:
+            - { name: doctrine.event_listener, event: 'prePersist' }
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ "@gedmo.attribute_reader" ] ]

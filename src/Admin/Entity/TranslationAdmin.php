@@ -69,6 +69,18 @@ class TranslationAdmin extends BaseAdmin
      * @var array
      */
     protected $filterLocales = [];
+    /**
+     * Whether or not to persist the filters in the session.
+     *
+     * @var bool
+     */
+    protected $persistFilters = true;
+
+    public function __construct(
+        protected string $defaultDomain = 'messages',
+    ) {
+        parent::__construct();
+    }
 
     public function setEditableOptions(array $options)
     {
@@ -119,12 +131,6 @@ class TranslationAdmin extends BaseAdmin
         $this->emptyFieldPrefixes = $prefixes;
     }
 
-    /**
-     * Whether or not to persist the filters in the session.
-     *
-     * @var bool
-     */
-    protected $persistFilters = true;
 
     /**
      * Not exportable.
@@ -144,7 +150,7 @@ class TranslationAdmin extends BaseAdmin
     {
 
         /** @var \Doctrine\ORM\EntityManager $em */
-        $em = $this->getContainer()->get('doctrine')->getManagerForClass(\Lexik\Bundle\TranslationBundle\Entity\File::class);
+        $em = $this->getModelManager()->getEntityManager(\Lexik\Bundle\TranslationBundle\Entity\File::class);
 
 
         $domains = [];
@@ -327,7 +333,7 @@ class TranslationAdmin extends BaseAdmin
      */
     protected function getDefaultDomain()
     {
-        return $this->getContainer()->getParameter('networking_init_cms.defaultDomain');
+        return $this->defaultDomain;
     }
 
     /**

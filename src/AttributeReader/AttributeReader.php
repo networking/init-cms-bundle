@@ -2,35 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Networking\InitCmsBundle\AnnotationReader;
+namespace Networking\InitCmsBundle\AttributeReader;
 
-use Doctrine\Common\Annotations\Reader;
-
-class AnnotationReader implements AnnotationReaderInterface
+class AttributeReader implements AttributeReaderInterface
 {
-    /**
-     * @var Reader
-     */
-    protected $annotationReader;
-
     /**
      * @var array
      */
     protected static $cache = [];
 
-    /**
-     * AnnotationReader constructor.
-     *
-     * @param Reader $annotationReader
-     */
-    public function __construct(Reader $annotationReader)
-    {
-        $this->annotationReader = $annotationReader;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function getAnnotations($entity)
     {
         $reflectionClass = new \ReflectionClass($entity);
@@ -51,20 +31,17 @@ class AnnotationReader implements AnnotationReaderInterface
             ),
         ];
 
-
         return self::$cache[$className] = $annotations;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getAnnotationsByType($entity, $type, $scope)
     {
         $returnAnnotations = [];
         $annotations = $this->getAnnotations($entity);
+
         $scopeAnnotations = $annotations[$scope] ?? [];
 
-        if ($scope === self::SCOPE_CLASS) {
+        if (self::SCOPE_CLASS === $scope) {
             return isset($scopeAnnotations[$type]) ? reset(
                 $scopeAnnotations[$type]
             ) : null;
@@ -93,48 +70,19 @@ class AnnotationReader implements AnnotationReaderInterface
                 $annotations[$fieldName] = [];
             }
 
-            foreach ($this->annotationReader->getPropertyAnnotations(
-                $reflectionProperty
-            ) as $propertyAnnotation
+            foreach (
+                $reflectionProperty->getAttributes() as $reflectionAttribute
             ) {
-                $reflectionAnnotation = new \ReflectionClass(
-                    $propertyAnnotation
-                );
-
-                $explode = explode("\\", $reflectionAnnotation->getName());
-                $type = end($explode);
-
-                foreach ($reflectionAnnotation->getInterfaces() as $reflectionInterface
-                ) {
-                    $explode = explode("\\", $reflectionInterface->getName());
-                    $type = end($explode);
-
-                    if (!isset($annotations[$fieldName][$type])) {
-                        $annotations[$fieldName][$type] = [];
-                    }
-
-                    $annotations[$fieldName][$type][] = $propertyAnnotation;
-                }
-
-
-                if (!isset($annotations[$fieldName][$type])) {
-                    $annotations[$fieldName][$type] = [];
-                }
-
-                $annotations[$fieldName][$type][] = $propertyAnnotation;
-            }
-
-            foreach ($reflectionProperty->getAttributes() as $reflectionAttribute
-            ) {
-                $explode = explode("\\", $reflectionAttribute->getName());
+                $explode = explode('\\', $reflectionAttribute->getName());
                 $type = end($explode);
 
                 $reflectionAnnotation = new \ReflectionClass(
                     $reflectionAttribute->getName()
                 );
-                foreach ($reflectionAnnotation->getInterfaces() as $reflectionInterface
+                foreach (
+                    $reflectionAnnotation->getInterfaces() as $reflectionInterface
                 ) {
-                    $explode = explode("\\", $reflectionInterface->getName());
+                    $explode = explode('\\', $reflectionInterface->getName());
                     $type = end($explode);
                 }
                 if (!isset($annotations[$fieldName][$type])) {
@@ -170,38 +118,18 @@ class AnnotationReader implements AnnotationReaderInterface
             if (!isset($annotations[$methodName])) {
                 $annotations[$methodName] = [];
             }
-            foreach ($this->annotationReader->getMethodAnnotations(
-                $reflectionMethod
-            ) as $methodAnnotation
-            ) {
-                $reflectionAnnotation = new \ReflectionClass($methodAnnotation);
-                $explode = explode("\\", $reflectionAnnotation->getName());
-                $type = end($explode);
-
-
-                foreach ($reflectionAnnotation->getInterfaces() as $reflectionInterface
-                ) {
-                    $explode = explode("\\", $reflectionInterface->getName());
-                    $type = end($explode);
-                }
-
-                if (!isset($annotations[$methodName][$type])) {
-                    $annotations[$methodName][$type] = [];
-                }
-
-                $annotations[$methodName][$type][] = $methodAnnotation;
-            }
 
             foreach ($reflectionMethod->getAttributes() as $reflectionAttribute) {
-                $explode = explode("\\", $reflectionAttribute->getName());
+                $explode = explode('\\', $reflectionAttribute->getName());
                 $type = end($explode);
 
                 $reflectionAnnotation = new \ReflectionClass(
                     $reflectionAttribute->getName()
                 );
-                foreach ($reflectionAnnotation->getInterfaces() as $reflectionInterface
+                foreach (
+                    $reflectionAnnotation->getInterfaces() as $reflectionInterface
                 ) {
-                    $explode = explode("\\", $reflectionInterface->getName());
+                    $explode = explode('\\', $reflectionInterface->getName());
                     $type = end($explode);
                 }
 
@@ -213,7 +141,6 @@ class AnnotationReader implements AnnotationReaderInterface
                     = $reflectionAttribute->newInstance();
             }
         }
-
 
         $parentClass = $reflectionClass->getParentClass();
         if ($parentClass) {
@@ -234,36 +161,18 @@ class AnnotationReader implements AnnotationReaderInterface
     ) {
         $annotations = [];
 
-        foreach ($this->annotationReader->getClassAnnotations($reflectionClass) as $classAnnotation
-        ) {
-            $reflectionAnnotation = new \ReflectionClass($classAnnotation);
-            $explode = explode("\\", $reflectionAnnotation->getName());
-            $type = end($explode);
-
-            foreach ($reflectionAnnotation->getInterfaces() as $reflectionInterface
-            ) {
-                $explode = explode("\\", $reflectionInterface->getName());
-                $type = end($explode);
-            }
-
-            if (!isset($annotations[$type])) {
-                $annotations[$type] = [];
-            }
-
-            $annotations[$type][] = $classAnnotation;
-        }
-
         foreach ($reflectionClass->getAttributes() as $reflectionAttribute) {
             $reflectionAnnotation = new \ReflectionClass(
                 $reflectionAttribute->getName()
             );
 
-            $explode = explode("\\", $reflectionAnnotation->getName());
+            $explode = explode('\\', $reflectionAnnotation->getName());
             $type = end($explode);
 
-            foreach ($reflectionAnnotation->getInterfaces() as $reflectionInterface
+            foreach (
+                $reflectionAnnotation->getInterfaces() as $reflectionInterface
             ) {
-                $explode = explode("\\", $reflectionInterface->getName());
+                $explode = explode('\\', $reflectionInterface->getName());
                 $type = end($explode);
             }
 

@@ -43,17 +43,20 @@ abstract class LayoutBlockAdmin extends BaseAdmin
 
     public $trackedActions = [];
 
-    protected $pageManager;
+    protected PageManagerInterface $pageManager;
 
-    protected $layoutBlockFormListener;
-    protected $serializer;
-    protected $pageAdmin;
+    protected LayoutBlockFormListener $layoutBlockFormListener;
+    protected SerializerInterface $serializer;
+    protected PageAdmin $pageAdmin;
+
+    protected array $contentTypes;
 
     public function __construct(
         PageManagerInterface $pageManager,
         LayoutBlockFormListener $layoutBlockFormListener,
         SerializerInterface $serializer,
-        PageAdmin $pageAdmin
+        PageAdmin $pageAdmin,
+        array $contentTypes
     ) {
 
         $this->pageManager = $pageManager;
@@ -132,7 +135,6 @@ abstract class LayoutBlockAdmin extends BaseAdmin
      */
     public function getContentTypes()
     {
-        $contentTypes = $this->getContainer()->getParameter('networking_init_cms.page.content_types');
 
         $choices = [];
         foreach ($contentTypes as $contentType) {

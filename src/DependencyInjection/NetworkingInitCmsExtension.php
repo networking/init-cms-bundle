@@ -145,7 +145,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         }
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('event_listeners.yaml');
+        $loader->load('gedmo_doctrine_event_listeners.yaml');
 
         $config['languages'] = $this->addShortLabels($config['languages']);
 

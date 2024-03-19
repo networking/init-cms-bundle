@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Annotation;
 
-interface FormInterface extends AdminInterface
+interface FormInterface
 {
     /**
      * @return array

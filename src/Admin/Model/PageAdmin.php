@@ -87,6 +87,8 @@ abstract class PageAdmin extends BaseAdmin
             '_sort_by' => 'path',
         ];
 
+    protected array $pageTemplates;
+
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false
     ): string {
@@ -100,9 +102,12 @@ abstract class PageAdmin extends BaseAdmin
     }
 
 
-    public function __construct(PageManagerInterface $pageManager)
-    {
+    public function __construct(
+        PageManagerInterface $pageManager,
+        array $pageTemplates,
+    ) {
         $this->pageManager = $pageManager;
+        $this->pageTemplates = $pageTemplates;
         parent::__construct();
     }
 
@@ -166,13 +171,7 @@ abstract class PageAdmin extends BaseAdmin
      */
     public function configureFormOptions(array &$formOptions): void
     {
-        try {
-            $request = $this->getRequest();
-        } catch (\RuntimeException) {
-            $request = $this->getContainer()->get('request_stack')
-                ->getCurrentRequest();
-        }
-
+        $request = $this->getRequest();
 
         if ($this->hasObject()) {
             $this->pageLocale = $this->getSubject()->getLocale();
@@ -219,13 +218,9 @@ abstract class PageAdmin extends BaseAdmin
         );
         $horizontal = $this->hasSubject() && $this->getSubject()->getId()
             ? 'horizontal' : null;
-        try {
-            /** @var Request $request */
-            $request = $this->getRequest();
-        } catch (\RuntimeException) {
-            $requestStack = $this->getContainer()->get('request_stack');
-            $request = $requestStack->getCurrentRequest();
-        }
+
+        $request = $this->getRequest();
+
 
         if (($this->hasObject() || $request->isXmlHttpRequest())
             && !$request->get('no_layout')
@@ -737,20 +732,16 @@ abstract class PageAdmin extends BaseAdmin
         return $translationLanguages;
     }
 
+
     /**
      * Get the page templates from the configuration and create an array to use in the
      * choice field in the admin form.
-     *
-     * @return array
      */
-    protected function getPageTemplates()
+    protected function getPageTemplates(): array
     {
         $choices = [];
 
-        $templates = $this->getContainer()->getParameter(
-            'networking_init_cms.page.templates'
-        );
-        foreach ($templates as $key => $template) {
+        foreach ($this->pageTemplates as $key => $template) {
             $choices[$template['name']] = $key;
         }
 
@@ -767,12 +758,8 @@ abstract class PageAdmin extends BaseAdmin
         if ($this->hasObject()) {
             return $this->getSubject()->getTemplateName();
         }
-        $templates = $this->getContainer()->getParameter(
-            'networking_init_cms.page.templates'
-        );
-        $defaultTemplate = array_key_first($templates);
 
-        return $defaultTemplate;
+        return array_key_first($this->pageTemplates);
     }
 
     /**
@@ -784,10 +771,7 @@ abstract class PageAdmin extends BaseAdmin
     {
         $icons = [];
 
-        $templates = $this->getContainer()->getParameter(
-            'networking_init_cms.page.templates'
-        );
-        foreach ($templates as $key => $template) {
+        foreach ($this->pageTemplates as $key => $template) {
             $icons[$key] = $template['icon'] ?? '';
         }
 
