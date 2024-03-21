@@ -55,7 +55,37 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
                 'method' => 'onPostDeserialize',
                 'format' => 'json',
             ],
+            [
+                'event' => Events::PRE_DESERIALIZE,
+                'method' => 'onPreDeserialize',
+                'format' => 'json',
+            ],
         ];
+    }
+
+    public function onPreDeserialize(\JMS\Serializer\EventDispatcher\PreDeserializeEvent $event)
+    {
+
+        $type = $event->getType();
+
+        if('Networking\InitCmsBundle\Entity\LayoutBlock' !== $type['name']){
+            return;
+        }
+
+        $data = $event->getData();
+
+        if(!is_array($data['snapshot_content'])){
+            return;
+        }
+        $content = '{}';
+
+        if(!empty($data['snapshot_content'])){
+            $content = $data['snapshot_content'][0];
+        }
+        $data['snapshot_content'] = $content;
+
+        $event->setData($data);
+
     }
 
     public function onPostDeserialize(\JMS\Serializer\EventDispatcher\ObjectEvent $event)
