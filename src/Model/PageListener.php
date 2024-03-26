@@ -13,8 +13,11 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Model;
 
 use JMS\Serializer\EventDispatcher\Events;
-use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
+use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\EventDispatcher\PreDeserializeEvent;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
+use Networking\InitCmsBundle\Serializer\PageSnapshotDeserializationContext;
+use Networking\InitCmsBundle\Entity\LayoutBlock;
 
 /**
  * Class PageListener.
@@ -57,13 +60,14 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
             ],
             [
                 'event' => Events::PRE_DESERIALIZE,
+                'class' => LayoutBlock::class,
                 'method' => 'onPreDeserialize',
                 'format' => 'json',
             ],
         ];
     }
 
-    public function onPreDeserialize(\JMS\Serializer\EventDispatcher\PreDeserializeEvent $event)
+    public function onPreDeserialize(PreDeserializeEvent $event)
     {
 
         $type = $event->getType();
@@ -88,7 +92,7 @@ abstract class PageListener implements EventSubscriberInterface, PageListenerInt
 
     }
 
-    public function onPostDeserialize(\JMS\Serializer\EventDispatcher\ObjectEvent $event)
+    public function onPostDeserialize(ObjectEvent $event)
     {
         /** @var $page PageInterface */
         $page = $event->getObject();
