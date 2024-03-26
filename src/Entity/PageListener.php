@@ -13,14 +13,11 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PostPersistEventArgs;
-use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\OnFlushEventArgs;
-use App\Entity\Page;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageListener as ModelPageListener;
@@ -36,15 +33,16 @@ class PageListener extends ModelPageListener
 {
 
     /**
-     * @param LifecycleEventArgs $args
-     * @return mixed|void
+     * @param PostPersistEventArgs $args
+     *
+     * @return void
      * @throws \Doctrine\ORM\ORMException
      */
     public function postPersist(PostPersistEventArgs $args): void
     {
 
         /** @var PageInterface $page */
-        $page = $args->getEntity();
+        $page = $args->getObject();
 
         if (!$page instanceof PageInterface) {
             return;
@@ -64,8 +62,8 @@ class PageListener extends ModelPageListener
 
     /**
      * @param OnFlushEventArgs $args
-     * @return mixed|void
-     * @throws \Doctrine\ORM\ORMException
+     *
+     * @return void
      */
     public function onFlush(OnFlushEventArgs $args): void
     {
@@ -90,7 +88,7 @@ class PageListener extends ModelPageListener
                         $em->persist($contentRoute);
                         $unitOfWork->computeChangeSet($em->getClassMetadata($contentRoute::class), $contentRoute);
 
-                        if ($entity->getStatus() == Page::STATUS_PUBLISHED) {
+                        if ($entity->getStatus() == VersionableInterface::STATUS_PUBLISHED) {
                             if ($childSnapshot = $child->getSnapshot()) {
                                 $snapshotRoute = $childSnapshot->getContentRoute();
 
