@@ -33,6 +33,7 @@
                            data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
                            data-sort-order="{{ datagrid.values._sort_order }}"
                            data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
+                           data-per-page="{{ datagrid.values._per_page}}"
                            title="{{ 'link_previous_pager'|trans({}, 'SonataAdminBundle') }}"><i
                                     class="previous"></i></a>
                     </li>
@@ -46,18 +47,20 @@
                                     data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
                                     data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
                                     data-sort-order="{{ datagrid.values._sort_order }}"
-                                    data-sort-by="{{ datagrid.values._sort_by.fieldName}}">{{ page }}</a>
+                                    data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
+                                    data-per-page="{{ datagrid.values._per_page}}">{{ page }}</a>
                         </li>
                 {% endfor %}
 
 
                     <li class="paginate_button page-item next {% if datagrid.pager.page == datagrid.pager.lastpage %}disabled{% endif %}">
                         <a href="{{ admin.generateUrl('list', admin.datagrid.paginationparameters(datagrid.pager.nextpage)|merge({pcode: app.request.get('pcode'), 'galleryMode': galleryListMode})) }}"
-                           data-page="{{ datagrid.pager.lastpage }}" class="media-pager page-link"
+                           data-page="{{ datagrid.pager.nextpage }}" class="media-pager page-link"
                            data-name="{{ datagrid.values.name?datagrid.values.name.value:'' }}"
                            data-tags="{{ datagrid.values.tags?datagrid.values.tags.value:'' }}"
                            data-sort-order="{{ datagrid.values._sort_order }}"
                            data-sort-by="{{ datagrid.values._sort_by.fieldName}}"
+                           data-per-page="{{ datagrid.values._per_page}}"
 
                            title="{{ 'link_next_pager'|trans({}, 'SonataAdminBundle') }}"><i class="next"></i></a>
                     </li>

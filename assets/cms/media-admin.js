@@ -354,15 +354,24 @@ var CMSMediaAdmin = function () {
 
             KTUtil.on(document.body, 'a.media-pager', 'click', function (e) {
                 e.preventDefault();
-                let page = e.target.dataset.page;
-                let sort_order = e.target.dataset.sortOrder;
-                let sort_by = e.target.dataset.sortBy;
-                let tags = e.target.dataset.tags;
-                let name = e.target.dataset.name;
+
+                let link = e.target;
+
+                if(!link.getAttribute('href')){
+                    link = link.closest('a')
+                }
+
+                let page = link.dataset.page;
+                let sort_order = link.dataset.sortOrder;
+                let sort_by = link.dataset.sortBy;
+                let per_page = link.dataset.perPage;
+                let tags = link.dataset.tags;
+                let name = link.dataset.name;
                 refreshList({
                     'filter[_page]': page,
                     'filter[_sort_order]': sort_order,
                     'filter[_sort_by]':sort_by,
+                    'filter[_per_page]':per_page,
                     'filter[tags][value]': tags,
                     'filter[name][value]': name,
                 });
