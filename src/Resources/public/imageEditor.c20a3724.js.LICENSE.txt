@@ -1,6 +1,6 @@
 /*!
-  * vue-i18n v9.8.0
-  * (c) 2023 kazuya kawaguchi
+  * vue-i18n v9.10.2
+  * (c) 2024 kazuya kawaguchi
   * Released under the MIT License.
   */
 
@@ -13,3 +13,9 @@
 /*!******************************************************!*\
   !*** ./node_modules/vue-loader/dist/exportHelper.js ***!
   \******************************************************/
+
+/**
+* @vue/shared v3.4.21
+* (c) 2018-present Yuxi (Evan) You and Vue contributors
+* @license MIT
+**/

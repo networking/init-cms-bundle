@@ -27,8 +27,8 @@
   "homepage": "https://github.com/networking/init-cms-bundle#readme",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.5.0",
-    "@simplewebauthn/browser": "^8.3.4",
-    "@simplewebauthn/typescript-types": "^8.3.4",
+    "@simplewebauthn/browser": "^9.0.1",
+    "@simplewebauthn/types": "^9.0.1",
     "add": "^2.0.6",
     "axios": "^1.6.2",
     "bazinga-translator": "^5.1.0",
