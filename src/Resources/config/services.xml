@@ -21,6 +21,7 @@
         </prototype>
 
         <service id="Networking\InitCmsBundle\Twig\Extension\NetworkingHelperExtension">
+            <argument key="$rolesBuilder" type="service" id="sonata.user.matrix_roles_builder"/>
             <argument key="$templates">%networking_init_cms.page.templates%</argument>
             <argument key="$contentTypes">%networking_init_cms.page.content_types%</argument>
             <tag name="twig.extension"/>
@@ -212,6 +213,10 @@
         <service id="Networking\InitCmsBundle\AttributeReader\SonataAdminAttributeReaderInterface"
                  alias="networking_init_cms.annotation.reader"
                  public="false"/>
+
+        <service id="Networking\InitCmsBundle\Security\Voter\LayoutBlockVoter" autowire="true" public="true">
+            <tag name="security.voter" priority="300" />
+        </service>
 
         <service id="Networking\InitCmsBundle\Twig\Extension\ImageFilter">
             <argument key="$flysystem" type="service" id="oneup_flysystem.media_filesystem"/>

@@ -1,5 +1,5 @@
 /*!
-  * vue-i18n v9.10.2
+  * vue-i18n v9.13.1
   * (c) 2024 kazuya kawaguchi
   * Released under the MIT License.
   */
@@ -15,7 +15,7 @@
   \******************************************************/
 
 /**
-* @vue/shared v3.4.21
+* @vue/shared v3.4.27
 * (c) 2018-present Yuxi (Evan) You and Vue contributors
 * @license MIT
 **/

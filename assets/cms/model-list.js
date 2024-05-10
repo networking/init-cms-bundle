@@ -1,4 +1,5 @@
 import {CMSAdmin} from './cms-admin';
+import {hasOwnProperty} from "webpack/lib/RuntimeGlobals";
 class ModelList{
     constructor(element) {
 
@@ -30,7 +31,6 @@ class ModelList{
 
     }
     initialize() {
-
         this.element.dataset.modelListInitialized = true
         if(this.listLink){
             this.listLink.addEventListener('click', this.createListDialog.bind(this))
@@ -249,6 +249,33 @@ class ModelList{
                 CMSAdmin.createSelect2()
 
             }).catch(error => {
+                let data = error.response.data
+                if(data.hasOwnProperty('violations')){
+                    data.violations.forEach((item) => {
+                        let path = item.propertyPath
+                        let message = item.title
+
+                        let field = form.querySelector('[name="'+path+'"]');
+                        if(!field) {
+                            return
+                        }
+
+                        if(field.closest('.tab-pane')){
+                            let tabDiv = field.closest('.tab-pane')
+                            let tab = document.querySelector('a[href="#'+tabDiv.id+'"]')
+                            tab.insertAdjacentHTML('beforeend', '<i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>')
+                        }
+
+                        field.classList.add('is-invalid')
+                        field.setAttribute('required', 'required')
+
+                        if(field.nextElementSibling && field.nextElementSibling.classList.contains('invalid-feedback')){
+                            field.nextElementSibling.innerHtml = message;
+                            return
+                        }
+                        field.insertAdjacentHTML('afterend', '<div class="invalid-feedback">' + message + '</div>')
+                    })
+                }
 
         })
     }
@@ -264,7 +291,6 @@ class ModelList{
 
             let newElement = this.preview.querySelector('#' + this.id+ ' [value="'+objectId+'"]')
 
-
             let fieldType = newElement.tagName.toLowerCase()
 
             if(fieldType === 'input'){
@@ -275,8 +301,12 @@ class ModelList{
                 newElement.setAttribute('selected', 'selected')
             }
 
+            if(fieldType === 'option'){
+                newElement.setAttribute('selected', 'selected')
+            }
+
             if(this.field.dataset.control === 'select2'){
-                // CMSAdmin.createSelect2()
+                CMSAdmin.createSelect2()
                 this.field.dispatchEvent(new Event('change'));
             }
 

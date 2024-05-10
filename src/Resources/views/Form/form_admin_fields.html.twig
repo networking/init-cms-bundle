@@ -237,9 +237,9 @@ file that was distributed with this source code.
 
 {% block sonata_roles_matrix_widget %}
     {% apply spaceless %}
-        {{ renderMatrix(form)|replace({'table-condensed': 'table-bordered'})|raw }}
+        {{ render_user_permissions_table(form)|raw }}
         <ul class="list-unstyled">
-            {{ renderRolesList(form)|raw }}
+            {{ render_user_roles_list(form)|raw }}
         </ul>
     {% endapply %}
 {% endblock sonata_roles_matrix_widget %}
@@ -668,11 +668,8 @@ file that was distributed with this source code.
 
 
 
-
-
-
-
 {% block sonata_security_roles_widget %}
+
     {% apply spaceless %}
         <div class="editable">
             <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a></p>

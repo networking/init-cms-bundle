@@ -10,6 +10,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Form\Type;
 
 use Networking\InitCmsBundle\Form\DataTransformer\ModelToIdTransformer;
@@ -30,12 +31,12 @@ class MediaEntityType extends AbstractType
     /**
      * @var null
      */
-    public $context = null;
+    public $context;
 
     /**
      * @var null
      */
-    public $providerName = null;
+    public $providerName;
 
     /**
      * @var Pool
@@ -47,16 +48,13 @@ class MediaEntityType extends AbstractType
         $this->pool = $pool;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($options['model_manager'] === null) {
+        if (null === $options['model_manager']) {
             $pool = $this->pool;
             $adminCode = $options['admin_code'];
 
-            if ($adminCode !== null) {
+            if (null !== $adminCode) {
                 $admin = $pool->getAdminByAdminCode($adminCode);
                 $options['class'] = $admin->getClass();
             } else {
@@ -70,19 +68,24 @@ class MediaEntityType extends AbstractType
             ->addViewTransformer(new ModelToIdTransformer($options['model_manager'], $options['class']), true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $pool = $this->pool;
 
         $adminCode = $options['admin_code'];
 
-        if ($adminCode !== null) {
+        if (null !== $adminCode) {
             $admin = $pool->getAdminByAdminCode($adminCode);
         } else {
             $admin = $pool->getAdminByClass($options['class']);
+        }
+
+        if ($options['provider'] && !$options['provider_name']) {
+            $options['provider_name'] = $options['provider'];
+        }
+
+        if ($options['context_name'] && !$options['context']) {
+            $options['context'] = $options['context_name'];
         }
 
         $view->vars['admin'] = $admin;
@@ -90,9 +93,6 @@ class MediaEntityType extends AbstractType
         $view->vars['context'] = $options['context'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
@@ -100,11 +100,13 @@ class MediaEntityType extends AbstractType
                 'model_manager' => null,
                 'class' => null,
                 'required' => false,
+                'provider' => false,
                 'provider_name' => false,
                 'context' => false,
+                'context_name' => false,
                 'admin_code' => 'sonata.media.admin.media',
                 'error_bubbling' => false,
-                'compound' => false
+                'compound' => false,
             ]
         );
 
@@ -112,9 +114,6 @@ class MediaEntityType extends AbstractType
         $resolver->addAllowedValues('required', [false, true]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix(): string
     {
         return 'media_entity_type';

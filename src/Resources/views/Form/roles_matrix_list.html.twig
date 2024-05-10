@@ -1,0 +1,15 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% for role, attributes in roles|sort %}
+{% if attributes.form is defined %}
+    <li>{{ form_widget(attributes.form, {label: attributes.role_translated, value: attributes.role, attr: {disabled: attributes.is_granted?false:true}}) }}</li>
+{% endif %}
+{% endfor %}

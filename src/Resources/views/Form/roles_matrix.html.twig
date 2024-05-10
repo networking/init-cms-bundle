@@ -1,0 +1,43 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th></th>
+        <th></th>
+        {% for label in permission_labels|sort %}
+            <th> {{ label }} </th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for group_code, admin_roles in grouped_roles %}
+        {% set new_group = true %}
+        {% for admin_code, roles in admin_roles %}
+            <tr>
+            {% for role, attributes in roles|sort %}
+                {% if loop.first %}
+                    {% if new_group %}
+                        {% set new_group = false %}
+                        <th rowspan="{{ admin_roles|length }}" scope="rowgroup">{{ attributes.group_label|default('') }}</th>
+                    {% endif %}
+                    <th>{{ attributes.admin_label|default('') }}</th>
+                {% endif %}
+                <td>
+                    {{ form_widget(attributes.form, { label: false, attr: {disabled: attributes.is_granted?false:true} }) }}
+                </td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+

@@ -14,7 +14,6 @@ file that was distributed with this source code.
     {% set url = objectId|default(admin.id(object)) is not null ? 'edit' : 'create' %}
 
     {% set isAjax = app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
-
     {% if not admin.hasRoute(url) %}
         <div>
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
@@ -78,9 +77,21 @@ file that was distributed with this source code.
                         <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs nav-line-tabs" role="tablist">
                                 {% for name, form_tab in admin.formtabs %}
+
+                                    {% set tabValid = true %}
+                                    {% for code in form_tab['groups']|filter(code => admin.formgroups[code] is defined) %}
+                                        {% for field_name in admin.formgroups[code].fields|filter(field_name => form[field_name] is defined) %}
+                                            {% if not form[field_name].vars.valid %}{% set tabValid = false %}{% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+
                                     <li class="nav-item">
                                         <a  class="nav-link {% if loop.index == 1 %}active{% endif %}" href="#tab_{{ admin.uniqid }}_{{ loop.index }}"  data-bs-toggle="tab" role="tab">
-                                            <i class="fa fa-exclamation-circle has-errors d-none" aria-hidden="true"></i> {{ form_tab.label|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}</a>
+                                            {{ form_tab.label|trans({}, form_tab.translation_domain ?: admin.translationDomain) }}
+                                            {% if not tabValid %}
+                                                <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
+                                            {% endif %}
+                                            </a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -115,6 +126,7 @@ file that was distributed with this source code.
 
                 {% block sonata_post_fieldsets %}{% endblock %}
                 {{ form_rest(form ) }}
+                <input type="hidden" name="_tab" id="tab_{{ admin.uniqid }}" value="{{ app.request.query.get('_tab') }}">
 
             </div>
 

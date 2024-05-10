@@ -42,9 +42,37 @@ const CMSAdmin = {
         this.initSelect2();
         this.initCkeditor();
         this.initCollectionType()
+        this.initTabs()
 
     },
 
+    initTabs(el){
+
+        el ??= document.body;
+
+        let elements = [].slice.call(document.querySelectorAll('[data-kt-tabs="true"]'));
+
+        elements.map((element) => {
+            if (element.getAttribute("data-kt-initialized") === "1") {
+                return;
+            }
+
+            let triggerEl = el.querySelector(`a[href="${element.dataset.activeTab}"]`)
+            let tab = new bootstrap.Tab(triggerEl) // Select tab by name
+            let tabFieldId = element.dataset.tabField
+            tab.show()
+            let tabEls = document.querySelectorAll('a[data-bs-toggle="tab"]')
+            let tabInputField = document.querySelector(tabFieldId)
+            tabEls.forEach((el) => {
+                    el.addEventListener('shown.bs.tab', function (event) {
+                        tabInputField.value = event.target.dataset.tabIndex;
+                    })
+                }
+            )
+        })
+
+
+    },
 
     initToolTips(el){
 
@@ -320,8 +348,12 @@ const CMSAdmin = {
             }
 
             var options = {
-                dir: document.body.getAttribute('direction')
+                dir: document.body.getAttribute('direction'),
             };
+
+            if(element.closest('.modal')){
+                options.dropdownParent = element.closest('.modal')
+            }
 
             if (element.getAttribute('data-hide-search') === 'true') {
                 options.minimumResultsForSearch = Infinity;

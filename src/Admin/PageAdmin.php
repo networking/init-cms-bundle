@@ -65,6 +65,11 @@ class PageAdmin extends BaseAdmin
 
     private ?LogEntry $lastEditedBy = null;
 
+    protected function getAccessMapping(): array
+    {
+        return ['publish' => 'PUBLISH'];
+    }
+
     public function __construct(
         protected PageManagerInterface $pageManager,
         protected array $pageTemplates,
@@ -418,10 +423,6 @@ class PageAdmin extends BaseAdmin
                 ]
             )
             ->end();
-
-        foreach ($this->getExtensions() as $extension) {
-            $extension->configureFormFields($form);
-        }
     }
 
     protected function configureDatagridFilters(DatagridMapper $filter): void
@@ -736,8 +737,6 @@ class PageAdmin extends BaseAdmin
 
     /**
      * Get the icons which represent the templates.
-     *
-     * @return array
      */
     protected function getPageTemplateIcons(): array
     {

@@ -308,7 +308,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     #[Ignore]
     public function getContentTypeName()
     {
-        return 'Layout Content Block';
+        return null;
     }
 
     public function import(LayoutBlockInterface $object)

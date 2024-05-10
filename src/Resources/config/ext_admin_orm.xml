@@ -49,6 +49,18 @@
                  label_translator_strategy="sonata.admin.label.strategy.underscore"
                  persist_filters="true"/>
         </service>
+        <service id="sonata.media.admin.gallery_item" class="Sonata\MediaBundle\Admin\GalleryItemAdmin">
+            <tag name="sonata.admin"
+                 model_class="%sonata.media.gallery_item.class%"
+                 controller="%sonata.admin.configuration.default_controller%"
+                 translation_domain="%sonata.media.admin.media.translation_domain%"
+                 manager_type="orm"
+                 show_in_roles_matrix="false"
+                 show_in_dashboard="false"
+                 group="sonata_media"
+                 label="gallery_item"
+                 label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+        </service>
 
     </services>
 

@@ -29,6 +29,7 @@ use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Form\Type\ModelHiddenType;
 use Sonata\Form\Type\BooleanType;
+use Sonata\UserBundle\Security\RolesBuilder\MatrixRolesBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -89,6 +90,7 @@ class NetworkingHelperExtension extends AbstractExtension
         protected PageManagerInterface $pageManager,
         protected CKEditorConfiguration $ckEditorConfigManager,
         protected Packages $packages,
+        protected MatrixRolesBuilderInterface $rolesBuilder,
         protected $templates = [],
         protected $contentTypes = []
     ) {
@@ -153,6 +155,8 @@ class NetworkingHelperExtension extends AbstractExtension
             new TwigFunction('get_file_icon', $this->getFileIcon(...)),
             new TwigFunction('crop_middle', $this->cropMiddle(...)),
             new TwigFunction('human_readable_filesize', $this->getHumanReadableSize(...)),
+            new TwigFunction('render_user_permissions_table', $this->renderUserPermissionsTable(...), ['needs_environment' => true]),
+            new TwigFunction('render_user_roles_list', $this->renderRolesList(...), ['needs_environment' => true]),
         ];
     }
 
@@ -230,10 +234,21 @@ class NetworkingHelperExtension extends AbstractExtension
     public function getContentTypeName($class)
     {
         $contentItem = new ($class)();
+        $name = null;
 
-        if (method_exists($contentItem, 'getContentTypeName')) {
+        if (!$name && method_exists($contentItem, 'getContentTypeName')) {
             $name = $contentItem->getContentTypeName();
-        } else {
+        }
+
+        if (!$name) {
+            foreach ($this->contentTypes as $contentType) {
+                if ($contentType['class'] === $class) {
+                    $name = $contentType['name'];
+                }
+            }
+        }
+
+        if (!$name) {
             $name = $contentItem::class;
         }
 
@@ -251,7 +266,7 @@ class NetworkingHelperExtension extends AbstractExtension
         return null;
     }
 
-    public function getContentTemplate(LayoutBlockInterface $layoutBlock, string $fallback = null): ?string
+    public function getContentTemplate(LayoutBlockInterface $layoutBlock, ?string $fallback = null): ?string
     {
         foreach ($this->contentTypes as $contentType) {
             if ($contentType['class'] === $layoutBlock::class) {
@@ -346,11 +361,6 @@ class NetworkingHelperExtension extends AbstractExtension
         $zones = $this->templates[$template]['zones'];
 
         foreach ($zones as $key => $zone) {
-            //            $temp = array_map($this->jsString(...), $zone['restricted_types']);
-            //            $test = '['.implode(',', $temp).']';
-            //
-            //            dump($test);
-
             $zones[$key]['restricted_types'] = json_encode($zone['restricted_types'], JSON_THROW_ON_ERROR);
         }
 
@@ -421,9 +431,10 @@ class NetworkingHelperExtension extends AbstractExtension
             foreach ($imageType as $type) {
                 $icon = $folder.DIRECTORY_SEPARATOR.$iconName.'.'.$type;
 
-                if (file_exists(
-                    $path.DIRECTORY_SEPARATOR.'Resources'.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.$icon
-                )
+                if (
+                    file_exists(
+                        $path.DIRECTORY_SEPARATOR.'Resources'.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.$icon
+                    )
                 ) {
                     $imagePath = 'bundles'.DIRECTORY_SEPARATOR.str_replace(
                         'bundle',
@@ -895,12 +906,13 @@ class NetworkingHelperExtension extends AbstractExtension
                 if ($contentLength + $totalLength > $length) {
                     $left = $length - $totalLength;
                     $entitiesLength = 0;
-                    if (preg_match_all(
-                        '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i',
-                        $tag[3],
-                        $entities,
-                        PREG_OFFSET_CAPTURE
-                    )
+                    if (
+                        preg_match_all(
+                            '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i',
+                            $tag[3],
+                            $entities,
+                            PREG_OFFSET_CAPTURE
+                        )
                     ) {
                         foreach ($entities[0] as $entity) {
                             if ($entity[1] + 1 - $entitiesLength <= $left) {
@@ -1156,5 +1168,52 @@ class NetworkingHelperExtension extends AbstractExtension
     protected function jsString($s): string
     {
         return '"'.addcslashes((string) $s, "\0..\37\"\\").'"';
+    }
+
+    public function renderUserPermissionsTable(Environment $environment, FormView $form): string
+    {
+        $groupedRoles = [];
+
+        foreach ($this->rolesBuilder->getRoles() as $role => $attributes) {
+            if (!isset($attributes['admin_code'])) {
+                continue;
+            }
+
+            $groupCode = $attributes['group_code'] ?? '';
+            $groupedRoles[$groupCode][$attributes['admin_code']][$role] = $attributes;
+
+            foreach ($form->getIterator() as $child) {
+                if ($child->vars['value'] === $role) {
+                    $groupedRoles[$groupCode][$attributes['admin_code']][$role]['form'] = $child;
+                }
+            }
+        }
+
+        return $environment->render('@NetworkingInitCms/Form/roles_matrix.html.twig', [
+            'grouped_roles' => $groupedRoles,
+            'permission_labels' => $this->rolesBuilder->getPermissionLabels(),
+        ]);
+    }
+
+    public function renderRolesList(Environment $environment, FormView $form): string
+    {
+        $roles = $this->rolesBuilder->getRoles();
+        foreach ($roles as $role => $attributes) {
+            if (isset($attributes['admin_label'])) {
+                unset($roles[$role]);
+                continue;
+            }
+
+            $roles[$role] = $attributes;
+            foreach ($form->getIterator() as $child) {
+                if ($child->vars['value'] === $role) {
+                    $roles[$role]['form'] = $child;
+                }
+            }
+        }
+
+        return $environment->render('@NetworkingInitCms/Form/roles_matrix_list.html.twig', [
+            'roles' => $roles,
+        ]);
     }
 }
