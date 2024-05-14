@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Networking package.
  *
@@ -7,12 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\DependencyInjection;
 
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
-use Networking\InitCmsBundle\Controller\AdminResettingController;
 use Networking\InitCmsBundle\Entity\BaseUser;
 use Networking\InitCmsBundle\Entity\Group;
 use Networking\InitCmsBundle\EventSubscriber\AdminToolbarSubscriber;
@@ -20,7 +21,6 @@ use Networking\InitCmsBundle\Helper\OneTimeCodeHelper;
 use Sonata\Doctrine\Mapper\Builder\OptionsBuilder;
 use Sonata\Doctrine\Mapper\DoctrineCollector;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
@@ -47,7 +47,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             if (isset($config['languages'])) {
                 $isLanguageSet = true;
             }
-            if (isset($config['cache']) && $config['cache']['activate'] === true) {
+            if (isset($config['cache']) && true === $config['cache']['activate']) {
                 $isCacheActive = true;
             }
         }
@@ -64,7 +64,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             ];
             $container->prependExtensionConfig($this->getAlias(), $config);
         }
-
 
         if (isset($bundles['LexikTranslationBundle'])) {
             $configs = $container->getExtensionConfig('lexik_translation');
@@ -87,7 +86,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 $config = ['managed_locales' => [$_ENV['LOCALE']]];
                 $container->prependExtensionConfig('lexik_translation', $config);
             }
-
         }
 
         if (isset($bundles['FrameworkBundle'])) {
@@ -103,14 +101,12 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 }
 
                 if (isset($config['cache'])) {
-
                     if (isset($config['cache']['pools'])) {
                         $pools = array_merge($pools, $config['cache']['pools']);
                     }
                     if (isset($pools['page.cache'])) {
                         $pageCacheSet = true;
                     }
-
                 }
             }
 
@@ -119,21 +115,16 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 $config = ['cache' => ['pools' => $pools]];
                 $container->prependExtensionConfig('framework', $config);
             }
-
         }
-
     }
+
     /**
-     *
      * @throws \ReflectionException|\Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
-
-
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('blocks.xml');
@@ -148,7 +139,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $loader->load(sprintf('ext_admin_%s.xml', $config['db_driver']));
         $loader->load(sprintf('admin_%s.xml', $config['db_driver']));
 
-        if($config['webauthn']['enabled']){
+        if ($config['webauthn']['enabled']) {
             $loader->load('webauthn.xml');
         }
 
@@ -163,12 +154,12 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
         $layoutBlockAdmin = $container->getDefinition('networking_init_cms.admin.layout_block');
         $subClasses = [];
-        foreach ($config['content_types'] as $contentType)
-        {
+        foreach ($config['content_types'] as $contentType) {
             $subClasses[$contentType['class']] = $contentType['class'];
         }
-        $layoutBlockAdmin->addMethodCall('setSubClasses', [$subClasses] );
-        
+
+        $layoutBlockAdmin->addMethodCall('setSubClasses', [$subClasses]);
+
         $container->setParameter(
             'networking_init_cms.translation_fallback_route',
             $config['translation_fallback_route']
@@ -194,7 +185,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.no_translation_template', $config['no_translation_template']);
         $container->setParameter('networking_init_cms.db_driver', $config['db_driver']);
 
-        if ($config['db_driver'] == 'orm') {
+        if ('orm' == $config['db_driver']) {
             $config['class']['media'] = $container->getParameter('sonata.media.media.class');
             $this->registerDoctrineORMMapping($config);
         }
@@ -241,21 +232,17 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         if ($cacheService) {
             $reflectionClass = new \ReflectionClass($cacheService);
 
-            if (in_array(\Networking\InitCmsBundle\Cache\PageCacheInterface::class, $reflectionClass->getInterfaceNames())) {
+            if (in_array(PageCacheInterface::class, $reflectionClass->getInterfaceNames())) {
                 $container->setParameter('networking_init_cms.page_cache_service', $cacheService);
             } else {
-                throw new \RuntimeException(
-                    sprintf('Cache class should implement %s interface', PageCacheInterface::class)
-                );
+                throw new \RuntimeException(sprintf('Cache class should implement %s interface', PageCacheInterface::class));
             }
         }
-
-
     }
 
     /**
-     * @param String $alias
-     * @param array $config
+     * @param string $alias
+     * @param array  $config
      */
     protected function registerContainerParametersRecursive(ContainerBuilder $container, $alias, $config)
     {
@@ -266,17 +253,14 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
         foreach ($iterator as $value) {
             $path = [];
-            for ($i = 0; $i <= $iterator->getDepth(); $i++) {
+            for ($i = 0; $i <= $iterator->getDepth(); ++$i) {
                 $path[] = $iterator->getSubIterator($i)->key();
             }
-            $key = $alias.'.'.implode(".", $path);
+            $key = $alias.'.'.implode('.', $path);
             $container->setParameter($key, $value);
         }
     }
 
-    /**
-     * @param $config
-     */
     public function configureLanguageCookie($config, ContainerBuilder $container)
     {
         $container->setParameter('networking_init_cms.single_language', $config['single_language']);
@@ -285,8 +269,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
     }
 
     /**
-     * @param $config
-     *
      * @throws \InvalidArgumentException
      */
     public function configureClass($config, ContainerBuilder $container)
@@ -302,22 +284,17 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.manager.layout_block.class', $config['class']['layout_block']);
         $container->setParameter('networking_init_cms.manager.user.class', $config['class']['user']);
         $container->setParameter('networking_init_cms.manager.menu_item.class', $config['class']['menu_item']);
-
-       $container->setParameter('networking_init_cms.admin.layout_block.class',\Networking\InitCmsBundle\Entity\LayoutBlock::class);
+        $container->setParameter('networking_init_cms.admin.layout_block.class', $config['class']['layout_block']);
     }
-
-
 
     /**
      * @param array $config
      *
      * @throws \RuntimeException
-     *
-     * @return mixed
      */
     public function configureGoogleAuthenticator($config, ContainerBuilder $container)
     {
-        if(isset($config['google_authenticator']) && $config['google_authenticator']['enabled'] && !$config['2fa_authenticator']['enabled']){
+        if (isset($config['google_authenticator']) && $config['google_authenticator']['enabled'] && !$config['2fa_authenticator']['enabled']) {
             $config['2fa_authenticator'] = $config['google_authenticator'];
         }
 
@@ -333,7 +310,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             return;
         }
 
-
         $container->setParameter('networking_init_cms.google.authenticator.forced_for_role', $config['2fa_authenticator']['forced_for_role']);
 
         $trustedIpList = $config['2fa_authenticator']['trusted_ip_list'];
@@ -345,8 +321,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.google.authenticator.trusted_ip_list', $trustedIpList);
         $container->getDefinition('networking_init_cms.google.authenticator.helper')
             ->replaceArgument(0, $config['2fa_authenticator']['server']);
-        $container->setAlias( \Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface::class, 'networking_init_cms.google.authenticator.helper');
-
+        $container->setAlias(\Networking\InitCmsBundle\GoogleAuthenticator\HelperInterface::class, 'networking_init_cms.google.authenticator.helper');
     }
 
     public function configureWebauthnAuthentication(array $config, ContainerBuilder $container)
@@ -354,10 +329,8 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
         $container->setParameter('networking_init_cms.webauthn.enabled', $config['webauthn']['enabled']);
     }
 
-
     /**
      * Add short labels for languages (e.g. de_CH becomes DE).
-     *
      *
      * @return array
      */
@@ -380,7 +353,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
             }
         }
 
-        if ($config['db_driver'] != 'orm') {
+        if ('orm' != $config['db_driver']) {
             return;
         }
 
@@ -388,28 +361,28 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
 
         $collector = DoctrineCollector::getInstance();
 
-//        $collector->addAssociation(
-//            $config['class']['page'],
-//            'mapManyToMany',
-//            OptionsBuilder::createManyToMany('translations', $config['class']['page'])
-//                ->mappedBy('originals')
-//        );
-//
-//
-//        $collector->addAssociation(
-//            $config['class']['page'],
-//            'mapManyToMany',
-//            OptionsBuilder::createManyToMany('originals', $config['class']['page'])
-//                ->inversedBy('translations')
-//                ->cascade(['persist'])
-//                ->addJoinTable(
-//                    'page_translation',
-//                    ['name' => 'translation_id', 'referencedColumnName' => 'id',],
-//                    ['name' => 'original_id', 'referencedColumnName' => 'id',]
-//                )
-//        );
+        //        $collector->addAssociation(
+        //            $config['class']['page'],
+        //            'mapManyToMany',
+        //            OptionsBuilder::createManyToMany('translations', $config['class']['page'])
+        //                ->mappedBy('originals')
+        //        );
+        //
+        //
+        //        $collector->addAssociation(
+        //            $config['class']['page'],
+        //            'mapManyToMany',
+        //            OptionsBuilder::createManyToMany('originals', $config['class']['page'])
+        //                ->inversedBy('translations')
+        //                ->cascade(['persist'])
+        //                ->addJoinTable(
+        //                    'page_translation',
+        //                    ['name' => 'translation_id', 'referencedColumnName' => 'id',],
+        //                    ['name' => 'original_id', 'referencedColumnName' => 'id',]
+        //                )
+        //        );
 
-        //LayoutBlock
+        // LayoutBlock
 
         $collector->addAssociation(
             $baseNameSpace.'\\LayoutBlock',
@@ -422,10 +395,9 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                     'referencedColumnName' => 'id',
                     'onDelete' => 'CASCADE',
                 ])
-
         );
 
-        //MenuItem
+        // MenuItem
         $collector->addAssociation(
             $config['class']['menu_item'],
             'mapManyToOne',
@@ -440,7 +412,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 ])
         );
 
-        //PageSnapshot
+        // PageSnapshot
         $collector->addAssociation(
             $baseNameSpace.'\\PageSnapshot',
             'mapManyToOne',
@@ -449,7 +421,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                 ->cascade(['persist'])
         );
 
-        //Social media Media item
+        // Social media Media item
         $collector->addAssociation(
             $config['class']['page'],
             'mapManyToOne',
@@ -461,9 +433,6 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                     'nullable' => 'true',
                 ])
         );
-
-
-
 
         $collector->addAssociation(
             BaseUser::class,

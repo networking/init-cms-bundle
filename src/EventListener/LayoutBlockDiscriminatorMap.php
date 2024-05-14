@@ -2,9 +2,12 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 
+#[AsDoctrineListener(event: Events::loadClassMetadata)]
 class LayoutBlockDiscriminatorMap
 {
     /**
@@ -17,9 +20,9 @@ class LayoutBlockDiscriminatorMap
         $this->mapping = $mapping;
     }
 
-    public function loadClassMetadata(LoadClassMetadataEventArgs $event)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $loadClassMetadataEventArgs)
     {
-        $metadata = $event->getClassMetadata();
+        $metadata = $loadClassMetadataEventArgs->getClassMetadata();
         $class = $metadata->getReflectionClass();
 
         if (null === $class) {

@@ -64,7 +64,6 @@
 
         <service id="Networking\InitCmsBundle\EventListener\LayoutBlockDiscriminatorMap">
             <argument key="$mapping">%networking_init_cms.page.content_types%</argument>
-            <tag name="doctrine.event_listener" event="loadClassMetadata"/>
         </service>
 
         <service id="Networking\InitCmsBundle\Entity\EntityChangedListener" lazy="true">
