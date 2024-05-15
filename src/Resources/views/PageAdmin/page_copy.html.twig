@@ -22,10 +22,10 @@ file that was distributed with this source code.
     <div class="modal-footer">
         <form method="POST" action="{{ admin.generateUrl('copy', {id: page.id}) }}">
             <input type=hidden name="page_id" value="{{ id }}"/>
-            <input type="submit" class="btn btn-primary"
-                   value="{{ 'button.duplicate_page'|trans({}, admin.translationDomain) }}"/>
-            <button type="button" class="btn btn-light " data-bs-dismiss="modal"
+            <button type="button" class="btn btn-sm btn-light " data-bs-dismiss="modal"
                     aria-hidden="true">{{ 'button.cancel'|trans({}, admin.translationDomain) }}</button>
+            <input type="submit" class="btn btn-sm btn-primary"
+                   value="{{ 'button.duplicate_page'|trans({}, admin.translationDomain) }}"/>
         </form>
     </div>
 {% endblock %}

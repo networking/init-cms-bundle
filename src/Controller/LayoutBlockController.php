@@ -122,8 +122,7 @@ class LayoutBlockController extends CRUDController
                         ]
                     );
                 } catch (\Throwable $e) {
-
-                    if($e instanceof ModelManagerException) {
+                    if ($e instanceof ModelManagerException) {
                         $e = $e->getPrevious();
                     }
 
@@ -254,7 +253,6 @@ class LayoutBlockController extends CRUDController
                 try {
                     $this->admin->update($layoutBlock);
 
-                    $adminContent = $layoutBlock->getAdminContent();
                     $html = $this->renderView(
                         '@NetworkingInitCms/PageAdmin/admin_layout_block.html.twig',
                         ['layout_block' => $layoutBlock]
@@ -436,7 +434,7 @@ class LayoutBlockController extends CRUDController
                     $blockId = str_replace(
                         'layoutBlock_',
                         '',
-                        (string)$layoutBlockStr
+                        (string) $layoutBlockStr
                     );
 
                     if ($blockId) {
@@ -555,7 +553,7 @@ class LayoutBlockController extends CRUDController
     public static function getSubscribedServices(): array
     {
         return [
-                'networking_init_cms.admin.page' => \Networking\InitCmsBundle\Admin\PageAdmin::class,
-            ] + parent::getSubscribedServices();
+            'networking_init_cms.admin.page' => \Networking\InitCmsBundle\Admin\PageAdmin::class,
+        ] + parent::getSubscribedServices();
     }
 }

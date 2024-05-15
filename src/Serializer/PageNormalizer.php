@@ -21,50 +21,50 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
 
     public function normalize(
         mixed $object,
-        string $format = null,
+        ?string $format = null,
         array $context = []
-    ):array|string|int|float|bool|\ArrayObject|null {
+    ): array|string|int|float|bool|\ArrayObject|null {
         $context += [
-                AbstractNormalizer::CALLBACKS => [
-                    'translations' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertTranslationsToArray() : [];
-                    },
-                    'originals' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertOriginalsToArray() : [];
-                    },
-                    'parent' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): ?int {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertParentToInteger() : null;
-                    },
-                    'alias' => function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []): ?string {
-                        return $outerObject instanceof PageInterface ? $outerObject->getAlias()?->getFullPath() : null;
-                    },
-                    'parents' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertParentsToArray() : [];
-                    },
-                    'children' => function ($innerObject, object $outerObject, string $attributeName, string $format = null, array $context = []): array {
-                        return $outerObject instanceof PageInterface ? $outerObject->convertChildrenToIntegerArray() : [];
-                    },
-                ],
-                AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                    'lazyObjectState',
-                    'lazyObjectInitialized',
-                    'lazyObjectAsInitialized',
-                    'allChildren',
-                    'allTranslations',
-                    'snapshots',
-                    'snapshot',
-                    'route',
-                    'routes',
-                    'oldTitle',
-                    'tags',
-                    'menuItem',
-                    'original',
-                    'directTranslation',
-                    '__initializer__',
-                    '__cloner__',
-                    '__isInitialized__',
-                ],
-            ];
+            AbstractNormalizer::CALLBACKS => [
+                'translations' => function ($innerObject, object $outerObject, string $attributeName, ?string $format = null, array $context = []): array {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertTranslationsToArray() : [];
+                },
+                'originals' => function ($innerObject, object $outerObject, string $attributeName, ?string $format = null, array $context = []): array {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertOriginalsToArray() : [];
+                },
+                'parent' => function ($innerObject, object $outerObject, string $attributeName, ?string $format = null, array $context = []): ?int {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertParentToInteger() : null;
+                },
+                'alias' => function ($innerObject, $outerObject, string $attributeName, ?string $format = null, array $context = []): ?string {
+                    return $outerObject instanceof PageInterface ? $outerObject->getAlias()?->getFullPath() : null;
+                },
+                'parents' => function ($innerObject, object $outerObject, string $attributeName, ?string $format = null, array $context = []): array {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertParentsToArray() : [];
+                },
+                'children' => function ($innerObject, object $outerObject, string $attributeName, ?string $format = null, array $context = []): array {
+                    return $outerObject instanceof PageInterface ? $outerObject->convertChildrenToIntegerArray() : [];
+                },
+            ],
+            AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                'lazyObjectState',
+                'lazyObjectInitialized',
+                'lazyObjectAsInitialized',
+                'allChildren',
+                'allTranslations',
+                'snapshots',
+                'snapshot',
+                'route',
+                'routes',
+                'oldTitle',
+                'tags',
+                'menuItem',
+                'original',
+                'directTranslation',
+                '__initializer__',
+                '__cloner__',
+                '__isInitialized__',
+            ],
+        ];
 
         return $this->objectNormalizer->normalize($object, $format, $context);
     }
@@ -72,7 +72,7 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
     public function denormalize(
         mixed $data,
         string $type,
-        string $format = null,
+        ?string $format = null,
         array $context = []
     ): mixed {
         if (is_integer($data)) {
@@ -86,12 +86,12 @@ class PageNormalizer implements NormalizerInterface, DenormalizerInterface
         return $this->objectNormalizer->denormalize($data, $type, $format, $context);
     }
 
-    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof PageInterface;
     }
 
-    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
         return $type === $this->pageClass;
     }

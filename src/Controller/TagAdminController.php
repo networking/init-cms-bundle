@@ -10,48 +10,43 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\ORM\Query;
 use Networking\InitCmsBundle\Admin\MediaAdmin;
 use Networking\InitCmsBundle\Entity\Tag;
 use Sonata\AdminBundle\Exception\ModelManagerException;
-use Sonata\AdminBundle\Form\FormErrorIteratorToConstraintViolationList;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TagAdminController extends CRUDController
 {
-    /**
-     * @return Response
-     */
     public function createAction(Request $request): Response
     {
         /** @var Response $response */
         $response = parent::createAction($request);
 
-        if ($this->isXmlHttpRequest($request) && $response->getStatusCode() === 200) {
+        if ($this->isXmlHttpRequest($request) && 200 === $response->getStatusCode()) {
             $content = $response->getContent();
-            try{
+            try {
                 $jsonArray = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
-                if ($jsonArray && $jsonArray['result'] == 'ok') {
+                if ($jsonArray && 'ok' == $jsonArray['result']) {
                     $object = $this->admin->getObject($jsonArray['objectId']);
-                    $jsonArray['status'] =  'success';
-                    $jsonArray['message'] =  $this->translate('flash_create_success', ['%name%' =>  $this->escapeHtml($this->admin->toString($object))], 'SonataAdminBundle');
+                    $jsonArray['status'] = 'success';
+                    $jsonArray['message'] = $this->translate('flash_create_success', ['%name%' => $this->escapeHtml($this->admin->toString($object))], 'SonataAdminBundle');
                     $jsonArray['json'] = $this->admin->getTagTree($object->getId());
                     $response = $this->renderJson($jsonArray, 200);
                 }
-            }catch (\Exception){
+            } catch (\Exception) {
                 return $response;
             }
-
         }
 
         return $response;
@@ -63,13 +58,11 @@ class TagAdminController extends CRUDController
     }
 
     /**
-     * @param $objectId
-     *
      * @return string
      */
     public function getTagTree($objectId)
     {
-        $tags = $this->admin->getModelManager()->findBy(\Networking\InitCmsBundle\Entity\Tag::class, ['level' => 1], ['path' => 'ASC']);
+        $tags = $this->admin->getModelManager()->findBy(Tag::class, ['level' => 1], ['path' => 'ASC']);
 
         return $this->renderView('@NetworkingInitCms/TagAdmin/tags.html.twig', [
             'noSort' => false,
@@ -79,13 +72,10 @@ class TagAdminController extends CRUDController
     }
 
     /**
-     * @param int|null|string $id
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
     public function deleteAction(Request $request): Response
     {
-
         $returnToMedia = $request->get('returnToMedia');
         $object = $this->assertObjectExists($request, true);
         \assert(null !== $object);
@@ -174,13 +164,10 @@ class TagAdminController extends CRUDController
 
         $name = $request->get('value');
 
-
         /** @var $tag Tag */
         if (!$tag = $this->admin->getObject($id)) {
             throw new NotFoundHttpException('unable to find the tag with the id');
         }
-
-        dump($tag);
 
         $tag->setName($name);
 
@@ -264,13 +251,11 @@ class TagAdminController extends CRUDController
         return $this->renderJson($response);
     }
 
-
-
     public static function getSubscribedServices(): array
     {
         return [
-                'sonata.media.admin.media' => MediaAdmin::class,
-                'validator' => ValidatorInterface::class,
-            ] + parent::getSubscribedServices();
+            'sonata.media.admin.media' => MediaAdmin::class,
+            'validator' => ValidatorInterface::class,
+        ] + parent::getSubscribedServices();
     }
 }

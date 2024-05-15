@@ -90,15 +90,15 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
         return [];
     }
 
-    public function initializeContentRoute(ContentRouteInterface &$contentRoute
-    ): void {
+    public function initializeContentRoute(ContentRouteInterface &$contentRoute): void
+    {
         $content = $this->getRouteContent($contentRoute);
 
         $contentRoute->setContent($content);
     }
 
-    public function getRouteContent(ContentRouteInterface $contentRoute
-    ): ?RouteReferrersReadInterface {
+    public function getRouteContent(ContentRouteInterface $contentRoute): ?RouteReferrersReadInterface
+    {
         return $this->findContentByContentRoute($contentRoute);
     }
 
@@ -182,6 +182,7 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
 
     /**
      * @return mixed|object|null
+     *
      * @deprecated will be removed
      */
     public function findContentRouteBy(array $criteria)
@@ -199,8 +200,8 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
         return $repository->find($contentRoute->getObjectId());
     }
 
-    public function getRouteCollectionForRequest(Request $request
-    ): RouteCollection {
+    public function getRouteCollectionForRequest(Request $request): RouteCollection
+    {
         $url = $request->getPathInfo();
 
         $collection = new RouteCollection();
@@ -248,11 +249,13 @@ class ContentRouteManager implements ContentRouteManagerInterface, RouteProvider
                 continue;
             }
 
-            if (VersionableInterface::STATUS_DRAFT == $viewStatus
+            if (
+                VersionableInterface::STATUS_DRAFT == $viewStatus
                 && $test->implementsInterface(ResourceVersionInterface::class)
             ) {
                 continue;
-            } elseif (VersionableInterface::STATUS_PUBLISHED == $viewStatus
+            } elseif (
+                VersionableInterface::STATUS_PUBLISHED == $viewStatus
                 && $test->implementsInterface(VersionableInterface::class)
             ) {
                 continue;
