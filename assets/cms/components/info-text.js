@@ -24,7 +24,20 @@ class InfoText extends FormCompnent{
     }
     init(popoverElement) {
         ClassicEditor
-            .create(document.querySelector('#ckeditor_'+ this.id ))
+            .create(document.querySelector('#ckeditor_'+ this.id ), {
+                toolbar: [
+            'alignment',  // Displaying the proper UI element in the toolbar.
+            'heading',
+            '|',
+            'bold',
+            'italic',
+            'link',
+            'bulletedList',
+            'numberedList',
+            'undo',
+            'redo'
+        ]
+            })
             .then(editor => {
                 this.editor = editor
             })
