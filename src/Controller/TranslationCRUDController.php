@@ -59,7 +59,6 @@ class TranslationCRUDController extends CRUDController
      */
     public function editAction(Request $request): Response
     {
-
         $existingObject = $this->assertObjectExists($request, true);
         \assert(null !== $existingObject);
 
@@ -174,7 +173,7 @@ class TranslationCRUDController extends CRUDController
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function clearCacheAction(Request $request)
     {
@@ -191,10 +190,10 @@ class TranslationCRUDController extends CRUDController
         $session = $request->getSession();
         $session->getFlashBag()->set(
             'sonata_flash_success',
-            'translations.cache_removed'
+            $this->translate('translations.cache_removed', [], 'NetworkingInitCmsBundle')
         );
 
-        return $this->redirect($this->admin->generateUrl('list'));
+        return $this->redirect($request->headers->get('referer'));
     }
 
     public function batchActionDownload(ProxyQueryInterface $query
