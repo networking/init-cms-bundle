@@ -15,9 +15,11 @@ namespace Networking\InitCmsBundle\Admin;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Lexik\Bundle\TranslationBundle\Entity\Translation;
 use Lexik\Bundle\TranslationBundle\Entity\TransUnit;
 use Lexik\Bundle\TranslationBundle\Manager\TransUnitManagerInterface;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -36,7 +38,7 @@ use Symfony\Component\Intl\Locales;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
-class TranslationAdmin extends BaseAdmin
+class TranslationAdmin extends AbstractAdmin
 {
     /**
      * @var array
@@ -128,8 +130,6 @@ class TranslationAdmin extends BaseAdmin
 
     public function configureQuery(ProxyQueryInterface $query
     ): ProxyQueryInterface {
-
-
         $this->joinTranslations(
             $query,
             $query->getRootAlias()
@@ -137,7 +137,6 @@ class TranslationAdmin extends BaseAdmin
 
         return $query;
     }
-
 
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
@@ -266,7 +265,6 @@ class TranslationAdmin extends BaseAdmin
                 $filters
             );
 
-
             // always force the parent value
             if ($this->isChild() && $this->getParentAssociationMapping()) {
                 $parameters[$this->getParentAssociationMapping()] = [
@@ -362,7 +360,7 @@ class TranslationAdmin extends BaseAdmin
     private function joinTranslations(
         ProxyQueryInterface $queryBuilder,
         $alias,
-        array $locales = null
+        ?array $locales = null
     ) {
         $alreadyJoined = false;
         $joins = $queryBuilder->getDQLPart('join');
@@ -380,7 +378,6 @@ class TranslationAdmin extends BaseAdmin
         }
 
         if (!$alreadyJoined) {
-            $queryBuilder->addSelect('translations');
             /* @var QueryBuilder $queryBuilder */
             if ($locales) {
                 $queryBuilder->leftJoin(
@@ -427,18 +424,6 @@ class TranslationAdmin extends BaseAdmin
 
         if (!$object instanceof TransUnit) {
             return '';
-        }
-
-        $translations = $object->getTranslations();
-
-        $locale = $this->getDefaultLocale();
-        if (!$locale) {
-            $locale = $this->managedLocales[0];
-        }
-        foreach ($translations as $translation) {
-            if ($translation->getLocale() == $locale) {
-                return $translation->getContent();
-            }
         }
 
         return $object->getKey();
