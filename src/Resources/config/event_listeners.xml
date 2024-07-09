@@ -46,6 +46,9 @@
         <service id="Networking\InitCmsBundle\EventListener\CacheCleaner">
         </service>
 
+        <service id="Networking\InitCmsBundle\EventListener\TransUnitEventListener">
+        </service>
+
         <service id="Networking\InitCmsBundle\EventSubscriber\LoginSubscriber">
             <tag name="kernel.event_subscriber" dispatcher="security.event_dispatcher.admin"/>
         </service>
