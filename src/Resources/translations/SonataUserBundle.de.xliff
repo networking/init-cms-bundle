@@ -28,7 +28,7 @@
             </trans-unit>
             <trans-unit id="link_action_create">
                 <source>link_action_create</source>
-                <target>Hinnzufügen</target>
+                <target>Hinzufügen</target>
             </trans-unit>
             <trans-unit id="title_edit">
                 <source>title_edit</source>
