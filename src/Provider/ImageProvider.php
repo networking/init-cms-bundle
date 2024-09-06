@@ -19,7 +19,6 @@ use Sonata\MediaBundle\CDN\Server;
 use Sonata\MediaBundle\Generator\GeneratorInterface;
 use Sonata\MediaBundle\Metadata\MetadataBuilderInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
-use Sonata\MediaBundle\Provider\FileProvider;
 use Sonata\MediaBundle\Provider\ImageProviderInterface;
 use Sonata\MediaBundle\Provider\MediaProviderInterface;
 use Sonata\MediaBundle\Provider\Metadata;
@@ -114,6 +113,13 @@ class ImageProvider extends FileProvider implements ImageProviderInterface
     {
         $this->fixBinaryContent($media);
         $this->fixFilename($media);
+
+        if($media->getBinaryContent() instanceof UploadedFile && $this->scanner){
+            $scanResult = $this->scanner->scan($media->getBinaryContent()->getPathname());
+            if (!$scanResult->isClean()) {
+                throw new UploadException(sprintf('The file is infected with a virus'));
+            }
+        }
 
         if ($media->getBinaryContent() instanceof UploadedFile && 0 === $media->getBinaryContent()->getSize()) {
             $media->setProviderReference(uniqid($media->getName(), true));

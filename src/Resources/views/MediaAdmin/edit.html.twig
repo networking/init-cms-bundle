@@ -98,6 +98,7 @@ file that was distributed with this source code.
                         <div class="col-md-6" id="media-preview">
                             {% set previewLink = false %}
 
+                            {% if object.providerReference %}
                             {% if object.width is defined and object.width %}
                                 {% if object.providerName == 'sonata.media.provider.youtube' %}
                                     {% set previewLink %}//www.youtube.com/embed/{{ object.providerreference }}?autoplay=1{% endset %}
@@ -128,6 +129,7 @@ file that was distributed with this source code.
                             {% else %}
                             {% if previewLink %}
                                 <iframe src="{{ previewLink }}" width="100%" height="760px"></iframe>
+                            {% endif %}
                             {% endif %}
                             {% endif %}
                             <table class="table">
@@ -178,7 +180,7 @@ file that was distributed with this source code.
                                         {% endif %}
                                     </td>
                                 <tr>
-                                    {% if object.width is defined and object.width %}
+                                    {% if object.width is defined and object.width and object.providerReference %}
                                     <tr>
                                         <th>
                                             <a href="{{ sonata_path(object, 'reference')  }}"
@@ -220,7 +222,7 @@ file that was distributed with this source code.
                                             </td>
                                         </tr>
                                     {% endfor %}
-                                {% else %}
+                                {% elseif object.providerReference %}
                                     <tr>
                                         <th>
                                             <a href="{{ sonata_path(object, 'reference')  }}"

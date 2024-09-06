@@ -9,14 +9,27 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Provider;
 
+use Sineflow\ClamAV\DTO\ScannedFile;
+use Sineflow\ClamAV\Scanner;
+use Sineflow\ClamAV\ScanStrategy\ScanStrategyClamdNetwork;
+use Sineflow\ClamAV\ScanStrategy\ScanStrategyClamdUnix;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\Form\Validator\ErrorElement;
 use Sonata\MediaBundle\CDN\Server;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Sonata\MediaBundle\Provider\FileProvider as BaseProvider;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileProvider extends BaseProvider
 {
+    protected ?Scanner $scanner = null;
+
+    public function setScanner(Scanner $scanner): void
+    {
+        $this->scanner = $scanner;
+    }
     /**
      * @param MediaInterface $media
      *
@@ -25,6 +38,35 @@ class FileProvider extends BaseProvider
     protected function generateReferenceName(MediaInterface $media): string
     {
         return $media->getMetadataValue('filename');
+    }
+
+    public function validate(ErrorElement $errorElement, MediaInterface $media): void
+    {
+        parent::validate($errorElement, $media);
+
+        $uoloadedFile = $media->getBinaryContent();
+
+        if($uoloadedFile instanceof UploadedFile && $this->scanner){
+            $scanResult = $this->scanner->scan($uoloadedFile->getPathname());
+            if ($scanResult->isClean()) {
+                return;
+            } else {
+                $errorElement->with('binaryContent')->addViolation(
+                    'The file is infected with the %virus_name% virus.', ['%virus_name%' => $scanResult->getVirusName()]
+                )->end();
+            }
+        }
+
+    }
+
+    protected function doTransform(MediaInterface $media): void
+    {
+        if($media->getBinaryContent() instanceof UploadedFile && $this->scanner){
+            $scanResult = $this->scanner->scan($media->getBinaryContent()->getPathname());
+            if (!$scanResult->isClean()) {
+                throw new UploadException(sprintf('The file is infected with a virus'));
+            }
+        }
     }
 
     /**
