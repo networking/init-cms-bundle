@@ -65,19 +65,6 @@
         </property>
     </class>
 
-    <class name="Networking\InitCmsBundle\Entity\BaseUser">
-        <property name="plainPassword">
-            <constraint name="Length">
-                <option name="groups">
-                    <value>default</value>
-                    <value>Profile</value>
-                </option>
-                <option name="min">8</option>
-                <option name="minMessage">password_too_short</option>
-            </constraint>
-        </property>
-    </class>
-
     <class name="Networking\InitCmsBundle\Entity\Group">
         <property name="name">
             <constraint name="NotBlank"/>

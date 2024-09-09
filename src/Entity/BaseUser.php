@@ -17,6 +17,10 @@ use Doctrine\Common\Collections\Collection;
 use Networking\InitCmsBundle\Model\UserInterface;
 use Sonata\UserBundle\Entity\BaseUser as SonataBaseUser;
 use Networking\InitCmsBundle\Model\AdminSettings;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -51,6 +55,10 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
 
 
     protected ?string $locale = null;
+
+    protected int $userMinPassword = 8;
+
+    protected int $adminUserMinPassword = 12;
 
     public function getHexId()
     {
@@ -249,6 +257,21 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
         return $this;
     }
 
+    public function hasRole(string $role): bool
+    {
+        if(parent::hasRole($role)) {
+            return true;
+        }
+
+        foreach ($this->getGroups() as $group) {
+            if($group->hasRole($role)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     /**
      * {@inheritdoc}
@@ -308,6 +331,108 @@ abstract class BaseUser extends SonataBaseUser implements UserInterface
     public function getDisplayName(): string
     {
         return $this->getFullname();
+    }
+
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context)
+    {
+
+        $min = $this->userMinPassword;
+        if ($this->hasRole('ROLE_SONATA_ADMIN')) {
+            $min = $this->adminUserMinPassword;
+        }
+
+        $value = $this->plainPassword;
+
+        if (null === $this->plainPassword) {
+            return;
+        }
+
+        if (!\is_scalar($value) && !$value instanceof \Stringable) {
+            throw new UnexpectedValueException($value, 'string');
+        }
+
+        $stringValue = (string) $value;
+
+        try {
+            $invalidCharset = !@mb_check_encoding($stringValue, 'UTF-8');
+        } catch (\ValueError $e) {
+            if (!str_starts_with(
+                $e->getMessage(),
+                'mb_check_encoding(): Argument #2 ($encoding) must be a valid encoding'
+            )
+            ) {
+                throw $e;
+            }
+
+            $invalidCharset = true;
+        }
+
+        $length = $invalidCharset
+            ? 0
+            : match ('codepoints') {
+                Length::COUNT_BYTES => \strlen($stringValue),
+                Length::COUNT_CODEPOINTS => mb_strlen($stringValue, 'UTF-8'),
+                Length::COUNT_GRAPHEMES => grapheme_strlen($stringValue),
+            };
+
+        if ($invalidCharset || false === ($length ?? false)) {
+            $context->buildViolation(
+                'This value does not match the expected {{ charset }} charset.'
+            )
+                ->atPath('plainPassword')
+                ->setParameter('{{ value }}', $this->formatValue($stringValue))
+                ->setParameter('{{ charset }}', 'UTF-8')
+                ->setInvalidValue($value)
+                ->setCode(Length::INVALID_CHARACTERS_ERROR)
+                ->addViolation();
+
+            return;
+        }
+
+
+        if ($length < $min) {
+            $context->buildViolation(
+                'password_too_short'
+            )
+                ->atPath('plainPassword')
+                ->setParameter('{{ value }}', $this->formatValue($stringValue))
+                ->setParameter('{{ limit }}', (string) $min)
+                ->setParameter('{{ value_length }}', (string) $length)
+                ->setInvalidValue($value)
+                ->setPlural((int) $min)
+                ->setCode(Length::TOO_SHORT_ERROR)
+                ->addViolation();
+        }
+    }
+
+    private function formatValue($value): string
+    {
+        if (\is_array($value)) {
+            return 'array';
+        }
+
+        if (\is_string($value)) {
+            return '"'.$value.'"';
+        }
+
+        if (\is_resource($value)) {
+            return 'resource';
+        }
+
+        if (null === $value) {
+            return 'null';
+        }
+
+        if (false === $value) {
+            return 'false';
+        }
+
+        if (true === $value) {
+            return 'true';
+        }
+
+        return (string) $value;
     }
 
 }
