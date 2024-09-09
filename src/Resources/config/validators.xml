@@ -20,5 +20,9 @@
             </call>
             <tag name="validator.constraint_validator" alias="unique_tag_validator"/>
         </service>
+        <service id="networking_init_cms.clamav_validator"
+                 class="Networking\InitCmsBundle\Validator\Constraints\VirusScanValidator"
+        >
+        </service>
     </services>
 </container>

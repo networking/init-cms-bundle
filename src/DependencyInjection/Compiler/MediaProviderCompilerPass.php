@@ -28,31 +28,16 @@ class MediaProviderCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
 
-        $scanner = null;
-
-
-        if($container->hasDefinition('sineflow.clamav.scanner')){
-
-            $scanner = $container->getDefinition('sineflow.clamav.scanner');
-        }
-
-
         foreach ($container->findTaggedServiceIds('sonata.media.provider') as $id => $attributes) {
             $definition = $container->getDefinition($id);
 
             if ('sonata.media.provider.image' == $id) {
                 $definition->setClass(ImageProvider::class);
 
-                if($scanner){
-                    $definition->addMethodCall('setScanner', [$scanner]);
-                }
             }
 
             if ('sonata.media.provider.file' == $id) {
                 $definition->setClass(FileProvider::class);
-                if($scanner){
-                    $definition->addMethodCall('setScanner', [$scanner]);
-                }
             }
 
             if ('sonata.media.provider.youtube' == $id) {
