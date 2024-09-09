@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraint;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class UniqueURL extends Constraint
 {
     /**

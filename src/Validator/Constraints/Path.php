@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraint;
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 class Path extends Constraint
 {
     public $message = 'This value is not a valid Path.';
