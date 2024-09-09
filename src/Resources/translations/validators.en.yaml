@@ -17,3 +17,5 @@ user_group_empty_roles: Please select at least on user role.
 menu:
     page_or_url:
         required: Either a page or a redirect url must be set.
+
+The file is infected with a virus: This file is infected with a virus.
