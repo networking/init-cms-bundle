@@ -2,6 +2,7 @@
 
 namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
+use Networking\InitCmsBundle\Lib\ScannerFactory;
 use Networking\InitCmsBundle\Provider\FileProvider;
 use Networking\InitCmsBundle\Provider\ImageProvider;
 use Networking\InitCmsBundle\Validator\Constraints\ClamAVValidator;
@@ -23,6 +24,8 @@ class ClamAVCompilerPass implements CompilerPassInterface
         }
 
         $scanner = $container->getDefinition('sineflow.clamav.scanner');
+
+        $scanner->setFactory([ScannerFactory::class, 'createScanner']);
 
 
         if ($definition = $container->getDefinition('sonata.media.provider.image')) {
