@@ -13,6 +13,7 @@ init_cms:
 
 'Cannot create content, object is invalid': Please check your data, content is invalid or missing
 password_too_short: 'This password is too short. It should have at least {{ limit }} character or more.| This password is too short. It should have at least {{ limit }} character or more.'
+user_group_empty_roles: Please select at least on user role.
 menu:
     page_or_url:
         required: Either a page or a redirect url must be set.

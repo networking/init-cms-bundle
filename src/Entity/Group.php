@@ -12,7 +12,9 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Entity;
 
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
@@ -30,6 +32,7 @@ class Group implements \Stringable
     protected $id;
     
     #[ORM\Column(type: 'simple_array')]
+    #[Assert\Count(min: 1, minMessage: 'user_group_empty_roles')]
     protected array $roles = [];
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -62,22 +65,6 @@ class Group implements \Stringable
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasRole($role): bool
-    {
-        return in_array(strtoupper((string) $role), $this->roles, true);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRoles()
-    {
-        return $this->roles;
     }
 
     /**
@@ -118,4 +105,31 @@ class Group implements \Stringable
         return $this->name ?? '';
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+
+        // we need to make sure to have at least one role
+        $roles[] = User::ROLE_DEFAULT;
+
+        return array_values(array_unique($roles));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasRole($role): bool
+    {
+        return \in_array(strtoupper((string) $role), $this->getRoles(), true);
+    }
+
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole(static::ROLE_SUPER_ADMIN);
+    }
 }
