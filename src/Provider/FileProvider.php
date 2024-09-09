@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Provider;
 
+use Sineflow\ClamAV\Exception\FileScanException;
 use Sineflow\ClamAV\Exception\SocketException;
 use Sineflow\ClamAV\Scanner;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -59,6 +60,12 @@ class FileProvider extends BaseProvider
                 );
 
                 return;
+            } catch (FileScanException $e) {
+                @trigger_error(
+                    $e->getMessage(),
+                    \E_USER_WARNING
+                );
+                // do nothing
             }
         }
     }
@@ -74,6 +81,12 @@ class FileProvider extends BaseProvider
                     throw new UploadException(sprintf('The file is infected with a virus'));
                 }
             } catch (SocketException $e) {
+                @trigger_error(
+                    $e->getMessage(),
+                    \E_USER_WARNING
+                );
+                // do nothing
+            } catch (FileScanException $e) {
                 @trigger_error(
                     $e->getMessage(),
                     \E_USER_WARNING
