@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * Created by PhpStorm.
@@ -9,10 +10,8 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Provider;
 
-use Sineflow\ClamAV\DTO\ScannedFile;
+use Sineflow\ClamAV\Exception\SocketException;
 use Sineflow\ClamAV\Scanner;
-use Sineflow\ClamAV\ScanStrategy\ScanStrategyClamdNetwork;
-use Sineflow\ClamAV\ScanStrategy\ScanStrategyClamdUnix;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\Form\Validator\ErrorElement;
 use Sonata\MediaBundle\CDN\Server;
@@ -30,11 +29,7 @@ class FileProvider extends BaseProvider
     {
         $this->scanner = $scanner;
     }
-    /**
-     * @param MediaInterface $media
-     *
-     * @return string
-     */
+
     protected function generateReferenceName(MediaInterface $media): string
     {
         return $media->getMetadataValue('filename');
@@ -46,32 +41,50 @@ class FileProvider extends BaseProvider
 
         $uoloadedFile = $media->getBinaryContent();
 
-        if($uoloadedFile instanceof UploadedFile && $this->scanner){
-            $scanResult = $this->scanner->scan($uoloadedFile->getPathname());
-            if ($scanResult->isClean()) {
+        if ($uoloadedFile instanceof UploadedFile && $this->scanner) {
+            try {
+                $scanResult = $this->scanner->scan(
+                    $uoloadedFile->getPathname()
+                );
+                if (!$scanResult->isClean()) {
+                    $errorElement->with('binaryContent')->addViolation(
+                        'The file is infected with the %virus_name% virus.',
+                        ['%virus_name%' => $scanResult->getVirusName()]
+                    )->end();
+                }
+            } catch (SocketException $e) {
+                @trigger_error(
+                    $e->getMessage(),
+                    \E_USER_WARNING
+                );
+
                 return;
-            } else {
-                $errorElement->with('binaryContent')->addViolation(
-                    'The file is infected with the %virus_name% virus.', ['%virus_name%' => $scanResult->getVirusName()]
-                )->end();
             }
         }
-
     }
 
     protected function doTransform(MediaInterface $media): void
     {
-        if($media->getBinaryContent() instanceof UploadedFile && $this->scanner){
-            $scanResult = $this->scanner->scan($media->getBinaryContent()->getPathname());
-            if (!$scanResult->isClean()) {
-                throw new UploadException(sprintf('The file is infected with a virus'));
+        if ($media->getBinaryContent() instanceof UploadedFile && $this->scanner) {
+            try {
+                $scanResult = $this->scanner->scan(
+                    $media->getBinaryContent()->getPathname()
+                );
+                if (!$scanResult->isClean()) {
+                    throw new UploadException(sprintf('The file is infected with a virus'));
+                }
+            } catch (SocketException $e) {
+                @trigger_error(
+                    $e->getMessage(),
+                    \E_USER_WARNING
+                );
+                // do nothing
             }
         }
+
+        parent::doTransform($media);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildEditForm(FormMapper $formMapper): void
     {
         $formMapper->add('name');
