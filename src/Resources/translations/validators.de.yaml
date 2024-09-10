@@ -20,4 +20,5 @@ menu:
 
 
 The file is infected with a virus: Diese Datei ist mit einem Virus infiziert.
+The file is infected with known a virus: Diese Datei ist mit dem {{ virus_name }} Virus infiziert.
 

@@ -15,3 +15,8 @@ password_too_short: 'Ce mot de passe est trop court. Il doit avoir au moins {{ l
 menu:
     page_or_url:
         required: Une page ou une URL de redirection doit être définie.
+
+
+
+The file is infected with a virus: Ce fichier est infecté par un virus.
+The file is infected with known a virus: Ce fichier est infecté par le virus connu {{ virus_name }}.

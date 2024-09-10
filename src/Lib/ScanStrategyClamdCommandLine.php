@@ -12,18 +12,38 @@ use Symfony\Component\Process\Process;
 
 class ScanStrategyClamdCommandLine implements ScanStrategyInterface
 {
+    
+    const DEFAULT_PATH = '/usr/bin/clamdscan';
+    
+
+    public function __construct(
+        private readonly string $path,
+        private readonly string $env = 'prod')
+    {
+    }
+    
     public function scan(string $filePath): ScannedFile
     {
 
         if (!is_file($filePath)) {
             throw new FileScanException($filePath, 'Not a file.');
         }
+        $process = new Process([$this->path, '--fdpass',  '--no-summary', $filePath]);
+        try {
+            $process->mustRun();
+            $response =  $process->getOutput();
+        } catch (ProcessFailedException $exception) {
 
-        $process = new Process(['clamdscan', '--fdpass',  '--no-summary', $filePath]);
-        $process->run();
+            if($exception->getProcess()->getExitCode() !== 1){
 
+                $message = 'dev' === $this->env?$exception->getProcess()->getErrorOutput():$exception->getProcess()->getExitCodeText();
 
-        $response = $process->getOutput();
+                throw new FileScanException($filePath, $message);
+            }
+
+            $response = $exception->getProcess()->getOutput();
+
+        }
 
         return new ScannedFile($response);
     }
@@ -31,7 +51,7 @@ class ScanStrategyClamdCommandLine implements ScanStrategyInterface
     public function version(): string
     {
 
-        $process = new Process(['clamdscan', '--version']);
+        $process = new Process([$this->path, '--version']);
         $process->run();
 
         if (!$process->isSuccessful()) {
@@ -39,12 +59,12 @@ class ScanStrategyClamdCommandLine implements ScanStrategyInterface
         }
         $output = $process->getOutput();
 
-        return 'PONG' === trim($output);
+        return trim($output);
     }
 
     public function ping(): bool
     {
-        $process = new Process(['clamdscan', '--ping', '1']);
+        $process = new Process([$this->path, '--ping', '1']);
         $process->run();
 
         if (!$process->isSuccessful()) {

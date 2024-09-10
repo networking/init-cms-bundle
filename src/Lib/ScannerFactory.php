@@ -7,14 +7,26 @@ namespace Networking\InitCmsBundle\Lib;
 use Sineflow\ClamAV\Scanner;
 use Sineflow\ClamAV\ScanStrategy\ScanStrategyClamdNetwork;
 use Sineflow\ClamAV\ScanStrategy\ScanStrategyClamdUnix;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-class ScannerFactory extends \Sineflow\ClamAV\Bundle\ScannerFactory
+class ScannerFactory
 {
-    public static function createScanner(array $options)
+
+    public function __construct(#[Autowire(env: 'APP_ENV')] private string $env)
+    {
+
+    }
+
+    public function createScanner(array $options)
     {
         switch ($options['strategy']) {
+            case 'clamd_cli':
             case 'clamd_clamd':
-                $scanStrategy = new ScanStrategyClamdCommandLine();
+
+                $scanStrategy = new ScanStrategyClamdCommandLine(
+                    $options['socket'] ?? ScanStrategyClamdCommandLine::DEFAULT_PATH,
+                    $this->env
+                );
                 break;
             case 'clamd_unix':
                 $scanStrategy = new ScanStrategyClamdUnix(

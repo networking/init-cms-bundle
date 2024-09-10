@@ -25,7 +25,9 @@ class ClamAVCompilerPass implements CompilerPassInterface
 
         $scanner = $container->getDefinition('sineflow.clamav.scanner');
 
-        $scanner->setFactory([ScannerFactory::class, 'createScanner']);
+        $factoryServiceDefinition = $container->getDefinition('networking_init_cms.clamav_factory');
+
+        $scanner->setFactory([$factoryServiceDefinition, 'createScanner']);
 
 
         if ($definition = $container->getDefinition('sonata.media.provider.image')) {

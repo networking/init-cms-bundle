@@ -19,3 +19,4 @@ menu:
         required: Either a page or a redirect url must be set.
 
 The file is infected with a virus: This file is infected with a virus.
+The file is infected with known a virus: This file is infected with the known virus {{ virus_name }}.

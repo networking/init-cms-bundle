@@ -266,5 +266,8 @@
         <service id="Networking\InitCmsBundle\MessageHandler\UserMessageHandler" autowire="true" public="true">
         </service>
 
+        <service id="networking_init_cms.clamav_factory" class="Networking\InitCmsBundle\Lib\ScannerFactory" autowire="true" public="true">
+        </service>
+
     </services>
 </container>
