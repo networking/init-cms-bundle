@@ -11,18 +11,14 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ScannerFactory
 {
-
     public function __construct(#[Autowire(env: 'APP_ENV')] private string $env)
     {
-
     }
 
     public function createScanner(array $options)
     {
         switch ($options['strategy']) {
             case 'clamd_cli':
-            case 'clamd_clamd':
-
                 $scanStrategy = new ScanStrategyClamdCommandLine(
                     $options['socket'] ?? ScanStrategyClamdCommandLine::DEFAULT_PATH,
                     $this->env
