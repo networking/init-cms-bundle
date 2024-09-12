@@ -48,10 +48,7 @@ class FileProvider extends BaseProvider
                     $uploadedFile->getPathname()
                 );
 
-
                 if (!$scanResult->isClean()) {
-
-                    dump($scanResult);
                     $errorElement->with('binaryContent')->addViolation(
                         'The file is infected with known a virus',
                         ['{{ virus_name }}' => $scanResult->getVirusName()]
@@ -65,34 +62,34 @@ class FileProvider extends BaseProvider
 
                 return;
             } catch (FileScanException $e) {
-                $errorElement->with('binaryContent')->addViolation($e->getMessage() )->end();
+                $errorElement->with('binaryContent')->addViolation($e->getMessage())->end();
             }
         }
     }
 
-//    protected function doTransform(MediaInterface $media): void
-//    {
-//        if ($media->getBinaryContent() instanceof UploadedFile && $this->scanner) {
-//            try {
-//                $scanResult = $this->scanner->scan(
-//                    $media->getBinaryContent()->getPathname()
-//                );
-//                if (!$scanResult->isClean()) {
-//                    throw new UploadException('The file is infected with known a virus');
-//                }
-//            } catch (SocketException $e) {
-//                @trigger_error(
-//                    $e->getMessage(),
-//                    \E_USER_ERROR
-//                );
-//                // do nothing
-//            } catch (FileScanException $e) {
-//                throw new UploadException($e->getMessage());
-//            }
-//        }
-//
-//        parent::doTransform($media);
-//    }
+    //    protected function doTransform(MediaInterface $media): void
+    //    {
+    //        if ($media->getBinaryContent() instanceof UploadedFile && $this->scanner) {
+    //            try {
+    //                $scanResult = $this->scanner->scan(
+    //                    $media->getBinaryContent()->getPathname()
+    //                );
+    //                if (!$scanResult->isClean()) {
+    //                    throw new UploadException('The file is infected with known a virus');
+    //                }
+    //            } catch (SocketException $e) {
+    //                @trigger_error(
+    //                    $e->getMessage(),
+    //                    \E_USER_ERROR
+    //                );
+    //                // do nothing
+    //            } catch (FileScanException $e) {
+    //                throw new UploadException($e->getMessage());
+    //            }
+    //        }
+    //
+    //        parent::doTransform($media);
+    //    }
 
     public function buildEditForm(FormMapper $formMapper): void
     {
