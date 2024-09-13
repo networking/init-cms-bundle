@@ -259,7 +259,7 @@ file that was distributed with this source code.
                             <strong>{{ "label.select_provider"|trans({}, 'MediaAdmin') }}</strong>
                             <div class="btn-group btn-group-sm">
                                 <a class="btn btn-sm btn-{{ currentProvider is empty ? 'primary': 'light' }}"
-                                   href="{{ admin.generateUrl(route, {'context': persistent_parameters.context, 'provider': null, 'active_tab' : persistent_parameters.context}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
+                                   href="{{ admin.generateUrl(route, {'context': persistent_parameters.context, 'provider': '', 'active_tab' : persistent_parameters.context}) }}">{{ "link.all_providers"|trans({}, 'MediaAdmin') }}</a>
                                 {% for provider_name in providers %}
                                     <a class="btn btn-sm btn-{{ currentProvider == provider_name? 'primary':'light' }}"
                                        href="{{ admin.generateUrl(route, {'context': persistent_parameters.context, 'provider': provider_name, 'active_tab' : persistent_parameters.context}) }}">{{ provider_name|trans({}) }}</a>
