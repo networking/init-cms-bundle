@@ -196,7 +196,7 @@ file that was distributed with this source code.
                                                             data-field="#download"></a></span>
                                             </div>
                                             {% if 'sonata.media.security.public_strategy' != sonata_media.pool.getContext(object.context).download.strategy %}
-                                                <span class="label label-warning">{{ 'label.protected_download_url_notice'|trans({}, 'SonataMediaBundle') }}</span> {{ sonata_media.pool.downloadSecurity(object).description|raw }}
+                                                <span class="label label-warning">{{ 'label.protected_download_url_notice'|trans({}, 'SonataMediaBundle') }}</span> {{ sonata_media.pool.downloadStrategy(object).description|raw }}
                                             {% endif %}
                                         </td>
                                     <tr>
