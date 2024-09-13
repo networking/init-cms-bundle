@@ -36,5 +36,8 @@
             <tag name="doctrine.event_listener" event="postRemove" />
         </service>
 
+        <service id="Networking\InitCmsBundle\EventListener\TransUnitEventListener">
+        </service>
+
     </services>
 </container>
