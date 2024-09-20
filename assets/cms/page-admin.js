@@ -50,7 +50,7 @@ function initDropZone() {
                 }
 
                 saveLayoutBlockSort(evt, (response) => {
-                    CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
+                    CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message, 1000);
                 })
             },
             onAdd: function (/**CustomEvent*/evt, dragEl) {
@@ -375,7 +375,7 @@ let saveLayoutBlock = (e) => {
             editBlock.innerHTML = ''
             displayBlock.classList.remove('d-none')
             displayBlock.innerHTML = response.data.html
-            CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message);
+            CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message, 1000);
             let event = new CustomEvent('page-updated')
             document.body.dispatchEvent(event)
             fadeInContentBlocks()
@@ -419,7 +419,7 @@ let createLayoutBlock = (e) => {
             let template = document.createElement('template');
             template.innerHTML = response.data.html.trim();;
             div.replaceWith(template.content.firstChild)
-            CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message);
+            CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message, 1000);
             let event = new CustomEvent('page-updated')
             document.body.dispatchEvent(event)
             fadeInContentBlocks()
@@ -452,7 +452,7 @@ let toggleActive = (e) => {
     axios.post(url, {id: id}, axiosConfig).then((response) => {
 
 
-        CMSAdmin.createInitCmsMessageBox('success', response.data.message);
+        CMSAdmin.createInitCmsMessageBox('success', response.data.message, 1000);
         if (response.data.active) {
             icon.classList.remove('ki-minus-circle')
             icon.classList.add('ki-check-circle')
@@ -505,7 +505,7 @@ let deleteBlock = (e) => {
             }).then((response) => {
                 fadeInContentBlocks()
                 document.querySelector('#layoutBlock_' + el.dataset.value).remove()
-                CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
+                CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message, 1000);
                 saveLayoutBlockSort();
                 if (container.querySelectorAll('.draggable').length) {
                     container.querySelector('.empty_layout_block').classList.add("d-none")
@@ -547,7 +547,7 @@ let unlinkTranslation = (e) => {
                 headers: headers
             }).then((response) => {
                 document.querySelector('#translations').innerHTML = response.data.html
-                CMSAdmin.createInitCmsMessageBox('success', response.data.message);
+                CMSAdmin.createInitCmsMessageBox('success', response.data.message, 1000);
             }).catch((err) => {
                 CMSAdmin.createInitCmsMessageBox('error', 'Something went wrong');
             })
@@ -580,7 +580,7 @@ let submitTranslationLink = (e) => {
 
     axios.post(form.action, new FormData(form), axiosConfig).then((response) => {
         document.querySelector('#translations').innerHTML = response.data.html
-        CMSAdmin.createInitCmsMessageBox('success', response.data.message);
+        CMSAdmin.createInitCmsMessageBox('success', response.data.message, 1000);
     }, axiosConfig).catch((err) => {
 
         if (err.response.data.message) {
@@ -607,7 +607,7 @@ let submitPageSettings = (e) => {
             initDropZone()
         }
 
-        CMSAdmin.createInitCmsMessageBox('success', response.data.message);
+        CMSAdmin.createInitCmsMessageBox('success', response.data.message, 1000);
     }).catch((err) => {
         let data = err.response.data
 

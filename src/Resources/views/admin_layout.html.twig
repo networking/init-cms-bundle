@@ -322,13 +322,14 @@ file that was distributed with this source code.
         {% set session_var = 'sonata_flash_' ~ notice_level %}
         {% for flash in app.session.flashbag.get(session_var) %}
         KTUtil.onDOMContentLoaded(function () {
-            CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+
+            CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}', {{ notice_level =='success'?1000:2000 }});
         })
         {% endfor %}
 
         {% for flash in app.session.flashbag.get(notice_level) %}
         KTUtil.onDOMContentLoaded(function () {
-            CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');
+            CMSAdmin.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}',{{ notice_level =='success'?1000:2000 }});
         })
         {% endfor %}
         {% endfor %}
