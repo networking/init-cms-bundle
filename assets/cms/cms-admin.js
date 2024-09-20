@@ -309,18 +309,18 @@ const CMSAdmin = {
         this.initCkeditor()
         this.initCollectionType()
     },
-    createInitCmsMessageBox(status, message) {
+    createInitCmsMessageBox(status, message, timeout = 2000, positionClass = 'toastr-top-right') {
         toastr.options = {
             "closeButton": true,
             "debug": false,
             "newestOnTop": true,
             "progressBar": false,
-            "positionClass": "toastr-top-right",
+            "positionClass": positionClass,
             "preventDuplicates": true,
             "onclick": null,
             "showDuration": "2000",
             "hideDuration": "1000",
-            "timeOut": "5000",
+            "timeOut": timeout,
             "extendedTimeOut": "1000",
             "showEasing": "linear",
             "hideEasing": "linear",
