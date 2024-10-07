@@ -13,6 +13,9 @@ namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
 use Networking\InitCmsBundle\Admin\Pool;
 use Networking\InitCmsBundle\Builder\ListBuilder;
+use Networking\InitCmsBundle\Action\CheckEmailAction;
+use Networking\InitCmsBundle\Action\RequestAction;
+use Networking\InitCmsBundle\Action\ResetAction;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -57,6 +60,21 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
                 $definition->addMethodCall('setGoogleAuthEnabled', [$container->getParameter('networking_init_cms.google.authenticator.enabled')]);
                 $definition->addMethodCall('setGoogleAuthenticatorHelper', [$container->getDefinition('networking_init_cms.google.authenticator.helper')]);
             }
+        }
+
+        if($container->hasDefinition('sonata.user.action.request')){
+            $definition = $container->getDefinition('sonata.user.action.request');
+            $definition->setClass(RequestAction::class);
+        }
+
+        if($container->hasDefinition('sonata.user.action.check_email')){
+            $definition = $container->getDefinition('sonata.user.action.check_email');
+            $definition->setClass(CheckEmailAction::class);
+        }
+
+        if($container->hasDefinition('sonata.user.action.reset')){
+            $definition = $container->getDefinition('sonata.user.action.reset');
+            $definition->setClass(ResetAction::class);
         }
 
     }
