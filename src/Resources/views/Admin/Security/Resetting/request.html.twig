@@ -1,17 +1,13 @@
 {#
-
 This file is part of the Sonata package.
 
 (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
 {% extends base_template %}
-
-{% block sidebar_left %}{% endblock %}
 
 {% block sonata_nav %}
 {% endblock sonata_nav %}
@@ -24,51 +20,48 @@ file that was distributed with this source code.
 
 {% block body_attributes %}class="sonata-bc login-page"{% endblock %}
 
-{% block content %}
+{% block sonata_wrapper %}
     <div class="row">
         <div id="login" class="connection modal">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
-                    {% block sonata_user_reset_request_form %}
-                        {% block sonata_user_reset_request_error %}
-                            {% if invalid_username is defined %}
-                                <div class="alert alert-danger">{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}, 'FOSUserBundle') }}</div>
-                            {% endif %}
-                        {% endblock %}
-                        <form action="{{ path('networking_init_cms_admin_resetting_send_email') }}" method="post"
-                              role="form" class="form-vertical">
-                            <div class="modal-body">
-                                <p class="login-box-msg">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</p>
+                    <div class="login-box modal-body">
+                        <div class="login-box-body">
+                            {% block sonata_user_reset_request_form %}
+                                <p class="login-box-msg">{{ 'resetting.request.submit'|trans({}, 'SonataUserBundle') }}</p>
 
+                                {{ form_start(form) }}
                                 <div class="form-group has-feedback">
-                                    <input type="text" class="form-control" id="username" name="username"
-                                           required="required"
-                                           placeholder="{{ 'resetting.request.username'|trans({}, 'FOSUserBundle')|replace({':': ''}) }}"/>
-                                    <span class="fa fa-user form-control-feedback"></span>
+                                    {{ form_widget(form.username, {'attr': {
+                                        'class': 'form-control input-large',
+                                        'placeholder': 'resetting.request.username'|trans({}, 'SonataUserBundle')|replace({':': ''})
+                                    }}) }}
+                                    {{ form_errors(form.username) }}
                                 </div>
-                                <p>
-                                    <a href="{{ path('networking_init_cms_admin_security_login') }}">{{ 'title_user_authentication'|trans({}, 'SonataUserBundle') }}</a>
-                                </p>
-                            </div>
-
-                            <div class="modal-footer">
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <button type="submit"
-                                                class="btn btn-primary btn-block btn-flat">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</button>
-
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <button type="submit" name="submit" class="btn btn-primary btn-block btn-flat">
+                                            {{ 'resetting.request.submit'|trans({}, 'SonataUserBundle') }}
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
-
-                    {% endblock %}
+                                {{ form_end(form) }}
+                                <hr>
+                                <div class="row mt-3">
+                                    <div class="col text-center">
+                                        <p>
+                                            <a href="{{ path('sonata_user_admin_security_login') }}">
+                                                {{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endblock %}
+                        </div>
+                    </div>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
         </div>
-        <!-- /.modal -->
     </div>
 
-{% endblock content %}
+{% endblock sonata_wrapper %}

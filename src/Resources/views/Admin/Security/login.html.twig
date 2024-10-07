@@ -7,7 +7,6 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
 {% extends base_template %}
-
 {% block sonata_nav %}
 {% endblock sonata_nav %}
 
@@ -126,7 +125,8 @@ file that was distributed with this source code.
                                                 class="btn btn-primary btn-block btn-flat">{{ 'security.login.submit'|trans({}, 'SonataUserBundle') }}</button>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 20px">
+                                <hr>
+                                <div class="row mt-3">
                                     <div class="col text-center">
                                         <p>
                                             <a href="{{ reset_route }}">{{ 'forgotten_password'|trans({}, 'SonataUserBundle') }}</a>
@@ -139,6 +139,7 @@ file that was distributed with this source code.
                 {% endblock %}
             </div>
         </div>
+    </div>
     </div>
 
 {% endblock sonata_wrapper %}

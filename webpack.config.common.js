@@ -23,7 +23,7 @@ module.exports = {
         networking_initcms: [
             './assets/vendor/select2/css/select2.min.css',
             './assets/vendor/select2/css/select2-bootstrap.min.css',
-            './assets/vendor/jquery-ui-1.12.1/jquery-ui.css',
+            './assets/vendor/jquery-ui-1.14.0/jquery-ui.css',
             './assets/vendor/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.css',
             './assets/scss/initcms_bootstrap.scss',
             './assets/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css'
@@ -167,7 +167,7 @@ module.exports = {
                 {
                     dest: './src/Resources/public/jquery-plugins.js',
                     src: [
-                        './assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js',
+                        './assets/vendor/jquery-ui-1.14.0/jquery-ui.js',
                         './assets/vendor/jquery-form/jquery.form.js',
                     ],
                     transforms: {
@@ -195,7 +195,7 @@ module.exports = {
                     dest: './src/Resources/public/app.js',
                     src: [
                         './assets/js/collection.js',
-                        './assets/vendor/select2/js/select2.full.js',
+                        './node_modules/select2/dist/js/select2.full.js',
                         './assets/vendor/featherlight/src/featherlight.js',
                         './assets/js/index.js',
                     ],

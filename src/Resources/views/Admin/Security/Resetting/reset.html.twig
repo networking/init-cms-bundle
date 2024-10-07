@@ -1,12 +1,10 @@
 {#
-
 This file is part of the Sonata package.
 
 (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 
 {% extends base_template %}
@@ -17,48 +15,49 @@ file that was distributed with this source code.
 {% block logo %}
 {% endblock logo %}
 
-{% block sidebar_left %}
-{% endblock %}
+{% block sonata_left_side %}
+{% endblock sonata_left_side %}
 
 {% block body_attributes %}class="sonata-bc login-page"{% endblock %}
 
-{% block content %}
+{% block sonata_wrapper %}
     <div class="row">
         <div id="login" class="connection modal">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
-                    {{ form_start(form, { 'action': path('networking_init_cms_admin_resetting_reset', {'token': token}) }) }}
-                    <div class="modal-body">
-                        <p class="login-box-msg">{{ 'resetting.reset.submit'|trans({}, 'FOSUserBundle') }}</p>
-                        <div class="form-group">
-                            {{ form_widget(form.plainPassword.first, {'attr': {
-                                'class': 'form-control',
-                                'placeholder': 'form.new_password'|trans({}, 'FOSUserBundle')
-                            }}) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_widget(form.plainPassword.second, {'attr': {
-                                'class': 'form-control',
-                                'placeholder': 'form.new_password_confirmation'|trans({}, 'FOSUserBundle')
-                            }}) }}
+                    <div class="login-box modal-body">
+                        <div class="login-box-body">
+                            {% block sonata_user_reset_form %}
+                                <p class="login-box-msg">{{ 'resetting.reset.submit'|trans({}, 'SonataUserBundle') }}</p>
+                                {{ form_start(form, { 'action': path('sonata_user_admin_resetting_reset', {'token': token}) }) }}
+                                <div class="form-group">
+                                    {{ form_widget(form.plainPassword.first, {'attr': {
+                                        'class': 'form-control input-large',
+                                        'placeholder': 'form.new_password'|trans({}, 'SonataUserBundle')
+                                    }}) }}
+                                    {{ form_errors(form.plainPassword.first) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_widget(form.plainPassword.second, {'attr': {
+                                        'class': 'form-control input-large',
+                                        'placeholder': 'form.new_password_confirmation'|trans({}, 'SonataUserBundle')
+                                    }}) }}
+                                    {{ form_errors(form.plainPassword.second) }}
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <button type="submit" name="submit" class="btn btn-primary btn-block btn-flat">
+                                            {{ 'resetting.reset.submit'|trans({}, 'SonataUserBundle') }}
+                                        </button>
+                                    </div>
+                                </div>
+                                {{ form_end(form) }}
+                            {% endblock %}
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <input type="submit" class="btn btn-primary" id="_submit" name="_submit"
-                                       value="{{ 'resetting.reset.submit'|trans({}, 'FOSUserBundle') }}"/>
-                            </div>
-                        </div>
-                    </div>
-                    {{ form_end(form) }}
-                    </form>
                 </div>
-                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-dialog -->
         </div>
-        <!-- /.modal -->
     </div>
 
-{% endblock content %}
+{% endblock sonata_wrapper %}
