@@ -1,1 +1,8 @@
-CKEDITOR.plugins.setLang("autoembed","pt",{embeddingInProgress:"Trying to embed pasted URL...",embeddingFailed:"Não foi possível embeber diretamente este URL."});
+/*
+ Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+CKEDITOR.plugins.setLang( 'autoembed', 'pt', {
+	embeddingInProgress: 'Trying to embed pasted URL...', // MISSING
+	embeddingFailed: 'Não foi possível embeber diretamente este URL.'
+} );

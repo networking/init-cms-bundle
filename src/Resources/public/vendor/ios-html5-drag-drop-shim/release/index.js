@@ -1,1 +1,778 @@
-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"function"==typeof define&&define.amd?define(["exports"],e):e(t.MobileDragDrop=t.MobileDragDrop||{})}(this,(function(t){"use strict";var e;var r,a={iterationInterval:150};function o(t){if(console.log("dnd-poly: global touchstart"),r)console.log("dnd-poly: drag operation already active");else{var e=function(t){var e=t.target;do{if(!1!==e.draggable&&e.getAttribute&&"true"===e.getAttribute("draggable"))return e}while((e=e.parentNode)&&e!==document.body)}(t);if(e)try{r=new u(t,a,e,n)}catch(e){throw n(a,t,3),e}}}function n(t,e,a){if(0===a&&(console.log("dnd-poly: Drag never started. Last event was "+e.type),t.defaultActionOverride))try{t.defaultActionOverride(e),e.defaultPrevented&&console.log("dnd-poly: defaultActionOverride has taken care of triggering the default action. preventing default on original event")}catch(t){console.log("dnd-poly: error in defaultActionOverride: "+t)}r=null}var i=["none","copy","copyLink","copyMove","link","linkMove","move","all"],s=["none","copy","move","link"],d=["","-webkit-"],c="dnd-poly-",g=c+"drag-image",l=c+"snapback",h=c+"icon",u=function(){function t(t,e,r,a){this._initialEvent=t,this._config=e,this._sourceNode=r,this._dragOperationEndedCb=a,this._dragOperationState=0,this._immediateUserSelection=null,this._currentDropTarget=null,console.log("dnd-poly: setting up potential drag operation.."),this._lastTouchEvent=t,this._initialTouch=t.changedTouches[0],this._touchMoveHandler=this._onTouchMove.bind(this),this._touchEndOrCancelHandler=this._onTouchEndOrCancel.bind(this),_("touchmove",this._touchMoveHandler,!1),_("touchend",this._touchEndOrCancelHandler,!1),_("touchcancel",this._touchEndOrCancelHandler,!1)}return t.prototype._setup=function(){var t=this;console.log("dnd-poly: starting drag and drop operation"),this._dragOperationState=1,this._currentDragOperation=s[0],this._dragDataStore={_data:{},_effectAllowed:void 0,_mode:3,_types:[]},this._currentHotspotCoordinates={x:null,y:null},this._dragImagePageCoordinates={x:null,y:null};var e,r,a=this._sourceNode;if(this._dataTransfer=new f(this._dragDataStore,(function(e,r,o){a=e,"number"!=typeof r&&"number"!=typeof o||(t._dragImageOffset={x:r||0,y:o||0})})),this._dragDataStore._mode=2,this._dataTransfer.dropEffect=s[0],S("dragstart",this._sourceNode,this._lastTouchEvent,this._dragDataStore,this._dataTransfer))return console.log("dnd-poly: dragstart cancelled"),this._dragOperationState=3,this._cleanup(),!1;if(T("page",this._lastTouchEvent,this._dragImagePageCoordinates),this._dragImage=(r=(e=a).cloneNode(!0),O(e,r),r.style.position="absolute",r.style.left="0px",r.style.top="0px",r.style.zIndex="999999",r.classList.add(g),r.classList.add(h),r),this._dragImageTransforms=function(t){return d.map((function(e){var r=t.style[e+"transform"];return r&&"none"!==r?r.replace(/translate\(\D*\d+[^,]*,\D*\d+[^,]*\)\s*/g,""):""}))}(this._dragImage),!this._dragImageOffset)if(this._config.dragImageOffset)this._dragImageOffset={x:this._config.dragImageOffset.x,y:this._config.dragImageOffset.y};else if(this._config.dragImageCenterOnTouch){var o=getComputedStyle(a);this._dragImageOffset={x:0-parseInt(o.marginLeft,10),y:0-parseInt(o.marginTop,10)}}else{var n=a.getBoundingClientRect();o=getComputedStyle(a);this._dragImageOffset={x:n.left-this._initialTouch.clientX-parseInt(o.marginLeft,10)+n.width/2,y:n.top-this._initialTouch.clientY-parseInt(o.marginTop,10)+n.height/2}}return D(this._dragImage,this._dragImagePageCoordinates,this._dragImageTransforms,this._dragImageOffset,this._config.dragImageCenterOnTouch),document.body.appendChild(this._dragImage),this._iterationIntervalId=setInterval((function(){t._iterationLock?console.log("dnd-poly: iteration skipped because previous iteration hast not yet finished."):(t._iterationLock=!0,t._dragAndDropProcessModelIteration(),t._iterationLock=!1)}),this._config.iterationInterval),!0},t.prototype._cleanup=function(){console.log("dnd-poly: cleanup"),this._iterationIntervalId&&(clearInterval(this._iterationIntervalId),this._iterationIntervalId=null),p("touchmove",this._touchMoveHandler),p("touchend",this._touchEndOrCancelHandler),p("touchcancel",this._touchEndOrCancelHandler),this._dragImage&&(this._dragImage.parentNode.removeChild(this._dragImage),this._dragImage=null),this._dragOperationEndedCb(this._config,this._lastTouchEvent,this._dragOperationState)},t.prototype._onTouchMove=function(t){var e=this;if(!1!==y(t,this._initialTouch.identifier)){if(this._lastTouchEvent=t,0===this._dragOperationState){var r=void 0;if(this._config.dragStartConditionOverride)try{r=this._config.dragStartConditionOverride(t)}catch(t){console.error("dnd-poly: error in dragStartConditionOverride hook: "+t),r=!1}else r=1===t.touches.length;return r?void(!0===this._setup()&&(this._initialEvent.preventDefault(),t.preventDefault())):void this._cleanup()}if(console.log("dnd-poly: moving draggable.."),t.preventDefault(),T("client",t,this._currentHotspotCoordinates),T("page",t,this._dragImagePageCoordinates),this._config.dragImageTranslateOverride)try{var a=!1;if(this._config.dragImageTranslateOverride(t,{x:this._currentHotspotCoordinates.x,y:this._currentHotspotCoordinates.y},this._immediateUserSelection,(function(t,r){e._dragImage&&(a=!0,e._currentHotspotCoordinates.x+=t,e._currentHotspotCoordinates.y+=r,e._dragImagePageCoordinates.x+=t,e._dragImagePageCoordinates.y+=r,D(e._dragImage,e._dragImagePageCoordinates,e._dragImageTransforms,e._dragImageOffset,e._config.dragImageCenterOnTouch))})),a)return}catch(t){console.log("dnd-poly: error in dragImageTranslateOverride hook: "+t)}D(this._dragImage,this._dragImagePageCoordinates,this._dragImageTransforms,this._dragImageOffset,this._config.dragImageCenterOnTouch)}},t.prototype._onTouchEndOrCancel=function(t){if(!1!==y(t,this._initialTouch.identifier)){if(this._config.dragImageTranslateOverride)try{this._config.dragImageTranslateOverride(void 0,void 0,void 0,(function(){}))}catch(t){console.log("dnd-poly: error in dragImageTranslateOverride hook: "+t)}0!==this._dragOperationState?(t.preventDefault(),this._dragOperationState="touchcancel"===t.type?3:2):this._cleanup()}},t.prototype._dragAndDropProcessModelIteration=function(){var t=this,e=this._currentDragOperation;this._dragDataStore._mode=3,this._dataTransfer.dropEffect=s[0];var r=S("drag",this._sourceNode,this._lastTouchEvent,this._dragDataStore,this._dataTransfer);if(r&&(console.log("dnd-poly: drag event cancelled."),this._currentDragOperation=s[0]),r||2===this._dragOperationState||3===this._dragOperationState)return this._dragOperationEnded(this._dragOperationState)?void function(t,e,r,a){var o=getComputedStyle(t);if("hidden"===o.visibility||"none"===o.display)return console.log("dnd-poly: source node is not visible. skipping snapback transition."),void a();e.classList.add(l);var n=getComputedStyle(e),i=parseFloat(n.transitionDuration);if(isNaN(i)||0===i)return console.log("dnd-poly: no transition used - skipping snapback"),void a();console.log("dnd-poly: starting dragimage snap back");var s=t.getBoundingClientRect(),d={x:s.left,y:s.top};d.x+=document.body.scrollLeft||document.documentElement.scrollLeft,d.y+=document.body.scrollTop||document.documentElement.scrollTop,d.x-=parseInt(o.marginLeft,10),d.y-=parseInt(o.marginTop,10);var c=parseFloat(n.transitionDelay),g=Math.round(1e3*(i+c));D(e,d,r,void 0,!1),setTimeout(a,g)}(this._sourceNode,this._dragImage,this._dragImageTransforms,(function(){t._finishDragOperation()})):void this._finishDragOperation();var a=document.elementFromPoint(this._currentHotspotCoordinates.x,this._currentHotspotCoordinates.y);console.log("dnd-poly: new immediate user selection is: "+a);var o=this._currentDropTarget;a!==this._immediateUserSelection&&a!==this._currentDropTarget&&(this._immediateUserSelection=a,null!==this._currentDropTarget&&(this._dragDataStore._mode=3,this._dataTransfer.dropEffect=s[0],S("dragexit",this._currentDropTarget,this._lastTouchEvent,this._dragDataStore,this._dataTransfer,!1)),null===this._immediateUserSelection?(this._currentDropTarget=this._immediateUserSelection,console.log("dnd-poly: current drop target changed to null")):(this._dragDataStore._mode=3,this._dataTransfer.dropEffect=I(this._dragDataStore._effectAllowed,this._sourceNode),S("dragenter",this._immediateUserSelection,this._lastTouchEvent,this._dragDataStore,this._dataTransfer)?(console.log("dnd-poly: dragenter default prevented"),this._currentDropTarget=this._immediateUserSelection,this._currentDragOperation=E(this._dataTransfer.effectAllowed,this._dataTransfer.dropEffect)):this._immediateUserSelection!==document.body&&(this._currentDropTarget=document.body))),o!==this._currentDropTarget&&v(o)&&(console.log("dnd-poly: current drop target changed."),this._dragDataStore._mode=3,this._dataTransfer.dropEffect=s[0],S("dragleave",o,this._lastTouchEvent,this._dragDataStore,this._dataTransfer,!1,this._currentDropTarget)),v(this._currentDropTarget)&&(this._dragDataStore._mode=3,this._dataTransfer.dropEffect=I(this._dragDataStore._effectAllowed,this._sourceNode),!1===S("dragover",this._currentDropTarget,this._lastTouchEvent,this._dragDataStore,this._dataTransfer)?(console.log("dnd-poly: dragover not prevented on possible drop-target."),this._currentDragOperation=s[0]):(console.log("dnd-poly: dragover prevented."),this._currentDragOperation=E(this._dataTransfer.effectAllowed,this._dataTransfer.dropEffect))),console.log("dnd-poly: d'n'd iteration ended. current drag operation: "+this._currentDragOperation),e!==this._currentDragOperation&&this._dragImage.classList.remove(c+e);var n=c+this._currentDragOperation;!1===this._dragImage.classList.contains(n)&&this._dragImage.classList.add(n)},t.prototype._dragOperationEnded=function(t){console.log("dnd-poly: drag operation end detected with "+this._currentDragOperation);var e=this._currentDragOperation===s[0]||null===this._currentDropTarget||3===t;return e?v(this._currentDropTarget)&&(this._dragDataStore._mode=3,this._dataTransfer.dropEffect=s[0],S("dragleave",this._currentDropTarget,this._lastTouchEvent,this._dragDataStore,this._dataTransfer,!1)):v(this._currentDropTarget)&&(this._dragDataStore._mode=1,this._dataTransfer.dropEffect=this._currentDragOperation,!0===S("drop",this._currentDropTarget,this._lastTouchEvent,this._dragDataStore,this._dataTransfer)?this._currentDragOperation=this._dataTransfer.dropEffect:this._currentDragOperation=s[0]),e},t.prototype._finishDragOperation=function(){console.log("dnd-poly: dragimage snap back transition ended"),this._dragDataStore._mode=3,this._dataTransfer.dropEffect=this._currentDragOperation,S("dragend",this._sourceNode,this._lastTouchEvent,this._dragDataStore,this._dataTransfer,!1),this._dragOperationState=2,this._cleanup()},t}(),f=function(){function t(t,e){this._dataStore=t,this._setDragImageHandler=e,this._dropEffect=s[0]}return Object.defineProperty(t.prototype,"types",{get:function(){if(0!==this._dataStore._mode)return Object.freeze(this._dataStore._types)},enumerable:!0,configurable:!0}),t.prototype.setData=function(t,e){if(2===this._dataStore._mode){if(t.indexOf(" ")>-1)throw new Error("illegal arg: type contains space");this._dataStore._data[t]=e,-1===this._dataStore._types.indexOf(t)&&this._dataStore._types.push(t)}},t.prototype.getData=function(t){if(1===this._dataStore._mode||2===this._dataStore._mode)return this._dataStore._data[t]||""},t.prototype.clearData=function(t){if(2===this._dataStore._mode){if(t&&this._dataStore._data[t]){delete this._dataStore._data[t];var e=this._dataStore._types.indexOf(t);return void(e>-1&&this._dataStore._types.splice(e,1))}this._dataStore._data={},this._dataStore._types=[]}},t.prototype.setDragImage=function(t,e,r){2===this._dataStore._mode&&this._setDragImageHandler(t,e,r)},Object.defineProperty(t.prototype,"effectAllowed",{get:function(){return this._dataStore._effectAllowed},set:function(t){2===this._dataStore._mode&&i.indexOf(t)>-1&&(this._dataStore._effectAllowed=t)},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"dropEffect",{get:function(){return this._dropEffect},set:function(t){0!==this._dataStore._mode&&i.indexOf(t)>-1&&(this._dropEffect=t)},enumerable:!0,configurable:!0}),t}();function _(t,r,a){void 0===a&&(a=!0),document.addEventListener(t,r,!!e&&{passive:a})}function p(t,e){document.removeEventListener(t,e)}function m(t){return 0===t.length?0:t.reduce((function(t,e){return e+t}),0)/t.length}function v(t){return t&&t.tagName}function y(t,e){for(var r=0;r<t.changedTouches.length;r++){if(t.changedTouches[r].identifier===e)return!0}return!1}function T(t,e,r){for(var a=[],o=[],n=0;n<e.touches.length;n++){var i=e.touches[n];a.push(i[t+"X"]),o.push(i[t+"Y"])}r.x=m(a),r.y=m(o)}function O(t,e){if(1===t.nodeType){for(var r=getComputedStyle(t),a=0;a<r.length;a++){var o=r[a];e.style.setProperty(o,r.getPropertyValue(o),r.getPropertyPriority(o))}e.style.pointerEvents="none",e.removeAttribute("id"),e.removeAttribute("class"),e.removeAttribute("draggable")}if(t.hasChildNodes())for(a=0;a<t.childNodes.length;a++)O(t.childNodes[a],e.childNodes[a])}function D(t,e,r,a,o){void 0===o&&(o=!0);var n=e.x,i=e.y;a&&(n+=a.x,i+=a.y),o&&(n-=parseInt(t.offsetWidth,10)/2,i-=parseInt(t.offsetHeight,10)/2);for(var s="translate3d("+n+"px,"+i+"px, 0)",c=0;c<d.length;c++){var g=d[c]+"transform";t.style[g]=s+" "+r[c]}}function I(t,e){return t?t===i[0]?s[0]:0===t.indexOf(i[1])||t===i[7]?s[1]:0===t.indexOf(i[4])?s[3]:t===i[6]?s[2]:s[1]:3===e.nodeType&&"A"===e.tagName?s[3]:s[1]}function S(t,e,r,a,o,n,i){void 0===n&&(n=!0),void 0===i&&(i=null),console.log("dnd-poly: dispatching "+t);var s=function(t,e,r,a,o,n,i){void 0===i&&(i=null);var s=e.changedTouches[0],d=new Event(r,{bubbles:!0,cancelable:a});d.dataTransfer=n,d.relatedTarget=i,d.screenX=s.screenX,d.screenY=s.screenY,d.clientX=s.clientX,d.clientY=s.clientY,d.pageX=s.pageX,d.pageY=s.pageY;var c=t.getBoundingClientRect();return d.offsetX=d.clientX-c.left,d.offsetY=d.clientY-c.top,d}(e,r,t,n,document.defaultView,o,i),d=!e.dispatchEvent(s);return a._mode=0,d}function E(t,e){if(!t||t===i[7])return e;if(e===s[1]){if(0===t.indexOf(s[1]))return s[1]}else if(e===s[3]){if(0===t.indexOf(s[3])||t.indexOf("Link")>-1)return s[3]}else if(e===s[2]&&(0===t.indexOf(s[2])||t.indexOf("Move")>-1))return s[2];return s[0]}function b(t){var e=t.target,r=function(){i.off(),s.off(),d.off(),clearTimeout(n)},n=setTimeout((function(){i.off(),s.off(),d.off(),o(t)}),a.holdToDrag),i=C(e,"touchend",r,this),s=C(e,"touchcancel",r,this),d=C(window,"scroll",r,this)}function C(t,e,r,a){return a&&(r=r.bind(a)),t.addEventListener(e,r),{off:function(){return t.removeEventListener(e,r)}}}t.polyfill=function(t){if(t&&Object.keys(t).forEach((function(e){a[e]=t[e]})),!a.forceApply){var r=(n={dragEvents:"ondragstart"in document.documentElement,draggable:"draggable"in document.documentElement,touchEvents:"ontouchstart"in document.documentElement,userAgentSupportingNativeDnD:void 0},i=!!window.chrome||/chrome/i.test(navigator.userAgent),n.userAgentSupportingNativeDnD=!(/iPad|iPhone|iPod|Android/.test(navigator.userAgent)||i&&n.touchEvents),n);if(r.userAgentSupportingNativeDnD&&r.draggable&&r.dragEvents)return!1}var n,i;return console.log("dnd-poly: Applying mobile drag and drop polyfill."),e=function(){var t=!1;try{var e=Object.defineProperty({},"passive",{get:function(){t=!0}});window.addEventListener("test",null,e)}catch(t){}return t}(),a.holdToDrag?_("touchstart",b,!1):_("touchstart",o,!1),!0},Object.defineProperty(t,"__esModule",{value:!0})}));
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+    typeof define === 'function' && define.amd ? define(['exports'], factory) :
+    (factory((global.MobileDragDrop = global.MobileDragDrop || {})));
+}(this, (function (exports) { 'use strict';
+
+    var DEBUG = false;
+    function detectFeatures() {
+        var features = {
+            dragEvents: ("ondragstart" in document.documentElement),
+            draggable: ("draggable" in document.documentElement),
+            touchEvents: ("ontouchstart" in document.documentElement),
+            userAgentSupportingNativeDnD: undefined
+        };
+        var isBlinkEngine = !!(window.chrome) || /chrome/i.test(navigator.userAgent);
+        features.userAgentSupportingNativeDnD = !((/iPad|iPhone|iPod|Android/.test(navigator.userAgent))
+            ||
+                (isBlinkEngine && features.touchEvents));
+        if (DEBUG) {
+            Object.keys(features).forEach(function (key) {
+                console.log("dnd-poly: detected feature '" + key + " = " + features[key] + "'");
+            });
+        }
+        return features;
+    }
+    var supportsPassive;
+    function supportsPassiveEventListener() {
+        var supportsPassiveEventListeners = false;
+        try {
+            var opts = Object.defineProperty({}, "passive", {
+                get: function () {
+                    supportsPassiveEventListeners = true;
+                }
+            });
+            window.addEventListener("test", null, opts);
+        }
+        catch (e) {
+        }
+        return supportsPassiveEventListeners;
+    }
+    var config = {
+        iterationInterval: 150,
+    };
+    function polyfill(override) {
+        if (override) {
+            Object.keys(override).forEach(function (key) {
+                config[key] = override[key];
+            });
+        }
+        if (!config.forceApply) {
+            var detectedFeatures = detectFeatures();
+            if (detectedFeatures.userAgentSupportingNativeDnD
+                && detectedFeatures.draggable
+                && detectedFeatures.dragEvents) {
+                return false;
+            }
+        }
+        console.log("dnd-poly: Applying mobile drag and drop polyfill.");
+        supportsPassive = supportsPassiveEventListener();
+        if (config.holdToDrag) {
+            addDocumentListener("touchstart", onDelayTouchstart, false);
+        }
+        else {
+            addDocumentListener("touchstart", onTouchstart, false);
+        }
+        return true;
+    }
+    var activeDragOperation;
+    function onTouchstart(e) {
+        console.log("dnd-poly: global touchstart");
+        if (activeDragOperation) {
+            console.log("dnd-poly: drag operation already active");
+            return;
+        }
+        var dragTarget = tryFindDraggableTarget(e);
+        if (!dragTarget) {
+            return;
+        }
+        try {
+            activeDragOperation = new DragOperationController(e, config, dragTarget, dragOperationEnded);
+        }
+        catch (err) {
+            dragOperationEnded(config, e, 3);
+            throw err;
+        }
+    }
+    function tryFindDraggableTarget(event) {
+        var el = event.target;
+        do {
+            if (el.draggable === false) {
+                continue;
+            }
+            if (el.getAttribute && el.getAttribute("draggable") === "true") {
+                return el;
+            }
+        } while ((el = el.parentNode) && el !== document.body);
+    }
+    function dragOperationEnded(_config, event, state) {
+        if (state === 0) {
+            console.log("dnd-poly: Drag never started. Last event was " + event.type);
+            if (_config.defaultActionOverride) {
+                try {
+                    _config.defaultActionOverride(event);
+                    if (event.defaultPrevented) {
+                        console.log("dnd-poly: defaultActionOverride has taken care of triggering the default action. preventing default on original event");
+                    }
+                }
+                catch (e) {
+                    console.log("dnd-poly: error in defaultActionOverride: " + e);
+                }
+            }
+        }
+        activeDragOperation = null;
+    }
+    var ALLOWED_EFFECTS = ["none", "copy", "copyLink", "copyMove", "link", "linkMove", "move", "all"];
+    var DROP_EFFECTS = ["none", "copy", "move", "link"];
+    var TRANSFORM_CSS_VENDOR_PREFIXES = ["", "-webkit-"];
+    var CLASS_PREFIX = "dnd-poly-";
+    var CLASS_DRAG_IMAGE = CLASS_PREFIX + "drag-image";
+    var CLASS_DRAG_IMAGE_SNAPBACK = CLASS_PREFIX + "snapback";
+    var CLASS_DRAG_OPERATION_ICON = CLASS_PREFIX + "icon";
+    var DragOperationController = (function () {
+        function DragOperationController(_initialEvent, _config, _sourceNode, _dragOperationEndedCb) {
+            this._initialEvent = _initialEvent;
+            this._config = _config;
+            this._sourceNode = _sourceNode;
+            this._dragOperationEndedCb = _dragOperationEndedCb;
+            this._dragOperationState = 0;
+            this._immediateUserSelection = null;
+            this._currentDropTarget = null;
+            console.log("dnd-poly: setting up potential drag operation..");
+            this._lastTouchEvent = _initialEvent;
+            this._initialTouch = _initialEvent.changedTouches[0];
+            this._touchMoveHandler = this._onTouchMove.bind(this);
+            this._touchEndOrCancelHandler = this._onTouchEndOrCancel.bind(this);
+            addDocumentListener("touchmove", this._touchMoveHandler, false);
+            addDocumentListener("touchend", this._touchEndOrCancelHandler, false);
+            addDocumentListener("touchcancel", this._touchEndOrCancelHandler, false);
+        }
+        DragOperationController.prototype._setup = function () {
+            var _this = this;
+            console.log("dnd-poly: starting drag and drop operation");
+            this._dragOperationState = 1;
+            this._currentDragOperation = DROP_EFFECTS[0];
+            this._dragDataStore = {
+                _data: {},
+                _effectAllowed: undefined,
+                _mode: 3,
+                _types: [],
+            };
+            this._currentHotspotCoordinates = {
+                x: null,
+                y: null
+            };
+            this._dragImagePageCoordinates = {
+                x: null,
+                y: null
+            };
+            var dragImageSrc = this._sourceNode;
+            this._dataTransfer = new DataTransfer(this._dragDataStore, function (element, x, y) {
+                dragImageSrc = element;
+                if (typeof x === "number" || typeof y === "number") {
+                    _this._dragImageOffset = {
+                        x: x || 0,
+                        y: y || 0
+                    };
+                }
+            });
+            this._dragDataStore._mode = 2;
+            this._dataTransfer.dropEffect = DROP_EFFECTS[0];
+            if (dispatchDragEvent("dragstart", this._sourceNode, this._lastTouchEvent, this._dragDataStore, this._dataTransfer)) {
+                console.log("dnd-poly: dragstart cancelled");
+                this._dragOperationState = 3;
+                this._cleanup();
+                return false;
+            }
+            updateCentroidCoordinatesOfTouchesIn("page", this._lastTouchEvent, this._dragImagePageCoordinates);
+            this._dragImage = createDragImage(dragImageSrc);
+            this._dragImageTransforms = extractTransformStyles(this._dragImage);
+            if (!this._dragImageOffset) {
+                if (this._config.dragImageOffset) {
+                    this._dragImageOffset = {
+                        x: this._config.dragImageOffset.x,
+                        y: this._config.dragImageOffset.y
+                    };
+                }
+                else if (this._config.dragImageCenterOnTouch) {
+                    var cs = getComputedStyle(dragImageSrc);
+                    this._dragImageOffset = {
+                        x: 0 - parseInt(cs.marginLeft, 10),
+                        y: 0 - parseInt(cs.marginTop, 10)
+                    };
+                }
+                else {
+                    var targetRect = dragImageSrc.getBoundingClientRect();
+                    var cs = getComputedStyle(dragImageSrc);
+                    this._dragImageOffset = {
+                        x: targetRect.left - this._initialTouch.clientX - parseInt(cs.marginLeft, 10) + targetRect.width / 2,
+                        y: targetRect.top - this._initialTouch.clientY - parseInt(cs.marginTop, 10) + targetRect.height / 2
+                    };
+                }
+            }
+            translateDragImage(this._dragImage, this._dragImagePageCoordinates, this._dragImageTransforms, this._dragImageOffset, this._config.dragImageCenterOnTouch);
+            document.body.appendChild(this._dragImage);
+            this._iterationIntervalId = setInterval(function () {
+                if (_this._iterationLock) {
+                    console.log("dnd-poly: iteration skipped because previous iteration hast not yet finished.");
+                    return;
+                }
+                _this._iterationLock = true;
+                _this._dragAndDropProcessModelIteration();
+                _this._iterationLock = false;
+            }, this._config.iterationInterval);
+            return true;
+        };
+        DragOperationController.prototype._cleanup = function () {
+            console.log("dnd-poly: cleanup");
+            if (this._iterationIntervalId) {
+                clearInterval(this._iterationIntervalId);
+                this._iterationIntervalId = null;
+            }
+            removeDocumentListener("touchmove", this._touchMoveHandler);
+            removeDocumentListener("touchend", this._touchEndOrCancelHandler);
+            removeDocumentListener("touchcancel", this._touchEndOrCancelHandler);
+            if (this._dragImage) {
+                this._dragImage.parentNode.removeChild(this._dragImage);
+                this._dragImage = null;
+            }
+            this._dragOperationEndedCb(this._config, this._lastTouchEvent, this._dragOperationState);
+        };
+        DragOperationController.prototype._onTouchMove = function (event) {
+            var _this = this;
+            if (isTouchIdentifierContainedInTouchEvent(event, this._initialTouch.identifier) === false) {
+                return;
+            }
+            this._lastTouchEvent = event;
+            if (this._dragOperationState === 0) {
+                var startDrag = void 0;
+                if (this._config.dragStartConditionOverride) {
+                    try {
+                        startDrag = this._config.dragStartConditionOverride(event);
+                    }
+                    catch (e) {
+                        console.error("dnd-poly: error in dragStartConditionOverride hook: " + e);
+                        startDrag = false;
+                    }
+                }
+                else {
+                    startDrag = (event.touches.length === 1);
+                }
+                if (!startDrag) {
+                    this._cleanup();
+                    return;
+                }
+                if (this._setup() === true) {
+                    this._initialEvent.preventDefault();
+                    event.preventDefault();
+                }
+                return;
+            }
+            console.log("dnd-poly: moving draggable..");
+            event.preventDefault();
+            updateCentroidCoordinatesOfTouchesIn("client", event, this._currentHotspotCoordinates);
+            updateCentroidCoordinatesOfTouchesIn("page", event, this._dragImagePageCoordinates);
+            if (this._config.dragImageTranslateOverride) {
+                try {
+                    var handledDragImageTranslate_1 = false;
+                    this._config.dragImageTranslateOverride(event, {
+                        x: this._currentHotspotCoordinates.x,
+                        y: this._currentHotspotCoordinates.y
+                    }, this._immediateUserSelection, function (offsetX, offsetY) {
+                        if (!_this._dragImage) {
+                            return;
+                        }
+                        handledDragImageTranslate_1 = true;
+                        _this._currentHotspotCoordinates.x += offsetX;
+                        _this._currentHotspotCoordinates.y += offsetY;
+                        _this._dragImagePageCoordinates.x += offsetX;
+                        _this._dragImagePageCoordinates.y += offsetY;
+                        translateDragImage(_this._dragImage, _this._dragImagePageCoordinates, _this._dragImageTransforms, _this._dragImageOffset, _this._config.dragImageCenterOnTouch);
+                    });
+                    if (handledDragImageTranslate_1) {
+                        return;
+                    }
+                }
+                catch (e) {
+                    console.log("dnd-poly: error in dragImageTranslateOverride hook: " + e);
+                }
+            }
+            translateDragImage(this._dragImage, this._dragImagePageCoordinates, this._dragImageTransforms, this._dragImageOffset, this._config.dragImageCenterOnTouch);
+        };
+        DragOperationController.prototype._onTouchEndOrCancel = function (event) {
+            if (isTouchIdentifierContainedInTouchEvent(event, this._initialTouch.identifier) === false) {
+                return;
+            }
+            if (this._config.dragImageTranslateOverride) {
+                try {
+                    this._config.dragImageTranslateOverride(undefined, undefined, undefined, function () {
+                    });
+                }
+                catch (e) {
+                    console.log("dnd-poly: error in dragImageTranslateOverride hook: " + e);
+                }
+            }
+            if (this._dragOperationState === 0) {
+                this._cleanup();
+                return;
+            }
+            event.preventDefault();
+            this._dragOperationState = (event.type === "touchcancel") ? 3 : 2;
+        };
+        DragOperationController.prototype._dragAndDropProcessModelIteration = function () {
+            var _this = this;
+            if (DEBUG) {
+                var debug_class = CLASS_PREFIX + "debug", debug_class_user_selection = CLASS_PREFIX + "immediate-user-selection", debug_class_drop_target = CLASS_PREFIX + "current-drop-target";
+            }
+            var previousDragOperation = this._currentDragOperation;
+            this._dragDataStore._mode = 3;
+            this._dataTransfer.dropEffect = DROP_EFFECTS[0];
+            var dragCancelled = dispatchDragEvent("drag", this._sourceNode, this._lastTouchEvent, this._dragDataStore, this._dataTransfer);
+            if (dragCancelled) {
+                console.log("dnd-poly: drag event cancelled.");
+                this._currentDragOperation = DROP_EFFECTS[0];
+            }
+            if (dragCancelled || this._dragOperationState === 2 || this._dragOperationState === 3) {
+                var dragFailed = this._dragOperationEnded(this._dragOperationState);
+                if (dragFailed) {
+                    applyDragImageSnapback(this._sourceNode, this._dragImage, this._dragImageTransforms, function () {
+                        _this._finishDragOperation();
+                    });
+                    return;
+                }
+                this._finishDragOperation();
+                return;
+            }
+            var newUserSelection = document.elementFromPoint(this._currentHotspotCoordinates.x, this._currentHotspotCoordinates.y);
+            console.log("dnd-poly: new immediate user selection is: " + newUserSelection);
+            var previousTargetElement = this._currentDropTarget;
+            if (newUserSelection !== this._immediateUserSelection && newUserSelection !== this._currentDropTarget) {
+                if (DEBUG) {
+                    if (this._immediateUserSelection) {
+                        this._immediateUserSelection.classList.remove(debug_class_user_selection);
+                    }
+                    if (newUserSelection) {
+                        newUserSelection.classList.add(debug_class);
+                        newUserSelection.classList.add(debug_class_user_selection);
+                    }
+                }
+                this._immediateUserSelection = newUserSelection;
+                if (this._currentDropTarget !== null) {
+                    this._dragDataStore._mode = 3;
+                    this._dataTransfer.dropEffect = DROP_EFFECTS[0];
+                    dispatchDragEvent("dragexit", this._currentDropTarget, this._lastTouchEvent, this._dragDataStore, this._dataTransfer, false);
+                }
+                if (this._immediateUserSelection === null) {
+                    this._currentDropTarget = this._immediateUserSelection;
+                    console.log("dnd-poly: current drop target changed to null");
+                }
+                else {
+                    this._dragDataStore._mode = 3;
+                    this._dataTransfer.dropEffect = determineDropEffect(this._dragDataStore._effectAllowed, this._sourceNode);
+                    if (dispatchDragEvent("dragenter", this._immediateUserSelection, this._lastTouchEvent, this._dragDataStore, this._dataTransfer)) {
+                        console.log("dnd-poly: dragenter default prevented");
+                        this._currentDropTarget = this._immediateUserSelection;
+                        this._currentDragOperation = determineDragOperation(this._dataTransfer.effectAllowed, this._dataTransfer.dropEffect);
+                    }
+                    else {
+                        if (this._immediateUserSelection !== document.body) {
+                            this._currentDropTarget = document.body;
+                        }
+                    }
+                }
+            }
+            if (previousTargetElement !== this._currentDropTarget && (isDOMElement(previousTargetElement))) {
+                if (DEBUG) {
+                    previousTargetElement.classList.remove(debug_class_drop_target);
+                }
+                console.log("dnd-poly: current drop target changed.");
+                this._dragDataStore._mode = 3;
+                this._dataTransfer.dropEffect = DROP_EFFECTS[0];
+                dispatchDragEvent("dragleave", previousTargetElement, this._lastTouchEvent, this._dragDataStore, this._dataTransfer, false, this._currentDropTarget);
+            }
+            if (isDOMElement(this._currentDropTarget)) {
+                if (DEBUG) {
+                    this._currentDropTarget.classList.add(debug_class);
+                    this._currentDropTarget.classList.add(debug_class_drop_target);
+                }
+                this._dragDataStore._mode = 3;
+                this._dataTransfer.dropEffect = determineDropEffect(this._dragDataStore._effectAllowed, this._sourceNode);
+                if (dispatchDragEvent("dragover", this._currentDropTarget, this._lastTouchEvent, this._dragDataStore, this._dataTransfer) === false) {
+                    console.log("dnd-poly: dragover not prevented on possible drop-target.");
+                    this._currentDragOperation = DROP_EFFECTS[0];
+                }
+                else {
+                    console.log("dnd-poly: dragover prevented.");
+                    this._currentDragOperation = determineDragOperation(this._dataTransfer.effectAllowed, this._dataTransfer.dropEffect);
+                }
+            }
+            console.log("dnd-poly: d'n'd iteration ended. current drag operation: " + this._currentDragOperation);
+            if (previousDragOperation !== this._currentDragOperation) {
+                this._dragImage.classList.remove(CLASS_PREFIX + previousDragOperation);
+            }
+            var currentDragOperationClass = CLASS_PREFIX + this._currentDragOperation;
+            if (this._dragImage.classList.contains(currentDragOperationClass) === false) {
+                this._dragImage.classList.add(currentDragOperationClass);
+            }
+        };
+        DragOperationController.prototype._dragOperationEnded = function (state) {
+            console.log("dnd-poly: drag operation end detected with " + this._currentDragOperation);
+            if (DEBUG) {
+                var debug_class_user_selection = CLASS_PREFIX + "immediate-user-selection", debug_class_drop_target = CLASS_PREFIX + "current-drop-target";
+                if (this._currentDropTarget) {
+                    this._currentDropTarget.classList.remove(debug_class_drop_target);
+                }
+                if (this._immediateUserSelection) {
+                    this._immediateUserSelection.classList.remove(debug_class_user_selection);
+                }
+            }
+            var dragFailed = (this._currentDragOperation === DROP_EFFECTS[0]
+                || this._currentDropTarget === null
+                || state === 3);
+            if (dragFailed) {
+                if (isDOMElement(this._currentDropTarget)) {
+                    this._dragDataStore._mode = 3;
+                    this._dataTransfer.dropEffect = DROP_EFFECTS[0];
+                    dispatchDragEvent("dragleave", this._currentDropTarget, this._lastTouchEvent, this._dragDataStore, this._dataTransfer, false);
+                }
+            }
+            else {
+                if (isDOMElement(this._currentDropTarget)) {
+                    this._dragDataStore._mode = 1;
+                    this._dataTransfer.dropEffect = this._currentDragOperation;
+                    if (dispatchDragEvent("drop", this._currentDropTarget, this._lastTouchEvent, this._dragDataStore, this._dataTransfer) ===
+                        true) {
+                        this._currentDragOperation = this._dataTransfer.dropEffect;
+                    }
+                    else {
+                        this._currentDragOperation = DROP_EFFECTS[0];
+                    }
+                }
+            }
+            return dragFailed;
+        };
+        DragOperationController.prototype._finishDragOperation = function () {
+            console.log("dnd-poly: dragimage snap back transition ended");
+            this._dragDataStore._mode = 3;
+            this._dataTransfer.dropEffect = this._currentDragOperation;
+            dispatchDragEvent("dragend", this._sourceNode, this._lastTouchEvent, this._dragDataStore, this._dataTransfer, false);
+            this._dragOperationState = 2;
+            this._cleanup();
+        };
+        return DragOperationController;
+    }());
+    var DataTransfer = (function () {
+        function DataTransfer(_dataStore, _setDragImageHandler) {
+            this._dataStore = _dataStore;
+            this._setDragImageHandler = _setDragImageHandler;
+            this._dropEffect = DROP_EFFECTS[0];
+        }
+        Object.defineProperty(DataTransfer.prototype, "types", {
+            get: function () {
+                if (this._dataStore._mode !== 0) {
+                    return Object.freeze(this._dataStore._types);
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        DataTransfer.prototype.setData = function (type, data) {
+            if (this._dataStore._mode === 2) {
+                if (type.indexOf(" ") > -1) {
+                    throw new Error("illegal arg: type contains space");
+                }
+                this._dataStore._data[type] = data;
+                if (this._dataStore._types.indexOf(type) === -1) {
+                    this._dataStore._types.push(type);
+                }
+            }
+        };
+        DataTransfer.prototype.getData = function (type) {
+            if (this._dataStore._mode === 1
+                || this._dataStore._mode === 2) {
+                return this._dataStore._data[type] || "";
+            }
+        };
+        DataTransfer.prototype.clearData = function (format) {
+            if (this._dataStore._mode === 2) {
+                if (format && this._dataStore._data[format]) {
+                    delete this._dataStore._data[format];
+                    var index = this._dataStore._types.indexOf(format);
+                    if (index > -1) {
+                        this._dataStore._types.splice(index, 1);
+                    }
+                    return;
+                }
+                this._dataStore._data = {};
+                this._dataStore._types = [];
+            }
+        };
+        DataTransfer.prototype.setDragImage = function (image, x, y) {
+            if (this._dataStore._mode === 2) {
+                this._setDragImageHandler(image, x, y);
+            }
+        };
+        Object.defineProperty(DataTransfer.prototype, "effectAllowed", {
+            get: function () {
+                return this._dataStore._effectAllowed;
+            },
+            set: function (value) {
+                if (this._dataStore._mode === 2
+                    && ALLOWED_EFFECTS.indexOf(value) > -1) {
+                    this._dataStore._effectAllowed = value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DataTransfer.prototype, "dropEffect", {
+            get: function () {
+                return this._dropEffect;
+            },
+            set: function (value) {
+                if (this._dataStore._mode !== 0
+                    && ALLOWED_EFFECTS.indexOf(value) > -1) {
+                    this._dropEffect = value;
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return DataTransfer;
+    }());
+    function addDocumentListener(ev, handler, passive) {
+        if (passive === void 0) { passive = true; }
+        document.addEventListener(ev, handler, supportsPassive ? { passive: passive } : false);
+    }
+    function removeDocumentListener(ev, handler) {
+        document.removeEventListener(ev, handler);
+    }
+    function average(array) {
+        if (array.length === 0) {
+            return 0;
+        }
+        return array.reduce((function (s, v) {
+            return v + s;
+        }), 0) / array.length;
+    }
+    function isDOMElement(object) {
+        return object && object.tagName;
+    }
+    function isTouchIdentifierContainedInTouchEvent(newTouch, touchIdentifier) {
+        for (var i = 0; i < newTouch.changedTouches.length; i++) {
+            var touch = newTouch.changedTouches[i];
+            if (touch.identifier === touchIdentifier) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function createDragEventFromTouch(targetElement, e, type, cancelable, window, dataTransfer, relatedTarget) {
+        if (relatedTarget === void 0) { relatedTarget = null; }
+        var touch = e.changedTouches[0];
+        var dndEvent = new Event(type, {
+            bubbles: true,
+            cancelable: cancelable
+        });
+        dndEvent.dataTransfer = dataTransfer;
+        dndEvent.relatedTarget = relatedTarget;
+        dndEvent.screenX = touch.screenX;
+        dndEvent.screenY = touch.screenY;
+        dndEvent.clientX = touch.clientX;
+        dndEvent.clientY = touch.clientY;
+        dndEvent.pageX = touch.pageX;
+        dndEvent.pageY = touch.pageY;
+        var targetRect = targetElement.getBoundingClientRect();
+        dndEvent.offsetX = dndEvent.clientX - targetRect.left;
+        dndEvent.offsetY = dndEvent.clientY - targetRect.top;
+        return dndEvent;
+    }
+    function updateCentroidCoordinatesOfTouchesIn(coordinateProp, event, outPoint) {
+        var pageXs = [], pageYs = [];
+        for (var i = 0; i < event.touches.length; i++) {
+            var touch = event.touches[i];
+            pageXs.push(touch[coordinateProp + "X"]);
+            pageYs.push(touch[coordinateProp + "Y"]);
+        }
+        outPoint.x = average(pageXs);
+        outPoint.y = average(pageYs);
+    }
+    function prepareNodeCopyAsDragImage(srcNode, dstNode) {
+        if (srcNode.nodeType === 1) {
+            var cs = getComputedStyle(srcNode);
+            for (var i = 0; i < cs.length; i++) {
+                var csName = cs[i];
+                dstNode.style.setProperty(csName, cs.getPropertyValue(csName), cs.getPropertyPriority(csName));
+            }
+            dstNode.style.pointerEvents = "none";
+            dstNode.removeAttribute("id");
+            dstNode.removeAttribute("class");
+            dstNode.removeAttribute("draggable");
+        }
+        if (srcNode.hasChildNodes()) {
+            for (var i = 0; i < srcNode.childNodes.length; i++) {
+                prepareNodeCopyAsDragImage(srcNode.childNodes[i], dstNode.childNodes[i]);
+            }
+        }
+    }
+    function createDragImage(sourceNode) {
+        var dragImage = sourceNode.cloneNode(true);
+        prepareNodeCopyAsDragImage(sourceNode, dragImage);
+        dragImage.style.position = "absolute";
+        dragImage.style.left = "0px";
+        dragImage.style.top = "0px";
+        dragImage.style.zIndex = "999999";
+        dragImage.classList.add(CLASS_DRAG_IMAGE);
+        dragImage.classList.add(CLASS_DRAG_OPERATION_ICON);
+        return dragImage;
+    }
+    function extractTransformStyles(sourceNode) {
+        return TRANSFORM_CSS_VENDOR_PREFIXES.map(function (prefix) {
+            var transform = sourceNode.style[prefix + "transform"];
+            if (!transform || transform === "none") {
+                return "";
+            }
+            return transform.replace(/translate\(\D*\d+[^,]*,\D*\d+[^,]*\)\s*/g, "");
+        });
+    }
+    function translateDragImage(dragImage, pnt, originalTransforms, offset, centerOnCoordinates) {
+        if (centerOnCoordinates === void 0) { centerOnCoordinates = true; }
+        var x = pnt.x, y = pnt.y;
+        if (offset) {
+            x += offset.x;
+            y += offset.y;
+        }
+        if (centerOnCoordinates) {
+            x -= (parseInt(dragImage.offsetWidth, 10) / 2);
+            y -= (parseInt(dragImage.offsetHeight, 10) / 2);
+        }
+        var translate = "translate3d(" + x + "px," + y + "px, 0)";
+        for (var i = 0; i < TRANSFORM_CSS_VENDOR_PREFIXES.length; i++) {
+            var transformProp = TRANSFORM_CSS_VENDOR_PREFIXES[i] + "transform";
+            dragImage.style[transformProp] = translate + " " + originalTransforms[i];
+        }
+    }
+    function applyDragImageSnapback(sourceEl, dragImage, dragImageTransforms, transitionEndCb) {
+        var cs = getComputedStyle(sourceEl);
+        if (cs.visibility === "hidden" || cs.display === "none") {
+            console.log("dnd-poly: source node is not visible. skipping snapback transition.");
+            transitionEndCb();
+            return;
+        }
+        dragImage.classList.add(CLASS_DRAG_IMAGE_SNAPBACK);
+        var csDragImage = getComputedStyle(dragImage);
+        var durationInS = parseFloat(csDragImage.transitionDuration);
+        if (isNaN(durationInS) || durationInS === 0) {
+            console.log("dnd-poly: no transition used - skipping snapback");
+            transitionEndCb();
+            return;
+        }
+        console.log("dnd-poly: starting dragimage snap back");
+        var rect = sourceEl.getBoundingClientRect();
+        var pnt = {
+            x: rect.left,
+            y: rect.top
+        };
+        pnt.x += (document.body.scrollLeft || document.documentElement.scrollLeft);
+        pnt.y += (document.body.scrollTop || document.documentElement.scrollTop);
+        pnt.x -= parseInt(cs.marginLeft, 10);
+        pnt.y -= parseInt(cs.marginTop, 10);
+        var delayInS = parseFloat(csDragImage.transitionDelay);
+        var durationInMs = Math.round((durationInS + delayInS) * 1000);
+        translateDragImage(dragImage, pnt, dragImageTransforms, undefined, false);
+        setTimeout(transitionEndCb, durationInMs);
+    }
+    function determineDropEffect(effectAllowed, sourceNode) {
+        if (!effectAllowed) {
+            if (sourceNode.nodeType === 3 && sourceNode.tagName === "A") {
+                return DROP_EFFECTS[3];
+            }
+            return DROP_EFFECTS[1];
+        }
+        if (effectAllowed === ALLOWED_EFFECTS[0]) {
+            return DROP_EFFECTS[0];
+        }
+        if (effectAllowed.indexOf(ALLOWED_EFFECTS[1]) === 0 || effectAllowed === ALLOWED_EFFECTS[7]) {
+            return DROP_EFFECTS[1];
+        }
+        if (effectAllowed.indexOf(ALLOWED_EFFECTS[4]) === 0) {
+            return DROP_EFFECTS[3];
+        }
+        if (effectAllowed === ALLOWED_EFFECTS[6]) {
+            return DROP_EFFECTS[2];
+        }
+        return DROP_EFFECTS[1];
+    }
+    function dispatchDragEvent(dragEvent, targetElement, touchEvent, dataStore, dataTransfer, cancelable, relatedTarget) {
+        if (cancelable === void 0) { cancelable = true; }
+        if (relatedTarget === void 0) { relatedTarget = null; }
+        console.log("dnd-poly: dispatching " + dragEvent);
+        if (DEBUG) {
+            var debug_class = CLASS_PREFIX + "debug", debug_class_event_target = CLASS_PREFIX + "event-target", debug_class_event_related_target = CLASS_PREFIX + "event-related-target";
+            targetElement.classList.add(debug_class);
+            targetElement.classList.add(debug_class_event_target);
+            if (relatedTarget) {
+                relatedTarget.classList.add(debug_class);
+                relatedTarget.classList.add(debug_class_event_related_target);
+            }
+        }
+        var leaveEvt = createDragEventFromTouch(targetElement, touchEvent, dragEvent, cancelable, document.defaultView, dataTransfer, relatedTarget);
+        var cancelled = !targetElement.dispatchEvent(leaveEvt);
+        dataStore._mode = 0;
+        if (DEBUG) {
+            targetElement.classList.remove(debug_class_event_target);
+            if (relatedTarget) {
+                relatedTarget.classList.remove(debug_class_event_related_target);
+            }
+        }
+        return cancelled;
+    }
+    function determineDragOperation(effectAllowed, dropEffect) {
+        if (!effectAllowed || effectAllowed === ALLOWED_EFFECTS[7]) {
+            return dropEffect;
+        }
+        if (dropEffect === DROP_EFFECTS[1]) {
+            if (effectAllowed.indexOf(DROP_EFFECTS[1]) === 0) {
+                return DROP_EFFECTS[1];
+            }
+        }
+        else if (dropEffect === DROP_EFFECTS[3]) {
+            if (effectAllowed.indexOf(DROP_EFFECTS[3]) === 0 || effectAllowed.indexOf("Link") > -1) {
+                return DROP_EFFECTS[3];
+            }
+        }
+        else if (dropEffect === DROP_EFFECTS[2]) {
+            if (effectAllowed.indexOf(DROP_EFFECTS[2]) === 0 || effectAllowed.indexOf("Move") > -1) {
+                return DROP_EFFECTS[2];
+            }
+        }
+        return DROP_EFFECTS[0];
+    }
+    function onDelayTouchstart(evt) {
+        var el = evt.target;
+        var heldItem = function () {
+            end.off();
+            cancel.off();
+            scroll.off();
+            onTouchstart(evt);
+        };
+        var onReleasedItem = function () {
+            end.off();
+            cancel.off();
+            scroll.off();
+            clearTimeout(timer);
+        };
+        var timer = setTimeout(heldItem, config.holdToDrag);
+        var end = onEvt(el, 'touchend', onReleasedItem, this);
+        var cancel = onEvt(el, 'touchcancel', onReleasedItem, this);
+        var scroll = onEvt(window, 'scroll', onReleasedItem, this);
+    }
+    function onEvt(el, event, handler, context) {
+        if (context) {
+            handler = handler.bind(context);
+        }
+        el.addEventListener(event, handler);
+        return {
+            off: function () {
+                return el.removeEventListener(event, handler);
+            }
+        };
+    }
+
+    exports.polyfill = polyfill;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+
+//# sourceMappingURL=index.js.map

@@ -2,7 +2,7 @@ const { merge }  = require('webpack-merge')
 const commonConfig = require('./webpack.config.common')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
-
+const webpack = require('webpack');
 module.exports = merge(commonConfig, {
     mode: 'development',
     devtool: 'inline-source-map',
@@ -32,6 +32,11 @@ module.exports = merge(commonConfig, {
             // both options are optional
             filename: '[name].css',
             chunkFilename: '[id].css',
-        })
+        }),
+        new webpack.DefinePlugin({
+            __VUE_OPTIONS_API__: true,
+            __VUE_PROD_DEVTOOLS__: true,
+            __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: true,
+        }),
     ]
 })

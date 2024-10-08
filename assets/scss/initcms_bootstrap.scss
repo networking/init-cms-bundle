@@ -1,8 +1,5 @@
-// Main bootstrap.sass entry point
 $icon-font-path: "/bundles/networkinginitcms/fonts/bootstrap/" !default;
 @import "bootstrap-sass/assets/stylesheets/bootstrap";
-
-// variables
 
 .pagination{
   .disabled{
@@ -33,9 +30,8 @@ $icon-font-path: "/bundles/networkinginitcms/fonts/bootstrap/" !default;
     @include clearfix();
   }
 }
-// FormFlow support for MopaBootstrapBundle
 @import "../vendor/fontawesome/scss/fontawesome";
-$fa-font-path: "../vendor/fontawesome/webfonts";
+$fa-font-path: "/bundles/networkinginitcms/vendor/fontawesome/webfonts";
 @import "../vendor/fontawesome/scss/solid";
 @import "../vendor/fontawesome/scss/regular";
 @import "../vendor/fontawesome/scss/brands";

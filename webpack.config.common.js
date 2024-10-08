@@ -10,13 +10,14 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.esm.js',
+            'vue': 'vue/dist/vue.esm-bundler.js',
             'bootstrap-saas': path.resolve(__dirname, './node_modules/bootstrap-saas'),
         },
     },
     externals: {
         filerobotImageEditor: 'FilerobotImageEditor'
     },
+    devtool:'source-map',
     entry: {
         admin: './assets/js/admin.js',
         imageEditor: './assets/js/filebot.js',
@@ -32,7 +33,7 @@ module.exports = {
         'admin-navbar': './assets/scss/admin-navbar-standalone.scss',
     },
     output: {
-        publicPath: '/bundles/networkinginitcms',
+        publicPath: '/bundles/networkinginitcms/',
         pathinfo: true,
         path: path.resolve(__dirname, 'src/Resources/public/'),
         clean: true,
@@ -66,13 +67,13 @@ module.exports = {
                     MiniCssExtractPlugin.loader,
                     {
                         loader: 'css-loader',
-                        options: { sourceMap: true },
+                        options: { url: false,sourceMap: true },
                     },
-                    'postcss-loader',
                     {
                         loader: 'sass-loader',
                         options: { sourceMap: true },
                     },
+                    'postcss-loader',
                 ],
             }
         ]
@@ -172,7 +173,11 @@ module.exports = {
                     ],
                     transforms: {
                         after: async (code) => {
-                            const minifiedCode = await terser.minify(code);
+                            const minifiedCode = await terser.minify(code, {
+                                format: {
+                                    comments: false,
+                                }
+                            });
                             return minifiedCode.code;
                         },
                     },
@@ -186,7 +191,11 @@ module.exports = {
                     ],
                     transforms: {
                         after: async (code) => {
-                            const minifiedCode = await terser.minify(code);
+                            const minifiedCode = await terser.minify(code, {
+                                format: {
+                                    comments: false,
+                                }
+                            });
                             return minifiedCode.code;
                         },
                     },
@@ -201,7 +210,11 @@ module.exports = {
                     ],
                     transforms: {
                         after: async (code) => {
-                            const minifiedCode = await terser.minify(code);
+                            const minifiedCode = await terser.minify(code, {
+                                format: {
+                                    comments: false,
+                                }
+                            });
                             return minifiedCode.code;
                         },
                     },
@@ -209,6 +222,16 @@ module.exports = {
                 {
                     src: './node_modules/bootstrap/dist/js/bootstrap.js',
                     dest: './src/Resources/public/bootstrap.js',
+                    transforms: {
+                        after: async (code) => {
+                            const minifiedCode = await terser.minify(code, {
+                                format: {
+                                    comments: false,
+                                }
+                            });
+                            return minifiedCode.code;
+                        },
+                    },
                 }
             ],
         })
