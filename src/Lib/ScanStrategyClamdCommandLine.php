@@ -14,6 +14,8 @@ class ScanStrategyClamdCommandLine implements ScanStrategyInterface
 {
     
     const DEFAULT_PATH = '/usr/bin/clamdscan';
+
+    const ERROR_MESSAGE_PERMISSIONS_DENIED = 'Misuse of shell builtins';
     
 
     public function __construct(
@@ -24,7 +26,6 @@ class ScanStrategyClamdCommandLine implements ScanStrategyInterface
     
     public function scan(string $filePath): ScannedFile
     {
-
         if (!is_file($filePath)) {
             throw new FileScanException($filePath, 'Not a file.');
         }
@@ -35,6 +36,10 @@ class ScanStrategyClamdCommandLine implements ScanStrategyInterface
         } catch (ProcessFailedException $exception) {
 
             if($exception->getProcess()->getExitCode() !== 1){
+
+                if(self::ERROR_MESSAGE_PERMISSIONS_DENIED ===  $exception->getProcess()->getExitCodeText()){
+                    throw new \Exception($exception->getProcess()->getErrorOutput());
+                }
 
                 $message = 'dev' === $this->env?$exception->getProcess()->getErrorOutput():$exception->getProcess()->getExitCodeText();
 

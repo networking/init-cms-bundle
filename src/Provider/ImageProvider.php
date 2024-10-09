@@ -13,6 +13,8 @@ namespace Networking\InitCmsBundle\Provider;
 use Gaufrette\Filesystem;
 use Imagine\Image\ImagineInterface;
 use Networking\InitCmsBundle\Form\Type\MediaPreviewType;
+use Sineflow\ClamAV\Exception\FileScanException;
+use Sineflow\ClamAV\Exception\SocketException;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\MediaBundle\CDN\CDNInterface;
 use Sonata\MediaBundle\CDN\Server;
@@ -115,9 +117,21 @@ class ImageProvider extends FileProvider implements ImageProviderInterface
         $this->fixFilename($media);
 
         if($media->getBinaryContent() instanceof UploadedFile && $this->scanner){
-            $scanResult = $this->scanner->scan($media->getBinaryContent()->getPathname());
-            if (!$scanResult->isClean()) {
-                throw new UploadException(sprintf('The file is infected with a virus'));
+            try{
+                $scanResult = $this->scanner->scan($media->getBinaryContent()->getPathname());
+                if (!$scanResult->isClean()) {
+                    throw new UploadException(sprintf('The file is infected with a virus'));
+                }
+            }  catch (FileScanException $e) {
+                throw new UploadException($e->getMessage());
+                return;
+            }
+            catch (\Exception|SocketException $e) {
+                @trigger_error(
+                    $e->getMessage(),
+                    \E_USER_WARNING
+                );
+
             }
         }
 

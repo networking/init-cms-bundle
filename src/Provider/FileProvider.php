@@ -54,42 +54,19 @@ class FileProvider extends BaseProvider
                         ['{{ virus_name }}' => $scanResult->getVirusName()]
                     )->end();
                 }
-            } catch (SocketException $e) {
+            } catch (FileScanException $e) {
+                $errorElement->with('binaryContent')->addViolation($e->getMessage())->end();
+                return;
+            } catch (SocketException|\Exception $e) {
                 @trigger_error(
                     $e->getMessage(),
                     \E_USER_WARNING
                 );
-
                 return;
-            } catch (FileScanException $e) {
-                $errorElement->with('binaryContent')->addViolation($e->getMessage())->end();
             }
         }
     }
 
-    //    protected function doTransform(MediaInterface $media): void
-    //    {
-    //        if ($media->getBinaryContent() instanceof UploadedFile && $this->scanner) {
-    //            try {
-    //                $scanResult = $this->scanner->scan(
-    //                    $media->getBinaryContent()->getPathname()
-    //                );
-    //                if (!$scanResult->isClean()) {
-    //                    throw new UploadException('The file is infected with known a virus');
-    //                }
-    //            } catch (SocketException $e) {
-    //                @trigger_error(
-    //                    $e->getMessage(),
-    //                    \E_USER_ERROR
-    //                );
-    //                // do nothing
-    //            } catch (FileScanException $e) {
-    //                throw new UploadException($e->getMessage());
-    //            }
-    //        }
-    //
-    //        parent::doTransform($media);
-    //    }
 
     public function buildEditForm(FormMapper $formMapper): void
     {
