@@ -195,9 +195,9 @@ class Media extends BaseMedia implements IgnoreRevertInterface
     public function getChecksum()
     {
         if(!$this->binaryContent){
-            return $thid->md5File;
+            return $this->md5File;
         }
-        
+
         if ($this->getBinaryContent() instanceof UploadedFile) {
             return Util\Checksum::fromFile(
                 $this->getBinaryContent()->getPathName()
