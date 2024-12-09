@@ -53,7 +53,7 @@ class PageAdminController extends CRUDController
         CmsEventDispatcher $dispatcher,
         PageCacheInterface $pageCache,
         PageManagerInterface $pageManager,
-        PageHelper $pageHelper
+        PageHelper $pageHelper,
     ) {
         $this->pageManager = $pageManager;
         $this->pageHelper = $pageHelper;
@@ -68,7 +68,7 @@ class PageAdminController extends CRUDController
     public function translateAction(
         Request $request,
         $id,
-        $locale
+        $locale,
     ): RedirectResponse|Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
@@ -114,13 +114,13 @@ class PageAdminController extends CRUDController
         }
 
         $params = $this->addRenderExtraParams([
-                'action' => 'copy',
-                'page' => $page,
-                'id' => $id,
-                'locale' => $locale,
-                'language' => $language,
-                'admin' => $this->admin,
-            ]);
+            'action' => 'copy',
+            'page' => $page,
+            'id' => $id,
+            'locale' => $locale,
+            'language' => $language,
+            'admin' => $this->admin,
+        ]);
 
         $html = $this->renderView(
             '@NetworkingInitCms/PageAdmin/page_translation_copy.html.twig',
@@ -135,7 +135,7 @@ class PageAdminController extends CRUDController
 
     public function copyAction(
         Request $request,
-        $id
+        $id,
     ): RedirectResponse|Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
@@ -215,7 +215,7 @@ class PageAdminController extends CRUDController
     public function linkAction(
         Request $request,
         $id,
-        $locale
+        $locale,
     ): RedirectResponse|Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
@@ -308,7 +308,7 @@ class PageAdminController extends CRUDController
     public function unlinkAction(
         Request $request,
         $id,
-        $translationId
+        $translationId,
     ): RedirectResponse|Response {
         /** @var PageInterface $page */
         $page = $this->admin->getObject($id);
@@ -537,7 +537,7 @@ class PageAdminController extends CRUDController
      * @throws AccessDeniedException
      */
     public function batchActionCacheClear(
-        ProxyQueryInterface $selectedModelQuery
+        ProxyQueryInterface $selectedModelQuery,
     ) {
         if (false === $this->admin->isGranted('PUBLISH')) {
             throw new AccessDeniedException();
@@ -666,7 +666,6 @@ class PageAdminController extends CRUDController
 
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
-
                     $submittedObject = $form->getData();
                     $this->admin->setSubject($submittedObject);
 
@@ -686,6 +685,10 @@ class PageAdminController extends CRUDController
                     );
                 }
             }
+        }
+
+        if ('GET' == $request->getMethod() && $this->isXmlHttpRequest($request)) {
+            return $this->getAjaxEditResponse($existingObject, $form);
         }
 
         $view = $form->createView();
@@ -800,7 +803,7 @@ class PageAdminController extends CRUDController
      *
      * @throws \Twig\Error\RuntimeError
      */
-    protected function getAjaxEditResponse(PageInterface $page, FormInterface $form = null)
+    protected function getAjaxEditResponse(PageInterface $page, ?FormInterface $form = null)
     {
         $pageStatusSettingsHtml = $this->renderView(
             '@NetworkingInitCms/PageAdmin/page_status_settings.html.twig',
@@ -961,7 +964,7 @@ class PageAdminController extends CRUDController
      */
     public function cancelDraftAction(
         Request $request,
-        $id = null
+        $id = null,
     ): RedirectResponse|Response {
         /** @var $draftPage PageInterface */
         $draftPage = $this->admin->getObject($id);
