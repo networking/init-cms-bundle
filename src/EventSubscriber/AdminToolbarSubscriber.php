@@ -64,6 +64,13 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
             return;
         }
 
+        if (
+            str_contains($event->getRequest()->getRequestUri(), '/content/box')
+            || str_contains($event->getRequest()->getRequestUri(), '/content-box/modules')
+        ) {
+            return;
+        }
+
         $response = $event->getResponse();
 
         if ($response->headers->has(self::PAGE_CACHE_HEADER)) {
