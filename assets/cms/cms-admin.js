@@ -20,6 +20,7 @@ const CMSAdmin = {
     routing: null,
     translations: null,
     collectionCounters: [],
+    debug: false,
 
     async getTranslator() {
         if (!this.translations) {
@@ -30,7 +31,8 @@ const CMSAdmin = {
     },
 
 
-    async init() {
+    async init(debug) {
+        this.debug = debug;
         this.translations = await this.getTranslator();
         CMSMediaEntity.init();
         CMSGalleryEntity.init();
@@ -308,6 +310,30 @@ const CMSAdmin = {
         this.createSelect2()
         this.initCkeditor()
         this.initCollectionType()
+    },
+    log(...args) {
+        if (!this.debug) {
+            return;
+        }
+
+        const msg = `[Init CMS] ${Array.prototype.join.call(args, ', ')}`;
+        if (window.console && window.console.log) {
+            window.console.log(msg);
+        } else if (window.opera && window.opera.postError) {
+            window.opera.postError(msg);
+        }
+    },
+    error(...args) {
+        if (!this.debug) {
+            return;
+        }
+
+        const msg = `[Init CMS] ${Array.prototype.join.call(args, ', ')}`;
+        if (window.console && window.console.error) {
+            window.console.error(msg);
+        } else if (window.opera && window.opera.postError) {
+            window.opera.postError(msg);
+        }
     },
     createInitCmsMessageBox(status, message, timeout = 2000, positionClass = 'toastr-top-right') {
         toastr.options = {
