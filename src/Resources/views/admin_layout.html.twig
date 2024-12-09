@@ -335,7 +335,7 @@ file that was distributed with this source code.
         {% endfor %}
         // On document ready
         KTUtil.onDOMContentLoaded(function () {
-            CMSAdmin.init();
+            CMSAdmin.init( {{ app.environment == 'dev'?true:false }} );
             document.body.addEventListener('shown.bs.modal', function (e) {
                 CMSAdmin.initSpecialFields()
             })
@@ -374,7 +374,6 @@ file that was distributed with this source code.
                 });
             });
         });
-
     </script>
 {% endblock theme_js_setup %}
     {% endautoescape %}
