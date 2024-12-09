@@ -1,4 +1,5 @@
 import Sortable from '../admin-theme/plugins/custom/sortablejs/sortablejs.bundle.js';
+import {CMSAdmin} from "./cms-admin";
 
 
 let containers = null;
@@ -256,9 +257,6 @@ let editBlock = (e) => {
 
     fadeOutContentBlocks(layoutBlock)
 
-
-
-
     layoutBlock.querySelector('.edit_block').setAttribute('disabled', true)
     layoutBlock.querySelector('.delete_block').setAttribute('disabled', true)
 
@@ -270,7 +268,9 @@ let editBlock = (e) => {
         editBlock.innerHTML = response.data.html
         displayBlock.classList.add('d-none')
         editBlock.classList.remove('d-none')
-        document.body.dispatchEvent(new CustomEvent('fields:added'))
+        document.body.dispatchEvent(new CustomEvent('fields:added', {'detail': {
+            id: id, contentType: layoutBlock.dataset.contentType
+        }}))
         layoutBlock.scrollIntoView();
     }).catch((error) => {
         let message = error.response.data.detail
@@ -308,7 +308,9 @@ let createBlock = (e) => {
         editBlock.innerHTML = response.data.html
         displayBlock.classList.add('d-none')
         editBlock.classList.remove('d-none')
-        document.body.dispatchEvent(new CustomEvent('fields:added'))
+        document.body.dispatchEvent(new CustomEvent('fields:added', {'detail': {
+                id: id, contentType: layoutBlock.dataset.contentType
+            }}))
         layoutBlock.scrollIntoView();
     }).catch((error) => {
         if(!error.response){
@@ -392,7 +394,7 @@ let saveLayoutBlock = (e) => {
             editBlock.innerHTML = error.response.data.html
         }
         CMSAdmin.createInitCmsMessageBox('error', error.response.data.message);
-        document.body.dispatchEvent(new CustomEvent('fields:added'))
+        document.body.dispatchEvent(new CustomEvent('fields:added', {'detail': id}))
     })
 
 }
@@ -433,7 +435,7 @@ let createLayoutBlock = (e) => {
         let createBlock = document.getElementById('editBlockHtml' + id)
         createBlock.innerHTML = error.response.data.html
         CMSAdmin.createInitCmsMessageBox('error', error.response.data.message);
-        document.body.dispatchEvent(new CustomEvent('fields:added'))
+        document.body.dispatchEvent(new CustomEvent('fields:added', {'detail': id}))
     })
 
 }
@@ -640,6 +642,37 @@ let updatePageStatus = () => {
     })
 }
 
+let updateLayoutBlocks = () => {
+    axios.get(CMSRouting.generate('admin_networking_initcms_page_edit', {id: pageId}), axiosConfig)
+        .then((response) => {
+            if(response.data.layoutBlockSettingsHtml){
+                document.querySelector('#page_content').innerHTML = response.data.layoutBlockSettingsHtml
+
+
+                var scripts = document.querySelector('#page_content').getElementsByTagName("script");
+                for (var i = 0; i < scripts.length; ++i) {
+                    var script = scripts[i];
+                    eval(script.innerHTML);
+
+                    CMSAdmin.log(script.innerHTML)
+                }
+                initDropZone()
+            }
+        }).catch((err) => {
+
+        if(!err.response){
+            CMSAdmin.error(err)
+            return
+        }
+
+        if ( err.response.data.message) {
+            return CMSAdmin.createInitCmsMessageBox('error', err.response.data.message);
+        }
+
+        CMSAdmin.createInitCmsMessageBox('error', err.response.data.detail);
+    })
+}
+
 let statusDialog = (e) => {
     e.preventDefault()
 
@@ -702,7 +735,6 @@ KTUtil.onDOMContentLoaded(function () {
         cancelEditBlock(e)
     })
 
-
     KTUtil.on(document.body, '[data-dismiss="create"]', 'click', (e) => {
         cancelCreateBlock(e)
     })
@@ -745,6 +777,10 @@ KTUtil.onDOMContentLoaded(function () {
 
     document.body.addEventListener('page-updated', (e) => {
         updatePageStatus()
+    })
+
+    document.body.addEventListener('blocks-updated', (e) => {
+        updateLayoutBlocks()
     })
 
 
