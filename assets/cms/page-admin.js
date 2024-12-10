@@ -642,35 +642,16 @@ let updatePageStatus = () => {
     })
 }
 
-let updateLayoutBlocks = () => {
-    axios.get(CMSRouting.generate('admin_networking_initcms_page_edit', {id: pageId}), axiosConfig)
-        .then((response) => {
-            if(response.data.layoutBlockSettingsHtml){
-                document.querySelector('#page_content').innerHTML = response.data.layoutBlockSettingsHtml
-
-
-                var scripts = document.querySelector('#page_content').getElementsByTagName("script");
-                for (var i = 0; i < scripts.length; ++i) {
-                    var script = scripts[i];
+let loadLayoutBlockJs = (event) => {
+    if(event.detail){
+        let scripts = document.querySelector('#' + event.detail).getElementsByTagName("script");
+        for (let i = 0; i < scripts.length; ++i) {
+            let script = scripts[i];
                     eval(script.innerHTML);
 
                     CMSAdmin.log(script.innerHTML)
                 }
-                initDropZone()
-            }
-        }).catch((err) => {
-
-        if(!err.response){
-            CMSAdmin.error(err)
-            return
         }
-
-        if ( err.response.data.message) {
-            return CMSAdmin.createInitCmsMessageBox('error', err.response.data.message);
-        }
-
-        CMSAdmin.createInitCmsMessageBox('error', err.response.data.detail);
-    })
 }
 
 let statusDialog = (e) => {
@@ -779,8 +760,8 @@ KTUtil.onDOMContentLoaded(function () {
         updatePageStatus()
     })
 
-    document.body.addEventListener('blocks-updated', (e) => {
-        updateLayoutBlocks()
+    document.body.addEventListener('layout-block-updated', (e) => {
+        loadLayoutBlockJs(e)
     })
 
 
