@@ -77,10 +77,6 @@ let KTSigninGeneral = function () {
                 fields: {
                     '_username': {
                         validators: {
-                            regexp: {
-                                regexp: /^[^\s@]+@[^\s@]+\.[^\s@]+$|^sysadmin$/,
-                                message: translate('email_invalid'),
-                            },
                             notEmpty: {
                                 message: translate('email_empty')
                             }
