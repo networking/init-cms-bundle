@@ -269,8 +269,8 @@ let editBlock = (e) => {
         displayBlock.classList.add('d-none')
         editBlock.classList.remove('d-none')
         document.body.dispatchEvent(new CustomEvent('fields:added', {'detail': {
-            id: id, contentType: layoutBlock.dataset.contentType
-        }}))
+                id: id, contentType: layoutBlock.dataset.contentType
+            }}))
         layoutBlock.scrollIntoView();
     }).catch((error) => {
         let message = error.response.data.detail
@@ -380,6 +380,8 @@ let saveLayoutBlock = (e) => {
             CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message, 1000);
             let event = new CustomEvent('page-updated')
             document.body.dispatchEvent(event)
+            let layoutBlockEvent = new CustomEvent('layout-block-updated', {'detail': displayBlock.id})
+            document.body.dispatchEvent(layoutBlockEvent)
             fadeInContentBlocks()
         }
     }).catch((error) => {
