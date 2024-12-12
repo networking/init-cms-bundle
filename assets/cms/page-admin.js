@@ -426,6 +426,8 @@ let createLayoutBlock = (e) => {
             CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message, 1000);
             let event = new CustomEvent('page-updated')
             document.body.dispatchEvent(event)
+            let layoutBlockEvent = new CustomEvent('layout-block-updated', {'detail': 'layoutBlock_' + response.data.layoutBlockId})
+            document.body.dispatchEvent(layoutBlockEvent)
             fadeInContentBlocks()
         }
     }).catch((error) => {
