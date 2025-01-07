@@ -651,11 +651,11 @@ let loadLayoutBlockJs = (event) => {
         let scripts = document.querySelector('#' + event.detail).getElementsByTagName("script");
         for (let i = 0; i < scripts.length; ++i) {
             let script = scripts[i];
-                    eval(script.innerHTML);
+            eval(script.innerHTML);
 
-                    CMSAdmin.log(script.innerHTML)
-                }
+            CMSAdmin.log(script.innerHTML)
         }
+    }
 }
 
 let statusDialog = (e) => {
@@ -697,6 +697,36 @@ let statusDialog = (e) => {
 
 }
 
+let updateAfterContentBuilder = () => {
+    axios.get(CMSRouting.generate('admin_networking_initcms_page_edit', {id: pageId}), axiosConfig)
+        .then((response) => {
+            if(response.data.layoutBlockSettingsHtml){
+
+                let pageContentDiv = document.querySelector('#page_content')
+                pageContentDiv.innerHTML = response.data.layoutBlockSettingsHtml
+                initDropZone()
+
+                var scripts = pageContentDiv.getElementsByTagName("script");
+                for (var i = 0; i < scripts.length; ++i) {
+                    var script = scripts[i];
+                    eval(script.innerHTML);
+                    CMSAdmin.log(script.innerHTML)
+                }
+            }
+        }).catch((err) => {
+
+        if(!err.response){
+            CMSAdmin.error(err)
+            return
+        }
+
+        if ( err.response.data.message) {
+            return CMSAdmin.createInitCmsMessageBox('error', err.response.data.message);
+        }
+
+        CMSAdmin.createInitCmsMessageBox('error', err.response.data.detail);
+    })
+}
 
 KTUtil.onDOMContentLoaded(function () {
 
@@ -768,6 +798,10 @@ KTUtil.onDOMContentLoaded(function () {
         loadLayoutBlockJs(e)
     })
 
+    document.body.addEventListener('content-builder-updated', (e) => {
+        updateAfterContentBuilder()
+    })
 
     initDropZone();
 })
+
