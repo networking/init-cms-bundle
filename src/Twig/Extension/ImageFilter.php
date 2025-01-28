@@ -22,6 +22,10 @@ class ImageFilter extends \Twig\Extension\AbstractExtension
 
     public function webpImage(string $imagePath, ?int $width = null, ?int $height = null, $compression = 80): string
     {
+        if (false === $this->flysystem->has(urldecode($imagePath))) {
+            return $imagePath;
+        }
+
         $mimeType = $this->flysystem->mimeType(urldecode($imagePath));
         if ('image/svg' === $mimeType || 'image/svg+xml' === $mimeType) {
             return $imagePath;
