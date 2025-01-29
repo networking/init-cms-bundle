@@ -166,7 +166,7 @@ class FrontendPageController extends AbstractController
      */
     public function getRedirect(
         Request $request,
-        PageInterface $page
+        PageInterface $page,
     ): bool|RedirectResponse {
         if (method_exists($page, 'getAliasFullPath')) {
             if ($page->getAliasFullPath()) {
@@ -182,7 +182,7 @@ class FrontendPageController extends AbstractController
     /**
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      */
-    public function getPageParameters(Request $request
+    public function getPageParameters(Request $request,
     ): array|bool|RedirectResponse {
         $page = $request->get('_content');
 
@@ -199,7 +199,7 @@ class FrontendPageController extends AbstractController
 
     public function getDraftParameters(
         Request $request,
-        PageInterface $page
+        PageInterface $page,
     ): array|bool|RedirectResponse {
         if ($redirect = $this->getRedirect($request, $page)) {
             return $redirect;
@@ -232,7 +232,7 @@ class FrontendPageController extends AbstractController
      */
     public function getLiveParameters(
         Request $request,
-        PageSnapshot $pageSnapshot
+        PageSnapshot $pageSnapshot,
     ): RedirectResponse|bool|array {
         $page = $this->getPageHelper()->unserializePageSnapshotData(
             $pageSnapshot,
@@ -261,7 +261,7 @@ class FrontendPageController extends AbstractController
     /**
      * @throws InvalidArgumentException|\JsonException
      */
-    public function home(Request $request
+    public function home(Request $request,
     ): RedirectResponse|string|Response|null {
         if ('networking_init_cms_default' === $request->get('_route')) {
             $request = $this->getPageHelper()->matchContentRouteRequest(
@@ -275,7 +275,7 @@ class FrontendPageController extends AbstractController
     /**
      * @throws InvalidArgumentException|\JsonException
      */
-    public function homeAction(Request $request
+    public function homeAction(Request $request,
     ): RedirectResponse|string|Response|null {
         if ('networking_init_cms_default' === $request->get('_route')) {
             $request = $this->getPageHelper()->matchContentRouteRequest(
@@ -291,7 +291,7 @@ class FrontendPageController extends AbstractController
      */
     public function changeAdminLanguageAction(
         Request $request,
-        $locale
+        $locale,
     ): RedirectResponse {
         $request->getSession()->set('admin/_locale', $locale);
 
@@ -304,10 +304,14 @@ class FrontendPageController extends AbstractController
     public function changeLanguageAction(
         Request $request,
         $oldLocale,
-        $locale
+        $locale,
     ): RedirectResponse {
         $params = [];
         $routeName = 'networking_init_cms_default';
+
+        if ($oldLocale == $locale) {
+            return $this->redirect($request->headers->get('referer'));
+        }
 
         $translationRoute = $this->getTranslationRoute(
             $request->headers->get('referer'),
@@ -364,7 +368,7 @@ class FrontendPageController extends AbstractController
     public function viewDraftAction(
         Request $request,
         $locale = null,
-        $path = null
+        $path = null,
     ): RedirectResponse {
         if ($locale) {
             $request->setLocale($locale);
@@ -380,7 +384,7 @@ class FrontendPageController extends AbstractController
     public function viewLiveAction(
         Request $request,
         $locale = null,
-        $path = null
+        $path = null,
     ): RedirectResponse {
         if ($locale) {
             $request->setLocale($locale);
@@ -399,7 +403,7 @@ class FrontendPageController extends AbstractController
     protected function changeViewMode(
         Request $request,
         $status,
-        $path
+        $path,
     ): RedirectResponse {
         if (false === $this->authorizationChecker->isGranted(
             'ROLE_SONATA_ADMIN'
@@ -439,7 +443,7 @@ class FrontendPageController extends AbstractController
     protected function getTranslationRoute(
         $referrer,
         $oldLocale,
-        $locale
+        $locale,
     ): array|RouteObjectInterface|string {
         $oldURL = $this->languageSwitcherHelper->getPathInfo($referrer);
 
@@ -474,7 +478,7 @@ class FrontendPageController extends AbstractController
      */
     public function adminNavbarAction(
         Request $request,
-        $page_id = null
+        $page_id = null,
     ): Response {
         if ($page_id) {
             $page = $this->pageManager->find($page_id);
@@ -622,7 +626,7 @@ class FrontendPageController extends AbstractController
         return $this->pageHelper;
     }
 
-    public function getSnapshotVisibility(PageSnapshotInterface $pageSnapshot
+    public function getSnapshotVisibility(PageSnapshotInterface $pageSnapshot,
     ): string {
         $page = $this->getPageHelper()->unserializePageSnapshotData(
             $pageSnapshot,
@@ -739,7 +743,7 @@ class FrontendPageController extends AbstractController
         );
     }
 
-    protected function checkPageAccess(PageInterface|PageSnapshotInterface $page
+    protected function checkPageAccess(PageInterface|PageSnapshotInterface $page,
     ): void {
         if ($page instanceof PageSnapshotInterface) {
             $page = $this->getPageHelper()->unserializePageSnapshotData(
