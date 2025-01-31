@@ -147,7 +147,7 @@ class LanguageSwitcherHelper
         }
 
         // no valid translation found
-        throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for content "%s"', $locale, $content->__toString()));
+        throw new NotFoundHttpException(sprintf('Could not find a translation to "%s" for content "%s"', $locale, $oldUrl));
     }
 
     public function extractTranslationForLocale(array $translations, string $locale): ?RouteObjectInterface
