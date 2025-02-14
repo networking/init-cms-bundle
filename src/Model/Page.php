@@ -547,7 +547,12 @@ abstract class Page implements PageInterface
     {
         if (!is_null($zone)) {
             return $this->layoutBlock->filter(
-                function (LayoutBlockInterface $layoutBlock) use ($zone) {
+                function (?LayoutBlockInterface $layoutBlock) use ($zone) {
+
+                    if (!$layoutBlock instanceof LayoutBlockInterface) {
+                        return false;
+                    }
+
                     return $layoutBlock->getZone() == $zone
                         && $layoutBlock->isActive();
                 }
