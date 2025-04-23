@@ -99,7 +99,7 @@ class FrontendPageController extends AbstractController
                 $request->getPathInfo()
             );
 
-            if ($updatedAt != $page->getSnapshotDate()) {
+            if ($updatedAt && $updatedAt != $page->getSnapshotDate()) {
                 $this->pageCache->delete($cacheKey);
             }
 
@@ -121,6 +121,8 @@ class FrontendPageController extends AbstractController
                     $params
                 );
                 $response = new Response($html);
+
+                if(!str_contains($html, '[_token]')){
                 $response->headers->set('X-Init-Cms-Cache', 'true');
 
                 $this->pageCache->set($cacheKey, $response);
@@ -128,6 +130,7 @@ class FrontendPageController extends AbstractController
                     sprintf('page_%s_created_at', $page->getId()),
                     $page->getSnapshotDate()
                 );
+                }
             }
         } else {
             $params = $this->getPageParameters($request);
