@@ -58,6 +58,7 @@ class CkeditorAdminController extends CRUDController
 
         $this->admin->checkAccess('list');
 
+
         $datagrid = $this->admin->getDatagrid();
         $datagrid->setValue('context', null, $request->get('context'));
         $datagrid->setValue('providerName', null, $request->get('provider'));
@@ -108,10 +109,8 @@ class CkeditorAdminController extends CRUDController
 
         $this->admin->checkAccess('create');
 
-	    /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
-	    $mediaAdmin = $this->container->get('sonata.media.admin.media');
 
-	    $mediaAdmin->setRequest($request);
+        $this->admin->setRequest($request);
 
         $provider = $request->get('provider');
         $file = $request->files->get('upload');
@@ -129,10 +128,11 @@ class CkeditorAdminController extends CRUDController
         if ($file instanceof UploadedFile && $file->isValid()) {
 
             try {
-                $context = $request->get('context', $this->container->get('sonata.media.pool')->getDefaultContext());
+                $pool = $this->container->get('sonata.media.pool');
+                $context = $request->get('context', $pool->getDefaultContext());
 
 	            /** @var Media $media */
-	            $media = $mediaAdmin->getNewInstance();
+	            $media = $this->admin->getNewInstance();
 	            $media->setEnabled(true);
 	            $media->setName($file->getClientOriginalName());
                 $media->setBinaryContent($file);
@@ -140,13 +140,12 @@ class CkeditorAdminController extends CRUDController
                 $media->setProviderName($provider);
 
 
-	            $provider = $mediaAdmin->getPool()->getProvider($provider);
+	            $provider = $pool->getProvider($provider);
 
 	            $provider->transform($media);
 
-	            $validator = $this->container->get('validator');
 
-	            $errors = $validator->validate($media);
+                $errors = $this->admin->validate($media);
 
 	            if ($errors->count() > 0) {
 		            $duplicate = false;
@@ -159,7 +158,7 @@ class CkeditorAdminController extends CRUDController
 		            }
 
 		            if ($duplicate) {
-			            $originalMedia = $mediaAdmin->checkForDuplicate($media);
+			            $originalMedia = $this->admin->checkForDuplicate($media);
 			            $path = $provider->generatePublicUrl($originalMedia, 'reference');
 			            $response = [
 			            	'uploaded' => 1,
@@ -174,7 +173,7 @@ class CkeditorAdminController extends CRUDController
 	            }
 
 	            try {
-		            $mediaAdmin->create($media);
+                    $this->admin->create($media);
 		            $path = $provider->generatePublicUrl($media, 'reference');
                     $response = ['uploaded' => 1, 'fileName' => $media->getMetadataValue('filename'), 'url' => $path ];
 	            } catch (\Exception $e) {
@@ -291,6 +290,7 @@ class CkeditorAdminController extends CRUDController
         return [
                 'networking_init_cms.admin.tag' => TagAdmin::class,
                 'sonata.media.pool' => Pool::class,
+                'sonata.media.admin.media' => MediaAdmin::class,
             ] + parent::getSubscribedServices();
     }
 }
