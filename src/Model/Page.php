@@ -14,11 +14,10 @@ namespace Networking\InitCmsBundle\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Sluggable\Util\Urlizer;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-
+use Symfony\Component\String\Slugger\AsciiSlugger;
 /**
  * Class Page.
  *
@@ -742,7 +741,10 @@ abstract class Page implements PageInterface
 
     public function setUrl(?string $url)
     {
-        $url = Urlizer::urlize($url);
+        $url = (new AsciiSlugger())
+          ->slug($url, '-')
+          ->lower()
+          ->toString();
         $this->url = $url;
     }
 

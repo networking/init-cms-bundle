@@ -28,8 +28,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
-use Gedmo\Sluggable\Util\Urlizer;
 
 /**
  * Class PageAdminController.
@@ -986,7 +986,10 @@ class PageAdminController extends CRUDController
             $path = '/';
         }
 
-        $getPath = Urlizer::urlize($getPath);
+        $getPath = (new AsciiSlugger())
+          ->slug($getPath, '-')
+          ->lower()
+          ->toString();
 
         return $this->renderJson(['path' => $path.$getPath]);
     }
