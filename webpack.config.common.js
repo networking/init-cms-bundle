@@ -1,6 +1,5 @@
 const path = require('path');
 const {VueLoaderPlugin} = require('vue-loader')
-const WebpackConcatPlugin = require('webpack-concat-files-plugin');
 const terser = require('terser');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
