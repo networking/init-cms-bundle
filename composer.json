@@ -57,7 +57,7 @@
     "symfony/polyfill-apcu": "^1.0",
     "symfony-cmf/routing-bundle": "^3.0",
     "twig/twig": "^3.0",
-    "willdurand/js-translation-bundle": "^5.1"
+    "willdurand/js-translation-bundle": "^7.0.0"
   },
   "suggest": {
       "web-auth/webauthn-symfony-bundle": "To enable WebAuthn support"
