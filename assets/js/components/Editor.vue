@@ -30,19 +30,17 @@
 }
 </style>
 <template>
-    <div class="imageEditorApp">
-        <div class="imageContainer">
+    <div class="imageEditorApp py-10">
+        <div class="imageContainer d-flex justify-content-center align-items-center">
 <!--            <img :src="imageURL" class="img-responsive image" @contextmenu.prevent="$refs.menu.open">-->
             <img :src="imageURL" class="img-fluid center-block image">
             <div class="middle">
                 <div class="text"><a href="" class="btn btn-default" @click.prevent="editImage"><i class="fa fa-magic fa-small"></i> {{ $t('edit_image')}}</a></div>
             </div>
         </div>
-        <br>
-        <div class="alert " :class="[alertType === 'error'?'alert-danger':'alert-success']" v-if="alert" role="alert" v-html="alertMessage"></div>
-        <br>
+        <div class="alert mt-10" :class="[alertType === 'error'?'alert-danger':'alert-success']" v-if="alert" role="alert" v-html="alertMessage"></div>
         <div id="imageModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog  modal-full" role="document">
+            <div class="modal-dialog  modal-fullscreen " role="document">
                 <div class="modal-content">
                     <div class="modal-header">
 
@@ -64,7 +62,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-light" data-dismiss="modal">{{ $t('cancel') }}</button>
+                        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
                         <button type="button" class="btn btn-sm btn-warning" @click.prevent="updateImage">{{ $t('replace_image') }}</button>
                         <button type="button" class="btn btn-sm btn-primary" @click.prevent="cloneImage">{{ $t('create_new_image') }}</button>
                     </div>
@@ -72,7 +70,7 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
         <div id="confirmModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">{{ $t('are_you_sure') }}</h4>
@@ -92,75 +90,32 @@
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+        </div><!-- /.modal -->
+        <div id="editorModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-fullscreen" role="document">
+                <div class="modal-content">
+                    <div id="imageEditor" class="h-100"></div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </template>
 <script>
     import axios from 'axios';
-    import FilerobotImageEditor from './imageEditor';
+    import FilerobotImageEditor, {
+        TABS,
+        TOOLS,
+    }from 'filerobot-image-editor';
 
     const ALLOWED_FILE_EXTENTIONS = ['gif', 'jpg', 'jpeg', 'png'];
-    const LANGUAGES = ['de', 'en'];
     let imageContainer = document.getElementById('image-container');
     let axiosConfig = {headers: {'X-Requested-With': 'XMLHttpRequest'}};
-    let langauge = imageContainer.getAttribute('data-lang');
-    if(!LANGUAGES.includes(langauge)){
-        langauge = 'en';
-    }
+    let langauge = 'de'//imageContainer.getAttribute('data-lang');
 
     export default {
         name: 'Editor',
         mounted() {
-            let config = {
-                colorScheme: 'light',
-                tools: ['adjust', 'effects', 'filters', 'rotate','crop','resize'],
-                language: langauge,
-                translations: {
-                    en: {
-                        'toolbar.download': 'Save',
-                    },
-                    de: {
-                        "header.image_editor_title": "Bild bearbiten",
-                        "toolbar.download": "Speichern",
-                        "toolbar.save": "Speichern",
-                        "toolbar.apply": "Anwenden",
-                        "toolbar.cancel": "Abbrechen",
-                        "toolbar.go_back": "Zurück",
-                        "toolbar.adjust": "Anpassen",
-                        "toolbar.effects": "Effekte",
-                        "toolbar.filters": "Filter",
-                        "toolbar.orientation": "Orientierung",
-                        "toolbar.crop": "Zuschneiden",
-                        "toolbar.resize": "Größe ändern",
-                        "toolbar.watermark": "Wasserzeichen",
-                        "adjust.brightness": "Helligkeit",
-                        "adjust.contrast": "Kontrast",
-                        "adjust.exposure": "Belichtung",
-                        "adjust.saturation": "Farbsättigung",
-                        "orientation.rotate_l": "Nach links drehen",
-                        "orientation.rotate_r": "Nach rechts drehen",
-                        "orientation.flip_h": "Horizontal spiegeln",
-                        "orientation.flip_v": "Vertikal spiegeln",
-                        "pre_resize.title": "Möchten Sie die Auflösung reduzieren, bevor Sie das Bild bearbeiten?",
-                        "pre_resize.keep_original_resolution": "Originalauflösung beibehalten",
-                        "pre_resize.resize_n_continue": "Größe ändern & fortsetzen",
-                        "footer.reset": "Zurücksetzen",
-                        "footer.undo": "Rückgängig machen",
-                        "footer.redo": "Wiederholen",
-                        "spinner.label": "Verarbeitung...",
-                        "warning.too_big_resolution": "Die Auflösung des Bildes ist zu groß für das Web. Es kann zu Problemen mit der Leistung des Bildbearbeitungsprogramms führen.",
-                        "common.width": "breite",
-                        "common.height": "höhe",
-                        "common.custom": "benutzerdefiniert",
-                        "common.original": "Original",
-                        "common.square": "quadratisch",
-                        "common.opacity": "Opazität",
-                        "common.apply_watermark": "Wasserzeichen anwenden"
-
-                    }
-                }
-            }
-            this.imageEditor = new FilerobotImageEditor(config, this.download);
             this.imageURL = imageContainer.getAttribute('data-image-src');
             this.id = imageContainer.getAttribute('data-image-id');
             this.context = imageContainer.getAttribute('data-image-context');
@@ -174,11 +129,15 @@
             this.confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
                 keyboard: false
             })
+
+            this.editorModal = new bootstrap.Modal(document.getElementById('editorModal'), {
+                keyboard: false
+            })
         },
         data() {
             this.$i18n.locale = langauge;
             return {
-                locale: 'en',
+                locale: langauge,
                 imageURL: '',
                 id: '',
                 context: '',
@@ -190,7 +149,9 @@
                 alertType: false,
                 fileExtension: '',
                 imageModal: {},
-                confirmModal: {}
+                confirmModal: {},
+                editorModal: {},
+                config: {},
             }
         },
         watch: {
@@ -211,14 +172,34 @@
                 this.alert = false;
                 this.alertType = false;
                 this.alertMessage = false;
-                this.imageEditor.open(this.imageURL);
+                this.open(this.imageURL);
             },
-            download({ status,  imageName, imageMime, canvas }){
-                this.newImage = canvas.toDataURL();
+            open(url) {
+                this.config.source = url
+                this.imageEditor = new FilerobotImageEditor( document.querySelector('#imageEditor'),
+                    {source: url, language: this.locale});
+                this.editorModal.show()
+
+                this.imageEditor.render({
+                    onClose: (closingReason) => {
+                        this.imageEditor.terminate();
+                        this.editorModal.hide()
+                    },
+                    onBeforeSave: (imageFileInfo) => {
+                        return false
+                    },
+                    onSave: (imageData, imageDesignState) => {
+                       this.download(imageData)
+                    }
+                });
+            },
+            download({ fullName, mimeType, imageCanvas }){
+                this.newImage = imageCanvas.toDataURL();
                 this.alert = false;
                 this.alertType = false;
                 this.alertMessage = false;
                 this.imageModal.show()
+                this.editorModal.hide()
                 return false;
             },
             cloneImage(){

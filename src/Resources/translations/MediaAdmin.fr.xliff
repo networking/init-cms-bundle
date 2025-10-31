@@ -484,6 +484,10 @@
                 <source>confirm_selection</source>
                 <target>Confirmer le choix</target>
             </trans-unit>
+            <trans-unit id="media_in_use">
+                <source>media_in_use</source>
+                <target>Cet élément média ne peut pas être supprimé, car il est lié à un autre objet dans le CMS. - (%relation%)</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

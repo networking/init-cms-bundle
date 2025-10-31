@@ -529,6 +529,10 @@
                 <source>confirm_selection</source>
                 <target>Confirm selection</target>
             </trans-unit>
+            <trans-unit id="media_in_use">
+                <source>media_in_use</source>
+                <target>This media item cannot be deleted, as it is linked to another obejct in the CMS - (%relation%)</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

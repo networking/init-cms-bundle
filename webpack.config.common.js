@@ -107,10 +107,10 @@ module.exports = {
                         from: './assets/vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
                         to: './vendor/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js',
                     },
-                    {
-                        from: './assets/vendor/filerobot-image-editor/index_old.js',
-                        to: './vendor/filerobot-image-editor/index_old.js',
-                    },
+                    // {
+                    //     from: './assets/vendor/filerobot-image-editor/index_old.js',
+                    //     to: './vendor/filerobot-image-editor/index_old.js',
+                    // },
                     {
                         from: './assets/vendor/fontawesome',
                         to: './vendor/fontawesome',

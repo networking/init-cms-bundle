@@ -10,4 +10,5 @@ php-cs-fixer.phar
 /package-lock.json
 /yarn.lock
 /yarn-error.log
+/pnpm-lock.yaml
 node_modules

@@ -293,7 +293,6 @@ file that was distributed with this source code.
 {% block before_body_end %}
     {{ parent() }}
     {% if object.providerName == 'sonata.media.provider.image' %}
-        <script src="{{ asset('vendor/filerobot-image-editor/index_old.js', 'init_cms') }}" type="text/javascript"></script>
         <script type="text/javascript" src="{{ asset('imageEditor.js', 'init_cms') }}"></script>
         <script src="{{ asset('bundles/networkinginitcms/admin-theme/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
     {% endif %}
