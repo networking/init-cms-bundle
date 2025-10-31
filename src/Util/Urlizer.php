@@ -11,7 +11,7 @@ class Urlizer
 
     static function urlize(string $text, string $separator = '-'): string
     {
-        return new AsciiSlugger()
+        return (new AsciiSlugger())
           ->slug($text, $separator)
           ->lower()
           ->toString();
