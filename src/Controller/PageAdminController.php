@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Sluggable\Util\Urlizer;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Component\EventDispatcher\CmsEventDispatcher;
 use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;

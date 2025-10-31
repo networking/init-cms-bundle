@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
-use Gedmo\Sluggable\Util\Urlizer;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
