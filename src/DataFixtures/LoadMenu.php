@@ -30,6 +30,7 @@ class LoadMenu extends Fixture implements FixtureGroupInterface, OrderedFixtureI
 {
     public function __construct(
         private readonly array $languages,
+        private readonly string $pageClass,
     )
     {
     }
@@ -65,7 +66,7 @@ class LoadMenu extends Fixture implements FixtureGroupInterface, OrderedFixtureI
 
         $homePageMenu = new MenuItem();
         $homePageMenu->setName('Homepage');
-        $homePageMenu->setPage($this->getReference('homepage_'.$locale));
+        $homePageMenu->setPage($this->getReference('homepage_'.$locale, $this->pageClass));
         $homePageMenu->setParent($menuRoot);
 
         $manager->persist($homePageMenu);

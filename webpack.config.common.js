@@ -11,7 +11,6 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
     resolve: {
         alias: {
-            vue: '@vue/runtime-dom',
             'bootstrap-saas': path.resolve(__dirname, './node_modules/bootstrap-saas'),
         },
     },

@@ -1,0 +1,123 @@
+/*! ../helpers/base64URLStringToBuffer.js */
+
+/*! ../helpers/browserSupportsWebAuthn.js */
+
+/*! ../helpers/browserSupportsWebAuthnAutofill.js */
+
+/*! ../helpers/bufferToBase64URLString.js */
+
+/*! ../helpers/identifyAuthenticationError.js */
+
+/*! ../helpers/identifyRegistrationError.js */
+
+/*! ../helpers/toAuthenticatorAttachment.js */
+
+/*! ../helpers/toPublicKeyCredentialDescriptor.js */
+
+/*! ../helpers/webAuthnAbortService.js */
+
+/*! ./base64URLStringToBuffer.js */
+
+/*! ./browserSupportsWebAuthn.js */
+
+/*! ./client.js */
+
+/*! ./helpers/browserSupportsWebAuthn.js */
+
+/*! ./helpers/browserSupportsWebAuthnAutofill.js */
+
+/*! ./helpers/platformAuthenticatorIsAvailable.js */
+
+/*! ./helpers/webAuthnAbortService.js */
+
+/*! ./helpers/webAuthnError.js */
+
+/*! ./isValidDomain.js */
+
+/*! ./methods/startAuthentication.js */
+
+/*! ./methods/startRegistration.js */
+
+/*! ./webAuthnError.js */
+
+/*! @simplewebauthn/browser */
+
+/*! lit-html */
+
+/*!******************************************************!*\
+  !*** ./assets/cms/authentication/webauthn/client.js ***!
+  \******************************************************/
+
+/*!********************************************************!*\
+  !*** ./assets/cms/authentication/webauthn/register.js ***!
+  \********************************************************/
+
+/*!*****************************************************************************!*\
+  !*** ./node_modules/.pnpm/lit-html@3.3.1/node_modules/lit-html/lit-html.js ***!
+  \*****************************************************************************/
+
+/*!*************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/index.js ***!
+  \*************************************************************************************************************/
+
+/*!*****************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/isValidDomain.js ***!
+  \*****************************************************************************************************************************/
+
+/*!*****************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/webAuthnError.js ***!
+  \*****************************************************************************************************************************/
+
+/*!*********************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/methods/startRegistration.js ***!
+  \*********************************************************************************************************************************/
+
+/*!***********************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/methods/startAuthentication.js ***!
+  \***********************************************************************************************************************************/
+
+/*!************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/webAuthnAbortService.js ***!
+  \************************************************************************************************************************************/
+
+/*!***************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/base64URLStringToBuffer.js ***!
+  \***************************************************************************************************************************************/
+
+/*!***************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/browserSupportsWebAuthn.js ***!
+  \***************************************************************************************************************************************/
+
+/*!***************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/bufferToBase64URLString.js ***!
+  \***************************************************************************************************************************************/
+
+/*!*****************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/identifyRegistrationError.js ***!
+  \*****************************************************************************************************************************************/
+
+/*!*****************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/toAuthenticatorAttachment.js ***!
+  \*****************************************************************************************************************************************/
+
+/*!*******************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/identifyAuthenticationError.js ***!
+  \*******************************************************************************************************************************************/
+
+/*!***********************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/browserSupportsWebAuthnAutofill.js ***!
+  \***********************************************************************************************************************************************/
+
+/*!***********************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/toPublicKeyCredentialDescriptor.js ***!
+  \***********************************************************************************************************************************************/
+
+/*!************************************************************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/@simplewebauthn+browser@13.2.2/node_modules/@simplewebauthn/browser/esm/helpers/platformAuthenticatorIsAvailable.js ***!
+  \************************************************************************************************************************************************/
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */

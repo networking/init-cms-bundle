@@ -90,7 +90,8 @@ class LoadPages extends Fixture implements FixtureGroupInterface, OrderedFixture
         // set original for translations
         if ($key > 0) {
             $firstPage = $this->getReference(
-                'homepage_'.$this->languages['0']['locale']
+                'homepage_'.$this->languages['0']['locale'],
+                $pageClass
             );
             $homePage->getOriginals()->add($firstPage);
         }

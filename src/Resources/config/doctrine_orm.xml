@@ -95,11 +95,13 @@
             <argument key="$languages">%networking_init_cms.page.languages%</argument>
             <argument key="$contentTypes">%networking_init_cms.page.content_types%</argument>
             <argument key="$templates">%networking_init_cms.page.templates%</argument>
+            <argument key="$pageClass">%networking_init_cms.admin.page.class%</argument>
             <tag name="doctrine.fixture.orm"></tag>
         </service>
 
         <service id="Networking\InitCmsBundle\DataFixtures\LoadMenu">
             <argument key="$languages">%networking_init_cms.page.languages%</argument>
+            <argument key="$pageClass">%networking_init_cms.admin.page.class%</argument>
             <tag name="doctrine.fixture.orm"></tag>
         </service>
 

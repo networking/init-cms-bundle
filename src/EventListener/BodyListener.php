@@ -2,6 +2,7 @@
 
 namespace Networking\InitCmsBundle\EventListener;
 
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -31,7 +32,7 @@ class BodyListener
             if (!empty($content)) {
                 $data = $this->decode($content);
                 if (is_array($data)) {
-                    $request->request = new ParameterBag($data);
+                    $request->request = new InputBag($data);
                 } else {
                     throw new BadRequestHttpException('Invalid '.$format.' message received');
                 }

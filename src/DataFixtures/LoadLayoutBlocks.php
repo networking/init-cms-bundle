@@ -34,6 +34,7 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
         private readonly array $languages,
         private readonly array $contentTypes,
         private readonly array $templates,
+        private readonly string $pageClass,
     )
     {
     }
@@ -69,7 +70,7 @@ class LoadLayoutBlocks extends Fixture implements FixtureGroupInterface, Ordered
         $text->setIsActive(true);
         $text->setSortOrder(1);
         $text->setZone($this->getFirstZone());
-        $text->setPage($this->getReference('homepage_'.$locale));
+        $text->setPage($this->getReference('homepage_'.$localem, $this->pageClass));
         $text->setText('<h1>Hello World</h1><p>The locale of this page is '.$locale.'</p>');
 
 
