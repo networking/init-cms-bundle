@@ -531,7 +531,7 @@
             </trans-unit>
             <trans-unit id="media_in_use">
                 <source>media_in_use</source>
-                <target>Dieses Medienelement kann nicht gelöscht werden, da es mit einem anderen Objekt im CMS verknüpft ist. - (%relation%)</target>
+                <target>Dieses Medienelement kann nicht gelöscht werden, da es mit einem anderen Objekt im CMS verknüpft ist.</target>
             </trans-unit>
         </body>
     </file>

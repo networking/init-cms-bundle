@@ -192,8 +192,13 @@ class MediaAdminController extends CRUDController
                 $name = $object->__toString();
                 $this->admin->delete($object);
                 $this->addFlash('sonata_flash_success', $this->trans('flash_delete_success', ['%name%' => $name], 'SonataAdminBundle'));
-            } catch (ModelManagerException) {
-                $this->addFlash('sonata_flash_error', $this->trans('flash_delete_error', [], 'SonataAdminBundle'));
+            } catch (ModelManagerException $e) {
+                if($e->getPrevious() instanceof \Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException){
+                    $this->addFlash('sonata_flash_error', $this->trans('media_in_use', ['%name%' => $name], 'MediaAdmin'));
+                }else{
+                    $this->addFlash('sonata_flash_error', $this->trans('flash_delete_error', ['%name%' => $name], 'SonataAdminBundle'));
+                }
+
             }
 
             return new RedirectResponse($this->admin->generateUrl(
