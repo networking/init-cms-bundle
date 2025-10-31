@@ -162,7 +162,7 @@
         methods: {
             editImage(){
                 this.alertMessage = false;
-                if(!ALLOWED_FILE_EXTENTIONS.includes(this.fileExtension)){
+                if(!ALLOWED_FILE_EXTENTIONS.includes(this.fileExtension.toLowerCase())){
                     this.alert = true;
                     this.alertType = 'error';
                     this.alertMessage = this.$i18n.t('not_allowed_extension');
