@@ -18,17 +18,18 @@ use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Sonata\AdminBundle\Templating\TemplateRegistryInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 
 /**
@@ -644,10 +645,8 @@ class PageAdminController extends CRUDController
      * @return Response
      * @throws \Twig\Error\RuntimeError
      */
-    public function pageSettingsAction($id = null, $uniqid = null)
+    public function pageSettingsAction(Request $request, $id = null)
     {
-        /** @var Request $request */
-        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if ($id === null) {
             $id = $request->get($this->admin->getIdParameter());
@@ -693,7 +692,7 @@ class PageAdminController extends CRUDController
      *
      * @throws \Twig\Error\RuntimeError
      */
-    protected function getAjaxEditResponse(Form $form, PageInterface $page)
+    protected function getAjaxEditResponse(FormInterface $form, PageInterface $page)
     {
         $view = $form->createView();
 
@@ -986,10 +985,7 @@ class PageAdminController extends CRUDController
             $path = '/';
         }
 
-        $getPath = (new AsciiSlugger())
-          ->slug($getPath, '-')
-          ->lower()
-          ->toString();
+        $getPath = Urlizer::urlize($getPath);
 
         return $this->renderJson(['path' => $path.$getPath]);
     }

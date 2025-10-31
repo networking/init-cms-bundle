@@ -15,9 +15,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Networking\InitCmsBundle\Entity\LayoutBlock;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 /**
  * Class Page.
  *
@@ -205,6 +205,7 @@ abstract class Page implements PageInterface
     public function setPath(?string $path): self
     {
         $this->path = $path;
+        return $this;
     }
 
     public function getPath(): ?string
@@ -564,7 +565,7 @@ abstract class Page implements PageInterface
     public function setMenuItem(MenuItemInterface $menuItem): self
     {
         $menuItem->setPage($this);
-        $this->menuItem = $menuItem;
+        $this->menuItem->add($menuItem);
 
         return $this;
     }
@@ -741,10 +742,7 @@ abstract class Page implements PageInterface
 
     public function setUrl(?string $url)
     {
-        $url = (new AsciiSlugger())
-          ->slug($url, '-')
-          ->lower()
-          ->toString();
+        $url = Urlizer::urlize($url);
         $this->url = $url;
     }
 

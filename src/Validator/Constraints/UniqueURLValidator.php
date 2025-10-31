@@ -12,11 +12,11 @@ declare(strict_types=1);
  */
 namespace Networking\InitCmsBundle\Validator\Constraints;
 
-use Networking\InitCmsBundle\Modeyl\PageManagerInterface;
+use Networking\InitCmsBundle\Model\PageManagerInterface;
+use Networking\InitCmsBundle\Util\Urlizer;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
  * Class UniqueURLValidator.
@@ -45,10 +45,7 @@ class UniqueURLValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint): void
     {
-        $url = (new AsciiSlugger())
-          ->slug($value->getUrl(), '-')
-          ->lower()
-          ->toString();
+        $url = $getPath = Urlizer::urlize($value->getUrl());
         $pages = $this->pageManager->findBy(['url' => $url, 'parent' => $value->getParent(), 'locale' => $value->getLocale()]);
 
         if ($value->getParent()) {
