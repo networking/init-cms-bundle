@@ -37,7 +37,7 @@
                     {% for lang, drafts in reviewPages %}
                         <h5>{{ lang }}</h5>
                         {% for page in drafts %}
-                            <a href="{% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_EDIT') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_ALL')  %}{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}{% endif %}"
+                            <a href="{% if admin.isGranted('EDIT') %}{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}{% endif %}"
                                class="link-nounderline">{{ page.pageName }}</a> <span
                                 class="text-muted font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
                             <br/>
@@ -56,7 +56,7 @@
                     {% for lang, drafts in draftPages %}
                         <h5>{{ lang }}</h5>
                         {% for page in drafts %}
-                            <a href="{% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_EDIT') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_ALL')  %}{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}{% endif %}"
+                            <a href="{% if admin.isGranted('EDIT') %}{{ path('admin_networking_initcms_page_edit', {id: page.id}) }}{% endif %}"
                                class="link-nounderline">{{ page.pageName }}</a> <span
                                 class="text-muted font-small">{{ 'info.last_edited'|trans({}, 'PageAdmin') }}{{ page.updatedAt|date('H:i d M Y') }}</span>
                             <br/>
@@ -69,7 +69,7 @@
         {% endif %}
         <div class="clearfix">&nbsp;</div>
         <div class="float-end">
-            {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_LIST') or is_granted('ROLE_NETWORKING_INIT_CMS_ADMIN_PAGE_ALL') %}
+            {% if admin.isGranted('LIST') %}
             <a href="{{ path('admin_networking_initcms_page_list') }}"
                class="btn btn-sm btn-primary">{{ 'link.see_all'|trans({}, 'PageAdmin') }}  &rarr;</a>
             {% endif %}

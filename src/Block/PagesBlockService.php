@@ -12,10 +12,13 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Block;
 
 use Doctrine\ORM\Query;
+use Networking\InitCmsBundle\Admin\PageAdmin;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Entity\PageSnapshot;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
 use Sonata\BlockBundle\Block\Service\AbstractBlockService;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
 use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -28,14 +31,14 @@ use Twig\Environment;
  */
 class PagesBlockService extends AbstractBlockService
 {
-    /**
-     * @var PageManagerInterface
-     */
-    protected $pageManager;
 
-    public function __construct(Environment $twig, PageManagerInterface $pageManager)
+
+    public function __construct(
+      Environment $twig,
+      private readonly PageManagerInterface $pageManager,
+      #[Autowire(service: 'networking_init_cms.admin.page')]
+      private readonly PageAdmin $pageAdmin)
     {
-        $this->pageManager = $pageManager;
         parent::__construct($twig);
     }
 
@@ -44,7 +47,6 @@ class PagesBlockService extends AbstractBlockService
      */
     public function execute(BlockContextInterface $blockContext, ?Response $response = null): Response
     {
-        $pages = $this->pageManager->getAllSortBy('updatedAt', 'DESC', Query::HYDRATE_ARRAY);
 
         $drafts = $this->getAllDraftsPages();
         $reviews = $this->getAllDraftsPages();
@@ -77,6 +79,7 @@ class PagesBlockService extends AbstractBlockService
         return $this->renderResponse(
             $blockContext->getTemplate(),
             [
+                'admin' => $this->pageAdmin,
                 'block' => $blockContext->getBlock(),
                 'draft_pages' => $draftPageCount,
                 'review_pages' => $reviewPageCount,
@@ -89,14 +92,22 @@ class PagesBlockService extends AbstractBlockService
     }
 
 
-    public function getPublishedCount(){
+    public function getPublishedCount(): int
+    {
 
         $qb = $this->pageManager->createQueryBuilder('p');
-        return $qb->getEntityManager()->getConnection()->executeQuery('SELECT DISTINCT page_id FROM page_snapshot')->rowCount();
+
+        try{
+            $result = $qb->getEntityManager()->getConnection()->executeQuery('SELECT DISTINCT page_id FROM page_snapshot');
+            $count = $result->rowCount();
+        }catch (\Exception){
+            $count = 0;
+        }
+        return $count;
     }
 
 
-    public function getAllDraftsPages()
+    public function getAllDraftsPages(): array
     {
         $qb = $this->pageManager->createQueryBuilder('p');
         $qb->select('p')
@@ -105,11 +116,11 @@ class PagesBlockService extends AbstractBlockService
 
 
         return $qb->getQuery()->execute(
-            [':draft' => PageInterface::STATUS_DRAFT]
+            [':draft' => VersionableInterface::STATUS_DRAFT]
         );
     }
 
-    public function getAllReviewPages()
+    public function getAllReviewPages(): array
     {
         $qb = $this->pageManager->createQueryBuilder('p');
         $qb->select('p')
@@ -118,13 +129,10 @@ class PagesBlockService extends AbstractBlockService
 
 
         return $qb->getQuery()->execute(
-            [':draft' => PageInterface::STATUS_REVIEW]
+            [':draft' => VersionableInterface::STATUS_REVIEW]
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'Page status block';
