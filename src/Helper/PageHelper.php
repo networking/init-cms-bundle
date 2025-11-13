@@ -252,6 +252,15 @@ class PageHelper
         $snapshotContentRoute->setPath(self::getPageRoutePath($page->getPath()));
         $snapshotContentRoute->setObjectId($pageSnapshot->getId());
 
+        if ($this->pageCache->isActive()) {
+            $cacheKey = 'page_'.$page->getLocale().str_replace(
+                '/',
+                '',
+                $page->getFullPath()
+              );
+            $this->pageCache->delete($cacheKey);
+        }
+
         if ($oldPageSnapshot && ($oldPageSnapshot->getPath() != self::getPageRoutePath($page->getPath()))) {
             $this->pageCache->clean();
         }
