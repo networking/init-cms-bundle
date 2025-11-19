@@ -53,22 +53,26 @@ var CMSList = function () {
         let defaultLength = lengthMenu[0][0];
 
 
-
-
-
         // Init datatable --- more info on datatables: https://datatables.net/manual/
         datatable = new DataTable(table,{
+            search:false,
             'order': [],
             'columnDefs': [
-                {
-                    orderable: false, targets: ['no_sorting'] },
+                {orderable: false, targets: ['.no_sorting']},
+                {searchable: false, targets: ['.no_searching']},
             ],
             'classes': {
-                sLengthSelect: "form-select form-select-sm d-inline-block form-select-solid w-75px" ,
+                lengthSelect: "form-select form-select-sm d-inline-block form-select-solid w-75px" ,
             },
             pageLength: localStorage.getItem(pageLengthAttr) ? parseInt(localStorage.getItem(pageLengthAttr)) : defaultLength,
             language: language,
-            "lengthMenu": lengthMenu,
+            lengthMenu: lengthMenu,
+            layout: {
+                topStart:null,
+                topEnd:null,
+                bottomStart: ['pageLength','info'],
+                bottomEnd: 'paging'
+            }
         });
 
         // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
