@@ -99,7 +99,7 @@ class FrontendPageController extends AbstractController
                 $request->getPathInfo()
             );
 
-            if ($updatedAt && $updatedAt != $page->getSnapshotDate()) {
+            if ($updatedAt != $page->getSnapshotDate()) {
                 $this->pageCache->delete($cacheKey);
             }
 
