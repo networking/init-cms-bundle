@@ -273,7 +273,7 @@ file that was distributed with this source code.
                                     {% endif %}
 
                                     {% apply spaceless %}
-                                        <th class="{% if not sortable %}no_sorting{% endif %}">
+                                        <th class="{% if not sortable %}no_sorting{% endif %} {% if not field_description.option('searchable', true) %}no_searching{% endif %}">
                                                 {% if field_description.getOption('label_icon') %}
                                                     {{ field_description.getOption('label_icon')|parse_icon }}
                                                 {% endif %}
