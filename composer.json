@@ -25,7 +25,7 @@
     "friendsofsymfony/jsrouting-bundle": "^3.4",
     "knplabs/knp-paginator-bundle": "^6.2",
     "jenssegers/agent": "^2.6",
-    "lexik/translation-bundle": "6.*",
+    "lexik/translation-bundle": "^6.0 || ^7.0 || ^8.0",
     "oneup/flysystem-bundle": "^4.0",
     "oneup/uploader-bundle": "^4.0 || ^5.0",
     "pragmarx/google2fa": "^8.0",
