@@ -1,0 +1,11 @@
+/*! ./cms-admin */
+
+/*! ./lang/datables/de.json */
+
+/*! ./lang/datables/en.json */
+
+/*! ./lang/datables/fr.json */
+
+/*! ./lang/datables/it.json */
+
+/*! jquery */
