@@ -10,27 +10,26 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Form\Type;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
-use Symfony\Bridge\Doctrine\Form\ChoiceList\DoctrineChoiceLoader;
 use Doctrine\ORM\Query\Parameter;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
+use Networking\InitCmsBundle\Form\ChoiceList\ORMQueryBuilderLoader;
+use Symfony\Bridge\Doctrine\Form\ChoiceList\DoctrineChoiceLoader;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\IdReader;
-use Doctrine\ORM\QueryBuilder;
-use Networking\InitCmsBundle\Form\ChoiceList\ORMQueryBuilderLoader;
 use Symfony\Bridge\Doctrine\Form\Type\DoctrineType;
 use Symfony\Component\Form\ChoiceList\Factory\CachingFactoryDecorator;
 use Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface;
-use Symfony\Component\Form\ChoiceList\Factory\DefaultChoiceListFactory;
+use Symfony\Component\Form\Exception\RuntimeException;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\Form\Exception\RuntimeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\Form\ChoiceList\Factory\PropertyAccessDecorator;
 
 /**
  * Class AutocompleteType.
@@ -39,9 +38,6 @@ use Symfony\Component\Form\ChoiceList\Factory\PropertyAccessDecorator;
  */
 class AutocompleteType extends DoctrineType
 {
-
-    private readonly \Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface|\Symfony\Component\Form\ChoiceList\Factory\CachingFactoryDecorator $choiceListFactory;
-
     /**
      * @var IdReader[]
      */
@@ -54,20 +50,10 @@ class AutocompleteType extends DoctrineType
 
     /**
      * AutocompleteType constructor.
-     *
-     * @param ManagerRegistry                 $registry
-     * @param PropertyAccessorInterface|null  $propertyAccessor
-     * @param ChoiceListFactoryInterface|null $choiceListFactory
      */
-    public function __construct(ManagerRegistry $registry, PropertyAccessorInterface $propertyAccessor = null, ChoiceListFactoryInterface $choiceListFactory = null)
+    public function __construct(ManagerRegistry $registry, ?PropertyAccessorInterface $propertyAccessor = null, ?ChoiceListFactoryInterface $choiceListFactory = null)
     {
         $this->registry = $registry;
-        $this->choiceListFactory = $choiceListFactory ?: new CachingFactoryDecorator(
-            new PropertyAccessDecorator(
-                new DefaultChoiceListFactory(),
-                $propertyAccessor
-            )
-        );
 
         parent::__construct($registry);
     }
@@ -76,8 +62,7 @@ class AutocompleteType extends DoctrineType
     {
         $registry = $this->registry;
 
-        $choiceLoader = function (Options $options)  {
-
+        $choiceLoader = function (Options $options) {
             // Unless the choices are given explicitly, load them on demand
             if (null === $options['choices']) {
                 $hash = null;
@@ -115,7 +100,7 @@ class AutocompleteType extends DoctrineType
                     $entityLoader
                 );
 
-                if ($hash !== null) {
+                if (null !== $hash) {
                     $this->choiceLoaders[$hash] = $doctrineChoiceLoader;
                 }
 
@@ -176,11 +161,7 @@ class AutocompleteType extends DoctrineType
             $em = $registry->getManagerForClass($options['class']);
 
             if (null === $em) {
-                throw new RuntimeException(sprintf(
-                    'Class "%s" seems not to be a managed Doctrine entity. '.
-                    'Did you forget to map it?',
-                    $options['class']
-                ));
+                throw new RuntimeException(sprintf('Class "%s" seems not to be a managed Doctrine entity. Did you forget to map it?', $options['class']));
             }
 
             return $em;
@@ -202,7 +183,7 @@ class AutocompleteType extends DoctrineType
                 $queryBuilder = call_user_func($queryBuilder, $options['em']->getRepository($options['class']));
 
                 if (null !== $queryBuilder && !$queryBuilder instanceof QueryBuilder) {
-                    throw new UnexpectedTypeException($queryBuilder, \Doctrine\ORM\QueryBuilder::class);
+                    throw new UnexpectedTypeException($queryBuilder, QueryBuilder::class);
                 }
             }
 
@@ -264,9 +245,9 @@ class AutocompleteType extends DoctrineType
         $resolver->setNormalizer('loader', $loaderNormalizer);
         $resolver->setNormalizer('id_reader', $idReaderNormalizer);
 
-        $resolver->setAllowedTypes('em', ['null', 'string', \Doctrine\Persistence\ObjectManager::class]);
-        $resolver->setAllowedTypes('loader', ['null', \Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface::class]);
-        $resolver->setAllowedTypes('query_builder', ['null', 'callable', \Doctrine\ORM\QueryBuilder::class]);
+        $resolver->setAllowedTypes('em', ['null', 'string', ObjectManager::class]);
+        $resolver->setAllowedTypes('loader', ['null', EntityLoaderInterface::class]);
+        $resolver->setAllowedTypes('query_builder', ['null', 'callable', QueryBuilder::class]);
     }
 
     /**
@@ -275,7 +256,7 @@ class AutocompleteType extends DoctrineType
      *
      * @param QueryBuilder $queryBuilder
      */
-    private function getQueryBuilderForCachingHash($queryBuilder): array
+    private function getQueryBuilderForCachingHash(QueryBuilder $queryBuilder): array
     {
         return [
             $queryBuilder->getQuery()->getSQL(),
@@ -298,18 +279,11 @@ class AutocompleteType extends DoctrineType
     /**
      * Return the default loader object.
      *
-     * @param ObjectManager $manager
-     * @param mixed         $queryBuilder
-     * @param string        $class
-     *
-     * @return ORMQueryBuilderLoader|\Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface
+     * @param mixed $queryBuilder
      */
     public function getLoader(ObjectManager $manager, object $queryBuilder, string $class): EntityLoaderInterface
     {
-        $loader = new ORMQueryBuilderLoader($queryBuilder, $manager, $class);
-
-
-        return $loader;
+        return new ORMQueryBuilderLoader($queryBuilder, $manager, $class);
     }
 
     /**
@@ -323,7 +297,7 @@ class AutocompleteType extends DoctrineType
      *
      * @return string The SHA-256 hash
      */
-    public static function generateHash(mixed $value, $namespace = ''): string
+    public static function generateHash(mixed $value, string $namespace = ''): string
     {
         if (is_object($value)) {
             $value = spl_object_hash($value);

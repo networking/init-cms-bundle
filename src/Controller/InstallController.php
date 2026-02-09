@@ -10,24 +10,24 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Controller;
 
-use App\Kernel;
 use Doctrine\Persistence\ManagerRegistry;
+use Networking\InitCmsBundle\Entity\BasePage as Page;
+use Networking\InitCmsBundle\Form\Type\InstallUserType as UserType;
 use Networking\InitCmsBundle\Helper\PageHelper;
 use Networking\InitCmsBundle\Model\PageInterface;
 use Networking\InitCmsBundle\Model\PageManagerInterface;
-use Networking\InitCmsBundle\Entity\BasePage as Page;
-use Networking\InitCmsBundle\Form\Type\InstallUserType as UserType;
 use Sonata\AdminBundle\Form\FormErrorIteratorToConstraintViolationList;
 use Sonata\UserBundle\Model\UserManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -38,23 +38,21 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class InstallController extends AbstractController
 {
-    private ?\Symfony\Bundle\FrameworkBundle\Console\Application $application = null;
+    private ?Application $application = null;
 
     private array $consoleOutput = [];
 
-    public function __construct
-    (
-        private readonly PageManagerInterface $pageManager, 
-        private readonly PageHelper $pageHelper, 
+    public function __construct(
+        private readonly PageManagerInterface $pageManager,
+        private readonly PageHelper $pageHelper,
         private readonly UserManagerInterface $userManager,
         private readonly ManagerRegistry $doctrine,
-        private readonly KernelInterface $kernel
-    )
-    {
+        private readonly KernelInterface $kernel,
+    ) {
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -62,13 +60,12 @@ class InstallController extends AbstractController
         $hasDB = false;
         $installed = false;
         try {
-
             $schemaManager = $this->doctrine->getConnection()->getSchemaManager();
-            if ($schemaManager->tablesExist(['page']) !== true) {
+            if (true !== $schemaManager->tablesExist(['page'])) {
                 throw new \Exception('Pages not loaded');
             }
 
-            /** @var $page Page */
+            /** @var Page $page */
             $page = $this->pageManager->findOneBy(['isHome' => 1]);
 
             if (!$page) {
@@ -105,11 +102,9 @@ class InstallController extends AbstractController
     }
 
     /**
-     * @param $complete
-     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function installDbAction(Request $request, $complete): \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+    public function installDbAction(Request $request, $complete): RedirectResponse|Response
     {
         $installFailed = false;
         try {
@@ -146,7 +141,7 @@ class InstallController extends AbstractController
 
                 $output = $this->getStreamOutput();
 
-                if ($complete == 0) {
+                if (0 == $complete) {
                     $this->initACL($output);
                     $this->createDB($output);
                     $returnCode = $this->sonataSetupACL($output);
@@ -155,7 +150,7 @@ class InstallController extends AbstractController
                     }
                 }
 
-                if ($complete == 1) {
+                if (1 == $complete) {
                     $output = $this->getStreamOutput($output);
                     $returnCode = $this->loadFixtures($output);
                     $this->publishPages($output);
@@ -165,7 +160,7 @@ class InstallController extends AbstractController
                     }
                 }
 
-                if ($complete == 2) {
+                if (2 == $complete) {
                     $output = $this->getStreamOutput($output);
                     $returnCode = $this->createAdminUser($output, $username, $email, $password);
                     if (!$returnCode) {
@@ -173,31 +168,28 @@ class InstallController extends AbstractController
                     }
                 }
 
-                if ($complete == 3) {
+                if (3 == $complete) {
                     /* @var \Symfony\Component\HttpFoundation\Session\Session $session */
                     $request->getSession()->getFlashBag()->add('success', 'Init CMS was successfully installed');
 
                     $url = $this->generateUrl('_configure_cms');
 
-                    if($request->isXmlHttpRequest()){
+                    if ($request->isXmlHttpRequest()) {
                         return $this->json(['success' => true, 'redirect' => $url]);
                     }
 
                     return new RedirectResponse($url);
-
                 }
                 $request->getSession()->getFlashBag()->add('error', $this->getConsoleDisplay($output));
                 $installFailed = true;
             }
 
-
             $errors = FormErrorIteratorToConstraintViolationList::transform($form->getErrors(true));
 
-            if($request->isXmlHttpRequest()){
+            if ($request->isXmlHttpRequest()) {
                 return $this->json($errors, Response::HTTP_BAD_REQUEST);
             }
         }
-
 
         return $this->render(
             '@NetworkingInitCms/InitCmsInstall/index.html.twig',
@@ -212,6 +204,7 @@ class InstallController extends AbstractController
 
     /**
      * @return int
+     *
      * @throws \Exception
      */
     private function createDB(OutputInterface $output)
@@ -230,6 +223,7 @@ class InstallController extends AbstractController
 
     /**
      * @return int
+     *
      * @throws \Exception
      */
     private function initACL(OutputInterface $output)
@@ -246,6 +240,7 @@ class InstallController extends AbstractController
 
     /**
      * @return int
+     *
      * @throws \Exception
      */
     private function sonataSetupACL(OutputInterface $output)
@@ -261,10 +256,8 @@ class InstallController extends AbstractController
     }
 
     /**
-     * @param $username
-     * @param $email
-     * @param $password
      * @return int
+     *
      * @throws \Exception
      */
     private function createAdminUser(OutputInterface $output, $username, $email, $password)
@@ -285,6 +278,7 @@ class InstallController extends AbstractController
 
     /**
      * @return int
+     *
      * @throws \Exception
      */
     private function loadFixtures(OutputInterface $output)
@@ -324,9 +318,6 @@ class InstallController extends AbstractController
         }
     }
 
-    /**
-     * @param $application
-     */
     private function setApplication(Application $application)
     {
         $this->application = $application;
@@ -352,10 +343,7 @@ class InstallController extends AbstractController
         return nl2br(implode("\n", $errors));
     }
 
-    /**
-     * @return StreamOutput
-     */
-    private function getStreamOutput(StreamOutput $output = null)
+    private function getStreamOutput(?StreamOutput $output = null): StreamOutput
     {
         if ($output) {
             rewind($output->getStream());
@@ -370,9 +358,6 @@ class InstallController extends AbstractController
     {
         return parent::getSubscribedServices() + [
             'kernel' => '?'.KernelInterface::class,
-
         ];
     }
 }
-
-

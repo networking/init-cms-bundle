@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class AdminSecurityController extends AbstractController
 {
@@ -98,14 +99,12 @@ class AdminSecurityController extends AbstractController
                 'sonata_user_error',
                 'sonata_user_already_authenticated'
             );
-            $url = $this->generateUrl('sonata_admin_dashboard');
-
-            return $this->redirect($url);
+            return $this->redirectToRoute('sonata_admin_dashboard');
         }
 
         $session = $request->getSession();
 
-        $authErrorKey = \Symfony\Bundle\SecurityBundle\Security::AUTHENTICATION_ERROR;
+        $authErrorKey = SecurityRequestAttributes::AUTHENTICATION_ERROR;
 
         // get the error if any (works with forward and redirect -- see below)
         if ($request->attributes->has($authErrorKey)) {
@@ -149,7 +148,7 @@ class AdminSecurityController extends AbstractController
                 'csrf_token' => $csrfToken,
                 'error' => $error,
                 'last_username' =>$session->get(
-                        \Symfony\Bundle\SecurityBundle\Security::LAST_USERNAME
+                  SecurityRequestAttributes::LAST_USERNAME
                     ),
                 'reset_route' => $this->generateUrl(
                     'sonata_user_admin_resetting_request'

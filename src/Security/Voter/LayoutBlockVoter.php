@@ -4,6 +4,7 @@ namespace Networking\InitCmsBundle\Security\Voter;
 
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 
 class LayoutBlockVoter extends \Symfony\Component\Security\Core\Authorization\Voter\Voter
 {
@@ -29,7 +30,8 @@ class LayoutBlockVoter extends \Symfony\Component\Security\Core\Authorization\Vo
     protected function voteOnAttribute(
         string $attribute,
         mixed $subject,
-        TokenInterface $token
+        TokenInterface $token,
+        ?Vote $vote = null
     ): bool {
         $role = match ($attribute) {
             self::CREATE => self::PAGE_CREATE,

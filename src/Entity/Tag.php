@@ -10,13 +10,12 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 
 /**
  * Class Tag.
@@ -35,47 +34,31 @@ class Tag
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected int $id;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 255)]
-    #[Gedmo\TreePathSource()]
-    protected $name;
+    #[Gedmo\TreePathSource]
+    protected string $name;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Gedmo\TreePath(separator: '/', appendId: false)]
-    protected $path;
+    protected ?string $path = null;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer', nullable: true, name: 'lvl')]
-    #[Gedmo\TreeLevel()]
-    protected $level;
+    #[ORM\Column(name: 'lvl', type: 'integer', nullable: true)]
+    #[Gedmo\TreeLevel]
+    protected int $level;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 255)]
-    #[Gedmo\Slug(fields: ['name'], updatable: true, separator: '-', unique: false)]
-    protected $slug;
+    #[Gedmo\Slug(fields: ['name'], updatable: true, unique: false, separator: '-')]
+    protected string $slug;
 
-    /**
-     * @var ArrayCollection
-     */
     #[ORM\OneToMany(
-        targetEntity: 'Networking\InitCmsBundle\Entity\Tag',
         mappedBy: 'parent',
-        fetch: 'LAZY',
+        targetEntity: 'Networking\InitCmsBundle\Entity\Tag',
         orphanRemoval: true
     )]
     #[ORM\OrderBy(['path' => 'ASC'])]
-    protected $children = [];
+    protected array $children = [];
 
     #[ORM\ManyToOne(
         targetEntity: 'Networking\InitCmsBundle\Entity\Tag',
@@ -86,57 +69,34 @@ class Tag
         referencedColumnName: 'id',
         onDelete: 'SET NULL'
     )]
-    #[Gedmo\TreeParent()]
-    protected $parent;
+    #[Gedmo\TreeParent]
+    protected ?Tag $parent = null;
 
-    /**
-     * @var array
-     */
-    protected $parentNames;
+    protected array $parentNames;
 
-    /**
-     * @param $id
-     */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     */
-    public function setName($name): self
+    public function setName(?string $name = null): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Set slug.
-     *
-     * @param string $slug
-     *
-     * @return Tag|false
-     */
-    public function setSlug($slug)
+    public function setSlug(?string $slug = null): false|Tag|static
     {
         if (!empty($this->slug)) {
             return false;
@@ -146,35 +106,20 @@ class Tag
         return $this;
     }
 
-    /**
-     * Get slug.
-     *
-     * @return string
-     */
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * @return string
-     */
-    public function getPath()
+    public function getPath(): ?string
     {
         return $this->path;
     }
 
-    /**
-     * @param string $path
-     */
-    public function setPath($path)
+    public function setPath(?string $path = null): void
     {
         $this->path = $path;
     }
-
-
-
-
 
     public function getLevel(): ?int
     {
@@ -188,21 +133,22 @@ class Tag
         return $this;
     }
 
-    public function setParent(Tag $parent = null)
+    public function setParent(?Tag $parent = null): void
     {
         $this->parent = $parent;
     }
 
-    public function getParent()
+    public function getParent(): ?Tag
     {
         return $this->parent;
     }
 
-    public function getChildren(): Collection
+    public function getChildren(): Collection|array
     {
-        if(!$this->children){
+        if (!$this->children) {
             return [];
         }
+
         return $this->children;
     }
 

@@ -77,9 +77,9 @@ class FrontendPageController extends AbstractController
     public function index(Request $request): mixed
     {
         /** @var PageSnapshotInterface $page */
-        $page = $request->get('_content');
+        $page = $request->attributes->get('_content');
 
-        $template = $request->get('_template');
+        $template = $request->attributes->get('_template');
         if ($template instanceof Template) {
             $template = $template->template;
         }
@@ -187,7 +187,7 @@ class FrontendPageController extends AbstractController
      */
     public function getPageParameters(Request $request,
     ): array|bool|RedirectResponse {
-        $page = $request->get('_content');
+        $page = $request->attributes->get('_content');
 
         if (is_null($page)) {
             throw $this->createNotFoundException('no page object found');
@@ -266,7 +266,7 @@ class FrontendPageController extends AbstractController
      */
     public function home(Request $request,
     ): RedirectResponse|string|Response|null {
-        if ('networking_init_cms_default' === $request->get('_route')) {
+        if ('networking_init_cms_default' === $request->attributes->get('_route')) {
             $request = $this->getPageHelper()->matchContentRouteRequest(
                 $request
             );
@@ -280,7 +280,7 @@ class FrontendPageController extends AbstractController
      */
     public function homeAction(Request $request,
     ): RedirectResponse|string|Response|null {
-        if ('networking_init_cms_default' === $request->get('_route')) {
+        if ('networking_init_cms_default' === $request->attributes->get('_route')) {
             $request = $this->getPageHelper()->matchContentRouteRequest(
                 $request
             );
@@ -488,7 +488,7 @@ class FrontendPageController extends AbstractController
             $request->attributes->set('_content', $page);
         }
 
-        $entity = $request->get('_content');
+        $entity = $request->attributes->get('_content');
 
         $draftPath = null;
         $livePath = null;
@@ -690,7 +690,7 @@ class FrontendPageController extends AbstractController
 
     public function getJsonUrlsAction(Request $request): JsonResponse
     {
-        $locale = $request->get('_locale', false);
+        $locale = $request->attributes->get('_locale', false);
 
         $locale = str_replace('-', '_', (string) $locale);
         /** @var PageAdmin $pageAdmin */

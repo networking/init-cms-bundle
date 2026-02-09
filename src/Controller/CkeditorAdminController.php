@@ -59,8 +59,8 @@ class CkeditorAdminController extends CRUDController
         $this->admin->checkAccess('list');
 
         $datagrid = $this->admin->getDatagrid();
-        $datagrid->setValue('context', null, $request->get('context'));
-        $datagrid->setValue('providerName', null, $request->get('provider'));
+        $datagrid->setValue('context', null, $request->query->get('context'));
+        $datagrid->setValue('providerName', null, $request->query->get('provider'));
 
         $formats = [];
 
@@ -125,7 +125,7 @@ class CkeditorAdminController extends CRUDController
 
         $this->admin->setRequest($request);
 
-        $provider = $request->get('provider');
+        $provider = $request->query->get('provider');
         $file = $request->files->get('upload');
 
 	    $message = $this->trans(
@@ -142,7 +142,7 @@ class CkeditorAdminController extends CRUDController
 
             try {
                 $pool = $this->container->get('sonata.media.pool');
-                $context = $request->get('context', $pool->getDefaultContext());
+                $context = $request->query->get('context', $pool->getDefaultContext());
 
 	            /** @var Media $media */
 	            $media = $this->admin->getNewInstance();

@@ -11,14 +11,12 @@ file that was distributed with this source code.
 
 {% extends '@NetworkingInitCms/CRUD/base_show_field.html.twig' %}
 
-{% block field %}
-{% apply spaceless %}
-    {% if value %}
+{% block field -%}
+    {%-if value -%}
         <i class="far fa-circle-check"></i>
         {%- trans from 'SonataAdminBundle' %}label_type_yes{% endtrans -%}
-    {% else %}
+    {%- else -%}
         <i class="fa fa-ban"></i>
         {%- trans from 'SonataAdminBundle' %}label_type_no{% endtrans -%}
-    {% endif %}
-{% endapply %}
-{% endblock %}
+    {%- endif -%}
+{%- endblock %}

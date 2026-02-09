@@ -10,32 +10,35 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Twig\Node;
 
 use Networking\InitCmsBundle\Twig\Extension\NetworkingHelperExtension;
-use Twig\Node\Node;
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
+use Twig\Node\Node;
+
 /**
  * Class JSNode.
  *
  * @author Yorkie Chadwick <y.chadwick@networking.ch>
  */
+#[YieldReady]
 class JSNode extends Node
 {
     /**
      * @param Node $method
-     * @param int      $lineno
-     * @param null       $tag
+     * @param int $lineno
      */
-    public function __construct(Node $method, int $lineno, $tag = null)
+    public function __construct(Node $method, int $lineno)
     {
-        parent::__construct(['method' => $method], [], $lineno, $tag);
+        parent::__construct(['method' => $method], [], $lineno);
     }
 
     /**
      * Compiles the node to PHP.
      *
-     * @param Compiler A Twig_Compiler instance
+     * @param Compiler $compiler
      */
     public function compile(Compiler $compiler): void
     {

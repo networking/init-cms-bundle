@@ -16,22 +16,22 @@ class LayoutBlockNormalizer implements NormalizerInterface, DenormalizerInterfac
     }
 
     public function normalize(
-        mixed $object,
-        string $format = null,
-        array $context = []
-    ) : array|string|int|float|bool|\ArrayObject|null{
-        if (!$object instanceof LayoutBlockInterface) {
+        mixed $data,
+        ?string $format = null,
+        array $context = [],
+    ): array|string|int|float|bool|\ArrayObject|null {
+        if (!$data instanceof LayoutBlockInterface) {
             throw new \InvalidArgumentException('The object must implement the LayoutBlockInterface');
         }
 
-        return $this->objectNormalizer->normalize($object, $format, $context);
+        return $this->objectNormalizer->normalize($data, $format, $context);
     }
 
     public function denormalize(
         mixed $data,
         string $type,
-        string $format = null,
-        array $context = []
+        ?string $format = null,
+        array $context = [],
     ): mixed {
         return $this->propertyNormalizer->denormalize(
             $data,
@@ -41,12 +41,12 @@ class LayoutBlockNormalizer implements NormalizerInterface, DenormalizerInterfac
         );
     }
 
-    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof LayoutBlockInterface;
     }
 
-    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
         return LayoutBlock::class === $type;
     }

@@ -69,7 +69,7 @@ class LayoutBlockController extends CRUDController
         /* @var Request $request */
         $this->admin->setSubject($layoutBlock);
 
-        $pageId = $request->get('pageId');
+        $pageId = $request->query->get('pageId');
 
         $page = $this->pageManager->find($pageId);
         if ($pageId && !$page) {
@@ -80,11 +80,11 @@ class LayoutBlockController extends CRUDController
             throw new NotFoundHttpException();
         }
 
-        if ($request->get('zone')) {
-            $layoutBlock->setZone($request->get('zone'));
+        if ($request->query->get('zone')) {
+            $layoutBlock->setZone($request->query->get('zone'));
         }
-        if ($request->get('sortOrder')) {
-            $layoutBlock->setSortOrder($request->get('sortOrder'));
+        if ($request->query->get('sortOrder')) {
+            $layoutBlock->setSortOrder($request->query->get('sortOrder'));
         }
         $layoutBlock->setPage($page);
 
@@ -185,7 +185,7 @@ class LayoutBlockController extends CRUDController
         /* @var Request $request */
         $this->admin->setSubject($layoutBlock);
 
-        $pageId = $request->get('pageId');
+        $pageId = $request->query->get('pageId');
 
         $page = $this->pageManager->find($pageId);
         if ($pageId && !$page) {
@@ -196,11 +196,11 @@ class LayoutBlockController extends CRUDController
             throw new NotFoundHttpException();
         }
 
-        if ($request->get('zone')) {
-            $layoutBlock->setZone($request->get('zone'));
+        if ($request->query->get('zone')) {
+            $layoutBlock->setZone($request->query->get('zone'));
         }
-        if ($request->get('sortOrder')) {
-            $layoutBlock->setSortOrder($request->get('sortOrder'));
+        if ($request->query->get('sortOrder')) {
+            $layoutBlock->setSortOrder($request->query->get('sortOrder'));
         }
         $layoutBlock->setPage($page);
 
@@ -332,10 +332,10 @@ class LayoutBlockController extends CRUDController
      */
     public function reloadAction(Request $request)
     {
-        $pageId = $request->get('pageId');
-        $formFieldId = $request->get('formFieldId');
-        $uniqId = $request->get('uniqId');
-        $code = $request->get('code', 'networking_init_cms.admin.page');
+        $pageId = $request->query->get('pageId');
+        $formFieldId = $request->query->get('formFieldId');
+        $uniqId = $request->query->get('uniqId');
+        $code = $request->query->get('code', 'networking_init_cms.admin.page');
         $html = $this->getLayoutBlockFormWidget(
             $request,
             $pageId,
@@ -415,9 +415,9 @@ class LayoutBlockController extends CRUDController
      */
     public function updateLayoutBlockSortAction(Request $request)
     {
-        $zones = $request->get('zones', []);
-        $pageId = $request->get('pageId');
-        $code = $request->get('code');
+        $zones = $request->request->all('zones');
+        $pageId = $request->request->get('pageId');
+        $code = $request->request->get('code');
 
         if (!$pageId) {
             throw $this->createNotFoundException();
@@ -493,7 +493,7 @@ class LayoutBlockController extends CRUDController
      */
     public function deleteAjaxAction(Request $request)
     {
-        $id = $request->get('id');
+        $id = $request->query->get('id');
 
         if ($id) {
             $layoutBlock = $this->admin->getObject($id);
@@ -522,7 +522,7 @@ class LayoutBlockController extends CRUDController
     public function toggleActiveAction(Request $request)
     {
         $layoutBlock = null;
-        $id = $request->get('id');
+        $id = $request->request->get('id');
 
         if (!$id) {
             throw $this->createNotFoundException();

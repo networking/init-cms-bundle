@@ -42,7 +42,7 @@ class PageToIdTransformer implements DataTransformerInterface
      *
      * @return mixed|string
      */
-    public function transform($page)
+    public function transform($page): mixed
     {
         if (null === $page) {
             return '';
@@ -59,7 +59,7 @@ class PageToIdTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException if object (issue) is not found
      */
-    public function reverseTransform($id): ?\Networking\InitCmsBundle\Model\PageInterface
+    public function reverseTransform($id): mixed
     {
         if (!$id) {
             return null;

@@ -140,7 +140,7 @@ class UserAdminController extends SonataCRUDController
         $secret = $request->getSession()->get($this->helper->getSessionKey($this->tokenStorage->getToken()), null);
         $state = 'success';
         if ($secret && 'POST' === $request->getMethod()) {
-            if (true === $this->helper->checkSecret($secret, $request->get('_code'))) {
+            if (true === $this->helper->checkSecret($secret, $request->request->get('_code'))) {
                 $user->setTwoStepVerificationCode($secret);
                 $this->admin->update($user);
 
@@ -201,8 +201,8 @@ class UserAdminController extends SonataCRUDController
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid user'], 400);
         }
 
-        $credentialId = $request->get('credId');
-        $name = $request->get('name');
+        $credentialId = $request->query->get('credId');
+        $name = $request->query->get('name');
 
         $webAuthToken = $this->publicKeyCredentialSourceRepository->findOneBy(
             ['userHandle' => $user->getUserIdentifier(), 'id' => $credentialId]
@@ -233,7 +233,7 @@ class UserAdminController extends SonataCRUDController
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid user'], 400);
         }
 
-        $credentialId = $request->get('credId');
+        $credentialId = $request->query->get('credId');
 
         $webAuthToken = $this->publicKeyCredentialSourceRepository->findOneBy(
             ['userHandle' => $user->getUserIdentifier(), 'id' => $credentialId]

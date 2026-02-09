@@ -35,7 +35,7 @@ class TwoFactorController extends AbstractController
         $secret = $request->getSession()->get($helper->getVerifySessionKey($token), null);
         $state = 'success';
         if($secret && 'POST' === $request->getMethod()){
-            if (true === $helper->checkSecret($secret, $request->get('_code'))) {
+            if (true === $helper->checkSecret($secret, $request->request->get('_code'))) {
                 $user->setTwoStepVerificationCode($secret);
                 $this->userManager->updateUser($user);
 

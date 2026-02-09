@@ -34,7 +34,7 @@ class PageSnapshot implements PageSnapshotInterface
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(name: 'id', type: 'integer')]
-    protected $id;
+    protected ?int $id = null;
 
     /**
      * @var PageInterface

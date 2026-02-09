@@ -89,14 +89,14 @@ class RequestListener
         }
 
         $state = 'init';
-        if ('POST' === $request->getMethod() && $request->get('_code', false)) {
+        if ('POST' === $request->getMethod() && $request->request->get('_code', false)) {
             if (null !== $request->getSession()->get('networing_init_cms.one_time_code')) {
                 if (true === $this->oneTimeCodeHelper->checkCode(
-                    $request->get('_code'),
+                    $request->request->get('_code'),
                     $user
                 )) {
                     $request->getSession()->remove('networing_init_cms.one_time_code');
-                    $this->oneTimeCodeHelper->removeOneTimeCodeRequest($request->get('_code'), $user);
+                    $this->oneTimeCodeHelper->removeOneTimeCodeRequest($request->request->get('_code'), $user);
 
                     $session->set($key, true);
                     if ($request->isXmlHttpRequest()) {
@@ -113,7 +113,7 @@ class RequestListener
 
             if (true === $this->helper->checkCode(
                 $user,
-                $request->get('_code')
+                $request->request->get('_code')
             )
             ) {
                 $session->set($key, true);

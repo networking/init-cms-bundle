@@ -29,7 +29,7 @@ class Group implements \Stringable
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
     
     #[ORM\Column(type: 'simple_array')]
     #[Assert\Count(min: 1, minMessage: 'user_group_empty_roles')]

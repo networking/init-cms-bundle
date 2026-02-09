@@ -12,7 +12,7 @@ class MaintenanceDisableCommand extends Command
 {
     public function __construct(
         private readonly string $projectDir,
-        string $name = null
+        ?string $name = null,
     ) {
         parent::__construct($name);
     }

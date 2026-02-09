@@ -47,7 +47,7 @@ class TagTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException when the transformation fails
      */
-    public function transform($value)
+    public function transform($value): mixed
     {
         if (!$this->hasMultipleTags) {
             if ($value) {
@@ -82,7 +82,7 @@ class TagTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException when the transformation fails
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): mixed
     {
         if (!$this->hasMultipleTags && $value) {
             return new ArrayCollection([$value]);

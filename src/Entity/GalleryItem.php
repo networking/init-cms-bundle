@@ -28,7 +28,7 @@ class GalleryItem extends BaseGalleryItem
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
 
 
     /**

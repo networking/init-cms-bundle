@@ -76,7 +76,7 @@ class TagAdminController extends CRUDController
      */
     public function deleteAction(Request $request): Response
     {
-        $returnToMedia = $request->get('returnToMedia');
+        $returnToMedia = $request->query->get('returnToMedia');
         $object = $this->assertObjectExists($request, true);
         \assert(null !== $object);
 
@@ -90,6 +90,7 @@ class TagAdminController extends CRUDController
         }
 
         if (\in_array($request->getMethod(), [Request::METHOD_POST, Request::METHOD_DELETE], true)) {
+            $returnToMedia = $request->request->get('returnToMedia');
             // check the csrf token
             $this->validateCsrfToken($request, 'sonata.delete');
             $translator = $this->container->get('translator');
@@ -160,9 +161,9 @@ class TagAdminController extends CRUDController
      */
     public function inlineEditAction(Request $request)
     {
-        $id = $request->get('pk');
+        $id = $request->request->get('pk');
 
-        $name = $request->get('value');
+        $name = $request->request->get('value');
 
         /** @var $tag Tag */
         if (!$tag = $this->admin->getObject($id)) {
@@ -197,7 +198,7 @@ class TagAdminController extends CRUDController
     public function updateTreeAction(Request $request)
     {
         /** @var Request $request */
-        $nodes = $request->get('nodes') ?: [];
+        $nodes = $request->request->all('nodes');
 
         $admin = $this->admin;
 
@@ -239,7 +240,7 @@ class TagAdminController extends CRUDController
      */
     public function searchTagsAction(Request $request)
     {
-        $q = $request->get('q');
+        $q = $request->query->get('q');
         $response = [];
         $query = $this->admin->getModelManager()->createQuery($this->admin->getClass(), 't');
         $query->select('t.id, t.path AS text');

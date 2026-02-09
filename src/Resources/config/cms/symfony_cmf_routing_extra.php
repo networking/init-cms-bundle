@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+return static function (ContainerConfigurator $container): void {
+    $container->extension('cmf_routing', [
+        'chain' => [
+            'routers_by_id' => [
+                'router.default' => 300,
+                'networking_init_cms.cms_router' => 100,
+            ],
+        ],
+        'dynamic' => [
+            'route_provider_service_id' => 'networking_init_cms.content_route_manager',
+            'controllers_by_class' => [
+                'Networking\\InitCmsBundle\\Entity\\BasePage' => 'Networking\\InitCmsBundle\\Controller\\FrontendPageController::indexAction',
+                'Networking\\InitCmsBundle\\Entity\\PageSnapshot' => 'Networking\\InitCmsBundle\\Controller\\FrontendPageController::indexAction',
+            ],
+            'content_repository_service_id' => 'networking_init_cms.page_manager',
+        ],
+    ]);
+};

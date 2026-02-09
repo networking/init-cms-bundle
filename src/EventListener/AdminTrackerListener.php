@@ -66,7 +66,7 @@ class AdminTrackerListener
         }
 
         try{
-            $admin = $this->adminPool->getAdminByAdminCode($this->request->get('_sonata_admin', ''));
+            $admin = $this->adminPool->getAdminByAdminCode($this->request->attributes->get('_sonata_admin', ''));
         }catch (\Exception){
             return;
         }
@@ -88,7 +88,7 @@ class AdminTrackerListener
 
             foreach ($object->getTrackedActions() as $trackedAction) {
                 // if an action which is flagged as 'to be tracked' is matching the end of the route: add info to session
-                if (preg_match('#'.$trackedAction.'$#', (string) $this->request->get('_route'), $matches)) {
+                if (preg_match('#'.$trackedAction.'$#', (string) $this->request->attributes->get('_route'), $matches)) {
                     $this->updateTrackedInfo(
                         $this->request->getSession(),
                         '_networking_initcms_admin_tracker',

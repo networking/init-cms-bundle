@@ -98,7 +98,7 @@ class LanguageSwitcherHelper
             $request = $oldRequest;
         }
 
-        if (!$content = $request->get('_content', false)) {
+        if (!$content = $request->attributes->get('_content', false)) {
             try {
                 $route = $this->router->matchRequest(Request::create($oldUrl));
             } catch (ResourceNotFoundException) {

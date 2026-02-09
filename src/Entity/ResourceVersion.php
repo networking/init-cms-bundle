@@ -25,7 +25,7 @@ class ResourceVersion  implements ResourceVersionInterface
     /**
      * @var int
      */
-    protected $id;
+    protected ?int $id = null;
 
     /**
      * @var string

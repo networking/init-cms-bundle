@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Networking package.
  *
@@ -9,416 +10,259 @@
  */
 declare(strict_types=1);
 
-
 namespace Networking\InitCmsBundle\Entity;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Networking\InitCmsBundle\Doctrine\Extensions\Versionable\VersionableInterface;
 use Networking\InitCmsBundle\Model\ContentRouteInterface;
 use Networking\InitCmsBundle\Model\MenuItemInterface;
-use Networking\InitCmsBundle\Entity\BasePage;
 use Networking\InitCmsBundle\Model\PageInterface;
-use Networking\InitCmsBundle\Entity\Text;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-#[ORM\ORM\MappedSuperclass()]
+#[ORM\MappedSuperclass()]
 class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
 {
-    /**
-     * @var array
-     */
-    protected $options = [];
+    protected array $options = [];
 
-    /**
-     * @var int
-     */
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id;
 
-    /**
-     * @var string
-     */
     #[Assert\NotBlank]
     #[ORM\Column(type: 'string', length: 255)]
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var PageInterface
-     */
-    protected $page;
+    protected ?PageInterface $page = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected $redirectUrl;
+    protected ?string $redirectUrl = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected $internalUrl;
+    protected ?string $internalUrl = null;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(type: 'boolean', nullable: true)]
-    protected $hidden;
+    protected ?bool $hidden = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected $linkTarget;
+    protected ?string $linkTarget = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected $linkClass;
+    protected ?string $linkClass = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected $linkRel;
+    protected ?string $linkRel = null;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer', name: 'lft')]
-    #[Gedmo\TreeLeft()]
-    protected $lft;
+    #[ORM\Column(name: 'lft', type: 'integer')]
+    #[Gedmo\TreeLeft]
+    protected int $lft;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer', name: 'lvl')]
-    #[Gedmo\TreeLevel()]
-    protected $lvl;
+    #[ORM\Column(name: 'lvl', type: 'integer')]
+    #[Gedmo\TreeLevel]
+    protected int $lvl;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer', name: 'rgt')]
-    #[Gedmo\TreeRight()]
-    protected $rgt;
+    #[ORM\Column(name: 'rgt', type: 'integer')]
+    #[Gedmo\TreeRight]
+    protected int $rgt;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer', name: 'root', nullable: true)]
-    #[Gedmo\TreeRoot()]
-    protected $root;
+    #[ORM\Column(name: 'root', type: 'integer', nullable: true)]
+    #[Gedmo\TreeRoot]
+    protected ?int $root = null;
 
-    /**
-     * @var MenuItemInterface
-     */
-    protected $parent;
+    protected ?MenuItemInterface $parent = null;
 
-    /**
-     * @var ArrayCollection
-     */
-    protected $children;
+    protected Collection $children;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(type: 'boolean')]
-    protected $isRoot = false;
+    protected bool $isRoot = false;
 
-    /**
-     * @var string ;
-     */
     #[ORM\Column(type: 'string', length: 6)]
-    protected $locale;
+    protected string $locale;
 
-    /**
-     * @var string
-     */
-    protected $path;
-
-    /**
-     * @var text
-     */
     #[ORM\Column(type: 'text', nullable: true)]
-    protected $description;
+    protected ?string $description = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 50)]
-    protected $visibility = self::VISIBILITY_PUBLIC;
+    protected string $visibility = self::VISIBILITY_PUBLIC;
 
-    protected $wasValidated = false;
+    protected ?string $path = null;
+
+    protected bool $wasValidated = false;
 
     public function __construct()
     {
         $this->children = new ArrayCollection();
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
-        return (string) $this->name;
+        return $this->name ?? '';
     }
 
     #[ORM\PrePersist]
-    public function prePersist()
+    public function prePersist(): void
     {
         if ($this->getParent()) {
             $this->setLocale();
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param PageInterface $page
-     *
      * @return $this
      */
-    public function setPage(PageInterface $page = null)
+    public function setPage(?PageInterface $page = null): static
     {
         $this->page = $page;
 
         return $this;
     }
 
-    /**
-     * @return PageInterface
-     */
-    public function getPage()
+    public function getPage(): ?PageInterface
     {
         return $this->page;
     }
 
     /**
-     * @param $redirectUrl
-     *
      * @return $this
      */
-    public function setRedirectUrl($redirectUrl)
+    public function setRedirectUrl(?string $redirectUrl = null): static
     {
         $this->redirectUrl = $redirectUrl;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRedirectUrl()
+    public function getRedirectUrl(): ?string
     {
         return $this->redirectUrl;
     }
 
     /**
-     * @param $hidden
-     *
      * @return $this
      */
-    public function setHidden($hidden)
+    public function setHidden(?bool $hidden = null): static
     {
         $this->hidden = $hidden;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getHidden()
+    public function getHidden(): ?bool
     {
         return $this->hidden;
     }
 
-    /**
-     * @return mixed
-     */
-    public function isHidden()
+    public function isHidden(): bool
     {
-        return $this->getHidden();
+        return $this->getHidden() ?? false;
     }
 
-    /**
-     * @param $route
-     *
-     * @return $this
-     */
-    public function setInternalUrl($route)
+    public function setInternalUrl(?string $route = null): static
     {
         $this->internalUrl = $route;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getInternalUrl()
+    public function getInternalUrl(): ?string
     {
         return $this->internalUrl;
     }
 
-    /**
-     * @param $name
-     *
-     * @return $this
-     */
-    public function setName($name)
+    public function setName(?string $name = null): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param MenuItemInterface $parent
-     *
-     * @return $this
-     */
-    public function setParent(MenuItemInterface $parent = null)
+    public function setParent(?MenuItemInterface $parent = null): static
     {
         $this->parent = $parent;
 
         return $this;
     }
 
-    /**
-     * @return MenuItemInterface
-     */
-    public function getParent()
+    public function getParent(): ?MenuItemInterface
     {
         return $this->parent;
     }
 
-    /**
-     * @param $lft
-     *
-     * @return $this
-     */
-    public function setLft($lft)
+    public function setLft($lft): static
     {
         $this->lft = $lft;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getLft()
+    public function getLft(): int
     {
         return $this->lft;
     }
 
-    /**
-     * @param $lvl
-     *
-     * @return $this
-     */
-    public function setLvl($lvl)
+    public function setLvl($lvl): static
     {
         $this->lvl = $lvl;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getLvl()
+    public function getLvl(): int
     {
         return $this->lvl;
     }
 
-    /**
-     * @param $rgt
-     *
-     * @return $this
-     */
-    public function setRgt($rgt)
+    public function setRgt($rgt): static
     {
         $this->rgt = $rgt;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getRgt()
+    public function getRgt(): int
     {
         return $this->rgt;
     }
 
-    /**
-     * @param $root
-     *
-     * @return $this
-     */
-    public function setRoot($root)
+    public function setRoot(int $root): static
     {
+
         $this->root = $root;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getRoot()
+    public function getRoot(): int
     {
         return $this->root;
     }
 
-    /**
-     * @return MenuItemInterface
-     */
-    public function getMenu()
+    public function getMenu(): MenuItemInterface
     {
         return $this->getRootParent($this);
     }
 
-    /**
-     * @param bool $isRoot
-     *
-     * @return $this
-     */
-    public function setIsRoot(bool $isRoot)
+    public function setIsRoot(bool $isRoot): static
     {
         $this->isRoot = $isRoot;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getIsRoot(): bool
     {
         return $this->isRoot;
@@ -429,14 +273,8 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $this->isRoot;
     }
 
-    /**
-     * @param MenuItemInterface $menuItem
-     *
-     * @return bool|MenuItemInterface
-     */
-    public function getRootParent(MenuItemInterface $menuItem)
+    public function getRootParent(MenuItemInterface $menuItem): MenuItemInterface
     {
-
         if ($parent = $menuItem->getParent()) {
             return $this->getRootParent($parent);
         }
@@ -444,19 +282,14 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $menuItem;
     }
 
-    /**
-     * @param int $level
-     *
-     * @return bool|MenuItemInterface
-     */
-    public function getParentByLevel($level = 1)
+    public function getParentByLevel($level = 1): ?MenuItemInterface
     {
         if ($level === $this->getLvl()) {
             return $this;
         }
 
         if (!$this->getParent()) {
-            return false;
+            return null;
         }
 
         if ($level === $this->getParent()->getLvl()) {
@@ -466,12 +299,7 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $this->getParent()->getParentByLevel($level);
     }
 
-    /**
-     * @param MenuItemInterface $menuItem
-     *
-     * @return $this
-     */
-    public function setMenu(MenuItemInterface $menuItem = null)
+    public function setMenu(?MenuItemInterface $menuItem = null): static
     {
         if ($menuItem) {
             $this->setParent($menuItem);
@@ -480,18 +308,12 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $this;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getChildren()
+    public function getChildren(): Collection
     {
         return $this->children;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getActiveChildren()
+    public function getActiveChildren(): Collection
     {
         $children = new ArrayCollection();
         foreach ($this->getChildren() as $child) {
@@ -504,16 +326,11 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $children;
     }
 
-    /**
-     * @param $status
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getChildrenByStatus($status)
+    public function getChildrenByStatus($status): Collection
     {
         $children = new ArrayCollection();
         foreach ($this->getChildren() as $child) {
-            if ($status === Page::STATUS_PUBLISHED) {
+            if (VersionableInterface::STATUS_PUBLISHED === $status) {
                 if ($child->getPage() && !$child->getPage()->getSnapshot()) {
                     continue;
                 }
@@ -524,29 +341,21 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $children;
     }
 
-    /**
-     * @param $path
-     *
-     * @return $this
-     */
-    public function setPath($path)
+    public function setPath($path): static
     {
         $this->path = $path;
 
         return $this;
     }
 
-    /**
-     * @return bool|string
-     */
-    public function getPath()
+    public function getPath(): ?string
     {
         if ($this->path) {
             return $this->path;
         }
 
         if (!$this->getPage()) {
-            return false;
+            return null;
         }
 
         return $this->getPage()->getContentRoute()->getPath();
@@ -555,10 +364,10 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
     /**
      * @return bool|int|string
      */
-    public function getRouteId()
+    public function getRouteId(): ?int
     {
         if (!$this->getPage()) {
-            return false;
+            return null;
         }
 
         return $this->getPage()->getContentRoute()->getId();
@@ -576,12 +385,7 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $this->getPage()->getContentRoute();
     }
 
-    /**
-     * @param null $locale
-     *
-     * @return $this
-     */
-    public function setLocale($locale = null)
+    public function setLocale(?string $locale = null): static
     {
         if (is_null($locale)) {
             $locale = $this->getParent()->getLocale();
@@ -591,110 +395,65 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): ?string
     {
         return $this->locale;
     }
 
-    /**
-     * @param \Networking\InitCmsBundle\Entity\text $description
-     *
-     * @return $this
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description = null): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * Implements IteratorAggregate.
-     */
     public function getIterator(): \Traversable
     {
         return $this->children->getIterator();
     }
 
-    /**
-     * @param $linkClass
-     *
-     * @return $this
-     */
-    public function setLinkClass($linkClass)
+    public function setLinkClass(?string $linkClass = null): static
     {
         $this->linkClass = $linkClass;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLinkClass()
+    public function getLinkClass(): ?string
     {
         return $this->linkClass;
     }
 
-    /**
-     * @param $linkRel
-     *
-     * @return $this
-     */
-    public function setLinkRel($linkRel)
+    public function setLinkRel(?string $linkRel = null): static
     {
         $this->linkRel = $linkRel;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLinkRel()
+    public function getLinkRel(): ?string
     {
         return $this->linkRel;
     }
 
-    /**
-     * @param $linkTarget
-     *
-     * @return $this
-     */
-    public function setLinkTarget($linkTarget)
+    public function setLinkTarget(?string $linkTarget = null): static
     {
         $this->linkTarget = $linkTarget;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLinkTarget()
+    public function getLinkTarget(): ?string
     {
         return $this->linkTarget;
     }
 
-    /**
-     * @param string $visibility
-     *
-     * @return $this
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function setVisibility($visibility)
+    public function setVisibility(string $visibility): static
     {
         if (!in_array($visibility, [self::VISIBILITY_PROTECTED, self::VISIBILITY_PUBLIC])) {
             throw new \InvalidArgumentException('Invalid visibility');
@@ -704,20 +463,12 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $this;
     }
 
-    /**
-     * Get page visibility.
-     *
-     * @return string
-     */
-    public function getVisibility()
+    public function getVisibility(): string
     {
         return $this->visibility;
     }
 
-    /**
-     * @return array
-     */
-    public static function getVisibilityList()
+    public static function getVisibilityList(): array
     {
         return [
             'visibility_public' => self::VISIBILITY_PUBLIC,
@@ -725,10 +476,7 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getLinkAttributes()
+    public function getLinkAttributes(): array
     {
         $linkAttributes = [];
 
@@ -745,20 +493,12 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return $linkAttributes;
     }
 
-    /**
-     * @return int
-     */
-    public function hasChildren()
+    public function hasChildren(): bool
     {
-        return $this->children->count();
+        return $this->children->count() > 0;
     }
 
-    /**
-     * @param $id
-     *
-     * @return bool
-     */
-    public function hasChild($id)
+    public function hasChild($id): bool
     {
         foreach ($this->getChildren() as $child) {
             if ($child->getId() == $id) {
@@ -771,24 +511,22 @@ class BaseMenuItem implements MenuItemInterface, \IteratorAggregate, \Stringable
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasPage()
+
+    public function hasPage(): bool
     {
         return !is_null($this->page);
     }
 
     #[Assert\Callback]
-    public function validate(ExecutionContextInterface $context, $payload){
-
-        if($this->wasValidated){
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ($this->wasValidated) {
             return;
         }
-        if($this->getIsRoot() ){
+        if ($this->getIsRoot()) {
             return;
         }
-        if(!$this->getRedirectUrl() && !$this->getPage() && !$this->getInternalUrl()){
+        if (!$this->getRedirectUrl() && !$this->getPage() && !$this->getInternalUrl()) {
             $context->buildViolation('menu.page_or_url.required')
                 ->atPath('page')
                 ->addViolation();

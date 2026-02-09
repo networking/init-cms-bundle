@@ -188,7 +188,7 @@ class AdminToolbarSubscriber implements EventSubscriberInterface
         $content = $response->getContent();
         $pos = $posrFunction($content, '</body>');
 
-        $page = $request->get('_content', false);
+        $page = $request->attributes->get('_content', false);
 
         $page_id = null;
         if ($page instanceof \Networking\InitCmsBundle\Entity\PageSnapshot) {

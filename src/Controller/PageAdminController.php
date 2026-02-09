@@ -224,8 +224,8 @@ class PageAdminController extends CRUDController
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
         }
 
-        if ('POST' == $request->getMethod()) {
-            $linkPageId = $request->get('page');
+        if (Request::METHOD_POST == $request->getMethod()) {
+            $linkPageId = $request->request->get('page');
             if (!$linkPageId) {
                 $this->addFlash(
                     'sonata_flash_error',
@@ -317,9 +317,8 @@ class PageAdminController extends CRUDController
         if (!$page) {
             throw new NotFoundHttpException(sprintf('unable to find the Page with id : %s', $id));
         }
-        $method = $request->get('_method');
 
-        if ('DELETE' == $request->getMethod()) {
+        if (Request::METHOD_DELETE == $request->getMethod()) {
             $page->removeTranslation($translatedPage);
             $translatedPage->removeTranslation($page);
 
@@ -748,55 +747,6 @@ class PageAdminController extends CRUDController
     }
 
     /**
-     * @param null $id
-     * @param null $uniqid
-     *
-     * @return Response
-     *
-     * @throws \Twig\Error\RuntimeError
-     */
-    public function pageSettingsAction($id = null, $uniqid = null)
-    {
-        /** @var Request $request */
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
-        if (null === $id) {
-            $id = $request->get($this->admin->getIdParameter());
-        }
-
-        $object = $this->admin->getObject($id);
-
-        if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
-        }
-
-        if (false === $this->admin->isGranted('EDIT', $object)) {
-            throw new AccessDeniedException();
-        }
-
-        $this->admin->setSubject($object);
-
-        /** @var $form \Symfony\Component\Form\Form */
-        $form = $this->admin->getForm();
-        $form->setData($object);
-
-        $view = $form->createView();
-
-        // set the theme for the current Admin Form
-        $this->setFormTheme($view, $this->admin->getFormTheme());
-
-        return $this->renderWithExtraParams(
-            $this->admin->getTemplateRegistry()->getTemplate('edit'),
-            [
-                'action' => 'edit',
-                'form' => $view,
-                'object' => $object,
-                'language' => \Locale::getDisplayLanguage($object->getLocale()),
-            ]
-        );
-    }
-
-    /**
      * Return the json response for the ajax edit action.
      *
      * @return Response
@@ -836,36 +786,19 @@ class PageAdminController extends CRUDController
 
     public function getPageStatusAction(Request $request)
     {
-        $id = $request->get('id');
+        $id = $request->attributes->get('id');
         $page = $this->admin->getObject($id);
 
         return $this->getAjaxEditResponse($page);
     }
 
-    /**
-     * @return Response
-     */
-    public function parentPageListAction(Request $request)
-    {
-        $locale = $request->get('locale');
-        $pages = [];
-
-        if ($result = $this->pageManager->getParentPagesChoices($locale)) {
-            foreach ($result as $page) {
-                /* @var PageInterface $page */
-                $pages[$page->getId()] = [$page->getAdminTitle()];
-            }
-        }
-
-        return $this->renderJson($pages);
-    }
 
     /**
      * @throws \Twig\Error\RuntimeError
      */
     public function draftAction(Request $request): RedirectResponse|Response
     {
-        $id = $request->get($this->admin->getIdParameter());
+        $id = $request->attributes->get($this->admin->getIdParameter());
 
         return $this->changePageStatus($id, PageInterface::STATUS_DRAFT);
     }
@@ -875,7 +808,7 @@ class PageAdminController extends CRUDController
      */
     public function reviewAction(Request $request): RedirectResponse|Response
     {
-        $id = $request->get($this->admin->getIdParameter());
+        $id = $request->attributes->get($this->admin->getIdParameter());
 
         return $this->changePageStatus($id, PageInterface::STATUS_REVIEW);
     }
@@ -885,7 +818,7 @@ class PageAdminController extends CRUDController
      */
     public function offlineAction(Request $request): RedirectResponse|Response
     {
-        $id = $request->get($this->admin->getIdParameter());
+        $id = $request->attributes->get($this->admin->getIdParameter());
 
         $putOnline = $request->query->getBoolean('put-online', false);
 
@@ -1008,7 +941,7 @@ class PageAdminController extends CRUDController
      */
     public function publishAction(Request $request, $id = null)
     {
-        $id = $request->get($this->admin->getIdParameter());
+        $id = $request->attributes->get($this->admin->getIdParameter());
 
         $object = $this->admin->getObject($id);
 

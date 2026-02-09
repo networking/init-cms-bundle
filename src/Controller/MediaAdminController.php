@@ -60,8 +60,9 @@ class MediaAdminController extends CRUDController
             '@NetworkingInitCms/MediaAdmin/show.html.twig',
             [
                 'media' => $media,
+                'object' => $media,
                 'formats' => $this->container->get('sonata.media.pool')->getFormatNamesByContext($media->getContext()),
-                'format' => $request->get('format', 'reference'),
+                'format' => $request->query->get('format', 'reference'),
                 'base_template' => $this->getBaseTemplate(),
                 'admin' => $this->admin,
                 'security' => $this->container->get('sonata.media.pool')->getDownloadStrategy($media),
@@ -87,7 +88,7 @@ class MediaAdminController extends CRUDController
                 '@NetworkingInitCms/MediaAdmin/select_provider.html.twig',
                 [
                     'providers' => $this->container->get('sonata.media.pool')->getProvidersByContext(
-                        $request->get('context', $this->container->get('sonata.media.pool')->getDefaultContext())
+                        $request->query->get('context', $this->container->get('sonata.media.pool')->getDefaultContext())
                     ),
                     'base_template' => $this->getBaseTemplate(),
                     'admin' => $this->admin,
@@ -145,17 +146,18 @@ class MediaAdminController extends CRUDController
     {
         $url = false;
 
-        if ($request->get('btn_update_and_list')) {
-            $url = $this->admin->generateUrl('list', ['active_tab' => $request->get('context')]);
+
+        if ($request->request->get('btn_update_and_list')) {
+            $url = $this->admin->generateUrl('list', ['active_tab' => $request->query->get('context')]);
         }
-        if ($request->get('btn_create_and_list')) {
-            $url = $this->admin->generateUrl('list', ['active_tab' => $request->get('context')]);
+        if ($request->request->get('btn_create_and_list')) {
+            $url = $this->admin->generateUrl('list', ['active_tab' => $request->query->get('context')]);
         }
 
-        if ($request->get('btn_create_and_create')) {
+        if ($request->request->get('btn_create_and_create')) {
             $params = [];
             if ($this->admin->hasActiveSubClass()) {
-                $params['subclass'] = $request->get('subclass');
+                $params['subclass'] = $request->query->get('subclass');
             }
             $url = $this->admin->generateUrl('create', $params);
         }
@@ -203,7 +205,7 @@ class MediaAdminController extends CRUDController
 
             return new RedirectResponse($this->admin->generateUrl(
                 'list',
-                ['active_tab' => $request->get('context')]
+                ['active_tab' => $request->query->get('context')]
             ));
         }
 
@@ -417,7 +419,7 @@ class MediaAdminController extends CRUDController
             '@NetworkingInitCms/MediaAdmin/list_items.html.twig',
             [
                 'providers' => $this->container->get('sonata.media.pool')->getProvidersByContext(
-                    $request->get('context', $persistentParameters['context'])
+                    $request->query->get('context', $persistentParameters['context'])
                 ),
                 'multiSelect' => $multiSelect,
                 'selected' => $multiSelect ? $selected : [],

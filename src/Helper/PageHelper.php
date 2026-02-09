@@ -26,6 +26,7 @@ use Sonata\AdminBundle\Exception\NoValueException;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Context\Normalizer\DateTimeNormalizerContextBuilder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -226,6 +227,7 @@ class PageHelper
             AbstractNormalizer::REQUIRE_ALL_PROPERTIES => false,
             AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => false,
             AbstractObjectNormalizer::SKIP_UNINITIALIZED_VALUES => true,
+            AbstractObjectNormalizer::SKIP_NULL_VALUES => true
         ];
 
         $data = $this->serializer->serialize($page, 'json', $defaultContext);
@@ -279,6 +281,7 @@ class PageHelper
         $context = [
             PageNormalizer::DESERIALIZE_TRANSLATIONS => $deserializeTranslations,
             AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true,
+            AbstractObjectNormalizer::SKIP_NULL_VALUES => true
         ];
 
         return $this->serializer->deserialize($pageSnapshot->getVersionedData(), $pageSnapshot->getResourceName(), 'json', $context);

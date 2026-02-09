@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+return static function (ContainerConfigurator $container): void {
+    $container->extension('twig', [
+        'form_themes' => ['@NetworkingInitCms/Form/form_admin_fields.html.twig'],
+    ]);
+
+    $container->extension('sonata_doctrine_orm_admin', [
+        'templates' => [
+            'types' => [
+                'list' => [
+                    'array' => '@NetworkingInitCms/CRUD/list_array.html.twig',
+                    'boolean' => '@NetworkingInitCms/CRUD/list_boolean.html.twig',
+                    'currency' => '@NetworkingInitCms/CRUD/list_currency.html.twig',
+                    'date' => '@NetworkingInitCms/CRUD/list_date.html.twig',
+                    'time' => '@NetworkingInitCms/CRUD/list_time.html.twig',
+                    'datetime' => '@NetworkingInitCms/CRUD/list_datetime.html.twig',
+                    'datetimeIntl' => '@NetworkingInitCms/CRUD/list_datetime_intl.html.twig',
+                    'dateIntl' => '@NetworkingInitCms/CRUD/list_date_intl.html.twig',
+                    'text' => '@NetworkingInitCms/CRUD/list_string.html.twig',
+                    'trans' => '@NetworkingInitCms/CRUD/list_trans.html.twig',
+                    'string' => '@NetworkingInitCms/CRUD/list_string.html.twig',
+                    'smallint' => '@NetworkingInitCms/CRUD/base_list_field.html.twig',
+                    'bigint' => '@NetworkingInitCms/CRUD/base_list_field.html.twig',
+                    'integer' => '@NetworkingInitCms/CRUD/base_list_field.html.twig',
+                    'decimal' => '@NetworkingInitCms/CRUD/base_list_field.html.twig',
+                    'identifier' => '@NetworkingInitCms/CRUD/base_list_field.html.twig',
+                ],
+                'show' => [
+                    'array' => '@NetworkingInitCms/CRUD/show_array.html.twig',
+                    'boolean' => '@NetworkingInitCms/CRUD/show_boolean.html.twig',
+                    'date' => '@NetworkingInitCms/CRUD/show_date.html.twig',
+                    'time' => '@NetworkingInitCms/CRUD/show_time.html.twig',
+                    'datetime' => '@NetworkingInitCms/CRUD/show_datetime.html.twig',
+                    'text' => '@NetworkingInitCms/CRUD/base_show_field.html.twig',
+                    'trans' => '@NetworkingInitCms/CRUD/show_trans.html.twig',
+                    'string' => '@NetworkingInitCms/CRUD/base_show_field.html.twig',
+                    'smallint' => '@NetworkingInitCms/CRUD/base_show_field.html.twig',
+                    'bigint' => '@NetworkingInitCms/CRUD/base_show_field.html.twig',
+                    'integer' => '@NetworkingInitCms/CRUD/base_show_field.html.twig',
+                    'decimal' => '@NetworkingInitCms/CRUD/base_show_field.html.twig',
+                    'birthday' => '@NetworkingInitCms/CRUD/show_date.html.twig',
+                ],
+            ],
+        ],
+    ]);
+};

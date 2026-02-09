@@ -15,6 +15,7 @@ namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -40,9 +41,9 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class PageManager extends AbstractTreeRepository implements PageManagerInterface
 {
-    public $mergingInfos = [];
+    public array $mergingInfos = [];
 
-    public $deserializedEntities = [];
+    public array $deserializedEntities = [];
 
     /**
      * PageManager constructor.
@@ -56,34 +57,24 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         }
     }
 
-    /**
-     * @param string $id
-     */
     public function findById($id): ?object
     {
         return $this->findOneBy(['id' => $id]);
     }
 
-    /**
-     * @param null $id
-     * @param bool $showHome
-     * @param bool $showChildren
-     *
-     * @return \Doctrine\ORM\QueryBuilder|mixed
-     */
     public function getParentPagesQuery(
-        $locale,
-        $id = null,
-        $showHome = false,
-        $showChildren = false
-    ): mixed {
+        string $locale,
+        ?int $id = null,
+        bool $showHome = false,
+        bool $showChildren = false,
+    ): QueryBuilder {
         $qb = $this->createQueryBuilder('p');
         if (!$showHome) {
             $qb->where($qb->expr()->isNull('p.isHome').' OR p.isHome <> 1');
         }
         if ($id) {
             if (!$showChildren) {
-                /** @var $page PageInterface */
+                /** @var PageInterface $page */
                 $page = $this->findById($id);
                 $collection = new ArrayCollection($page->getAllChildren());
                 $childrenIds = $collection->map(
@@ -107,34 +98,24 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         return $qb;
     }
 
-    /**
-     * @param null $id
-     */
-    public function getParentPagesChoices($locale, $id = null): mixed
+    public function getParentPagesChoices($locale, ?int $id = null): mixed
     {
         $qb = $this->getParentPagesQuery($locale, $id);
 
         return $qb->getQuery()->execute();
     }
 
-    /**
-     * @param string $order
-     * @param int    $hydrationMode
-     */
     public function getAllSortBy(
-        $sort,
-        $order = 'DESC',
-        $hydrationMode = Query::HYDRATE_OBJECT
+        string $sort,
+        string $order = 'DESC',
+        string $hydrationMode = AbstractQuery::HYDRATE_OBJECT,
     ): mixed {
         $query = $this->getAllSortByQuery($sort, $order);
 
         return $query->execute([], $hydrationMode);
     }
 
-    /**
-     * @param string $order
-     */
-    public function getAllSortByQuery($sort, $order = 'DESC'): Query
+    public function getAllSortByQuery(string $sort, string $order = 'DESC'): Query
     {
         $qb = $this->createQueryBuilder('p');
         $qb2 = $this->_em->getRepository(PageSnapshot::class)
@@ -168,11 +149,23 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         return $content->getId();
     }
 
-    public function revertToPublished(PageInterface $draftPage, $serializer)
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     * @throws \ReflectionException
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     */
+    public function revertToPublished(PageInterface $draftPage, SerializerInterface $serializer): mixed
     {
         return $this->cancelDraft($draftPage, $serializer);
     }
 
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @throws \ReflectionException
+     */
     public function cancelDraft(PageInterface $page, SerializerInterface $serializer)
     {
         $pageSnapshot = $page->getSnapshot();
@@ -182,7 +175,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             AbstractNormalizer::OBJECT_TO_POPULATE => $page,
             AbstractObjectNormalizer::SKIP_UNINITIALIZED_VALUES => true,
             AbstractNormalizer::CALLBACKS => [
-                'translations' => function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use ($pageManager): array {
+                'translations' => function ($innerObject, $outerObject, string $attributeName, ?string $format = null, array $context = []) use ($pageManager): array {
                     $translations = [];
                     foreach ($innerObject as $key => $page) {
                         $translations[$key] = $pageManager->findById(
@@ -193,12 +186,12 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
                     return $translations;
                 },
-                'original' => function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use ($pageManager): ?PageInterface {
+                'original' => function ($innerObject, $outerObject, string $attributeName, ?string $format = null, array $context = []) use ($pageManager): ?PageInterface {
                     return $innerObject ? $pageManager->findById(
                         $innerObject
                     ) : null;
                 },
-                'alias' => function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) use ($pageManager): ?PageInterface {
+                'alias' => function ($innerObject, $outerObject, string $attributeName, ?string $format = null, array $context = []) use ($pageManager): ?PageInterface {
                     return $innerObject ? $pageManager->findById(
                         $innerObject
                     ) : null;
@@ -212,7 +205,6 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
             $this->resetContent($layoutBlock);
 
             $this->_em->persist($layoutBlock);
-
         }
 
         $this->_em->persist($page);
@@ -418,7 +410,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
     public function getRootNodesQueryBuilder(
         $sortByField = null,
-        $direction = 'asc'
+        $direction = 'asc',
     ): QueryBuilder {
         return $this->getChildrenQueryBuilder(
             null,
@@ -430,7 +422,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
 
     public function getRootNodesQuery(
         $sortByField = null,
-        $direction = 'asc'
+        $direction = 'asc',
     ): Query {
         return $this->getRootNodesQueryBuilder($sortByField, $direction)
             ->getQuery();
@@ -528,7 +520,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $direct = false,
         $sortByField = null,
         $direction = 'asc',
-        $includeNode = false
+        $includeNode = false,
     ): QueryBuilder {
         $meta = $this->getClassMetadata();
         $config = $this->listener->getConfiguration(
@@ -625,7 +617,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $direct = false,
         $sortByField = null,
         $direction = 'asc',
-        $includeNode = false
+        $includeNode = false,
     ): Query {
         return $this->getChildrenQueryBuilder(
             $node,
@@ -641,7 +633,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $direct = false,
         $sortByField = null,
         $direction = 'asc',
-        $includeNode = false
+        $includeNode = false,
     ): ?array {
         return $this->getChildrenQuery(
             $node,
@@ -656,7 +648,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $node = null,
         $direct = false,
         array $options = [],
-        $includeNode = false
+        $includeNode = false,
     ): QueryBuilder {
         $sortBy = [
             'field' => null,
@@ -680,7 +672,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $node = null,
         $direct = false,
         array $options = [],
-        $includeNode = false
+        $includeNode = false,
     ): Query {
         return $this->getNodesHierarchyQueryBuilder(
             $node,
@@ -694,7 +686,7 @@ class PageManager extends AbstractTreeRepository implements PageManagerInterface
         $node = null,
         $direct = false,
         array $options = [],
-        $includeNode = false
+        $includeNode = false,
     ): array {
         $meta = $this->getClassMetadata();
         $config = $this->listener->getConfiguration(

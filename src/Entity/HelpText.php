@@ -29,7 +29,7 @@ class HelpText implements HelpTextInterface, \Stringable
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
 
     /**
      * @var string

@@ -17,7 +17,7 @@ file that was distributed with this source code.
         {% set create_text =  'link_action_create'|trans({}, 'SonataAdminBundle') %}
     {% endif %}
     {#{% set list_text =  'link_action_list'|trans({}, admin.translationDomain) %}#}
-    {% if list_text == 'link_action_list' %}
+    {% if list_text|default('link_action_list') == 'link_action_list' %}
         {% set list_text =  'link_action_list'|trans({}, 'SonataAdminBundle') %}
     {% endif %}
     <div class="sonata-actions">

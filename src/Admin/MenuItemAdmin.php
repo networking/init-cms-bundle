@@ -10,12 +10,11 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Admin;
 
 use Doctrine\ORM\EntityRepository;
-use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Networking\InitCmsBundle\Entity\MenuItem;
-use Networking\InitCmsBundle\Form\DataTransformer\ModelToIdTransformer;
 use Networking\InitCmsBundle\Form\Type\AutocompleteType;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -24,7 +23,6 @@ use Sonata\AdminBundle\Filter\Model\FilterData;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelHiddenType;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
-use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Route\RouteCollectionInterface;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Sonata\DoctrineORMAdminBundle\Filter\CallbackFilter;
@@ -35,7 +33,6 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
-use function PHPUnit\Framework\arrayHasKey;
 
 /**
  * Class MenuItemAdmin.
@@ -50,7 +47,6 @@ class MenuItemAdmin extends BaseAdmin
      * @var int
      */
     protected $maxPerPage = 10000;
-
 
     /**
      * The maximum number of page numbers to display in the list.
@@ -80,22 +76,16 @@ class MenuItemAdmin extends BaseAdmin
      */
     protected $trackedActions = ['list'];
 
-
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {
         return 'cms/menu';
     }
-
 
     protected function generateBaseRouteName(bool $isChildAdmin = false): string
     {
         return 'admin_networking_initcms_menuitem';
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     protected function configureRoutes(RouteCollectionInterface $collection): void
     {
         $collection->add(
@@ -114,7 +104,6 @@ class MenuItemAdmin extends BaseAdmin
             'ajax_navigation',
             [],
             [
-
                 '_controller' => 'Networking\InitCmsBundle\Controller\MenuItemAdminController::ajaxControllerAction',
                 '_method' => 'GET|POST',
             ]
@@ -141,18 +130,17 @@ class MenuItemAdmin extends BaseAdmin
         );
     }
 
-
     public function alterNewInstance(object $object): void
     {
         $request = $this->getRequest();
 
-        if (!$locale = $request->get('locale')) {
+        if (!$locale = $request->query->get('locale')) {
             $locale = $request->getLocale();
         }
 
         $uniqId = $this->getUniqid();
 
-        $rootId = $request->query->get('root_id');
+        $rootId = $request->query->getInt('root_id');
 
         if ($postArray = $request->request->all($uniqId)) {
             if (array_key_exists('locale', $postArray)) {
@@ -168,22 +156,19 @@ class MenuItemAdmin extends BaseAdmin
             $root = $this->getModelManager()->find($this->getClass(), $rootId);
             $object
                 ->setMenu($root)
-                ->setRoot($root);
+                ->setRoot($rootId);
             $locale = $root->getLocale();
         }
 
         $object->setLocale($locale);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureFormFields(FormMapper $form): void
     {
         $request = $this->getRequest();
 
         $createRoot = false;
-        if ($request->get('subclass') && $request->get('subclass') === 'menu'
+        if ($request->query->get('subclass') && 'menu' === $request->query->get('subclass')
         ) {
             $createRoot = true;
         }
@@ -191,7 +176,6 @@ class MenuItemAdmin extends BaseAdmin
         if ($this->getSubject()->getIsRoot()) {
             $createRoot = true;
         }
-
 
         $form
             ->with('general', ['label' => false])
@@ -204,7 +188,7 @@ class MenuItemAdmin extends BaseAdmin
                 ->add('locale', ChoiceType::class, [
                     'placeholder' => false,
                     'choice_loader' => new CallbackChoiceLoader(
-                        fn() => $this->getLocaleChoices()
+                        fn () => $this->getLocaleChoices()
                     ),
                     'preferred_choices' => [$this->getDefaultLocale()],
                     'translation_domain' => $this->getTranslationDomain()])
@@ -212,7 +196,7 @@ class MenuItemAdmin extends BaseAdmin
 
             return;
         }
-        $form ->add('locale', HiddenType::class);
+        $form->add('locale', HiddenType::class);
 
         $form->end();
         // start group page_or_url
@@ -327,7 +311,7 @@ class MenuItemAdmin extends BaseAdmin
             ->add(
                 'hidden',
                 CheckboxType::class,
-                ['layout' => 'horizontal', 'required' => false,]
+                ['layout' => 'horizontal', 'required' => false]
             )
             ->add(
                 'menu',
@@ -337,9 +321,6 @@ class MenuItemAdmin extends BaseAdmin
             ->end();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
@@ -353,7 +334,7 @@ class MenuItemAdmin extends BaseAdmin
                         'row_attr' => ['class' => 'form-floating'],
                         'placeholder' => false,
                         'choice_loader' => new CallbackChoiceLoader(
-                            fn() => $this->getLocaleChoices()
+                            fn () => $this->getLocaleChoices()
                         ),
                         'preferred_choices' => [$this->getDefaultLocale()],
                         'translation_domain' => $this->getTranslationDomain(),
@@ -362,9 +343,6 @@ class MenuItemAdmin extends BaseAdmin
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureListFields(ListMapper $list): void
     {
         $list
@@ -383,9 +361,6 @@ class MenuItemAdmin extends BaseAdmin
             ->add('menu');
     }
 
-    /**
-     * @param array $filterValues
-     */
     public function configureDefaultFilterValues(array &$filterValues): void
     {
         $filterValues['locale'] = [
@@ -395,18 +370,13 @@ class MenuItemAdmin extends BaseAdmin
     }
 
     /**
-     * @param $queryBuilder
-     * @param $alias
-     * @param $field
-     * @param $value
-     *
      * @return bool
      */
     public function getByLocale(
         ProxyQuery $queryBuilder,
         $alias,
         $field,
-        FilterData $data
+        FilterData $data,
     ) {
         $locale = $data->hasValue() ? $data->getValue()
             : $this->getDefaultLocale();
@@ -419,7 +389,6 @@ class MenuItemAdmin extends BaseAdmin
         return true;
     }
 
-
     /**
      * @param bool $isRoot
      */
@@ -427,7 +396,6 @@ class MenuItemAdmin extends BaseAdmin
     {
         $this->isRoot = $isRoot;
     }
-
 
     /**
      * returns all translated link targets.
@@ -444,9 +412,6 @@ class MenuItemAdmin extends BaseAdmin
         return $translatedLinkTargets;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preRemove(object $object): void
     {
         if ($object->hasChildren()) {

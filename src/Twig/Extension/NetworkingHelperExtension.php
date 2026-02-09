@@ -39,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -370,8 +371,10 @@ class NetworkingHelperExtension extends AbstractExtension
     public function getCurrentTemplate(): int|string|null
     {
         if (!$this->currentTemplate) {
+
             $request = $this->requestStack->getCurrentRequest();
-            $pageId = (!$request->get('objectId')) ? $request->get('id') : $request->get('objectId');
+
+            $pageId = self::getFromRequest($request, 'objectId')??self::getFromRequest($request, 'id');
 
             if ($pageId) {
                 /** @var PageInterface $page */
@@ -387,6 +390,22 @@ class NetworkingHelperExtension extends AbstractExtension
         }
 
         return $this->currentTemplate;
+    }
+
+    public static function getFromRequest(Request $request, string $key, mixed $default = null): mixed
+    {
+        $result = $request->attributes->get($key, $request);
+        if ($request !== $result) {
+            return $result;
+        }
+        if ($request->query->has($key)) {
+            return $request->query->all()[$key];
+        }
+        if ($request->request->has($key)) {
+            return $request->request->all()[$key];
+        }
+
+        return $default;
     }
 
     public function getContentTypeOptions()

@@ -33,60 +33,29 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFormListenerInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $om;
+    protected LayoutBlockAdmin $admin {
+        set {
+            $this->admin = $value;
+        }
+    }
 
-    /**
-     * @var ValidatorInterface
-     */
-    protected $validator;
+    protected string $contentType;
 
-    /**
-     * @var LayoutBlockAdmin
-     */
-    protected $admin;
-
-    /**
-     * @var string
-     */
-    protected $contentType;
-
-    /**
-     * LayoutBlockFormListener constructor.
-     *
-     * @param         $contentTypes
-     * @param mixed[] $contentTypes
-     */
     public function __construct(
-        EntityManagerInterface $om,
-        ValidatorInterface $validator,
-        protected $contentTypes
+        protected readonly EntityManagerInterface $om,
+        protected readonly ValidatorInterface $validator,
+        protected array $contentTypes {
+            get {
+                return $this->contentTypes;
+            }
+        },
     ) {
-        $this->om = $om;
-
-        $this->validator = $validator;
     }
-
-    public function setAdmin(LayoutBlockAdmin $admin)
-    {
-        $this->admin = $admin;
-    }
-
-    /**
-     * @return array $contentTypes
-     */
-    public function getContentTypes()
-    {
-        return $this->contentTypes;
-    }
-
 
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             FormEvents::PRE_SET_DATA => 'preSetData',
@@ -94,18 +63,12 @@ class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFo
         ];
     }
 
-    /**
-     * @param $contentType
-     */
-    public function setContentType($contentType)
+    public function setContentType($contentType): void
     {
         $this->contentType = $contentType;
     }
 
-    /**
-     * @param FormEvent $event
-     */
-    public function preSetData(FormEvent $event)
+    public function preSetData(FormEvent $event): void
     {
         $layoutBlock = $event->getData();
 
@@ -129,29 +92,23 @@ class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFo
      * If needed create an new content type object, or change to a new type deleting the old one.
      * Set the Content objects contentType and objectId fields accordingly.
      *
-     * @param FormEvent $event
-     *
      * @throws \RuntimeException
      */
-    public function postBindData(FormEvent $event)
+    public function postBindData(FormEvent $event): void
     {
-
-        /** @var $layoutBlock LayoutBlockInterface */
+        /** @var LayoutBlockInterface $layoutBlock */
         $layoutBlock = $event->getForm()->getData();
 
-
         if (!$layoutBlock instanceof ContentInterface) {
-            throw new \RuntimeException(
-                'Content Object must implement the ContentInterface'
-            );
+            throw new \RuntimeException('Content Object must implement the ContentInterface');
         }
 
         $this->validate($event, $layoutBlock);
     }
 
-    public function validate(FormEvent &$event, $contentObject)
+    public function validate(FormEvent &$event, $contentObject): FormEvent
     {
-        /** @var $layoutBlock LayoutBlockInterface */
+        /** @var LayoutBlockInterface $layoutBlock */
         $form = $event->getForm();
 
         /** @var \Symfony\Component\Validator\ConstraintViolationList $errors */
@@ -213,11 +170,11 @@ class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFo
         return $event;
     }
 
-    private function getFieldFromArray(FormInterface $field, $path, $index = 0)
+    private function getFieldFromArray(FormInterface $field, $path, $index = 0): FormInterface
     {
-        $pathArr = explode('.', (string)$path);
+        $pathArr = explode('.', (string) $path);
         $child = $field->get($pathArr[$index]);
-        $index++;
+        ++$index;
         if (count($pathArr) > $index) {
             return $this->getFieldFromArray($child, $path, $index);
         }
@@ -228,10 +185,9 @@ class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFo
     /**
      * Get the content type of the content object, if the object is new, use the first available type.
      *
-     *
      * @return string
      */
-    public function getContentType(LayoutBlockInterface $layoutBlock = null)
+    public function getContentType(?LayoutBlockInterface $layoutBlock = null): string
     {
         if (is_null($layoutBlock)
             || !$classType = $layoutBlock::class
@@ -240,7 +196,7 @@ class LayoutBlockFormListener implements EventSubscriberInterface, LayoutBlockFo
                 return $this->contentType;
             }
 
-            $contentTypes = $this->getContentTypes();
+            $contentTypes = $this->contentTypes;
 
             $classType = $contentTypes[0]['class'];
         }

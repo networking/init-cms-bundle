@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Networking\InitCmsBundle\Model\MenuItemInterface;
@@ -29,10 +29,6 @@ use Networking\InitCmsBundle\Model\MenuItemInterface;
 #[Gedmo\Tree(type: 'nested')]
 class MenuItem extends BaseMenuItem
 {
-
-    /**
-     * @var MenuItemInterface
-     */
     #[ORM\ManyToOne(
         targetEntity: 'Networking\InitCmsBundle\Entity\MenuItem',
         inversedBy: 'children'
@@ -42,45 +38,15 @@ class MenuItem extends BaseMenuItem
         referencedColumnName: 'id',
         onDelete: 'SET NULL'
     )]
-    #[Gedmo\TreeParent()]
-    protected $parent;
+    #[Gedmo\TreeParent]
+    protected ?MenuItemInterface $parent = null;
 
-    /**
-     * @var ArrayCollection
-     */
     #[ORM\OneToMany(
-        targetEntity: 'Networking\InitCmsBundle\Entity\MenuItem',
         mappedBy: 'parent',
-        fetch: 'LAZY',
+        targetEntity: 'Networking\InitCmsBundle\Entity\MenuItem',
     )]
     #[ORM\OrderBy(['lft' => 'ASC'])]
-    protected $children;
+    protected Collection $children;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer', name: 'lft')]
-    #[Gedmo\TreeLeft()]
-    protected $lft;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer', name: 'lvl')]
-    #[Gedmo\TreeLevel()]
-    protected $lvl;
-
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer', name: 'rgt')]
-    #[Gedmo\TreeRight()]
-    protected $rgt;
-
-    /**
-     * @var int
-     */
-    #[ORM\Column(type: 'integer', name: 'root')]
-    #[Gedmo\TreeRoot()]
-    protected $root;
 }

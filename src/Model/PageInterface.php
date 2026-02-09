@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Networking package.
  *
@@ -24,24 +25,21 @@ use Symfony\Cmf\Component\Routing\RouteReferrersReadInterface;
  */
 interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterface, VersionableInterface
 {
-    public const PATH_SEPARATOR = '/';
+    public const string PATH_SEPARATOR = '/';
 
-    public const VISIBILITY_PUBLIC = 'public';
+    public const string VISIBILITY_PUBLIC = 'public';
 
-    public const VISIBILITY_PROTECTED = 'protected';
+    public const string VISIBILITY_PROTECTED = 'protected';
 
     public static function getStatusList(): array;
 
     public static function getVisibilityList(): array;
 
-    public function setUpdatedAt(): self;
+    public function setUpdatedAt(): static;
 
-    /**
-     * @return int|string|null
-     */
-    public function getId();
+    public function getId(): ?int;
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self;
+    public function setCreatedAt(\DateTimeInterface $createdAt): static;
 
     public function getCreatedAt(): ?\DateTimeInterface;
 
@@ -49,15 +47,15 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
 
     public function getTitle(): ?string;
 
-    public function setPageName(?string $title): self;
+    public function setPageName(?string $title): static;
 
     public function getPageName(): ?string;
 
-    public function setMetaTitle(?string $title): self;
+    public function setMetaTitle(?string $title): static;
 
     public function getMetaTitle(): ?string;
 
-    public function setPath(?string $path): self;
+    public function setPath(?string $path): static;
 
     public function getPath(): ?string;
 
@@ -71,10 +69,7 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
 
     public function getMetaDescription(): ?string;
 
-    /**
-     * @return $this
-     */
-    public function setParent(PageInterface $parent = null);
+    public function setParent(?PageInterface $parent = null): static;
 
     public function getParent(int $level = -1): PageInterface|int|null;
 
@@ -82,31 +77,31 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
 
     public function getAlias(): ?PageInterface;
 
-    public function setParents(array $parents): self;
+    public function setParents(array $parents): static;
 
     /**
-     * @return array<int, PageInterface>
+     * @return Collection<int, static>|array<int, static>
      */
-    public function getParents();
+    public function getParents(): Collection|array;
 
-    public function addChildren(PageInterface $children): self;
+    public function addChildren(PageInterface $children): static;
 
     /**
-     * @return Collection<int, self>
+     * @return Collection<int, static>|array<int, static>
      */
     public function getChildren(): Collection|array;
 
-    public function setChildren(array $children): self;
+    public function setChildren(array $children): static;
 
     public function getAllChildren(array &$children = []): array;
 
-    public function setAllChildren(array $children): self;
+    public function setAllChildren(array $children): static;
 
-    public function setStatus(?string $status): self;
+    public function setStatus(?string $status): static;
 
     public function getStatus(): string;
 
-    public function setVisibility(string $visibility): self;
+    public function setVisibility(string $visibility): static;
 
     public function getVisibility(): string;
 
@@ -120,30 +115,30 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
 
     public function isActive(): bool;
 
-    public function setActiveTo(?\DateTimeInterface $activeTo): self;
+    public function setActiveTo(?\DateTimeInterface $activeTo): static;
 
     public function getActiveTo(): ?\DateTimeInterface;
 
-    public function setActiveFrom(?\DateTimeInterface $activeFrom): self;
+    public function setActiveFrom(?\DateTimeInterface $activeFrom): static;
 
     public function getActiveFrom(): ?\DateTimeInterface;
 
-    public function addLayoutBlock(LayoutBlockInterface $layoutBlock): self;
+    public function addLayoutBlock(LayoutBlockInterface $layoutBlock): static;
 
-    public function removeLayoutBlock(LayoutBlockInterface $layoutBlock): self;
+    public function removeLayoutBlock(LayoutBlockInterface $layoutBlock): static;
 
-    public function setLayoutBlocks($layoutBlocks): self;
+    public function setLayoutBlocks($layoutBlocks): static;
 
     public function orderLayoutBlocks(): void;
 
     /**
-     * @return Collection<int, LayoutBlockInterface>
+     * @return Collection<int, LayoutBlockInterface>|array<int, LayoutBlockInterface>
      */
     public function getLayoutBlocks(?string $zone): Collection|array;
 
-    public function setMenuItem(MenuItemInterface $menuItem): self;
+    public function setMenuItem(MenuItemInterface $menuItem): static;
 
-    public function removeMenuItem(MenuItemInterface $menuItem): self;
+    public function removeMenuItem(MenuItemInterface $menuItem): static;
 
     public function getMenuItem(): Collection;
 
@@ -151,17 +146,17 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
 
     public function __toString(): string;
 
-    public function setIsHome(bool $isHome): self;
+    public function setIsHome(bool $isHome): static;
 
     public function getIsHome(): bool;
 
     public function isHome(): bool;
 
-    public function setLocale(?string $locale): self;
+    public function setLocale(?string $locale): static;
 
     public function getLocale(): ?string;
 
-    public function setOriginals(array $originals): self;
+    public function setOriginals(array $originals): static;
 
     public function getOriginals(): Collection|array;
 
@@ -169,14 +164,14 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
 
     public function getDirectTranslationFor(PageInterface $page): ?PageInterface;
 
-    public function addTranslation(PageInterface $page): self;
+    public function addTranslation(PageInterface $page): static;
 
-    public function removeTranslation(PageInterface $page): self;
+    public function removeTranslation(PageInterface $page): static;
 
-    public function setTranslations(array|Collection $translations): self;
+    public function setTranslations(array|Collection $translations): static;
 
     /**
-     * @return Collection<int, PageInterface>
+     * @return Collection<int, static>|array<int, static>
      */
     public function getTranslations(): Collection|array;
 
@@ -184,15 +179,15 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
 
     public function getAdminTitle(): string;
 
-    public function setUrl(?string $url);
+    public function setUrl(?string $url): static;
 
     public function getUrl(): ?string;
 
-    public function setContentRoute(ContentRouteInterface $contentRoute): self;
+    public function setContentRoute(ContentRouteInterface $contentRoute): static;
 
     public function getContentRoute(): ContentRouteInterface;
 
-    public function setSnapshots($snapshots): self;
+    public function setSnapshots($snapshots): static;
 
     /**
      * @return Collection<int, PageSnapshotInterface>
@@ -201,11 +196,11 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
 
     public function getRoute(): RouteObjectInterface;
 
-    public function setTemplate(string $template): self;
+    public function setTemplate(string $template): static;
 
     public function getTemplate(): ?string;
 
-    public function setTemplateName(string $templateName): self;
+    public function setTemplateName(string $templateName): static;
 
     public function getTemplateName(): ?string;
 
@@ -214,9 +209,9 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
     public function getAliasFullPath(): ?string;
 
     /**
-     * @return Collection<PageInterface>
+     * @return Collection<int, PageInterface>|array<int, PageInterface>
      */
-    public function getAllTranslations(): Collection;
+    public function getAllTranslations(): Collection|array;
 
     public function buildAllTranslations(array &$translationsArray): void;
 
@@ -248,7 +243,7 @@ interface PageInterface extends RouteReferrersReadInterface, IgnoreRevertInterfa
 
     public function getStatusLabel(): string;
 
-    public function setSocialMediaImage(?MediaInterface $socialMediaImage): self;
+    public function setSocialMediaImage(?MediaInterface $socialMediaImage): static;
 
     public function getSocialMediaImage(): ?MediaInterface;
 

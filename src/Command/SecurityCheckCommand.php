@@ -21,7 +21,7 @@ class SecurityCheckCommand extends Command
 
     protected function execute(
         InputInterface $input,
-        OutputInterface $output
+        OutputInterface $output,
     ): int {
         $io = new SymfonyStyle($input, $output);
 
@@ -67,6 +67,7 @@ class SecurityCheckCommand extends Command
         if ($return_var > 0) {
             $io->error('NPM Security Check failed.');
             $io->writeln($securityOutput);
+
             return Command::FAILURE;
         }
 

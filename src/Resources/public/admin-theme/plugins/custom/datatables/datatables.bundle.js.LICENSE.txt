@@ -1,8 +1,30 @@
-/*! Bootstrap 5 styling wrapper for ColReorder
+/*!
+ * Column visibility buttons for Buttons and DataTables.
  * © SpryMedia Ltd - datatables.net/license
  */
 
-/*! Bootstrap 5 styling wrapper for ColumnControl
+/*!
+ * HTML5 export buttons for Buttons and DataTables.
+ * © SpryMedia Ltd - datatables.net/license
+ *
+ * FileSaver.js (1.3.3) - MIT license
+ * Copyright © 2016 Eli Grey - http://eligrey.com
+ */
+
+/*!
+ * Print button for Buttons and DataTables.
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! Bootstrap 5 integration for DataTables' FixedColumns
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! Bootstrap 5 integration for DataTables' Responsive
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! Bootstrap 5 styling wrapper for ColReorder
  * © SpryMedia Ltd - datatables.net/license
  */
 
@@ -10,53 +32,61 @@
  * © SpryMedia Ltd - datatables.net/license
  */
 
-/*! Bootstrap 5 styling wrapper for KeyTable
+/*! Bootstrap 5 styling wrapper for RowGroup
  * © SpryMedia Ltd - datatables.net/license
  */
 
-/*! Bootstrap 5 styling wrapper for Select
+/*! Bootstrap 5 styling wrapper for RowReorder
  * © SpryMedia Ltd - datatables.net/license
  */
 
-/*! Bootstrap integration for DataTables' StateRestore
+/*! Bootstrap integration for DataTables' Buttons
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! Buttons for DataTables 3.2.6
  * © SpryMedia Ltd - datatables.net/license
  */
 
 /*! ColReorder 2.1.2
-     * © SpryMedia Ltd - datatables.net/license
-     */
-
-/*! ColReorder 2.1.2
  * © SpryMedia Ltd - datatables.net/license
  */
 
-/*! ColumnControl 1.1.1
- * Copyright (c) SpryMedia Ltd - datatables.net/license
- *
- * SVG icons: ISC License
- * Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022 as part of Feather (MIT).
- * All other copyright (c) for Lucide are held by Lucide Contributors 2022.
+/*! DataTables 2.3.7
+ * © SpryMedia Ltd - datatables.net/license
  */
 
-/*! DataTables 2.3.5
- * © SpryMedia Ltd - datatables.net/license
+/*! DataTables Bootstrap 4 integration
+ * ©2011-2017 SpryMedia Ltd - datatables.net/license
  */
 
 /*! DataTables Bootstrap 5 integration
  * © SpryMedia Ltd - datatables.net/license
  */
 
-/*! DateTime picker for DataTables.net v1.6.1
+/*! DateTime picker for DataTables.net v1.6.3
  *
  * © SpryMedia Ltd, all rights reserved.
  * License: MIT datatables.net/license/mit
+ */
+
+/*! FixedColumns 5.0.5
+ * © SpryMedia Ltd - datatables.net/license
  */
 
 /*! FixedHeader 4.0.5
  * © SpryMedia Ltd - datatables.net/license
  */
 
-/*! KeyTable 2.12.2
+/*! Responsive 3.0.8
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! RowGroup 1.6.0
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! RowReorder 1.5.1
  * © SpryMedia Ltd - datatables.net/license
  */
 
@@ -64,6 +94,4 @@
  * © SpryMedia Ltd - datatables.net/license/mit
  */
 
-/*! StateRestore 1.4.3
- * © SpryMedia Ltd - datatables.net/license
- */
+/*! © SpryMedia Ltd, Matthew Hasbach - datatables.net/license */

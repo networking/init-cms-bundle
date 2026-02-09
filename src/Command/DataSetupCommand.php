@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Networking package.
  *
@@ -25,7 +26,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 #[AsCommand(name: 'networking:initcms:data-setup', description: 'create and update db schema and append fixtures')]
 class DataSetupCommand extends Command
 {
-    protected $proceed = true;
+    protected bool $proceed = true;
 
     /**
      * DataSetupCommand constructor.
@@ -34,7 +35,7 @@ class DataSetupCommand extends Command
         protected ManagerRegistry $registry,
         protected PageManagerInterface $pageManager,
         protected PageHelper $pageHelper,
-        string $name = null
+        ?string $name = null,
     ) {
         parent::__construct($name);
     }
@@ -68,7 +69,7 @@ class DataSetupCommand extends Command
 
     protected function execute(
         InputInterface $input,
-        OutputInterface $output
+        OutputInterface $output,
     ): int {
         if (!$this->proceed) {
             $output->writeln('<error>Aborted</error>');

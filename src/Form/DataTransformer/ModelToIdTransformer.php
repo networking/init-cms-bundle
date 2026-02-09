@@ -34,7 +34,7 @@ class ModelToIdTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function reverseTransform($newId)
+    public function reverseTransform($newId): mixed
     {
         if (empty($newId) && !in_array($newId, ['0', 0], true)) {
             return null;
@@ -46,7 +46,7 @@ class ModelToIdTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      */
-    public function transform($entity)
+    public function transform($entity): mixed
     {
         if (empty($entity)) {
             return null;

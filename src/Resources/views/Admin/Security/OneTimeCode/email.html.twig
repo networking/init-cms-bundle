@@ -120,7 +120,7 @@
     <div id="main">
         <div class="contentMiddle">
 <p>{{ 'one_time_code.email.message.line_1'|trans({'%username%': username}, 'security')|nl2br }}</p>
-{% apply spaceless %}{% for char in code %}<h2 style="display: inline; margin-left: 2px;">{{ char }}</h2>{% endfor %}{% endapply %}
+{% for char in code -%}<h2 style="display: inline; margin-left: 2px;">{{ char }}</h2>{%- endfor %}
 <br>
 <p>{{ 'one_time_code.email.message.line_2'|trans({}, 'security')|nl2br }}</p>
         </div>

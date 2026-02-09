@@ -104,7 +104,6 @@
 {% endblock %}
 
 {% block linkElement %}
-    {% apply spaceless %}
         {% set translation_domain = item.extra('translation_domain', 'messages') %}
         {% if item.extra('on_top') is defined and not item.extra('on_top') %}
         {% else %}
@@ -136,7 +135,6 @@
         <a href="{{ item.uri }}"{{ knp_menu.attributes(attributes) }}>
             {{ block('label') }}
         </a>
-    {% endapply %}
 {% endblock %}
 
 {% block spanElement %}

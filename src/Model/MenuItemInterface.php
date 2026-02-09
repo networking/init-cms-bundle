@@ -10,7 +10,10 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Networking\InitCmsBundle\Model;
+
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class MenuItemInterface.
@@ -19,300 +22,109 @@ namespace Networking\InitCmsBundle\Model;
  */
 interface MenuItemInterface
 {
-    public const PATH_SEPARATOR = '/';
+    public const string PATH_SEPARATOR = '/';
 
-    public const VISIBILITY_PUBLIC = 'public';
+    public const string VISIBILITY_PUBLIC = 'public';
 
-    public const VISIBILITY_PROTECTED = 'protected';
+    public const string VISIBILITY_PROTECTED = 'protected';
 
-    /**
-     * @return string
-     */
     public function __toString();
 
-    /**
-     * @return int
-     */
-    public function getId();
+    public function getId(): ?int;
 
-    /**
-     * @param PageInterface $page
-     *
-     * @return $this
-     */
-    public function setPage(PageInterface $page = null);
+    public function setPage(?PageInterface $page = null): static;
 
-    /**
-     * Get conversation.
-     *
-     * @return PageInterface
-     */
-    public function getPage();
+    public function getPage(): ?PageInterface;
 
-    /**
-     * @param $redirectUrl
-     */
-    public function setRedirectUrl($redirectUrl);
+    public function setRedirectUrl(?string $redirectUrl = null): static;
 
-    /**
-     * @return string
-     */
-    public function getRedirectUrl();
+    public function getRedirectUrl(): ?string;
 
-    /**
-     * @param $hidden
-     */
-    public function setHidden($hidden);
-    /**
-     * @return bool
-     */
-    public function getHidden();
+    public function setHidden(?bool $hidden = null): static;
 
-    /**
-     * @return bool
-     */
-    public function isHidden();
+    public function getHidden(): ?bool;
 
-    /**
-     * @param $route
-     */
-    public function setInternalUrl($route);
+    public function isHidden(): bool;
 
-    /**
-     * @return string
-     */
-    public function getInternalUrl();
+    public function setInternalUrl(?string $route = null): static;
 
-    /**
-     * @param $name
-     *
-     * @return MenuItemInterface
-     */
-    public function setName($name);
+    public function getInternalUrl(): ?string;
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName();
+    public function setName(?string $name = null): static;
 
-    /**
-     * @param MenuItemInterface $parent
-     *
-     * @return $this
-     */
-    public function setParent(MenuItemInterface $parent = null);
+    public function getName(): ?string;
 
-    /**
-     * @return MenuItemInterface
-     */
-    public function getParent();
+    public function setParent(?MenuItemInterface $parent = null): static;
 
-    /**
-     * @param $lft
-     *
-     * @return $this
-     */
-    public function setLft($lft);
+    public function getParent(): ?MenuItemInterface;
 
-    /**
-     * @return mixed
-     */
+    public function setLft($lft): static;
+
     public function getLft();
 
-    /**
-     * @param $lvl
-     */
-    public function setLvl($lvl);
+    public function setLvl($lvl): static;
 
-    /**
-     * @return int
-     */
-    public function getLvl();
+    public function getLvl(): int;
 
-    /**
-     * @param $rgt
-     *
-     * @return $this
-     */
-    public function setRgt($rgt);
+    public function setRgt($rgt): static;
 
-    /**
-     * @return int
-     */
-    public function getRgt();
+    public function getRgt(): int;
 
-    /**
-     * @param $root
-     *
-     * @return $this
-     */
-    public function setRoot($root);
+    public function setRoot(int $root): static;
 
-    /**
-     * @return int
-     */
-    public function getRoot();
+    public function getRoot(): int;
 
-    /**
-     * @return $this
-     */
-    public function getMenu();
+    public function getMenu(): MenuItemInterface;
 
-    /**
-     * @param bool $isRoot
-     */
     public function setIsRoot(bool $isRoot);
 
-    /**
-     * @return bool
-     */
-    public function getIsRoot();
+    public function getIsRoot(): bool;
 
-    /**
-     * @param MenuItemInterface $menuItem
-     *
-     * @return MenuItemInterface
-     */
-    public function getRootParent(MenuItemInterface $menuItem);
+    public function getRootParent(MenuItemInterface $menuItem): MenuItemInterface;
 
-    /**
-     * @param int $level
-     *
-     * @return bool|MenuItem
-     */
-    public function getParentByLevel($level = 1);
+    public function getParentByLevel(int $level = 1): ?MenuItemInterface;
 
-    /**
-     * @param MenuItemInterface $menuItem
-     *
-     * @return $this
-     */
-    public function setMenu(MenuItemInterface $menuItem = null);
+    public function setMenu(?MenuItemInterface $menuItem = null): static;
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getChildren();
+    public function getChildren(): Collection;
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getActiveChildren();
+    public function getActiveChildren(): Collection;
 
-    /**
-     * @param $status
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getChildrenByStatus($status);
+    public function getChildrenByStatus($status): Collection;
 
-    /**
-     * @param $path
-     *
-     * @return $this
-     */
-    public function setPath($path);
+    public function setPath($path): static;
 
-    /**
-     * @return string
-     */
-    public function getPath();
+    public function getPath(): ?string;
 
-    /**
-     * @return string
-     */
-    public function getRouteId();
+    public function getRouteId(): ?int;
 
-    /**
-     * @param null $locale
-     *
-     * @return $this
-     */
-    public function setLocale($locale = null);
+    public function setLocale(?string $locale = null): static;
 
-    /**
-     * @return string
-     */
-    public function getLocale();
+    public function getLocale(): ?string;
 
-    /**
-     * @param \Networking\InitCmsBundle\Entity\text $description
-     *
-     * @return $this
-     */
-    public function setDescription($description);
+    public function setDescription(?string $description = null): static;
 
-    /**
-     * @return string
-     */
-    public function getDescription();
+    public function getDescription(): ?string;
 
-    /**
-     * @param $linkClass
-     *
-     * @return MenuItem
-     */
-    public function setLinkClass($linkClass);
+    public function setLinkClass(?string $linkClass = null): static;
 
-    /**
-     * @return string
-     */
-    public function getLinkClass();
+    public function getLinkClass(): ?string;
 
-    /**
-     * @param $linkRel
-     *
-     * @return $this
-     */
-    public function setLinkRel($linkRel);
+    public function setLinkRel(?string $linkRel = null): static;
 
-    /**
-     * @return string
-     */
-    public function getLinkRel();
+    public function getLinkRel(): ?string;
 
-    /**
-     * @param $linkTarget
-     *
-     * @return $this
-     */
-    public function setLinkTarget($linkTarget);
+    public function setLinkTarget(?string $linkTarget = null): static;
 
-    /**
-     * @return string
-     */
-    public function getLinkTarget();
+    public function getLinkTarget(): ?string;
 
-    /**
-     * Set page visibility.
-     *
-     * @param string $visibility
-     *
-     * @return $this
-     */
-    public function setVisibility($visibility);
+    public function setVisibility(string $visibility): static;
 
-    /**
-     * Get page visibility.
-     *
-     * @return string
-     */
-    public function getVisibility();
+    public function getVisibility(): string;
 
-    /**
-     * @return array
-     */
-    public static function getVisibilityList();
+    public static function getVisibilityList(): array;
 
-    /**
-     * @return array
-     */
-    public function getLinkAttributes();
+    public function getLinkAttributes(): array;
 
-    /**
-     * @return int
-     */
-    public function hasChildren();
+    public function hasChildren(): bool;
 }

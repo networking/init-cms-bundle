@@ -165,7 +165,7 @@ class PageAdmin extends BaseAdmin
             $this->pageLocale = $this->getSubject()->getLocale();
             $formOptions['attr'] = ['class' => 'row'];
         } else {
-            $this->pageLocale = $request->get('locale')
+            $this->pageLocale = $request->query->get('locale')
                 ?: $request->getDefaultLocale();
 
             if ('POST' === $request->getMethod()) {
@@ -208,7 +208,7 @@ class PageAdmin extends BaseAdmin
 
         $request = $this->getRequest();
         if (($this->hasObject() || $request->isXmlHttpRequest())
-            && !$request->get('no_layout')
+            && !$request->attributes->get('no_layout')
         ) {
             $form
                 ->with('page_content')

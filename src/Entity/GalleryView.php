@@ -31,12 +31,11 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
 
     #[ORM\ManyToOne(
         targetEntity: MediaGallery::class,
-        cascade: ["merge"],
-        fetch: 'LAZY')]
+        cascade: ["merge"])]
     #[ORM\JoinColumn(name: 'media_gallery_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[Sonata\FormMapper(
         name: 'mediaGallery',

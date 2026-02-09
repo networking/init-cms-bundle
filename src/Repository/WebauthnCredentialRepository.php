@@ -17,7 +17,7 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
         parent::__construct($registry, WebauthnCredential::class);
     }
 
-    public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource, array $otherUi = null): void
+    public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource, ?array $otherUi = null): void
     {
         if (!$publicKeyCredentialSource instanceof WebauthnCredential) {
             $publicKeyCredentialSource = new WebauthnCredential(
@@ -40,7 +40,7 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
     {
         return $this->getEntityManager()
             ->createQueryBuilder()
-            ->from($this->class, 'c')
+            ->from($this->class/* @type WebauthnCredential::class */, 'c')
             ->select('c')
             ->where('c.userHandle = :userHandle')
             ->andWhere('c.aaguid = :aaguid')

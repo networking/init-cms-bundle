@@ -13,3 +13,4 @@ php-cs-fixer.phar
 /pnpm-lock.yaml
 /pnpm-workspace.yaml
 node_modules
+_keenthemes

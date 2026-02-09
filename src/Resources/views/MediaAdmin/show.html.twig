@@ -17,7 +17,7 @@ file that was distributed with this source code.
 {% block content %}
     <h3>{{ 'title.media_preview'|trans({}, 'MediaAdmin') }}</h3>
     <div>
-        {% media media, format %}
+        {{ sonata_media(media, format, {'class': 'img-responsive img-rounded'}) }}
     </div>
 
     <h3>{{ 'title.informations'|trans({}, 'MediaAdmin') }}</h3>

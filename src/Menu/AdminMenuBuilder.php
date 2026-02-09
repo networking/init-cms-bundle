@@ -83,13 +83,24 @@ class AdminMenuBuilder extends MenuBuilder
 
         if ($this->isLoggedIn) {
             $menu->setChildrenAttribute('class', $class);
-            if ($sonataAdminParam = $this->request->get('_sonata_admin')) {
+            if ($sonataAdminParam = $this->request->attributes->get('_sonata_admin')) {
                 $possibleAdmins = explode('|', (string) $sonataAdminParam);
                 foreach ($possibleAdmins as $adminCode) {
                     $sonataAdmin = $this->pool->getAdminByAdminCode($adminCode);
-                    if ($id = $this->request->get('id')) {
+                    if ($this->request->attributes->has('id')) {
+                        $id = $this->request->attributes->get('id');
+                    }
+                    if ($this->request->request->has('id')) {
+                        $id = $this->request->request->get('id');
+                    }
+                    if ($this->request->query->has('id')) {
+                        $id = $this->request->query->get('id');
+                    }
+
+                    if($id??=null) {
                         $entity = $sonataAdmin->getObject($id);
                     }
+
                 }
             }
 
@@ -234,7 +245,7 @@ class AdminMenuBuilder extends MenuBuilder
 
             $dashboardUrl = $this->router->generate('sonata_admin_dashboard');
 
-            $entity = $this->request->get('_content');
+            $entity = $this->request->attributes->get('_content');
 
             if ($entity instanceof VersionableInterface) {
                 if ($snapShot = $entity->getSnapshot()) {
@@ -307,7 +318,7 @@ class AdminMenuBuilder extends MenuBuilder
                 $lastActionArray = json_decode((string) $lastActions, null, 512, JSON_THROW_ON_ERROR);
                 if (is_countable($lastActionArray) ? count($lastActionArray) : 0) {
                     if ('sonata_admin_dashboard'
-                        == $this->request->get('_route')
+                        == $this->request->attributes->get('_route')
                         || $sonataAdmin
                     ) {
                         $lastAction = next($lastActionArray);
@@ -339,7 +350,7 @@ class AdminMenuBuilder extends MenuBuilder
                 );
             }
             if (!$sonataAdmin
-                && 'sonata_admin_dashboard' != $this->request->get('_route')
+                && 'sonata_admin_dashboard' != $this->request->attributes->get('_route')
             ) {
                 $menu->addChild('Admin', ['uri' => $lastActionUrl]);
             }

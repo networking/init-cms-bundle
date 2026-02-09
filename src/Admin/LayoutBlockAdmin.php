@@ -56,12 +56,7 @@ class LayoutBlockAdmin extends BaseAdmin
     ): void {
         $collection->add('addBlock', 'add_block', [], ['method' => 'GET']);
         $collection->add('deleteAjax', 'delete_ajax', [], ['method' => 'POST']);
-        $collection->add(
-            'toggleActive',
-            'toggle_active',
-            [],
-            ['method' => 'POST']
-        );
+        $collection->add('toggleActive','toggle_active', [], ['method' => 'POST']);
         $collection->add('reload', 'reload', [], ['method' => 'GET']);
         $collection->add(
             'updateFormFieldElement',

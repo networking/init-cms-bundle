@@ -19,13 +19,13 @@ use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Events;
 use Networking\InitCmsBundle\Model\ModelChangedListenerInterface;
 use Networking\InitCmsBundle\Enitty\EntityChangedSubscriber;
-use Symfony\Bridge\Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\When;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 #[AsDoctrineListener(event: Events::preRemove)]
 #[AsDoctrineListener(event: Events::postPersist)]
-    #[AsDoctrineListener(event: Events::postUpdate)]
+#[AsDoctrineListener(event: Events::postUpdate)]
 class EntityChangedListener implements ModelChangedListenerInterface
 {
     /**
@@ -42,7 +42,7 @@ class EntityChangedListener implements ModelChangedListenerInterface
      * ModelChangedListener constructor.
      * @param bool $loggingActive
      */
-    public function __construct(Logger $logger, TokenStorageInterface $tokenStorage, protected $loggingActive = false)
+    public function __construct(LoggerInterface $logger, TokenStorageInterface $tokenStorage, protected $loggingActive = false)
     {
         $this->logger = $logger;
         $this->tokenStorage = $tokenStorage;

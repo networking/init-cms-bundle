@@ -132,7 +132,7 @@ class TranslationAdmin extends AbstractAdmin
     ): ProxyQueryInterface {
         $this->joinTranslations(
             $query,
-            $query->getRootAlias()
+            $query->getRootAlias(),
         );
 
         return $query;
@@ -377,6 +377,7 @@ class TranslationAdmin extends AbstractAdmin
             }
         }
 
+
         if (!$alreadyJoined) {
             /* @var QueryBuilder $queryBuilder */
             if ($locales) {
@@ -384,10 +385,11 @@ class TranslationAdmin extends AbstractAdmin
                     sprintf('%s.translations', $alias),
                     'translations',
                     'WITH',
-                    'translations.locale = :locales'
+                    'translations.locale IN (:locales)'
                 );
                 $queryBuilder->setParameter('locales', $locales);
             } else {
+                $queryBuilder->addSelect('translations');
                 $queryBuilder->leftJoin(
                     sprintf('%s.translations', $alias),
                     'translations'

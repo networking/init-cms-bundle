@@ -19,7 +19,7 @@ class MaintenanceAction
     {
         $maintenanceFile = $this->projectDir . '/maintenance.flag';
 
-        if(!file_exists($maintenanceFile) && 'networking_init_cms_maintenance_debug' !== $request->get('_route')) {
+        if(!file_exists($maintenanceFile) && 'networking_init_cms_maintenance_debug' !== $request->attributes->get('_route')) {
             return new RedirectResponse('/');
         }
 
@@ -28,7 +28,7 @@ class MaintenanceAction
 
         $status = 503;
 
-        if('networking_init_cms_maintenance_debug' === $request->get('_route')) {
+        if('networking_init_cms_maintenance_debug' === $request->attributes->get('_route')) {
             $status = 200;
         }
 

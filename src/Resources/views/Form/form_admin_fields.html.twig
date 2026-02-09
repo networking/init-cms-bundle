@@ -9,63 +9,59 @@ file that was distributed with this source code.
 {% use 'bootstrap_5_layout.html.twig' %}
 
 {# Custom Sonata Admin Extension, template override #}
-{% block sonata_admin_orm_one_to_one_widget %}
+{%- block sonata_admin_orm_one_to_one_widget -%}
     {% include '@NetworkingInitCms/CRUD/edit_orm_one_to_one.html.twig' %}
-{% endblock %}
+{%- endblock -%}
 
-{% block sonata_admin_orm_many_to_many_widget %}
+{%- block sonata_admin_orm_many_to_many_widget -%}
     {% include '@NetworkingInitCms/CRUD/edit_orm_many_to_many.html.twig' %}
-{% endblock %}
+{%- endblock -%}
 
-{% block sonata_admin_orm_many_to_one_widget %}
+{%- block sonata_admin_orm_many_to_one_widget -%}
     {% include '@NetworkingInitCms/CRUD/edit_orm_many_to_one.html.twig' %}
-{% endblock %}
+{%- endblock -%}
 
-{% block sonata_admin_orm_one_to_many_widget %}
+{%- block sonata_admin_orm_one_to_many_widget -%}
     {% if sonata_admin.field_description.name == 'layoutBlock' %}
-        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' %}
-    {% else %}
-        {% include '@NetworkingInitCms/CRUD/edit_orm_one_to_many.html.twig' %}
-    {% endif %}
-{% endblock %}
+        {% include '@NetworkingInitCms/PageAdmin/page_edit_layout_blocks.html.twig' -%}
+    {%- else -%}
+     {% include '@NetworkingInitCms/CRUD/edit_orm_one_to_many.html.twig'-%}
+    {%- endif -%}
+{%- endblock -%}
 
-{% block sonata_type_model_widget %}
-    {#
-    This is not the best way to do if
-    TODO : improve this part
-    #}
+{%- block sonata_type_model_widget -%}
     {# model {{ sonata_admin.field_description.mappingtype }} #}
-    {% if sonata_admin.field_description is empty %}
-        {{ block('choice_widget') }}
-    {% elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_ONE') %}
+{%- if sonata_admin.field_description is empty -%}
+    {{ block('choice_widget') }}
+{%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_ONE') -%}
         {{ block('sonata_admin_orm_one_to_one_widget') }}
-    {% elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE') %}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE') -%}
         {{ block('sonata_admin_orm_many_to_one_widget') }}
-    {% elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') %}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') -%}
         {{ block('sonata_admin_orm_many_to_many_widget') }}
-    {% elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') %}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') -%}
         {{ block('sonata_admin_orm_one_to_many_widget') }}
-    {% else %}
+    {%- else -%}
         {# INVALID MODE : {{ id }} #}
         {{ block('choice_widget') }}
-    {% endif %}
-{% endblock %}
+    {%- endif -%}
+{%- endblock -%}
 
 
 
 {%- block form_row -%}
 
-    {% if sonata_admin.admin is defined and sonata_admin.admin %}
+    {%- if sonata_admin.admin is defined and sonata_admin.admin -%}
 
-        {% if translation_domain is same as(null) %}
-            {% set translation_domain = sonata_admin.field_description.translationDomain %}
-        {% endif %}
-        {% if label is same as(false) %}
-            {% set label_render = false %}
-        {% else %}
-            {% set label_render = true %}
-        {% endif %}
-    {% endif %}
+        {%- if translation_domain is same as(null) -%}
+            {%- set translation_domain = sonata_admin.field_description.translationDomain -%}
+        {%- endif -%}
+        {%- if label is same as(false) -%}
+            {%- set label_render = false -%}
+        {%- else -%}
+            {%- set label_render = true -%}
+        {%- endif -%}
+    {%- endif -%}
 
     {%- if compound is defined and compound -%}
         {%- set element = 'fieldset' -%}
@@ -74,12 +70,12 @@ file that was distributed with this source code.
 
     {%- set row_class = row_class|default(row_attr.class|default('mb-3')|trim) -%}
 
-    {% set widget_attr = {attr: {}} %}
-    {% set is_form_floating = false %}
+    {%- set widget_attr = {attr: {}} -%}
+    {%- set is_form_floating = false -%}
     {%- if 'form-floating' in row_class -%}
-        {% set row_class = row_class|replace({'form-floating': ''}) %}
-        {% set is_form_floating = true %}
-    {% endif %}
+        {%- set row_class = row_class|replace({'form-floating': ''}) -%}
+        {%- set is_form_floating = true -%}
+    {%- endif -%}
 
 
     {%- if help is not empty -%}
@@ -87,20 +83,20 @@ file that was distributed with this source code.
         {%- set widget_attr = widget_attr|merge({attr: attrs }) -%}
     {%- endif -%}
 
-    {% if help_widget_popover.selector is same as(null) %}
-        {% set help_widget_popover = help_widget_popover|merge({'selector': '#' ~ id }) %}
-    {% endif %}
+    {%- if help_widget_popover.selector is same as(null) -%}
+        {%- set help_widget_popover = help_widget_popover|merge({'selector': '#' ~ id }) -%}
+    {%- endif -%}
 
     <{{ element|default('div') }}
-    {% if help_widget_popover.title is not same as(null) %}{{ block('help_widget_popover') }}{% endif %}
-    {% with {attr: row_attr|merge({class: row_class})} %} {{ block('attributes') }}{% endwith %}>
+    {%- if help_widget_popover.title is not same as(null) -%}{{ block('help_widget_popover') }}{%- endif -%}
+    {%- with {attr: row_attr|merge({class: row_class})} -%} {{ block('attributes') }}{%- endwith -%}>
     {%- if is_form_floating is same as(true) -%}
         {%- set widget_attr = {attr: {placeholder: attr.placeholder|default(label)}} -%}
         <div class="form-floating">
             {{- form_widget(form, widget_attr ) -}}
             {{- form_label(form) -}}
         </div>
-    {% elseif 'form-floating' in attr.group_class|default('') %}
+    {%- elseif 'form-floating' in attr.group_class|default('') -%}
         {{- form_widget(form, widget_attr) -}}
     {%- else -%}
         {{- form_label(form) -}}
@@ -110,22 +106,22 @@ file that was distributed with this source code.
     {{ block('help_block') }}
     {{- form_errors(form) -}}
 
-    {% if form.parent and 'collection' in form.parent.vars.block_prefixes and form.parent.vars.allow_delete == true %}
+    {%- if form.parent and 'collection' in form.parent.vars.block_prefixes and form.parent.vars.allow_delete == true -%}
         &nbsp;{{ block('form_widget_remove_btn') }}
-    {% endif %}
+    {%- endif -%}
     </{{ element|default('div') }}>
-{%- endblock form_row %}
+{%- endblock form_row -%}
 
 
 {%- block form_label_content -%}
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
-            {% set label = label_format|replace({
+            {%- set label = label_format|replace({
                 '%name%': name,
                 '%id%': id,
-            }) %}
+            }) -%}
         {%- else -%}
-            {% set label = name|humanize %}
+            {%- set label = name|humanize -%}
         {%- endif -%}
     {%- endif -%}
     {%- if translation_domain is same as(false) -%}
@@ -135,152 +131,151 @@ file that was distributed with this source code.
             {{- label|raw -}}
         {%- endif -%}
     {%- else -%}
-        {% if sonata_admin.admin is defined and  sonata_admin.admin and translation_domain is same as (null) %}
-            {% set translation_domain = sonata_admin.field_description.translationDomain %}
-        {% endif %}
+        {%- if sonata_admin.admin is defined and  sonata_admin.admin and translation_domain is same as (null) -%}
+            {%- set translation_domain = sonata_admin.field_description.translationDomain -%}
+        {%- endif -%}
         {%- if label_html is same as(false) -%}
             {{- label|trans(label_translation_parameters, translation_domain) -}}
         {%- else -%}
             {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
         {%- endif -%}
     {%- endif -%}
-    {% set row_class = row_attr.class|default('mb-3') %}
-    {% if 'form-floating' in row_class %}
-    {% endif %}
+    {%- set row_class = row_attr.class|default('mb-3') -%}
+    {%- if 'form-floating' in row_class -%}
+    {%- endif -%}
 {%- endblock form_label_content -%}
 
 {%- block button_label -%}{%- endblock -%}
 
-{% block form_label %}
+{%- block form_label -%}
     {{ parent() }}
 
-    {% if admin is defined %}
-        {% set translation_domain = admin.translationDomain %}
-    {% endif %}
-    {% if help_label %}
+    {%- if admin is defined -%}
+        {%- set translation_domain = admin.translationDomain -%}
+    {%- endif -%}
+    {%- if help_label -%}
         {{ block('help_label') }}
-    {% endif %}
-    {% if help_label_tooltip.title %}
+    {%- endif -%}
+    {%- if help_label_tooltip.title -%}
         {{ block('help_label_tooltip') }}
-    {% endif %}
-    {% if help_label_popover.title %}
+    {%- endif -%}
+    {%- if help_label_popover.title -%}
         {{ block('help_label_popover') }}
-    {% endif %}
-{% endblock form_label %}
+    {%- endif -%}
+{%- endblock form_label -%}
 
-{% block help_label %}
+{%- block help_label -%}
     <span class="help-block form-text">{{ help_label|trans(help_translation_parameters, translation_domain) }}</span>
-{% endblock help_label %}
+{%- endblock help_label -%}
 
-{% block help_label_tooltip %}
+{%- block help_label_tooltip -%}
     <span class="help-block form-text">
         <a href="#" data-bs-toggle="tooltip" data-bs-placement="{{ help_label_tooltip.placement }}"
            title="{{ help_label_tooltip.title|trans(help_translation_parameters, translation_domain) }}">
-            {% if help_label_tooltip.icon is not same as(false) %}
+            {%- if help_label_tooltip.icon is not same as(false) -%}
                 {{ networking_bootstrap_icon(help_label_tooltip.icon) }}
-            {% endif %}
-            {% if help_label_tooltip.text is not same as(null) %}
+            {%- endif -%}
+            {%- if help_label_tooltip.text is not same as(null) -%}
                 {{ help_label_tooltip.text|trans(help_translation_parameters, translation_domain) }}
-            {% endif %}
+            {%- endif -%}
         </a>
     </span>
-{% endblock help_label_tooltip %}
+{%- endblock help_label_tooltip -%}
 
-{% block help_block_tooltip %}
-    {% set help_label_tooltip = help_block_tooltip %}
+{%- block help_block_tooltip -%}
+    {%- set help_label_tooltip = help_block_tooltip -%}
     {{ block('help_label_tooltip') }}
-{% endblock help_block_tooltip %}
+{%- endblock help_block_tooltip -%}
 
-{% block help_label_popover %}
+{%- block help_label_popover -%}
     <span class="help-block text-muted">
         <a href="#" data-bs-toggle="popover" data-trigger="hover" data-placement="{{ help_label_popover.placement }}"
            title="{{ help_label_popover.title|trans(help_translation_parameters, translation_domain) }}"
-           data-content="{{ help_label_popover.content|trans(help_translation_parameters, translation_domain) }}" data-html="true">
-            {% if help_label_popover.icon is not same as(false) %}
+           data-content="{{ help_label_popover.content|trans(help_translation_parameters, translation_domain) }}"
+           data-html="true">
+            {%- if help_label_popover.icon is not same as(false) -%}
                 {{ networking_bootstrap_icon(help_label_popover.icon) }}
-            {% endif %}
-            {% if help_label_popover.text is not same as(null) %}
+            {%- endif -%}
+            {%- if help_label_popover.text is not same as(null) -%}
                 {{ help_label_popover.text|trans(help_translation_parameters, translation_domain) }}
-            {% endif %}
+            {%- endif -%}
         </a>
     </span>
-{% endblock help_label_popover %}
+{%- endblock help_label_popover -%}
 
-{% block help_block_popover %}
-    {% set help_label_popover = help_block_popover %}
+{%- block help_block_popover -%}
+    {%- set help_label_popover = help_block_popover -%}
     {{ block('help_label_popover') }}
-{% endblock help_block_popover %}
+{%- endblock help_block_popover -%}
 
 
-{% block form_help %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-    {% endif %}
+{%- block form_help -%}
+    {%- if sonata_admin.admin is defined and  sonata_admin.admin -%}
+        {%- set translation_domain = sonata_admin.field_description.translationDomain -%}
+    {%- endif -%}
     {{ parent() }}
-{% endblock form_help %}
+{%- endblock form_help -%}
 
-{% block help_block %}
-    {% apply spaceless %}
-        {% if help_block %}
-            <p class="form-text mb-0 help-text">
-                {{ help_block|trans(help_translation_parameters, translation_domain)|raw }}
-            </p>
-        {% endif %}
-        {% if help_block_tooltip.title %}
-            &nbsp;{{ block('help_block_tooltip') }}
-        {% endif %}
-        {% if help_block_popover.title %}
-            &nbsp;{{ block('help_block_popover') }}
-        {% endif %}
-    {% endapply %}
-{% endblock help_block %}
+{%- block help_block -%}
+    {%- if help_block -%}
+        <p class="form-text mb-0 help-text">
+            {{ help_block|trans(help_translation_parameters, translation_domain)|raw }}
+        </p>
+    {%- endif -%}
+    {%- if help_block_tooltip.title -%}
+        &nbsp;{{ block('help_block_tooltip') }}
+    {%- endif -%}
+    {%- if help_block_popover.title -%}
+        &nbsp;{{ block('help_block_popover') }}
+    {%- endif -%}
+{%- endblock help_block -%}
 
-{% block sonata_roles_matrix_widget %}
-    {% apply spaceless %}
-        {{ render_user_permissions_table(form)|raw }}
-        <ul class="list-unstyled">
-            {{ render_user_roles_list(form)|raw }}
-        </ul>
-    {% endapply %}
-{% endblock sonata_roles_matrix_widget %}
+{%- block sonata_roles_matrix_widget -%}
 
-{% block checkbox_widget %}
+    {{ render_user_permissions_table(form)|raw }}
+    <ul class="list-unstyled">
+        {{ render_user_roles_list(form)|raw }}
+    </ul>
+
+{%- endblock sonata_roles_matrix_widget -%}
+
+{%- block checkbox_widget -%}
     {%- set attr_class = attr_class|default(attr.class|default('')) -%}
 
-    {% set row_class = row_attr.class|default('mb-3') %}
+    {%- set row_class = row_attr.class|default('mb-3') -%}
     {%- if 'btn-check' not in attr_class -%}
         {%- set attr_class = attr_class ~ ' form-check-input' -%}
         {%- set row_class = row_class ~ ' form-check' -%}
     {%- endif -%}
     {%- set attr = attr|merge({class: attr_class|trim}) -%}
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
-    {%- if 'checkbox-inline' in parent_label_class %}
+    {%- if 'checkbox-inline' in parent_label_class -%}
         {%- set row_class = row_class ~ ' form-check-inline' -%}
-    {% endif -%}
-    {%- if 'checkbox-switch' in parent_label_class %}
+    {%- endif -%}
+    {%- if 'checkbox-switch' in parent_label_class -%}
         {%- set row_class = row_class ~ ' form-switch' -%}
-    {% endif -%}
+    {%- endif -%}
     {%- if row_class is not empty -%}
         <div class="{{ row_class }}">
     {%- endif -%}
 
-    {% set checkbox %}
-        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-    {% endset %}
-    {% if label is not same as(false) %}
+    {%- set checkbox -%}
+        <input type="checkbox" {{ block('widget_attributes') }}{%- if value is defined -%} value="{{ value }}"{%- endif -%}{%- if checked -%} checked="checked"{%- endif -%} />
+    {%- endset -%}
+    {%- if label is not same as(false) -%}
         {{- form_label(form, null, { widget: checkbox }) -}}
-    {% else %}
+    {%- else -%}
         {{ checkbox|raw }}
-    {% endif %}
+    {%- endif -%}
 
     {%- if row_class is not empty -%}
         </div>
     {%- endif -%}
-    {#    {% endif %} #}
-{% endblock checkbox_widget %}
+    {#    {%- endif -%} #}
+{%- endblock checkbox_widget -%}
 
 
-{% block sonata_type_model_list_widget %}
+{%- block sonata_type_model_list_widget -%}
     <div id="{{ id }}_field_container" class="field-container model-list"
          data-field-id="{{ id }}"
          data-is-list-mode="true"
@@ -302,7 +297,7 @@ file that was distributed with this source code.
                   '_sonata_admin': sonata_admin.field_description.associationadmin.baseCodeRoute,
                   'linkParameters': sonata_admin.field_description.option('link_parameters', {})
               }) }}">
-            {% if sonata_admin.value and sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value) is not null %}
+            {%- if sonata_admin.value and sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value) is not null -%}
                 {{ render(path('sonata_admin_short_object_information', {
                     '_sonata_admin': sonata_admin.field_description.associationadmin.baseCodeRoute,
                     'objectId': sonata_admin.field_description.associationadmin.urlSafeIdentifier(sonata_admin.value),
@@ -315,17 +310,17 @@ file that was distributed with this source code.
                 ) + app.request.query.all|default({})
                 )) }}
 
-            {% elseif sonata_admin.field_description.options.placeholder is defined and sonata_admin.field_description.options.placeholder %}
+            {%- elseif sonata_admin.field_description.options.placeholder is defined and sonata_admin.field_description.options.placeholder -%}
                 <span class="inner-field-short-description">
                     {{ sonata_admin.field_description.options.placeholder|trans({}, 'SonataAdminBundle') }}
                 </span>
-            {% endif %}
+            {%- endif -%}
         </span>
         {{ block('hidden_widget') }}
 
         <span id="field_actions_{{ id }}" class="field-actions">
 
-            {% if sonata_admin.field_description.associationadmin.hasroute('list') and sonata_admin.field_description.associationadmin.isGranted('LIST') %}
+            {%- if sonata_admin.field_description.associationadmin.hasroute('list') and sonata_admin.field_description.associationadmin.isGranted('LIST') -%}
                 &nbsp;
                 <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('list') }}"
                    id="field_list_link_{{ id }}"
@@ -335,9 +330,9 @@ file that was distributed with this source code.
                     <i class="fa fa-list"></i>
                     {{ 'link_list'|trans({}, 'SonataAdminBundle') }}
                 </a>
-            {% endif %}
+            {%- endif -%}
 
-            {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') %}
+            {%- if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') -%}
                 &nbsp;
                 <a href="{{ sonata_admin.field_description.associationadmin.generateUrl('create') }}"
                    id="field_add_link_{{ id }}"
@@ -347,9 +342,9 @@ file that was distributed with this source code.
                     <i class="fa fa-plus"></i>
                     {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                 </a>
-            {% endif %}
+            {%- endif -%}
 
-            {% if sonata_admin.field_description.associationadmin.hasRoute('delete') and sonata_admin.field_description.associationadmin.isGranted('DELETE') %}
+            {%- if sonata_admin.field_description.associationadmin.hasRoute('delete') and sonata_admin.field_description.associationadmin.isGranted('DELETE') -%}
                 &nbsp;
                 <a href=""
                    id="field_remove_link_{{ id }}"
@@ -359,287 +354,287 @@ file that was distributed with this source code.
                     <i class="fa fa-trash"></i>
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
-            {% endif %}
+            {%- endif -%}
         </span>
     </div>
 
-    {#    {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %} #}
-{% endblock %}
+    {#    {%- include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' -%} #}
+{%- endblock -%}
 
-{% block sonata_type_admin_widget %}
+{%- block sonata_type_admin_widget -%}
     {# admin {{ sonata_admin.field_description.mappingtype }} #}
-    {% if sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_ONE') %}
+    {%- if sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_ONE') -%}
         {{ block('sonata_admin_orm_one_to_one_widget') }}
-    {% elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE') %}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE') -%}
         {{ block('sonata_admin_orm_many_to_one_widget') }}
-    {% elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') %}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') -%}
         {{ block('sonata_admin_orm_many_to_many_widget') }}
-    {% elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') %}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') -%}
         {{ block('sonata_admin_orm_one_to_many_widget') }}
-    {% else %}
+    {%- else -%}
         INVALID MODE : {{ id }}
-    {% endif %}
-{% endblock %}
+    {%- endif -%}
+{%- endblock -%}
 
-{% block sonata_type_collection_widget %}
-    {% if sonata_admin.field_description.mappingtype  == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') %}
+{%- block sonata_type_collection_widget -%}
+    {%- if sonata_admin.field_description.mappingtype  == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') -%}
         {{ block('sonata_admin_orm_one_to_many_widget') }}
-    {% elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') %}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') -%}
         {{ block('sonata_admin_orm_many_to_many_widget') }}
-    {% else %}
+    {%- else -%}
         INVALID MODE : {{ id }} - type : sonata_type_collection - mapping : {{ sonata_admin.field_description.mappingtype }}
-    {% endif %}
-{% endblock %}
+    {%- endif -%}
+{%- endblock -%}
 
 {# Buttons #}
-{% block button_widget %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = onata_admin.field_description.translationDomain %}
-    {% endif %}
-    {% apply spaceless %}
-        {% if label is empty %}
-            {% set label = name|humanize %}
-        {% endif %}
-        <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+{%- block button_widget -%}
+    {%- if sonata_admin.admin is defined and  sonata_admin.admin -%}
+        {%- set translation_domain = onata_admin.field_description.translationDomain -%}
+    {%- endif -%}
 
-            {{ label|trans({}, translation_domain) }}</button>
-    {% endapply %}
-{% endblock button_widget %}
+    {%- if label is empty -%}
+        {%- set label = name|humanize -%}
+    {%- endif -%}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+
+        {{ label|trans({}, translation_domain) }}</button>
+
+{%- endblock button_widget -%}
 
 {# Widgets #}
-{% block tabs_widget %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = onata_admin.field_description.translationDomain %}
-    {% endif %}
-    {% apply spaceless %}
-        <ul class="{{ form.vars.attr.class }}">
-            {% for tab in form.vars.tabs %}
-                <li{% if tab.active %} class="active"{% endif %}>
-                    <a data-toggle="tab" href="#{{ tab.id }}">
-                        {% if tab.icon %}{{ networking_bootstrap_icon(tab.icon) }}{% endif %}
-                        {{ tab.label|trans({}, tab.translation_domain) }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endapply %}
-{% endblock %}
+{%- block tabs_widget -%}
+    {%- if sonata_admin.admin is defined and  sonata_admin.admin -%}
+        {%- set translation_domain = onata_admin.field_description.translationDomain -%}
+    {%- endif -%}
+
+    <ul class="{{ form.vars.attr.class }}">
+        {%- for tab in form.vars.tabs -%}
+            <li{%- if tab.active -%} class="active"{%- endif -%}>
+                <a data-toggle="tab" href="#{{ tab.id }}">
+                    {%- if tab.icon -%}{{ networking_bootstrap_icon(tab.icon) }}{%- endif -%}
+                    {{ tab.label|trans({}, tab.translation_domain) }}
+                </a>
+            </li>
+        {%- endfor -%}
+    </ul>
+
+{%- endblock -%}
 
 
-{% block widget_container_attributes_choice_widget %}
-    {% apply spaceless %}
-        id="{{ id }}"
-        {% for attrname,attrvalue in attr %}{{ attrname }}="{% if attrname == 'class' %}unstyled {% endif %}{{ attrvalue }}" {% endfor %}
-        {% if "class" not in attr %}class="unstyled"{% endif %}
-    {% endapply %}
-{% endblock %}
+{%- block widget_container_attributes_choice_widget -%}
+
+    id="{{ id }}"
+    {%- for attrname,attrvalue in attr -%}{{ attrname }}="{%- if attrname == 'class' -%}unstyled {%- endif -%}{{ attrvalue }}" {%- endfor -%}
+    {%- if "class" not in attr -%}class="unstyled"{%- endif -%}
+
+{%- endblock -%}
 
 
-{% block choice_widget %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-    {% endif %}
-    {% if select2 is defined and select2 %}
+{%- block choice_widget -%}
+    {%- if sonata_admin.admin is defined and  sonata_admin.admin -%}
+        {%- set translation_domain = sonata_admin.field_description.translationDomain -%}
+    {%- endif -%}
+    {%- if select2 is defined and select2 -%}
 
 
-        {% if multiple is same as(false) %}
+        {%- if multiple is same as(false) -%}
             {%- if label is empty -%}
                 {%- if label_format is not empty -%}
-                    {% set label = label_format|replace({
+                    {%- set label = label_format|replace({
                         '%name%': name,
                         '%id%': id,
-                    }) %}
+                    }) -%}
                 {%- else -%}
-                    {% set label = name|humanize %}
+                    {%- set label = name|humanize -%}
                 {%- endif -%}
             {%- endif -%}
 
-            {% set attr = attr|merge({placeholder: attr.placeholder|default(false)}) %}
-            {% set placeholder = attr.placeholder %}
-            {% if placeholder is  same as(false) %}
-                {% set placeholder = 'Select'|trans %}
-            {% endif %}
-        {% endif %}
-        {% set attr = attr|merge({'data-control': 'select2', 'data-placeholder': placeholder|trans({}, translation_domain)}) %}
-    {% endif %}
-    {% set allowClear = (multiple or not required?'true':'false') %}
-    {% set attr = attr|merge({'data-allow-clear': allowClear }) %}
+            {%- set attr = attr|merge({placeholder: attr.placeholder|default(false)}) -%}
+            {%- set placeholder = attr.placeholder -%}
+            {%- if placeholder is  same as(false) -%}
+                {%- set placeholder = 'Select'|trans -%}
+            {%- endif -%}
+        {%- endif -%}
+        {%- set attr = attr|merge({'data-control': 'select2', 'data-placeholder': placeholder|trans({}, translation_domain)}) -%}
+    {%- endif -%}
+    {%- set allowClear = (multiple or not required?'true':'false') -%}
+    {%- set attr = attr|merge({'data-allow-clear': allowClear }) -%}
     {{ parent() }}
-{% endblock choice_widget %}
+{%- endblock choice_widget -%}
 
 
 
-{% block sonata_type_immutable_array_widget %}
-    {% apply spaceless %}
-        <div class="controls">
-            <div {{ block('widget_container_attributes') }}>
-                {{ form_errors(form) }}
+{%- block sonata_type_immutable_array_widget -%}
 
-                {% for key, child in form %}
-                    {{ block('sonata_type_immutable_array_widget_row') }}
-                {% endfor %}
+    <div class="controls">
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
 
-                {{ form_rest(form) }}
-            </div>
+            {%- for key, child in form -%}
+                {{ block('sonata_type_immutable_array_widget_row') }}
+            {%- endfor -%}
+
+            {{ form_rest(form) }}
         </div>
-    {% endapply %}
-{% endblock sonata_type_immutable_array_widget %}
+    </div>
 
-{% block sonata_type_immutable_array_widget_row %}
-    {% apply spaceless %}
-        <div class="control-group{% if errors|length > 0 %} error{% endif %}"
-             id="sonata-ba-field-container-{{ id }}-{{ key }}">
+{%- endblock sonata_type_immutable_array_widget -%}
 
-            {{ form_label(child) }}
+{%- block sonata_type_immutable_array_widget_row -%}
 
-            <div class="controls sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }} {% if errors|length > 0 %}sonata-ba-field-error{% endif %}">
-                {{ form_widget(child) }}
-            </div>
+    <div class="control-group{%- if errors|length > 0 -%} error{%- endif -%}"
+         id="sonata-ba-field-container-{{ id }}-{{ key }}">
 
-            {% if errors|length > 0 %}
-                <div class="help-inline sonata-ba-field-error-messages">
-                    {{ form_errors(child) }}
-                </div>
-            {% endif %}
+        {{ form_label(child) }}
+
+        <div class="controls sonata-ba-field sonata-ba-field-{{ sonata_admin.edit }}-{{ sonata_admin.inline }} {%- if errors|length > 0 -%}sonata-ba-field-error{%- endif -%}">
+            {{ form_widget(child) }}
         </div>
-    {% endapply %}
-{% endblock %}
 
-{% block date_widget %}
-    {% apply spaceless %}
-        {% if widget == 'single_text' %}
-            {% set attr = attr|merge({
-                'data-provider': 'datepicker',
-                'data-link-field': id,
-                'data-date-format': 'd.m.Y',
-                'data-date-language': app.request.getLocale()|slice(0, 2),
-            }) %}
-            {{ block('form_widget_simple') }}
-
-        {% else %}
-            {% set attr = attr|merge({'class': attr.class|default('form-inline')}) %}
-            <div {{ block('widget_container_attributes') }}>
-                {{ date_pattern|replace({
-                    '{{ year }}':  form_widget(form.year, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
-                    '{{ month }}': form_widget(form.month, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
-                    '{{ day }}':   form_widget(form.day, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
-                })|raw }}
+        {%- if errors|length > 0 -%}
+            <div class="help-inline sonata-ba-field-error-messages">
+                {{ form_errors(child) }}
             </div>
-        {% endif %}
-    {% endapply %}
-{% endblock date_widget %}
+        {%- endif -%}
+    </div>
 
-{% block time_widget %}
-    {% apply spaceless %}
-        {% if widget == 'single_text' %}
-            {% if timepicker is defined %}
-                {% set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'time' %}
-                <div data-provider="timepicker" class="input-group date"
-                     data-link-field="{{ id }}" data-link-format="hh:ii" data-date-format="hh:ii">
-                    {% set type = 'text' %}
-                    {{ block('form_widget_simple') }}
-                    <span class="input-group-addon">{{ networking_bootstrap_icon(widget_addon_icon) }}</span>
-                    {% if widget_reset_icon is defined %}
-                        <span class="input-group-addon">{{ networking_bootstrap_icon(widget_reset_icon) }}</span>
-                    {% endif %}
-                </div>
-            {% else %}
+{%- endblock -%}
+
+{%- block date_widget -%}
+
+    {%- if widget == 'single_text' -%}
+        {%- set attr = attr|merge({
+            'data-provider': 'datepicker',
+            'data-link-field': id,
+            'data-date-format': 'd.m.Y',
+            'data-date-language': app.request.getLocale()|slice(0, 2),
+        }) -%}
+        {{ block('form_widget_simple') }}
+
+    {%- else -%}
+        {%- set attr = attr|merge({'class': attr.class|default('form-inline')}) -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
+                '{{ month }}': form_widget(form.month, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
+                '{{ day }}':   form_widget(form.day, {'attr': {'class': attr.widget_class|default('') ~ ''}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}),
+            })|raw }}
+        </div>
+    {%- endif -%}
+
+{%- endblock date_widget -%}
+
+{%- block time_widget -%}
+
+    {%- if widget == 'single_text' -%}
+        {%- if timepicker is defined -%}
+            {%- set widget_addon_icon = widget_addon_append.icon is defined ? widget_addon_append.icon : 'time' -%}
+            <div data-provider="timepicker" class="input-group date"
+                 data-link-field="{{ id }}" data-link-format="hh:ii" data-date-format="hh:ii">
+                {%- set type = 'text' -%}
                 {{ block('form_widget_simple') }}
-            {% endif %}
-        {% else %}
-            {% set attr = attr|merge({'class': attr.class|default('form-inline')}) %}
-            {% apply spaceless %}
-                <div {{ block('widget_container_attributes') }}>
-                    {{ form_widget(form.hour, { 'attr': {  'size': '2'}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
-                    {% if with_minutes %}
-                        {{ form_widget(form.minute, { 'attr': { 'size': '2' }, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
-                    {% endif %}
-                    {% if with_seconds %}
-                        :{{ form_widget(form.second, { 'attr': { 'size': '2' }, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2') }) }}
-                    {% endif %}
-                </div>
-            {% endapply %}
-        {% endif %}
-    {% endapply %}
-{% endblock time_widget %}
-
-{% block datetime_widget %}
-    {% apply spaceless %}
-        {% if widget == 'single_text' %}
-            {% set attr = attr|merge({
-                'data-provider': 'datetimepicker',
-                'data-link-field': id,
-                'data-date-format': 'd.m.Y H:i',
-                'data-date-language': app.request.getLocale()|slice(0, 2),
-            }) %}
+                <span class="input-group-addon">{{ networking_bootstrap_icon(widget_addon_icon) }}</span>
+                {%- if widget_reset_icon is defined -%}
+                    <span class="input-group-addon">{{ networking_bootstrap_icon(widget_reset_icon) }}</span>
+                {%- endif -%}
+            </div>
+        {%- else -%}
             {{ block('form_widget_simple') }}
-        {% else %}
-            {% set attr = attr|merge({'class': attr.class|default('')}) %}
-            <div {{ block('widget_container_attributes') }}>
-                {{ form_errors(form.date) }}
-                {{ form_errors(form.time) }}
-                {{ form_widget(form.date, {'attr': {'class': attr.widget_class|default('')}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}) }}
-                {{ form_widget(form.time, {'attr': {'class': attr.widget_class|default('')}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
-            </div>
-        {% endif %}
-    {% endapply %}
-{% endblock datetime_widget %}
+        {%- endif -%}
+    {%- else -%}
+        {%- set attr = attr|merge({'class': attr.class|default('form-inline')}) -%}
 
-{% block networking_type_mediaprint_widget %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_widget(form.hour, { 'attr': {  'size': '2'}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
+            {%- if with_minutes -%}
+                {{ form_widget(form.minute, { 'attr': { 'size': '2' }, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
+            {%- endif -%}
+            {%- if with_seconds -%}
+                :{{ form_widget(form.second, { 'attr': { 'size': '2' }, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2') }) }}
+            {%- endif -%}
+        </div>
+
+    {%- endif -%}
+
+{%- endblock time_widget -%}
+
+{%- block datetime_widget -%}
+
+    {%- if widget == 'single_text' -%}
+        {%- set attr = attr|merge({
+            'data-provider': 'datetimepicker',
+            'data-link-field': id,
+            'data-date-format': 'd.m.Y H:i',
+            'data-date-language': app.request.getLocale()|slice(0, 2),
+        }) -%}
+        {{ block('form_widget_simple') }}
+    {%- else -%}
+        {%- set attr = attr|merge({'class': attr.class|default('')}) -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form.date) }}
+            {{ form_errors(form.time) }}
+            {{ form_widget(form.date, {'attr': {'class': attr.widget_class|default('')}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-3')}) }}
+            {{ form_widget(form.time, {'attr': {'class': attr.widget_class|default('')}, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class|default('col-sm-2')}) }}
+        </div>
+    {%- endif -%}
+
+{%- endblock datetime_widget -%}
+
+{%- block networking_type_mediaprint_widget -%}
     {{ sonata_media(get_media_by_id(value), 'admin') }}
-{% endblock %}
+{%- endblock -%}
 
-{% block networking_type_media_preview_widget %}
-    {% if is_image %}
-        <img src="{{ sonata_path(value, 'admin') }}?{{ date().timestamp }}"/>
-    {% else %}
+{%- block networking_type_media_preview_widget -%}
+    {%- if is_image -%}
+        <img src="{{ sonata_path(value, 'admin') }}?{{ date().timestamp }}" alt="{{ value.name }}"/>
+    {%- else -%}
         {{ sonata_media(value, 'admin') }}
-    {% endif %}
+    {%- endif -%}
 
-{% endblock %}
+{%- endblock -%}
 
 
 
-{% block networking_type_iconradio_widget %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-    {% endif %}
-    {% apply spaceless %}
-        {% if expanded %}
-            <div {{ block('widget_container_attributes') }}>
-                {% for row in form|batch(3, '-') %}
-                    <div class="row">
-                        {% for key, child in row %}
-                            <div class="col-sm-4">
-                                {% if child != '-' %}
-                                    <label class="radio-inline">
-                                        {{ form_widget(child, {'horizontal_label_class': horizontal_label_class, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class, 'attr': {'class': attr.widget_class|default('') }}
-                                        ) }}
-                                    </label>
+{%- block networking_type_iconradio_widget -%}
+    {%- if sonata_admin.admin is defined and  sonata_admin.admin -%}
+        {%- set translation_domain = sonata_admin.field_description.translationDomain -%}
+    {%- endif -%}
 
-                                    <div class="clearfix"></div>
-                                    <br>
-                                    {% if icons[choices[key].value] %}
-                                        <img src="{{ asset(icons[choices[key].value]) }}" width="175px"/>
-                                    {% endif %}
-                                    <p>&nbsp;</p>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="clearfix"></div>
-        {% else %}
-            {# just let the choice widget render the select tag #}
-            {{ block('choice_widget') }}
-        {% endif %}
-    {% endapply %}
-{% endblock %}
+    {%- if expanded -%}
+        <div {{ block('widget_container_attributes') }}>
+            {%- for row in form|batch(3, '-') -%}
+                <div class="row">
+                    {%- for key, child in row -%}
+                        <div class="col-sm-4">
+                            {%- if child != '-' -%}
+                                <label class="radio-inline">
+                                    {{ form_widget(child, {'horizontal_label_class': horizontal_label_class, 'horizontal_input_wrapper_class': horizontal_input_wrapper_class, 'attr': {'class': attr.widget_class|default('') }}
+                                    ) }}
+                                </label>
+
+                                <div class="clearfix"></div>
+                                <br>
+                                {%- if icons[choices[key].value] -%}
+                                    <img src="{{ asset(icons[choices[key].value]) }}" width="175px" alt="{{ choices[key].value }}"/>
+                                {%- endif -%}
+                                <p>&nbsp;</p>
+                            {%- endif -%}
+                        </div>
+                    {%- endfor -%}
+                </div>
+            {%- endfor -%}
+        </div>
+        <div class="clearfix"></div>
+    {%- else -%}
+        {# just let the choice widget render the select tag #}
+        {{ block('choice_widget') }}
+    {%- endif -%}
+
+{%- endblock -%}
 
 {%- block radio_widget -%}
     {%- set attr_class = attr_class|default(attr.class|default('')) -%}
-    {% set row_class = row_attr.class|default('mb-3') %}
+    {%- set row_class = row_attr.class|default('mb-3') -%}
 
     {%- if 'btn-check' not in attr_class -%}
         {%- set attr_class = attr_class ~ ' form-check-input' -%}
@@ -653,61 +648,61 @@ file that was distributed with this source code.
     {%- if row_class is not empty -%}
         <div class="{{ row_class }}">
     {%- endif -%}
-    {% set radio %}
-        <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-    {% endset %}
-    {% if label is not same as(false) %}
+    {%- set radio -%}
+        <input type="radio" {{ block('widget_attributes') }}{%- if value is defined -%} value="{{ value }}"{%- endif -%}{%- if checked -%} checked="checked"{%- endif -%} />
+    {%- endset -%}
+    {%- if label is not same as(false) -%}
         {{- form_label(form, null, { widget: radio }) -}}
-    {% else %}
+    {%- else -%}
         {{ radio|raw }}
-    {% endif %}
+    {%- endif -%}
     {%- if row_class is not empty -%}
         </div>
     {%- endif -%}
-{%- endblock radio_widget %}
+{%- endblock radio_widget -%}
 
 
 
-{% block sonata_security_roles_widget %}
+{%- block sonata_security_roles_widget -%}
 
-    {% apply spaceless %}
-        <div class="editable">
-            <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a></p>
 
-            <div id="securityRoles">
-                {{ block('choice_widget') }}
-            </div>
-            <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a>
+    <div class="editable">
+        <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a></p>
 
-            <p>
-                <script type="text/javascript">
-                    $('.toggle-roles').click(function () {
-                        $('#securityRoles input[id^="{{ id }}"]').each(function () {
-                            // toggle checkbox
-                            $(this).prop('checked', !$(this).prop('checked'));
-                            // toggle class
-                            $(this).parents('label').toggleClass('active');
-
-                        });
-                        return false;
-                    });
-                </script>
+        <div id="securityRoles">
+            {{ block('choice_widget') }}
         </div>
-        {% if read_only_choices|length > 0 %}
-            <div class="readonly">
-                <ul>
-                    {% for choice in read_only_choices %}
-                        <li>{{ choice }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-    {% endapply %}
-{% endblock sonata_security_roles_widget %}
+        <p><a class="toggle-roles btn btn-primary">{{ 'toggle.roles'|trans({},'NetworkingInitCmsBundle' ) }}</a>
 
-{% block media_entity_type_widget %}
-    {% set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) %}
-    {% if not label_render %}{% set widget_controls = false %}{% endif %}
+        <p>
+            <script type="text/javascript">
+                $('.toggle-roles').click(function () {
+                    $('#securityRoles input[id^="{{ id }}"]').each(function () {
+                        // toggle checkbox
+                        $(this).prop('checked', !$(this).prop('checked'))
+                        // toggle class
+                        $(this).parents('label').toggleClass('active')
+
+                    })
+                    return false
+                })
+            </script>
+    </div>
+    {%- if read_only_choices|length > 0 -%}
+        <div class="readonly">
+            <ul>
+                {%- for choice in read_only_choices -%}
+                    <li>{{ choice }}</li>
+                {%- endfor -%}
+            </ul>
+        </div>
+    {%- endif -%}
+
+{%- endblock sonata_security_roles_widget -%}
+
+{%- block media_entity_type_widget -%}
+    {%- set attr = attr|merge({'class': attr.class|default('') ~ (errors|length > 0 ? ' error' : '') }) -%}
+    {%- if not label_render -%}{%- set widget_controls = false -%}{%- endif -%}
     <div id="{{ id }}_field_container"
          class="field-container media-entity"
          data-field-id="{{ id }}"
@@ -719,19 +714,19 @@ file that was distributed with this source code.
                       '_sonata_admin': admin.code
                   }) }}"
             >
-                {% if form.vars.data %}
-                    {% set object = admin.object(admin.id(form.vars.data)) %}
-                    {% include get_admin_template('short_object_description', admin.code) with {
+                {%- if form.vars.data -%}
+                    {%- set object = admin.object(admin.id(form.vars.data)) -%}
+                    {%- include get_admin_template('short_object_description', admin.code) with {
                         'admin': admin,
                         'object': object,
                         'description': admin.toString(object),
-                        'link_parameters': app.request.get('linkParameters')
-                    } %}
+                        'link_parameters': app.request.query.get('linkParameters')
+                    } -%}
                     &nbsp;
-                {% else %}
+                {%- else -%}
                     <span class="inner-field-short-description">
                     </span>
-                {% endif %}
+                {%- endif -%}
             </span>
 
         {{ block('hidden_widget') }}
@@ -746,7 +741,7 @@ file that was distributed with this source code.
                     {{ 'link_list'|trans({}, 'SonataAdminBundle') }}
                 </a>
 
-            {% if admin.hasroute('create') and admin.isGranted('CREATE') %}
+            {%- if admin.hasroute('create') and admin.isGranted('CREATE') -%}
                 &nbsp;
                 <a href="{{ admin.generateUrl('create', {'gallery': true, 'context': (context?context:''), 'provider': (provider_name ? provider_name : '')}) }}"
                    id="field_add_link_{{ id }}"
@@ -756,9 +751,9 @@ file that was distributed with this source code.
                     <i class="fa fa-plus"></i>
                     {{ 'link_add'|trans({}, 'SonataAdminBundle') }}
                 </a>
-            {% endif %}
+            {%- endif -%}
 
-            {% if admin.hasRoute('delete') and admin.isGranted('DELETE') %}
+            {%- if admin.hasRoute('delete') and admin.isGranted('DELETE') -%}
                 &nbsp;
                 <a href=""
                    id="field_remove_link_{{ id }}"
@@ -768,12 +763,12 @@ file that was distributed with this source code.
                     <i class="fa fa-trash"></i>
                     {{ 'link_delete'|trans({}, 'SonataAdminBundle') }}
                 </a>
-            {% endif %}
+            {%- endif -%}
             </span>
     </div>
-{% endblock %}
+{%- endblock -%}
 
-{% block ckeditor_widget %}
+{%- block ckeditor_widget -%}
 
     <textarea {{ block('widget_attributes') }}
             data-kt-ckeditor="true"
@@ -787,28 +782,28 @@ file that was distributed with this source code.
             data-config="{{ config|merge({'language': app.request.locale, 'contentsCss': content_css(config_name)})|json_encode }}"
     >{{ value }}</textarea>
 
-{% endblock %}
+{%- endblock -%}
 
 
 
 
-{% block help_widget_popover %}
-    {% if sonata_admin.admin is defined and  sonata_admin.admin %}
-        {% set translation_domain = sonata_admin.field_description.translationDomain %}
-    {% endif %}
-    {% apply spaceless %}
-        {% for attrname,attrvalue in help_widget_popover %}
-            data-bs-{{ attrname }}="{{ attrvalue|trans(help_translation_parameters, translation_domain|default('messages')) }}"
-        {% endfor %}
-    {% endapply %}
-{% endblock help_widget_popover %}
+{%- block help_widget_popover -%}
+    {%- if sonata_admin.admin is defined and  sonata_admin.admin -%}
+        {%- set translation_domain = sonata_admin.field_description.translationDomain -%}
+    {%- endif -%}
 
-{% block qr_code_widget %}
+    {%- for attrname,attrvalue in help_widget_popover -%}
+        data-bs-{{ attrname }}="{{ attrvalue|trans(help_translation_parameters, translation_domain|default('messages')) }}"
+    {%- endfor -%}
+
+{%- endblock help_widget_popover -%}
+
+{%- block qr_code_widget -%}
     <br>
-    <img src="{{ qrCodeUrl }}">
-{% endblock %}
+    <img src="{{ qrCodeUrl }}" alt="qr-code">
+{%- endblock -%}
 
-{% block sonata_type_native_collection_row %}
+{%- block sonata_type_native_collection_row -%}
     {%- if compound is defined and compound -%}
         {%- set element = 'fieldset' -%}
     {%- endif -%}
@@ -817,17 +812,17 @@ file that was distributed with this source code.
         {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%}
 
-    {% set row_attr = row_attr|default({})|merge({'data-collection-list': '#'~id}) %}
+    {%- set row_attr = row_attr|default({})|merge({'data-collection-list': '#'~id}) -%}
 
-    {% if sortable %}
+    {%- if sortable -%}
         {%- set row_attr = row_attr|default({})|merge({
             'data-sortable-collection-type': sortable,
             'data-cms-sortable-container': '#'~id,
             'data-cms-sortable-draggable': ".collection-item"
         }) -%}
-    {% endif %}
+    {%- endif -%}
     {%- set row_class = row_class|default(row_attr.class|default('mb-3')|trim) -%}
-    <{{ element|default('div') }}{% with {attr: row_attr|merge({class: row_class})} %}{{ block('attributes') }}{% endwith %}>
+    <{{ element|default('div') }}{%- with {attr: row_attr|merge({class: row_class})} -%}{{ block('attributes') }}{%- endwith -%}>
     {%- if 'form-floating' in row_class -%}
         {{- form_widget(form, widget_attr) -}}
         {{- form_label(form) -}}
@@ -838,85 +833,85 @@ file that was distributed with this source code.
     {{- form_help(form) -}}
     {{- form_errors(form) -}}
     </{{ element|default('div') }}>
-{% endblock sonata_type_native_collection_row %}
+{%- endblock sonata_type_native_collection_row -%}
 
-{% block sonata_type_native_collection_widget_row %}
-    {% apply spaceless %}
-        <div class="collection-item border my-5 p-3">
-            {{ form_row(child, { label: false }) }}
+{%- block sonata_type_native_collection_widget_row -%}
+
+    <div class="collection-item border my-5 p-3">
+        {{ form_row(child, { label: false }) }}
+    </div>
+
+{%- endblock sonata_type_native_collection_widget_row -%}
+
+{%- block sonata_type_native_collection_widget -%}
+
+    {%- if prototype is defined -%}
+        {%- set child = prototype -%}
+        {%- set allow_delete_backup = allow_delete -%}
+        {%- set allow_delete = true -%}
+        {%- set attr = attr|merge({
+            'data-collection-counter': form.children|length,
+            'data-prototype': block('sonata_type_native_collection_widget_row'),
+            'data-prototype-name': prototype.vars.name,
+            'class': attr.class|default('') }) -%}
+        {%- set allow_delete = allow_delete_backup -%}
+    {%- endif -%}
+    <div {{ block('widget_container_attributes') }}>
+        {{ form_errors(form) }}
+        {%- for child in form -%}
+            {{ block('sonata_type_native_collection_widget_row') }}
+        {%- endfor -%}
+        {{ form_rest(form) }}
+    </div>
+    {%- if 'collection' in form.vars.block_prefixes and widget_add_btn|default(null) and form.vars.allow_add == true -%}
+        &nbsp;{{ block('form_widget_add_btn') }}
+    {%- endif -%}
+
+{%- endblock sonata_type_native_collection_widget -%}
+
+{%- block form_widget_add_btn -%}
+
+    {%- if widget_add_btn|default(null) -%}
+        {%- set button_type = 'add' -%}
+        {%- set button_values = widget_add_btn -%}
+        {{ block('collection_button') }}
+    {%- endif -%}
+
+{%- endblock form_widget_add_btn -%}
+
+{%- block form_widget_remove_btn -%}
+
+
+    {%- if widget_remove_btn.wrapper_div is not same as(false) -%}
+        <div class="{{ widget_remove_btn.wrapper_div.class }}">
+    {%- endif -%}
+    {%- if widget_remove_btn|default(null) -%}
+        {%- set button_type = 'remove' -%}
+        {%- set button_values = widget_remove_btn -%}
+        {{ block('collection_button') }}
+    {%- endif -%}
+    {%- if widget_remove_btn.wrapper_div is not same as(false) -%}
         </div>
-    {% endapply %}
-{% endblock sonata_type_native_collection_widget_row %}
+    {%- endif -%}
 
-{% block sonata_type_native_collection_widget %}
-    {% apply spaceless %}
-        {% if prototype is defined %}
-            {% set child = prototype %}
-            {% set allow_delete_backup = allow_delete %}
-            {% set allow_delete = true %}
-            {% set attr = attr|merge({
-                'data-collection-counter': form.children|length,
-                'data-prototype': block('sonata_type_native_collection_widget_row'),
-                'data-prototype-name': prototype.vars.name,
-                'class': attr.class|default('') }) %}
-            {% set allow_delete = allow_delete_backup %}
-        {% endif %}
-        <div {{ block('widget_container_attributes') }}>
-            {{ form_errors(form) }}
-            {% for child in form %}
-                {{ block('sonata_type_native_collection_widget_row') }}
-            {% endfor %}
-            {{ form_rest(form) }}
-        </div>
-        {% if 'collection' in form.vars.block_prefixes and widget_add_btn|default(null) and form.vars.allow_add == true %}
-            &nbsp;{{ block('form_widget_add_btn') }}
-        {% endif %}
-    {% endapply %}
-{% endblock sonata_type_native_collection_widget %}
-
-{% block form_widget_add_btn %}
-    {% apply spaceless %}
-        {% if widget_add_btn|default(null) %}
-            {% set button_type = 'add' %}
-            {% set button_values = widget_add_btn %}
-            {{ block('collection_button') }}
-        {% endif %}
-    {% endapply %}
-{% endblock form_widget_add_btn %}
-
-{% block form_widget_remove_btn %}
-    {% apply spaceless %}
-
-        {% if widget_remove_btn.wrapper_div is not same as(false) %}
-            <div class="{{ widget_remove_btn.wrapper_div.class }}">
-        {% endif %}
-        {% if widget_remove_btn|default(null) %}
-            {% set button_type = 'remove' %}
-            {% set button_values = widget_remove_btn %}
-            {{ block('collection_button') }}
-        {% endif %}
-        {% if widget_remove_btn.wrapper_div is not same as(false) %}
-            </div>
-        {% endif %}
-    {% endapply %}
-{% endblock form_widget_remove_btn %}
+{%- endblock form_widget_remove_btn -%}
 
 
-{% block collection_button %}
+{%- block collection_button -%}
 
-    <a {% for attrname,attrvalue in button_values.attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %} data-collection-{{ button_type }}-btn="{{ form.vars['id'] }}">
-    {% if button_values.icon is not null %}
-        {% if button_values.label is not defined  or not button_values.label %}
-            {% set button_values = button_values|merge({icon: button_values.icon ~ ' pe-0'}) %}
-        {% endif %}
+    <a {%- for attrname,attrvalue in button_values.attr -%} {{ attrname }}="{{ attrvalue }}"{%- endfor -%} data-collection-{{ button_type }}-btn="{{ form.vars['id'] }}">
+    {%- if button_values.icon is not null -%}
+        {%- if button_values.label is not defined  or not button_values.label -%}
+            {%- set button_values = button_values|merge({icon: button_values.icon ~ ' pe-0'}) -%}
+        {%- endif -%}
         {{ networking_bootstrap_icon(button_values.icon, button_values.icon_inverted|default(false)) }}
-    {% endif %}
-    {% if button_values.label is defined %}
+    {%- endif -%}
+    {%- if button_values.label is defined -%}
         {{ button_values.label|trans({}, button_values.translation_domain|default(translation_domain)) }}
-    {% endif %}
+    {%- endif -%}
     </a>
     <div class="clearfix"></div>
-{% endblock collection_button %}
+{%- endblock collection_button -%}
 
 {%- block form_widget_compound -%}
     <div {{ block('widget_container_attributes') }}>
@@ -928,7 +923,7 @@ file that was distributed with this source code.
     </div>
 {%- endblock form_widget_compound -%}
 
-{% block gallery_row %}
+{%- block gallery_row -%}
     {%- if compound is defined and compound -%}
         {%- set element = 'fieldset' -%}
     {%- endif -%}
@@ -936,16 +931,16 @@ file that was distributed with this source code.
     {%- if help is not empty -%}
         {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%}
-    {% if sortable %}
+    {%- if sortable -%}
         {%- set row_attr = row_attr|default({})|merge({
             'data-sortable-collection-type': sortable,
             'data-cms-sortable-container': '#'~id,
             'data-cms-sortable-draggable': ".collection-item",
             'data-gallery-entity': 'true',
         }) -%}
-    {% endif %}
+    {%- endif -%}
     {%- set row_class = row_class|default(row_attr.class|default('mb-3')|trim) -%}
-    <{{ element|default('div') }}{% with {attr: row_attr|merge({class: row_class})} %}{{ block('attributes') }}{% endwith %}>
+    <{{ element|default('div') }}{%- with {attr: row_attr|merge({class: row_class})} -%}{{ block('attributes') }}{%- endwith -%}>
     {%- if 'form-floating' in row_class -%}
         {{- form_widget(form, widget_attr) -}}
         {{- form_label(form) -}}
@@ -956,65 +951,65 @@ file that was distributed with this source code.
     {{- form_help(form) -}}
     {{- form_errors(form) -}}
     </{{ element|default('div') }}>
-{% endblock gallery_row %}
+{%- endblock gallery_row -%}
 
-{% block gallery_widget %}
-    {% apply spaceless %}
-        {% if prototype is defined %}
-            {% set child = prototype %}
-            {% set allow_delete_backup = allow_delete %}
-            {% set allow_delete = true %}
-            {% set attr = attr|merge({
-                'data-collection-counter': form.children|length,
-                'data-prototype': form_row(child, { label: false }),
-                'data-prototype-name': prototype.vars.name,
-                'class': attr.class|default('') }) %}
-            {% set allow_delete = allow_delete_backup %}
-        {% endif %}
+{%- block gallery_widget -%}
 
-        <div class="row">
-            <div class="form-group col-sm-12">
-                <a href="{{ path('admin_networking_initcms_media_gallery_select', {'_sonata_admin': 'sonata.media.admin.media', 'context':app.request.get('context', 'default'), 'pcode':1, 'provider':'sonata.media.provider.image'}) }}"
-                   id="select-button-{{ id }}"
-                   data-collection-id="#collection{{ id }}_form_group"
-                   data-index="{{ name }}"
-                   data-form-id="{{ id }}" class="open-select-media btn-primary btn btn-sm">Bilder Auswählen</a>
-            </div>
+    {%- if prototype is defined -%}
+        {%- set child = prototype -%}
+        {%- set allow_delete_backup = allow_delete -%}
+        {%- set allow_delete = true -%}
+        {%- set attr = attr|merge({
+            'data-collection-counter': form.children|length,
+            'data-prototype': form_row(child, { label: false }),
+            'data-prototype-name': prototype.vars.name,
+            'class': attr.class|default('') }) -%}
+        {%- set allow_delete = allow_delete_backup -%}
+    {%- endif -%}
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <a href="{{ path('admin_networking_initcms_media_gallery_select', {'_sonata_admin': 'sonata.media.admin.media', 'context':app.request.query.get('context', 'default'), 'pcode':1, 'provider':'sonata.media.provider.image'}) }}"
+               id="select-button-{{ id }}"
+               data-collection-id="#collection{{ id }}_form_group"
+               data-index="{{ name }}"
+               data-form-id="{{ id }}" class="open-select-media btn-primary btn btn-sm">Bilder Auswählen</a>
         </div>
-        <div {{ block('widget_container_attributes') }}>
-            {{ form_errors(form) }}
-            {% for child in form %}
-                {{ form_row(child, { label: false }) }}
-            {% endfor %}
-            {{ form_rest(form) }}
-        </div>
-    {% endapply %}
-{% endblock gallery_widget %}
+    </div>
+    <div {{ block('widget_container_attributes') }}>
+        {{ form_errors(form) }}
+        {%- for child in form -%}
+            {{ form_row(child, { label: false }) }}
+        {%- endfor -%}
+        {{ form_rest(form) }}
+    </div>
 
-{% block gallery_image_row %}
+{%- endblock gallery_widget -%}
+
+{%- block gallery_image_row -%}
     <div class="collection-item border my-5 p-3" data-selected="{{ form.vars.selected }}">
         {{ form_row(form) }}
     </div>
-{% endblock %}
+{%- endblock -%}
 
-{% block sonata_type_datetime_picker_widget %}
+{%- block sonata_type_datetime_picker_widget -%}
     {{ block('datetime_widget') }}
-{% endblock sonata_type_datetime_picker_widget %}
+{%- endblock sonata_type_datetime_picker_widget -%}
 
-{% block money_widget -%}
+{%- block money_widget -%}
     {%- set prepend = not (money_pattern starts with '{{') -%}
     {%- set append = not (money_pattern ends with '}}') -%}
 
     {%- if 'form-floating' in attr.group_class|default({}) -%}
 
         {%- if label is same as(false) -%}
-            {% set label = name|humanize|title %}
+            {%- set label = name|humanize|title -%}
         {%- endif -%}
 
-        {% set form_floating = 'form-floating' %}
-        {% set placeholder = label|trans({}, translation_domain) %}
+        {%- set form_floating = 'form-floating' -%}
+        {%- set placeholder = label|trans({}, translation_domain) -%}
         {%- set attr = attr|merge({placeholder: label}) -%}
-    {% endif %}
+    {%- endif -%}
 
     {%- if prepend or append -%}
         <div class="input-group {{ group_class|default('') }}">
@@ -1022,14 +1017,14 @@ file that was distributed with this source code.
                 <span class="input-group-text">{{ money_pattern|form_encode_currency }}</span>
             {%- endif -%}
 
-            {% if 'form-floating' in form_floating|default('') %}
+            {%- if 'form-floating' in form_floating|default('') -%}
                 <span class="form-floating">
                     {{- block('form_widget_simple') -}}
                     {{- block('form_label') -}}
                 </span>
-            {% else %}
+            {%- else -%}
                 {{- block('form_widget_simple') -}}
-            {% endif %}
+            {%- endif -%}
             {%- if append -%}
                 <span class="input-group-text">{{ money_pattern|form_encode_currency }}</span>
             {%- endif -%}
@@ -1037,92 +1032,92 @@ file that was distributed with this source code.
     {%- else -%}
         {{- block('form_widget_simple') -}}
     {%- endif -%}
-{%- endblock money_widget %}
+{%- endblock money_widget -%}
 
 
-{% block input_group_widget %}
+{%- block input_group_widget -%}
     {%- set prepend = widget_addon_prepend |default(null) is not same as(null) or widget_btn_prepend|default(null) is not same as(null) -%}
     {%- set append = widget_addon_append|default(null)  is not same as(null) or widget_btn_append|default(null) is not same as(null) -%}
 
     {%- if 'form-floating' in attr.group_class|default('') -%}
-        {% if admin %}
-            {% set translation_domain = admin.translationDomain %}
-        {% endif %}
+        {%- if admin -%}
+            {%- set translation_domain = admin.translationDomain -%}
+        {%- endif -%}
 
-        {% set form_floating = 'form-floating' %}
-        {% set placeholder = label|trans({}, translation_domain) %}
+        {%- set form_floating = 'form-floating' -%}
+        {%- set placeholder = label|trans({}, translation_domain) -%}
         {%- set attr = attr|merge({placeholder: label}) -%}
-    {% endif %}
+    {%- endif -%}
 
     {%- if prepend or append -%}
         <div class="input-group {{ group_class|default('') }}">
-            {% if widget_btn_prepend|default(null) is not null %}
-                {% set widget_btn = widget_btn_prepend %}
+            {%- if widget_btn_prepend|default(null) is not null -%}
+                {%- set widget_btn = widget_btn_prepend -%}
                 {{ block('widget_btns') }}
-            {% endif %}
-            {% if widget_addon_prepend|default(null) is not null %}
-                {% set widget_addon = widget_addon_prepend %}
+            {%- endif -%}
+            {%- if widget_addon_prepend|default(null) is not null -%}
+                {%- set widget_addon = widget_addon_prepend -%}
                 {{ block('widget_addon') }}
-            {% endif %}
-            {% if 'form-floating' in form_floating|default('') %}
+            {%- endif -%}
+            {%- if 'form-floating' in form_floating|default('') -%}
                 <span class="form-floating">
                     {{- block('form_widget_simple') -}}
                     {{- block('form_label') -}}
                 </span>
-            {% else %}
+            {%- else -%}
                 {{- block('form_widget_simple') -}}
-            {% endif %}
-            {% if widget_addon_append|default(null) is not null %}
-                {% set widget_addon = widget_addon_append %}
+            {%- endif -%}
+            {%- if widget_addon_append|default(null) is not null -%}
+                {%- set widget_addon = widget_addon_append -%}
                 {{ block('widget_addon') }}
-            {% endif %}
-            {% if widget_btn_append|default(null) is not null %}
-                {% set widget_btn = widget_btn_append %}
+            {%- endif -%}
+            {%- if widget_btn_append|default(null) is not null -%}
+                {%- set widget_btn = widget_btn_append -%}
                 {{ block('widget_btns') }}
-            {% endif %}
+            {%- endif -%}
         </div>
     {%- else -%}
         {{- block('form_widget_simple') -}}
     {%- endif -%}
-{% endblock input_group_widget %}
+{%- endblock input_group_widget -%}
 
-{% block widget_addon %}
-    {% apply spaceless %}
-        {% set widget_addon_icon = widget_addon.icon is defined ? widget_addon.icon : null %}
-        {% set widget_addon_icon_inverted = widget_addon.icon_inverted is defined ? widget_addon.icon_inverted : false %}
-        <span class="input-group-text">{{ (widget_addon.text|default(false) ? widget_addon.text|trans({}, translation_domain)|raw : networking_bootstrap_icon(widget_addon_icon, widget_addon_icon_inverted)) }}</span>
-    {% endapply %}
-{% endblock widget_addon %}
+{%- block widget_addon -%}
 
-{% block widget_btns %}
-    {% apply spaceless %}
+    {%- set widget_addon_icon = widget_addon.icon is defined ? widget_addon.icon : null -%}
+    {%- set widget_addon_icon_inverted = widget_addon.icon_inverted is defined ? widget_addon.icon_inverted : false -%}
+    <span class="input-group-text">{{ (widget_addon.text|default(false) ? widget_addon.text|trans({}, translation_domain)|raw : networking_bootstrap_icon(widget_addon_icon, widget_addon_icon_inverted)) }}</span>
 
-        {% set attr = widget_btn.attr|default({}) %}
-        {% for key, value in attr %}
+{%- endblock widget_addon -%}
 
-            {% if value is same as('{{ id }}') %}
-                {% set attr = attr|merge({ (key): '#' ~ id}) %}
-            {% endif %}
-        {% endfor %}
-        <button
-                type="{{ widget_btn.type | default('button') }}"
-                class="{{ 'btn ' ~ widget_btn.class | default('btn-light-secondary') }}"
-                {{ block('attributes') }}
-        >
-            {% if widget_btn.icon is not empty %}
-                {{ networking_bootstrap_icon(widget_btn.icon, widget_btn.icon_inverted | default(false), widget_btn.icon_set | default('kioutline')) }}
-            {% endif %}
-            {{ widget_btn.label | default("") | trans({}, translation_domain) }}
-        </button>
-    {% endapply %}
-{% endblock widget_btns %}
+{%- block widget_btns -%}
 
-{% block attributes -%}
-    {% if sonata_admin.admin is defined and sonata_admin.admin %}
-        {% if translation_domain is same as(null) %}
-            {% set translation_domain = sonata_admin.field_description.translationDomain %}
-        {% endif %}
-    {% endif %}
+
+    {%- set attr = widget_btn.attr|default({}) -%}
+    {%- for key, value in attr -%}
+
+        {%- if value is same as('{{ id }}') -%}
+            {%- set attr = attr|merge({ (key): '#' ~ id}) -%}
+        {%- endif -%}
+    {%- endfor -%}
+    <button
+            type="{{ widget_btn.type | default('button') }}"
+            class="{{ 'btn ' ~ widget_btn.class | default('btn-light-secondary') }}"
+            {{ block('attributes') }}
+    >
+        {%- if widget_btn.icon is not empty -%}
+            {{ networking_bootstrap_icon(widget_btn.icon, widget_btn.icon_inverted | default(false), widget_btn.icon_set | default('kioutline')) }}
+        {%- endif -%}
+        {{ widget_btn.label | default("") | trans({}, translation_domain) }}
+    </button>
+
+{%- endblock widget_btns -%}
+
+{%- block attributes -%}
+    {%- if sonata_admin.admin is defined and sonata_admin.admin -%}
+        {%- if translation_domain is same as(null) -%}
+            {%- set translation_domain = sonata_admin.field_description.translationDomain -%}
+        {%- endif -%}
+    {%- endif -%}
 
     {%- for attrname, attrvalue in attr -%}
         {{- " " -}}

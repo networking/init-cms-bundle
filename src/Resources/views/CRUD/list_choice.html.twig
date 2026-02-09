@@ -19,10 +19,8 @@ file that was distributed with this source code.
 
 {% block field_span_attributes %}
     {% if is_editable and x_editable_type %}
-        {% apply spaceless %}
-            {{ parent() }}
-            data-source="{{ field_description|sonata_xeditable_choices|json_encode }}"
-        {% endapply %}
+        {{ parent() }}
+        data-source="{{ field_description|sonata_xeditable_choices|json_encode }}"
     {% endif %}
 {% endblock %}
 
@@ -32,7 +30,7 @@ file that was distributed with this source code.
         choices: field_description.option('choices'),
         multiple: field_description.option('multiple'),
         delimiter: field_description.option('delimiter'),
-        translation_domain: field_description.option('catalogue'),
+        translation_domain: field_description.option('choice_translation_domain', field_description.option('catalogue')),
         safe: field_description.option('safe'),
     } only -%}
 {% endblock %}

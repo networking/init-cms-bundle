@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Sonata\MediaBundle\Entity\BaseGallery as BaseGallery;
+use Sonata\MediaBundle\Model\GalleryItemInterface;
 
 /**
  * @author Yorkie Chawdick <y.chadwick@networking.ch>
@@ -26,7 +28,12 @@ class Gallery extends BaseGallery
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
-    protected $id;
+    protected ?int $id = null;
+
+    /**
+     * @phpstan-var Collection<int, T>
+     */
+    protected Collection $galleryItems;
 
     /**
      * Get id.

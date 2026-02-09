@@ -59,17 +59,14 @@ file that was distributed with this source code.
     {% endblock javascripts %}
 
     <title>
-        {% block meta_title %}
-            {% apply spaceless %}
-                {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
-                {% if admin is defined %}
-                    &gt; {{ admin.label|trans({}, admin.translationDomain )|striptags }}
-                    {% if _title is not empty %}&gt; {{ _title|raw|replace({'&quot;': ''})|striptags }}{% endif %}
-                {% elseif _title is not empty %}
-                    &gt; {{ _title|raw|replace({'&quot;': ''})|striptags }}
-                {% endif %}
-            {% endapply %}
-        {% endblock %}
+        {%- block meta_title -%}
+            {{ 'Admin'|trans({}, 'SonataAdminBundle') }}
+            {%- if admin is defined %} &gt; {{ admin.label|trans({}, admin.translationDomain )|striptags }}
+                {%- if _title is not empty %} &gt; {{ _title|raw|replace({'&quot;': ''})|striptags }}{%- endif -%}
+            {% elseif _title is not empty -%}
+                &gt; {{ _title|raw|replace({'&quot;': ''})|striptags }}
+            {%- endif -%}
+        {%- endblock -%}
     </title>
 </head>
 {% block body_tag %}

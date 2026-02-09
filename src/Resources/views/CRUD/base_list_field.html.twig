@@ -44,7 +44,7 @@ file that was distributed with this source code.
     %}
         <a href="{{ admin.generateObjectUrl(route_name, object, route_parameters) }}">
             {%- block field %}
-                {% apply spaceless %}
+                {%- apply trim|raw %}
                     {% if field_description.option('collapse') is not null %}
                         {% set collapse = field_description.option('collapse') %}
                         <div class="sonata-readmore"
@@ -79,8 +79,6 @@ file that was distributed with this source code.
                 + admin.getPersistentParameters()
                 + app.request.query.all|default({})
             ) %}
-
-
 
             <span {% block field_span_attributes %}class="x-editable"
                   data-type="{{ x_editable_type }}"

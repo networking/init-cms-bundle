@@ -16,7 +16,7 @@ namespace Networking\InitCmsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Networking\InitCmsBundle\Model\LayoutBlockInterface;
 use Networking\InitCmsBundle\Model\PageInterface;
-use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 /**
  * Networking\InitCmsBundle\Entity\LayoutBlock.
@@ -36,7 +36,7 @@ abstract class LayoutBlock implements LayoutBlockInterface, \Stringable
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected $id;
+    protected ?int $id = null;
 
     /**
      * @var string

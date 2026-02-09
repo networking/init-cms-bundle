@@ -1,8 +1,30 @@
 /* flatpickr v4.6.13, @license MIT */
 
 /*!
-  * Tempus Dominus v6.7.11 (https://getdatepicker.com/)
-  * Copyright 2013-2023 Jonathan Peterson
+  * @svgdotjs/svg.resize.js - An extension for svg.js which allows to resize elements which are selected
+  * @version 2.0.4
+  * https://github.com/svgdotjs/svg.resize.js
+  *
+  * @copyright [object Object]
+  * @license MIT
+  *
+  * BUILT: Fri Sep 13 2024 12:43:14 GMT+0200 (Central European Summer Time)
+  */
+
+/*!
+  * @svgdotjs/svg.select.js - An extension of svg.js which allows to select elements with mouse
+  * @version 4.0.1
+  * https://github.com/svgdotjs/svg.select.js
+  *
+  * @copyright Ulrich-Matthias Schäfer
+  * @license MIT
+  *
+  * BUILT: Mon Jul 01 2024 15:04:42 GMT+0200 (Central European Summer Time)
+  */
+
+/*!
+  * Tempus Dominus vv6.10.4 (https://getdatepicker.com/)
+  * Copyright 2013-2025 Jonathan Peterson
   * Licensed under MIT (https://github.com/Eonasdan/tempus-dominus/blob/master/LICENSE)
   */
 
@@ -11,13 +33,6 @@
  * https://github.com/kurkle/color#readme
  * (c) 2023 Jukka Kurkela
  * Released under the MIT License
- */
-
-/*!
- * Quill Editor v1.3.7
- * https://quilljs.com/
- * Copyright (c) 2014, Jason Chen
- * Copyright (c) 2013, salesforce.com
  */
 
 /*!
@@ -31,14 +46,14 @@
  */
 
 /*!
- * jQuery JavaScript Library v3.7.0
+ * jQuery JavaScript Library v3.7.1
  * https://jquery.com/
  *
  * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2023-05-11T18:29Z
+ * Date: 2023-08-28T13:37Z
  */
 
 /*!
@@ -74,18 +89,9 @@
 
 /*! @source http://purl.eligrey.com/github/classList.js/blob/master/classList.js */
 
-/*! X-editable - v1.5.3 
-* In-place editing with Twitter Bootstrap, jQuery UI or pure jQuery
-* http://github.com/vitalets/x-editable
-* Copyright (c) 2018 Vitaliy Potapov; Licensed MIT */
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */
 
-/*! svg.draggable.js - v2.2.2 - 2019-01-08
-  * https://github.com/svgdotjs/svg.draggable.js
-  * Copyright (c) 2019 Wout Fierens; Licensed MIT */
-
-/*! svg.filter.js - v2.0.2 - 2016-02-24
-  * https://github.com/wout/svg.filter.js
-  * Copyright (c) 2016 Wout Fierens; Licensed MIT */
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
 
 /**
  * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
