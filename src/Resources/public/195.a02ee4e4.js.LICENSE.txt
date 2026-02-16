@@ -1,0 +1,8 @@
+/*! intl-messageformat */
+
+/*! jquery */
+
+/**
+ * @author William DURAND <william.durand1@gmail.com>
+ * @license MIT Licensed
+ */

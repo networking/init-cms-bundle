@@ -1,0 +1,15 @@
+/*! ./gallery-entity */
+
+/*! ./media-entity */
+
+/*! ./model-list */
+
+/*! ./one-to-many-sortable */
+
+/*! ./sortable-collection */
+
+/*! ./translator */
+
+/*! jquery */
+
+/*! select2 */

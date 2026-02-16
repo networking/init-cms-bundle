@@ -1,0 +1,59 @@
+/*!
+ * Column visibility buttons for Buttons and DataTables.
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*!
+ * Flash export buttons for Buttons and DataTables.
+ * 2015 SpryMedia Ltd - datatables.net/license
+ *
+ * ZeroClipbaord - MIT license
+ * Copyright (c) 2012 Joseph Huckaby
+ */
+
+/*!
+ * HTML5 export buttons for Buttons and DataTables.
+ * © SpryMedia Ltd - datatables.net/license
+ *
+ * FileSaver.js (1.3.3) - MIT license
+ * Copyright © 2016 Eli Grey - http://eligrey.com
+ */
+
+/*!
+ * Print button for Buttons and DataTables.
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! Bootstrap 5 integration for DataTables' FixedColumns
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! Bootstrap 5 styling wrapper for ColReorder
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! Bootstrap 5 styling wrapper for FixedHeader
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! Bootstrap 5 styling wrapper for RowGroup
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! Bootstrap 5 styling wrapper for RowReorder
+ * © SpryMedia Ltd - datatables.net/license
+ */
+
+/*! DataTables 1.13.5
+ * ©2008-2023 SpryMedia Ltd - datatables.net/license
+ */
+
+/*! DataTables Bootstrap 4 integration
+ * ©2011-2017 SpryMedia Ltd - datatables.net/license
+ */
+
+/*! DataTables Bootstrap 5 integration
+ * 2020 SpryMedia Ltd - datatables.net/license
+ */
+
+/*! © SpryMedia Ltd, Matthew Hasbach - datatables.net/license */

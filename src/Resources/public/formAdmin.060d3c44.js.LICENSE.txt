@@ -1,0 +1,26 @@
+/*!
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+/*! ../../admin-theme/plugins/custom/ckeditor/ckeditor-classic.bundle.js */
+
+/*! ./components/form-legend */
+
+/*! ./components/info-text */
+
+/*! ./components/multiple-checkboxes */
+
+/*! ./components/select-basic */
+
+/*! ./components/text-area */
+
+/*! ./components/text-input */
+
+/*! ./form-component */
+
+/*! ./select-basic */
+
+/*! smooth-scroll */
+
+/*! sortablejs/modular/sortable.complete.esm.js */

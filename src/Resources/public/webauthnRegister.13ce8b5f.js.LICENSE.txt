@@ -1,0 +1,5 @@
+/*! ./client.js */
+
+/*! @simplewebauthn/browser */
+
+/*! lit-html */

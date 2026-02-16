@@ -1,0 +1,21 @@
+/*! ./cms-admin */
+
+/*! ./gallery-entity */
+
+/*! ./media-entity */
+
+/*! ./model-list */
+
+/*! ./one-to-many-sortable */
+
+/*! ./sortable-collection */
+
+/*! ./translator */
+
+/*! glightbox */
+
+/*! jquery */
+
+/*! jstree */
+
+/*! select2 */
