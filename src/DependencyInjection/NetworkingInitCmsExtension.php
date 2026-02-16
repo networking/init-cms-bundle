@@ -407,7 +407,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                     'name' => 'page_id',
                     'referencedColumnName' => 'id',
                     'onDelete' => 'SET NULL',
-                    'nullable' => 'true',
+                    'nullable' => true,
                 ])
         );
 
@@ -429,7 +429,7 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                     'name' => 'social_media_image_id',
                     'referencedColumnName' => 'id',
                     'onDelete' => 'SET NULL',
-                    'nullable' => 'true',
+                    'nullable' => true,
                 ])
         );
 
@@ -443,8 +443,9 @@ class NetworkingInitCmsExtension extends Extension implements PrependExtensionIn
                         'name' => 'user_id',
                         'referencedColumnName' => 'id',
                         'onDelete' => 'CASCADE',
+                        ],
                     ],
-                ], [
+                  [
                     [
                         'name' => 'group_id',
                         'referencedColumnName' => 'id',

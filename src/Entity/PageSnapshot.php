@@ -46,19 +46,19 @@ class PageSnapshot implements PageSnapshotInterface
      */
     #[ORM\ManyToOne(targetEntity: ContentRoute::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'content_route_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    protected $contentRoute;
+    protected ContentRoute $contentRoute;
 
     /**
      * @var string
      */
     #[ORM\Column(name: 'resource_name', type: 'string', length: 255)]
-    protected $resourceName;
+    protected string $resourceName;
 
     /**
      * @var int
      */
     #[ORM\Column(name: 'resource_id', type: 'integer')]
-    protected $resourceId;
+    protected int $resourceId;
 
     #[ORM\Column(name: 'versioned_data', type: 'json')]
     protected $versionedData;
@@ -67,16 +67,16 @@ class PageSnapshot implements PageSnapshotInterface
      * @var int
      */
     #[ORM\Column(name: 'version', type: 'integer')]
-    protected $version;
+    protected int $version;
 
     /**
      * @var \DateTime
      */
     #[ORM\Column(name: 'snapshot_date', type: 'datetime')]
-    protected $snapshotDate;
+    protected \DateTimeInterface $snapshotDate;
 
     #[ORM\Column(name: 'path', type: 'string', length: 255, nullable: true)]
-    protected $path;
+    protected ?string $path = null;
 
     public function __construct(VersionableInterface $resource)
     {

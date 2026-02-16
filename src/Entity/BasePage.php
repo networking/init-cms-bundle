@@ -55,7 +55,7 @@ abstract class BasePage implements PageInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $metaTitle = null;
 
-    #[Gedmo\TreePathSource()]
+    #[Gedmo\TreePathSource]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $url = null;
 
@@ -63,7 +63,7 @@ abstract class BasePage implements PageInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $path = null;
 
-    #[Gedmo\TreeLevel()]
+    #[Gedmo\TreeLevel]
     #[ORM\Column(name: 'lvl', type: 'integer', nullable: true)]
     protected ?int $level = null;
 

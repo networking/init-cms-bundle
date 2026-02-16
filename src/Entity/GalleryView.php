@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Networking package.
  *
@@ -12,9 +13,9 @@ declare(strict_types=1);
 namespace Networking\InitCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Networking\InitCmsBundle\Annotation as Sonata;
 use Networking\InitCmsBundle\Entity\Gallery as MediaGallery;
 use Networking\InitCmsBundle\Model\GalleryViewInterface;
-use Networking\InitCmsBundle\Annotation as Sonata;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -24,18 +25,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'gallery_view')]
 class GalleryView extends LayoutBlock implements GalleryViewInterface
 {
-    /**
-     * @var int
-     *
-     */
-    #[ORM\Id]
-    #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected ?int $id = null;
 
     #[ORM\ManyToOne(
-        targetEntity: MediaGallery::class,
-        cascade: ["merge"])]
+        targetEntity: MediaGallery::class)]
     #[ORM\JoinColumn(name: 'media_gallery_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[Sonata\FormMapper(
         name: 'mediaGallery',
@@ -49,8 +41,7 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
         ]
     )]
     #[Assert\NotNull]
-    protected ?Gallery $mediaGallery = null;
-
+    protected ?MediaGallery $mediaGallery = null;
 
     #[ORM\Column(type: 'string', length: 50)]
     #[Sonata\FormMapper(
@@ -64,13 +55,10 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
     )]
     protected string $galleryType = 'lightbox';
 
-
-
     public function __clone(): void
     {
         $this->id = null;
     }
-
 
     /**
      * Get id.
@@ -83,7 +71,7 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
     }
 
     /**
-     * @param \Networking\InitCmsBundle\Entity\Gallery $mediaGallery
+     * @param MediaGallery $mediaGallery
      *
      * @return $this
      */
@@ -95,17 +83,14 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
     }
 
     /**
-     * @return \Networking\InitCmsBundle\Entity\Gallery
+     * @return MediaGallery
      */
     public function getMediaGallery()
     {
         return $this->mediaGallery;
     }
 
-
     /**
-     * @param $galleryType
-     *
      * @return $this
      *
      * @throws \InvalidArgumentException
@@ -130,17 +115,12 @@ class GalleryView extends LayoutBlock implements GalleryViewInterface
 
     /**
      * @param array $params
-     *
-     * @return array
      */
     public function getTemplateOptions($params = []): array
     {
         return [];
     }
 
-    /**
-     * @return array
-     */
     public function getAdminContent(): array
     {
         return [];

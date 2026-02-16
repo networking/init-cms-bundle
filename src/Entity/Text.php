@@ -23,11 +23,5 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'text')]
 class Text extends BaseText
 {
-    /**
-     * @var int
-     */
-    #[ORM\Id]
-    #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected ?int $id = null;
+
 }

@@ -28,9 +28,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[Gedmo\Tree(type: 'materializedPath')]
 class Tag
 {
-    /**
-     * @var int
-     */
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
@@ -53,8 +50,8 @@ class Tag
     protected string $slug;
 
     #[ORM\OneToMany(
-        mappedBy: 'parent',
         targetEntity: 'Networking\InitCmsBundle\Entity\Tag',
+        mappedBy: 'parent',
         orphanRemoval: true
     )]
     #[ORM\OrderBy(['path' => 'ASC'])]

@@ -42,8 +42,8 @@ class MenuItem extends BaseMenuItem
     protected ?MenuItemInterface $parent = null;
 
     #[ORM\OneToMany(
-        mappedBy: 'parent',
         targetEntity: 'Networking\InitCmsBundle\Entity\MenuItem',
+        mappedBy: 'parent',
     )]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     protected Collection $children;
