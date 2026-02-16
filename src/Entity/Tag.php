@@ -34,7 +34,7 @@ class Tag
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    protected int $id;
+    protected ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Gedmo\TreePathSource]
@@ -58,7 +58,7 @@ class Tag
         orphanRemoval: true
     )]
     #[ORM\OrderBy(['path' => 'ASC'])]
-    protected array $children = [];
+    protected Collection|array $children = [];
 
     #[ORM\ManyToOne(
         targetEntity: 'Networking\InitCmsBundle\Entity\Tag',
@@ -79,7 +79,7 @@ class Tag
         $this->id = $id;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

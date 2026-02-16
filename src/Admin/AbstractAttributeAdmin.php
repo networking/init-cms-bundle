@@ -13,13 +13,9 @@ use Sonata\AdminBundle\Show\ShowMapper;
 
 abstract class AbstractAttributeAdmin extends AbstractAdmin
 {
-    protected SonataAdminAttributeReaderInterface $attributeReader;
-
     public function __construct(
-        SonataAdminAttributeReaderInterface $attributeReader
+        public readonly SonataAdminAttributeReaderInterface $attributeReader,
     ) {
-        $this->attributeReader = $attributeReader;
-
         parent::__construct();
     }
 

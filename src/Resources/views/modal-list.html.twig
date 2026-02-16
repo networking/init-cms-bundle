@@ -22,14 +22,11 @@
                 </h1>
             {% endif %}
     </div>
-    <div class="modal-toolbar">
-        <!--begin::Close-->
-        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-            <i class="ki-outline ki-cross fs-1"></i>
-        </div>
-        <!--end::Close-->
+    <!--begin::Close-->
+    <div class="btn btn-icon btn-sm btn-active-light-primary btn-close" data-bs-dismiss="modal" aria-label="Close">
+        <i class="ki-outline ki-cross fs-1"></i>
     </div>
-
+    <!--end::Close-->
 </div>
 <div class="modal-body">
     {% for notice_level in ['success','error','info', 'warning'] %}

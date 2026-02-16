@@ -10,42 +10,10 @@ file that was distributed with this source code.
 #}
 
 {% block content %}
-{#    <div class="ajax-box">#}
-{#    {% block notice %}#}
-{#        {% autoescape false %}#}
-{#        <script type="text/javascript">#}
-{#        {% for notice_level in ['success','error','info', 'warning'] %}#}
-{#            {% set session_var = 'sonata_flash_' ~ notice_level %}#}
-{#            {% for flash in app.session.flashbag.get(session_var) %}#}
-{#            InitCms.createInitCmsMessageBox('{{ (notice_level=='error')?'danger':notice_level }}', '{{ flash }}');#}
-{#            {% endfor %}#}
-{#        {% endfor %}#}
-{#        </script>#}
-{#        {% endautoescape %}#}
-{#    {% endblock %}#}
     {% block preview %}{% endblock %}
     {% block form %}{% endblock %}
     {% block list %}{% endblock %}
     {% block show %}{% endblock %}
     {% block list_filters %}{% endblock %}
     {% block list_table %}{% endblock %}
-{#    {% jsblock 'render' %}#}
-{#    {% autoescape false %}#}
-{#    <script type="text/javascript">#}
-{#        jQuery('select.per-page').change(function(event) {#}
-{#            var that = this;#}
-{#            jQuery.ajax({#}
-{#                type: 'GET',#}
-{#                url: this.options[this.selectedIndex].value,#}
-{#                dataType: 'html',#}
-{#                success: function (html) {#}
-{#                    jQuery(that).closest('.ajax-box').replaceWith(html);#}
-{#                }#}
-{#            });#}
-
-{#        });#}
-{#        $('.show-tooltip, [data-toggle="tooltip"]').tooltip({placement:'bottom', container: 'body', delay:{ show:800, hide:100 }});#}
-{#    </script>#}
-{#    {% endautoescape %}#}
-{#    </div>#}
 {% endblock %}

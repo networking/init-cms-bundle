@@ -34,29 +34,28 @@ class LayoutBlockAdmin extends BaseAdmin
     /**
      * used to prefix dynamically generated form fields.
      */
-    public const CUSTOM_FIELD_PREFIX = 'networking_init_cms_content_';
+    public const string CUSTOM_FIELD_PREFIX = 'networking_init_cms_content_';
 
-    public $trackedActions = [];
+    public array $trackedActions = [];
 
     public function __construct(
         protected PageManagerInterface $pageManager,
         protected LayoutBlockFormListener $layoutBlockFormListener,
-        protected PageAdmin $pageAdmin
+        protected PageAdmin $pageAdmin,
     ) {
-
         parent::__construct();
     }
 
-    protected function generateBaseRoutePattern(bool $isChildAdmin = false
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false,
     ): string {
         return 'cms/layout_block';
     }
 
-    protected function configureRoutes(RouteCollectionInterface $collection
+    protected function configureRoutes(RouteCollectionInterface $collection,
     ): void {
         $collection->add('addBlock', 'add_block', [], ['method' => 'GET']);
         $collection->add('deleteAjax', 'delete_ajax', [], ['method' => 'POST']);
-        $collection->add('toggleActive','toggle_active', [], ['method' => 'POST']);
+        $collection->add('toggleActive', 'toggle_active', [], ['method' => 'POST']);
         $collection->add('reload', 'reload', [], ['method' => 'GET']);
         $collection->add(
             'updateFormFieldElement',

@@ -28,20 +28,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MediaEntityType extends AbstractType
 {
-    /**
-     * @var null
-     */
-    public $context;
 
-    /**
-     * @var null
-     */
-    public $providerName;
-
-    /**
-     * @var Pool
-     */
-    public $pool;
+    public Pool $pool;
 
     public function __construct(Pool $pool)
     {

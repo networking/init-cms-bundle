@@ -1,3 +1,7 @@
+#jstree-marker {
+  z-index: 9999;
+}
+
 /* jsTree default theme */
 .jstree-node,
 .jstree-children,

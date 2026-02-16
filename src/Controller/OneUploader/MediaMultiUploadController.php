@@ -16,7 +16,6 @@ use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * This file is part of the init-cms-sandbox  package.
@@ -28,8 +27,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class MediaMultiUploadController extends AbstractController
 {
- 
-
     public function upload(): JsonResponse
     {
         /** @var Request $request */
@@ -55,20 +52,15 @@ class MediaMultiUploadController extends AbstractController
         return $this->createSupportedJsonResponse($response->assemble(), $status);
     }
 
-    /**
-     * @param $file
-     * @param ResponseInterface $response
-     * @param Request           $request
-     */
     protected function handleUpload($file, ResponseInterface $response, Request $request): void
     {
         // wrap the file if it is not done yet which can only happen
         // if it wasn't a chunked upload, in which case it is definitely
         // on the local filesystem.
-        if (!($file instanceof FileInterface)) {
+        if (!$file instanceof FileInterface) {
             $file = new FilesystemFile($file);
         }
-        /** @var $mediaAdmin \Sonata\MediaBundle\Admin\ORM\MediaAdmin */
+        /** @var \Sonata\MediaBundle\Admin\ORM\MediaAdmin $mediaAdmin */
         $mediaAdmin = $this->container->get('sonata.media.admin.media');
 
         $mediaAdmin->setRequest($request);
@@ -103,7 +95,7 @@ class MediaMultiUploadController extends AbstractController
             foreach ($errors as $error) {
                 $errorMessages[] = $error->getMessage();
 
-                if ($error->getMessage() == 'File is duplicate') {
+                if ('File is duplicate' == $error->getMessage()) {
                     $duplicate = true;
                 }
             }

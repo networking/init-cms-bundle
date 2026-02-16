@@ -1,8 +1,0 @@
-{
-    "browser": true,
-    "predef": ["opts", "vue"],
-    "esversion": 11,
-    "asi": true,
-    "unused":true,
-    "devel": false
-}

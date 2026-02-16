@@ -42,7 +42,7 @@ file that was distributed with this source code.
             {% endif %}
             {% if admin.hasRoute('list') and admin.isGranted('LIST') %}
                 {{ 'delete_or'|trans({}, 'SonataAdminBundle') }}
-                {% if app.request.isxmlhttprequest  or app.request.get('_xml_http_request') %}
+                {% if app.request.isxmlhttprequest  or app.request.query.getBoolean('_xml_http_request') %}
                     <button type="button" class="btn btn-success"  data-bs-dismiss="modal">
                         <i class="fa fa-th-list"></i> {{ 'link_action_list'|trans({}, 'SonataAdminBundle') }}
                     </button>

@@ -8,7 +8,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
 
-{% set isAjax = app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+{% set isAjax = app.request.isXmlHttpRequest or app.request.query.getBoolean('_xml_http_request') %}
 {% extends isAjax?'@NetworkingInitCms/modal-edit.html.twig':base_template %}
 
 {% block actions %}

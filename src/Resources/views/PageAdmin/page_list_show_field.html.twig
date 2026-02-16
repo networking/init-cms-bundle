@@ -11,10 +11,25 @@ file that was distributed with this source code.
 {% extends '@NetworkingInitCms/CRUD/base_list_field.html.twig' %}
 
 {% block field %}
-    {% set path = path('cmf_routing_object', {'_route_object': object.route()}) %}
-    <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode})}}"
-       target="_blank"  title="{{ 'link.preview'|trans({}, 'PageAdmin') }}" class="show-tooltip"
-       data-original-title="{{ 'link.preview'|trans({}, 'PageAdmin') }}"
-    >{{ value }}
-    </a>
+    <div class="text-nowrap">
+        <a data-clipboard-target="#page_path_{{ object.id }}" class="copy-link" href="#"
+           data-bs-toggle="tooltip"
+           data-bs-placement="bottom"
+           aria-label="{{ 'link.copy'|trans({}, 'PageAdmin') }}"
+           title="{{ 'link.copy'|trans({}, 'PageAdmin') }}"
+        ><i >{{ ux_icon('bi:clipboard') }}</i></a>
+        &nbsp; - &nbsp;
+        {% set path = path('cmf_routing_object', {'_route_object': object.route()}) %}
+        <a href="{{ path('networking_init_view_draft', {'locale': object.locale, 'path': path | base64_encode})}}"
+           target="_blank"
+           data-bs-toggle="tooltip"
+           data-bs-placement="bottom"
+           aria-label="{{ 'link.preview'|trans({}, 'PageAdmin') }}"
+           title="{{ 'link.preview'|trans({}, 'PageAdmin') }}"
+           class="show-tooltip copy-field user-select-all"
+           id="page_path_{{ object.id }}"
+           data-original-title="{{ 'link.preview'|trans({}, 'PageAdmin') }}"
+        >{{ value }}</a>
+    </div>
+
 {% endblock %}

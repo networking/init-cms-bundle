@@ -1,28 +1,58 @@
 {#
-
 This file is part of the Networking package.
 
 (c) net working AG <info@networking.ch>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
-
 #}
 {% extends '@NetworkingInitCms/CRUD/list.html.twig' %}
 {% block stylesheets %}
     {{ parent() }}
-<style>
-    i.level-spacer{
+    <style>
+      i.level-spacer {
         margin: 0 0 0 5px;
         width: 10px;
-    }
-    i.level-spacer.first{
+      }
+      i.level-spacer.first {
         margin-left: 10px;
-    }
-    i.level-spacer.last{
+      }
+      i.level-spacer.last {
         margin-right: 5px;
-    }
+      }
 
-</style>
+    </style>
+    {% js_block 'addToBottom' %}
+    <script>
+        KTUtil.onDOMContentLoaded(() => {
+            const buttons = document.querySelectorAll('.copy-link')
+            buttons.forEach((button) => {
+                let target = document.querySelector(button.dataset.clipboardTarget)
+                // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+                let clipboard = new ClipboardJS(button, {
+                    target: target,
+                    text:  () => {
+                        return target.innerHtml
+                    },
+                })
+
+                clipboard.on('success', function (e) {
+                    if('1' === target.dataset.linkCopied){
+                        return;
+                    }
+                    toastr.success("{{ 'link.copied'|trans({}, 'PageAdmin') }}")
+                    target.dataset.linkCopied = '1'
+
+                    setTimeout(() => {
+                        target.dataset.linkCopied = '0'
+                    }, 500);
+                })
+            })
+        })
+
+    </script>
+    {% js_block 'addToBottomEnd' %}
+
 {% endblock %}
 {% set last_edited = app.session.get('Page.last_edited') %}
+

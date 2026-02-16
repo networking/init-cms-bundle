@@ -13,7 +13,7 @@ file that was distributed with this source code.
 
     {% set url = objectId|default(admin.id(object)) is not null ? 'edit' : 'create' %}
 
-    {% set isAjax = app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+    {% set isAjax = app.request.isXmlHttpRequest or app.request.query.getBoolean('_xml_http_request') %}
     {% if not admin.hasRoute(url) %}
         <div>
             {{ "form_not_available"|trans({}, "SonataAdminBundle") }}
@@ -22,6 +22,7 @@ file that was distributed with this source code.
 
 
         <form role="form"
+              id="{{ admin.uniqid }}_{{ admin.label }}_form"
               action="{% block sonata_form_action_url %}{{ admin.generateUrl(url, {'id': objectId|default(admin.id(object)), 'uniqid': admin.uniqid, 'subclass': app.request.get('subclass')}) }}{% endblock %}"
                 {% if form.vars.multipart %} enctype="multipart/form-data"{% endif %}
                 novalidate="novalidate"
@@ -54,8 +55,7 @@ file that was distributed with this source code.
                         {% endif %}
                     </h3>
                     <!--begin::Close-->
-                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="ki-outline ki-cross fs-1"></i>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </div>
                     <!--end::Close-->
                 </div>

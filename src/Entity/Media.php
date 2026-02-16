@@ -112,7 +112,7 @@ class Media extends BaseMedia implements IgnoreRevertInterface
         return $this->getId();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

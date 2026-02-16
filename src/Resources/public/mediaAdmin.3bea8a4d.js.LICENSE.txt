@@ -1,7 +1,0 @@
-/*! ./cms-admin */
-
-/*! glightbox */
-
-/*! jquery */
-
-/*! jstree */

@@ -486,14 +486,9 @@ class LayoutBlockController extends CRUDController
         return new JsonResponse($data);
     }
 
-    /**
-     * @return JsonResponse
-     *
-     * @throws \Twig\Error\RuntimeError
-     */
-    public function deleteAjaxAction(Request $request)
+    public function deleteAjaxAction(Request $request): JsonResponse
     {
-        $id = $request->query->get('id');
+        $id = $request->request->get('id');
 
         if ($id) {
             $layoutBlock = $this->admin->getObject($id);
@@ -514,12 +509,7 @@ class LayoutBlockController extends CRUDController
         );
     }
 
-    /**
-     * @return JsonResponse
-     *
-     * @throws \Twig\Error\RuntimeError
-     */
-    public function toggleActiveAction(Request $request)
+    public function toggleActiveAction(Request $request): JsonResponse
     {
         $layoutBlock = null;
         $id = $request->request->get('id');

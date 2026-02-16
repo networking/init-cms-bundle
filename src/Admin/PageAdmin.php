@@ -77,7 +77,7 @@ class PageAdmin extends BaseAdmin
         parent::__construct();
     }
 
-    protected function generateBaseRoutePattern(bool $isChildAdmin = false
+    protected function generateBaseRoutePattern(bool $isChildAdmin = false,
     ): string {
         return 'cms/pages';
     }
@@ -94,7 +94,7 @@ class PageAdmin extends BaseAdmin
         parent::configureDefaultSortValues($sortValues);
     }
 
-    protected function configureRoutes(RouteCollectionInterface $collection
+    protected function configureRoutes(RouteCollectionInterface $collection,
     ): void {
         $collection->add(
             'translate',
@@ -246,6 +246,7 @@ class PageAdmin extends BaseAdmin
                         'choices' => $this->getLocaleChoices(),
                         'choice_translation_domain' => false,
                         'preferred_choices' => [$this->pageLocale],
+                        'attr' => ['readonly' => 'readonly', 'disabled' => 'disabled'],
                         'help' => 'locale.helper.text',
                         'row_attr' => ['class' => 'form-floating mb-3'],
                     ]
@@ -317,6 +318,8 @@ class PageAdmin extends BaseAdmin
                         [
                             'required' => false,
                             'row_attr' => ['class' => 'form-floating mb-4'],
+                            'help' => $this->getSubject()->getFullPath(),
+                            'help_attr' => ['class' => 'url-preview-block badge py-3 px-4 fs-7 badge-light-success user-select-all'],
                         ],
                         ['display_method' => 'getFullPath']
                     );
@@ -328,14 +331,13 @@ class PageAdmin extends BaseAdmin
                     TextType::class,
                     [
                         'required' => $requireUrl,
-                        //                        'help_label' => '/',
                         'help' => 'url.helper.text',
+                        'help_attr' => ['class' => 'url-preview-block badge py-3 px-4 fs-7 badge-light-success '],
                         'row_attr' => ['class' => 'form-floating mb-4'],
                     ],
                     ['display_method' => 'getFullPath']
                 );
         }
-
         $form
             ->add(
                 'visibility',
@@ -562,7 +564,7 @@ class PageAdmin extends BaseAdmin
     /**
      * @param ProxyQuery $query
      */
-    public function configureQuery(ProxyQueryInterface $query
+    public function configureQuery(ProxyQueryInterface $query,
     ): ProxyQueryInterface {
         $qb = $query->getQueryBuilder();
         $alias = $qb->getRootAliases();
@@ -666,7 +668,7 @@ class PageAdmin extends BaseAdmin
             return $translationLanguages;
         }
 
-        /** @var $page PageInterface */
+        /** @var PageInterface $page */
         $page = $this->pageManager->findById($id);
 
         $translatedLocales = $page->getAllTranslations();
@@ -811,7 +813,7 @@ class PageAdmin extends BaseAdmin
         return $this->hasSubject() && $this->getSubject()->getId();
     }
 
-    public function getPageByLayoutBlock(LayoutBlock $layoutBlock
+    public function getPageByLayoutBlock(LayoutBlock $layoutBlock,
     ): PageInterface {
         return $layoutBlock->getPage();
     }

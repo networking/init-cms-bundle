@@ -8,12 +8,12 @@ declare(strict_types=1);
  * Date: 10/24/13
  * Time: 11:40 AM.
  */
+
 namespace Networking\InitCmsBundle\Admin;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
-use Networking\InitCmsBundle\Admin\BaseAdmin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Filter\Model\FilterData;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\Operator\ContainsOperatorType;
@@ -29,16 +29,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
  */
 class HelpTextAdmin extends BaseAdmin
 {
-
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {
         return 'cms/help';
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     protected function configureListFields(ListMapper $list): void
     {
         $list
@@ -58,9 +53,6 @@ class HelpTextAdmin extends BaseAdmin
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureFormFields(FormMapper $form): void
     {
         $form
@@ -69,7 +61,7 @@ class HelpTextAdmin extends BaseAdmin
                 'locale',
                 ChoiceType::class,
                 [
-                    'choice_loader' => new CallbackChoiceLoader(fn() => $this->getLocaleChoices()),
+                    'choice_loader' => new CallbackChoiceLoader(fn () => $this->getLocaleChoices()),
                     'preferred_choices' => [$this->getDefaultLocale()],
                     'translation_domain' => false,
                 ]
@@ -84,9 +76,6 @@ class HelpTextAdmin extends BaseAdmin
             ->end();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
@@ -102,18 +91,14 @@ class HelpTextAdmin extends BaseAdmin
                     'field_options' => [
                         'row_attr' => ['class' => 'form-floating'],
                         'placeholder' => false,
-                        'choice_loader' => new CallbackChoiceLoader(fn() => $this->getLocaleChoices()),
+                        'choice_loader' => new CallbackChoiceLoader(fn () => $this->getLocaleChoices()),
                         'preferred_choices' => [$this->getDefaultLocale()],
                         'translation_domain' => false,
-                    ]
+                    ],
                 ]
-
             );
     }
 
-    /**
-     * @param array $filterValues
-     */
     public function configureDefaultFilterValues(array &$filterValues): void
     {
         $filterValues['locale'] = [
@@ -122,13 +107,7 @@ class HelpTextAdmin extends BaseAdmin
         ];
     }
 
-    /**
-     * @param $alias
-     * @param $field
-     * @param $data
-     * @return bool
-     */
-    public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, FilterData $data)
+    public function getByLocale(ProxyQuery $ProxyQuery, $alias, $field, FilterData $data): bool
     {
         $locale = $this->getDefaultLocale();
         $active = false;

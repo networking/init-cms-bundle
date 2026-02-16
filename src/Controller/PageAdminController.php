@@ -995,11 +995,11 @@ class PageAdminController extends CRUDController
      *
      * @internal param string $path
      */
-    public function getPathAction(Request $request)
+    public function getPathAction(Request $request): Response
     {
-        $id = $request->get('page_id');
+        $id = $request->query->get('page_id');
 
-        $getPath = $request->get('path');
+        $getPath = $request->query->get('path');
 
         $object = $this->admin->getObject($id);
         if ($id && $object) {
@@ -1008,7 +1008,7 @@ class PageAdminController extends CRUDController
             $path = '/';
         }
 
-        $getPath = Urlizer::urlize($getPath);
+        $getPath = Urlizer::urlize($getPath??'');
 
         return $this->renderJson(['path' => $path.$getPath]);
     }

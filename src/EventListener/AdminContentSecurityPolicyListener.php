@@ -11,16 +11,6 @@ class AdminContentSecurityPolicyListener
     {
         $request = $event->getRequest();
 
-        // if path is not admin, return
-        if (str_contains($request->getPathInfo(), '/admin/login')) {
-            return;
-        }
-
-        // if path is not admin, return
-        if (false === str_contains($request->getPathInfo(), '/admin')) {
-            return;
-        }
-
         $response = $event->getResponse();
 
         $cspHeaders = ContentSecurityPolicyHelper::getCspHeaders($response);
@@ -32,6 +22,40 @@ class AdminContentSecurityPolicyListener
             'connect-src',
         ];
 
+        // if path is not admin, return
+        if (str_contains($request->getPathInfo(), '/admin/login')) {
+            foreach ($cspHeaders as $header => $directives) {
+                foreach ($types as $type) {
+                    if (!array_key_exists($type, $directives)) {
+                        $cspHeaders[$header][$type] = [];
+                        $directives[$type] = [];
+                    }
+
+                    if ('script-src' === $type) {
+                        foreach ($directives[$type] as $key => $value) {
+                            if (str_contains($value, 'nonce-') || str_contains($value, 'strict-dynamic')) {
+                                unset($cspHeaders[$header][$type][$key]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach ($cspHeaders as $header => $directives) {
+                $response->headers->set(
+                    $header,
+                    ContentSecurityPolicyHelper::generateCspHeader($directives)
+                );
+            }
+
+            return;
+        }
+
+        // if path is not admin, return
+        if (false === str_contains($request->getPathInfo(), '/admin')) {
+            return;
+        }
+
         foreach ($cspHeaders as $header => $directives) {
             foreach ($types as $type) {
                 if (!array_key_exists($type, $directives)) {
@@ -41,7 +65,7 @@ class AdminContentSecurityPolicyListener
 
                 if ('script-src' === $type) {
                     foreach ($directives[$type] as $key => $value) {
-                        if (str_contains($value, 'nonce-')) {
+                        if (str_contains($value, 'nonce-') || str_contains($value, 'strict-dynamic')) {
                             unset($cspHeaders[$header][$type][$key]);
                         }
                     }
@@ -66,7 +90,7 @@ class AdminContentSecurityPolicyListener
 
                 if ('worker-src' === $type) {
                     if (!in_array('blob:', $directives[$type])) {
-                        $cspHeaders[$header][$type][] = "blob:";
+                        $cspHeaders[$header][$type][] = 'blob:';
                     }
 
                     if (!in_array("'self'", $directives[$type])) {

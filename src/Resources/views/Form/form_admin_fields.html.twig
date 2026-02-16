@@ -31,9 +31,9 @@ file that was distributed with this source code.
 
 {%- block sonata_type_model_widget -%}
     {# model {{ sonata_admin.field_description.mappingtype }} #}
-{%- if sonata_admin.field_description is empty -%}
-    {{ block('choice_widget') }}
-{%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_ONE') -%}
+    {%- if sonata_admin.field_description is empty -%}
+        {{ block('choice_widget') }}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_ONE') -%}
         {{ block('sonata_admin_orm_one_to_one_widget') }}
     {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE') -%}
         {{ block('sonata_admin_orm_many_to_one_widget') }}
@@ -47,6 +47,30 @@ file that was distributed with this source code.
     {%- endif -%}
 {%- endblock -%}
 
+{%- block sonata_type_admin_widget -%}
+    {# admin {{ sonata_admin.field_description.mappingtype }} #}
+    {%- if sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_ONE') -%}
+        {{ block('sonata_admin_orm_one_to_one_widget') }}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE') -%}
+        {{ block('sonata_admin_orm_many_to_one_widget') }}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') -%}
+        {{ block('sonata_admin_orm_many_to_many_widget') }}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') -%}
+        {{ block('sonata_admin_orm_one_to_many_widget') }}
+    {%- else -%}
+        INVALID MODE : {{ id }}
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block sonata_type_collection_widget -%}
+    {%- if sonata_admin.field_description.mappingtype  == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') -%}
+        {{ block('sonata_admin_orm_one_to_many_widget') }}
+    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') -%}
+        {{ block('sonata_admin_orm_many_to_many_widget') }}
+    {%- else -%}
+        INVALID MODE : {{ id }} - type : sonata_type_collection - mapping : {{ sonata_admin.field_description.mappingtype }}
+    {%- endif -%}
+{%- endblock -%}
 
 
 {%- block form_row -%}
@@ -104,7 +128,6 @@ file that was distributed with this source code.
     {%- endif -%}
     {{ form_help(form) }}
     {{ block('help_block') }}
-    {{- form_errors(form) -}}
 
     {%- if form.parent and 'collection' in form.parent.vars.block_prefixes and form.parent.vars.allow_delete == true -%}
         &nbsp;{{ block('form_widget_remove_btn') }}
@@ -361,30 +384,6 @@ file that was distributed with this source code.
     {#    {%- include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' -%} #}
 {%- endblock -%}
 
-{%- block sonata_type_admin_widget -%}
-    {# admin {{ sonata_admin.field_description.mappingtype }} #}
-    {%- if sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_ONE') -%}
-        {{ block('sonata_admin_orm_one_to_one_widget') }}
-    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE') -%}
-        {{ block('sonata_admin_orm_many_to_one_widget') }}
-    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') -%}
-        {{ block('sonata_admin_orm_many_to_many_widget') }}
-    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') -%}
-        {{ block('sonata_admin_orm_one_to_many_widget') }}
-    {%- else -%}
-        INVALID MODE : {{ id }}
-    {%- endif -%}
-{%- endblock -%}
-
-{%- block sonata_type_collection_widget -%}
-    {%- if sonata_admin.field_description.mappingtype  == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY') -%}
-        {{ block('sonata_admin_orm_one_to_many_widget') }}
-    {%- elseif sonata_admin.field_description.mappingtype == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') -%}
-        {{ block('sonata_admin_orm_many_to_many_widget') }}
-    {%- else -%}
-        INVALID MODE : {{ id }} - type : sonata_type_collection - mapping : {{ sonata_admin.field_description.mappingtype }}
-    {%- endif -%}
-{%- endblock -%}
 
 {# Buttons #}
 {%- block button_widget -%}
@@ -435,8 +434,6 @@ file that was distributed with this source code.
         {%- set translation_domain = sonata_admin.field_description.translationDomain -%}
     {%- endif -%}
     {%- if select2 is defined and select2 -%}
-
-
         {%- if multiple is same as(false) -%}
             {%- if label is empty -%}
                 {%- if label_format is not empty -%}
@@ -822,7 +819,7 @@ file that was distributed with this source code.
         }) -%}
     {%- endif -%}
     {%- set row_class = row_class|default(row_attr.class|default('mb-3')|trim) -%}
-    <{{ element|default('div') }}{%- with {attr: row_attr|merge({class: row_class})} -%}{{ block('attributes') }}{%- endwith -%}>
+    <{{ element|default('div') }} {%- with {attr: row_attr|merge({class: row_class})} -%}{{ block('attributes') }}{%- endwith -%}>
     {%- if 'form-floating' in row_class -%}
         {{- form_widget(form, widget_attr) -}}
         {{- form_label(form) -}}
@@ -899,7 +896,7 @@ file that was distributed with this source code.
 
 {%- block collection_button -%}
 
-    <a {%- for attrname,attrvalue in button_values.attr -%} {{ attrname }}="{{ attrvalue }}"{%- endfor -%} data-collection-{{ button_type }}-btn="{{ form.vars['id'] }}">
+    <a {% for attrname,attrvalue in button_values.attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %} data-collection-{{ button_type }}-btn="{{ form.vars['id'] }}">
     {%- if button_values.icon is not null -%}
         {%- if button_values.label is not defined  or not button_values.label -%}
             {%- set button_values = button_values|merge({icon: button_values.icon ~ ' pe-0'}) -%}

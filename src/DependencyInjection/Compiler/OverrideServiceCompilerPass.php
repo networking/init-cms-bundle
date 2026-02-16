@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Networking package.
  *
@@ -11,11 +12,10 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\DependencyInjection\Compiler;
 
-use Networking\InitCmsBundle\Admin\Pool;
 use Networking\InitCmsBundle\Builder\ListBuilder;
+use Networking\InitCmsBundle\Cache\PageCacheInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Class OverrideServiceCompilerPass.
@@ -44,20 +44,18 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
             }
         }
 
-        if($container->hasParameter('networking_init_cms.page_cache_service')){
+        if ($container->hasParameter('networking_init_cms.page_cache_service')) {
             $service = $container->getParameter('networking_init_cms.page_cache_service');
             $definition = $container->getDefinition($service);
-            $container->setDefinition(\Networking\InitCmsBundle\Cache\PageCacheInterface::class, $definition);
+            $container->setDefinition(PageCacheInterface::class, $definition);
         }
 
-        if($container->hasDefinition('sonata.user.admin.user')){
+        if ($container->hasDefinition('sonata.user.admin.user')) {
             $definition = $container->getDefinition('sonata.user.admin.user');
             $definition->addMethodCall('setTokenStorage', [$container->getDefinition('security.token_storage')]);
-            if($container->getParameter('networking_init_cms.google.authenticator.enabled') && $container->hasDefinition('networking_init_cms.google.authenticator.helper') ){
+            if ($container->getParameter('networking_init_cms.google.authenticator.enabled') && $container->hasDefinition('networking_init_cms.google.authenticator.helper')) {
                 $definition->addMethodCall('setGoogleAuthEnabled', [$container->getParameter('networking_init_cms.google.authenticator.enabled')]);
-                $definition->addMethodCall('setGoogleAuthenticatorHelper', [$container->getDefinition('networking_init_cms.google.authenticator.helper')]);
             }
         }
-
     }
 }

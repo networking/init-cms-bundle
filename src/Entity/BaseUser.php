@@ -16,7 +16,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Networking\InitCmsBundle\Model\UserInterface;
 use Sonata\UserBundle\Entity\BaseUser as SonataBaseUser;
-use Networking\InitCmsBundle\Model\AdminSettings;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;

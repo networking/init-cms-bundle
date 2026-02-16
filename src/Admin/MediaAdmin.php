@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Networking\InitCmsBundle\Admin;
 
+use Networking\InitCmsBundle\Entity\Media;
 use Networking\InitCmsBundle\Filter\SimpleStringFilter;
 use Networking\InitCmsBundle\Form\DataTransformer\TagTransformer;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
@@ -30,6 +31,7 @@ use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Provider\FileProvider;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -39,45 +41,26 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class MediaAdmin extends Admin
 {
-    /**
-     * @var array
-     * @var array
-     */
-    protected $trackedActions = ['list'];
+    protected array $trackedActions = ['list'];
 
-    /**
-     * @var array
-     */
-    protected $languages;
+    protected array $languages;
 
-    /**
-     * @var int
-     */
-    protected $maxPerPage = 64;
+    protected int $maxPerPage = 64;
 
-    /**
-     * @var array
-     */
-    protected $localisedMediaProviders = ['sonata.media.provider.file'];
+    protected array $localisedMediaProviders = ['sonata.media.provider.file'];
 
-    /**
-     * @var bool
-     */
-    protected $hasMultipleMediaTags;
+    protected bool $hasMultipleMediaTags;
 
-    /**
-     * @var bool
-     */
-    protected $showTagTree;
+    protected bool $showTagTree;
 
     public function __construct(
         $pool,
-        private readonly ValidatorInterface $validator
+        private readonly ValidatorInterface $validator,
     ) {
         parent::__construct($pool);
     }
 
-    public function validate(object $object)
+    public function validate(object $object): ConstraintViolationListInterface
     {
         return $this->validator->validate($object);
     }
@@ -97,7 +80,7 @@ class MediaAdmin extends Admin
      * Set the language paramenter to contain a list of languages most likely
      * passed from the config.yaml file.
      */
-    public function setLanguages(array $languages)
+    public function setLanguages(array $languages): void
     {
         $this->languages = $languages;
     }
@@ -110,7 +93,7 @@ class MediaAdmin extends Admin
     /**
      * @return $this
      */
-    public function setTrackedActions($trackedActions)
+    public function setTrackedActions($trackedActions): static
     {
         $this->trackedActions = $trackedActions;
 
@@ -120,7 +103,7 @@ class MediaAdmin extends Admin
     /**
      * @return $this
      */
-    public function setMultipleMediaTags($hasMultipleMediaTags)
+    public function setMultipleMediaTags($hasMultipleMediaTags): static
     {
         $this->hasMultipleMediaTags = $hasMultipleMediaTags;
 
@@ -132,7 +115,7 @@ class MediaAdmin extends Admin
      *
      * @return $this
      */
-    public function setShowTagTree($showTagTree)
+    public function setShowTagTree($showTagTree): static
     {
         $this->showTagTree = $showTagTree;
 
@@ -142,7 +125,7 @@ class MediaAdmin extends Admin
     /**
      * @return bool
      */
-    public function getShowTagTree()
+    public function getShowTagTree(): bool
     {
         return $this->showTagTree;
     }
@@ -246,10 +229,6 @@ class MediaAdmin extends Admin
             );
     }
 
-    public function configureDefaultFilterValues(array &$filterValues): void
-    {
-    }
-
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
@@ -265,7 +244,7 @@ class MediaAdmin extends Admin
                     ProxyQueryInterface $query,
                     $alias,
                     $field,
-                    FilterData $data
+                    FilterData $data,
                 ): bool {
                     if (!$data->hasValue()) {
                         return false;
@@ -312,47 +291,20 @@ class MediaAdmin extends Admin
         return [];
     }
 
-    public function setLocalisedMediaProviders(array $providers)
+    public function setLocalisedMediaProviders(array $providers): void
     {
         $this->localisedMediaProviders = $providers;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return string|null
-     */
-    public function getTemplate($name)
+    public function checkForDuplicate($media): ?Media
     {
-        if (
-            'edit' === $name && is_null($this->getSubject()->getId())
-            && !$this->getRequest()->query->get('gallery')
-        ) {
-            $provider = $this->pool->getProvider(
-                $this->getRequest()->get('provider')
-            );
-            if ($provider instanceof FileProvider) {
-                return '@NetworkingInitCms/MediaAdmin/multifileupload_jquery.html.twig';
-            }
-        }
-
-        return $this->getTemplateRegistry()->getTemplate($name);
-    }
-
-    /**
-     * @return object
-     */
-    public function checkForDuplicate($media)
-    {
-        $duplicate = $this->getModelManager()->findOneBy(
+        return $this->getModelManager()->findOneBy(
             $this->getClass(),
             [
                 'context' => $media->getContext(),
                 'md5File' => $media->getMd5File(),
             ]
         );
-
-        return $duplicate;
     }
 
     protected function configureFormFields(FormMapper $form): void
@@ -427,7 +379,7 @@ class MediaAdmin extends Admin
      *
      * @return array
      */
-    protected function getLocaleChoices()
+    protected function getLocaleChoices(): array
     {
         $locale = [];
 
@@ -461,26 +413,30 @@ class MediaAdmin extends Admin
         if ($this->hasRequest()) {
             if (
                 $this->getRequest()->isMethod('POST')
-                && !$this->getRequest()->get('oneuploader')
+                && !$this->getRequest()->request->getBoolean('oneuploader')
             ) {
                 $uniqid = $this->getUniqid();
                 if (
                     array_key_exists(
                         'providerName',
-                        $this->getRequest()->get($uniqid, [])
+                        $this->getRequest()->request->all($uniqid)
                     )
                 ) {
                     $object->setProviderName(
-                        $this->getRequest()->get($uniqid)['providerName']
+                        $this->getRequest()->request->all($uniqid)['providerName']
                     );
                 }
             }
 
-            if ($this->getRequest()->get('provider')) {
-                $object->setProviderName($this->getRequest()->get('provider'));
+            if ($this->getRequest()->query->has('provider')) {
+                $object->setProviderName($this->getRequest()->query->get('provider'));
             }
 
-            $object->setContext($context = $this->getRequest()->get('context'));
+            if ($this->getRequest()->request->has('provider')) {
+                $object->setProviderName($this->getRequest()->request->get('provider'));
+            }
+
+            $object->setContext($this->getRequest()->query->get('context'));
         }
     }
 
@@ -503,15 +459,11 @@ class MediaAdmin extends Admin
             $provider = $request->query->get('providerName');
         }
 
-        if (is_array($context) && array_key_exists('value', $context)) {
-            $context = $context['value'];
-        }
-
         if (!$context && array_key_exists('context', $filter)) {
             $context = $filter['context']['value'];
         }
 
-        if (!$context || '0' === $context) {
+        if (!$context) {
             $context = $this->pool->getDefaultContext();
             $request->query->set('context', $context);
         }

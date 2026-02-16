@@ -1,0 +1,67 @@
+{#
+
+This file is part of the Networking package.
+
+(c) net working AG <info@networking.ch>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+{% autoescape false %}
+<script type="text/javascript">
+    KTUtil.onDOMContentLoaded(function () {
+        KTUtil.on(document.querySelector("form"), "#{{ admin.getUniqid }}_locale", 'change', (event) => {
+            let element = event.target;
+            let locale = element.value;
+            fetch('{{ admin.generateUrl('parentPageList') }}?locale=' + locale).
+                then(response => response.json()).
+                then(data => {
+                    let parentPages = document.querySelector("#{{ admin.getUniqid }}_parent");
+                    parentPages.innerHTML = '';
+                    parentPages.appendChild(document.createElement('option'));
+                    for (let key in data) {
+                        if (data.hasOwnProperty(key)) {
+                            let option = document.createElement('option');
+                            option.value = key;
+                            option.innerHTML = data[key];
+                            parentPages.appendChild(option);
+                        }
+                    }
+                })
+        })
+
+        let pageLocale = '{{ locale|default(app.request.query.get('locale')) }}'
+        {% if admin.subject and admin.subject.locale %}
+        pageLocale = '{{ admin.subject.locale }}'
+        {% else %}
+
+        {% endif %}
+
+        let updateURLHelpText = async () => {
+            let previewField = document.querySelector('.url-preview-block')
+            let pageId = document.querySelector("#{{ admin.uniqid }}_parent").value;
+            let locale = pageLocale ?? document.querySelector("#{{ admin.getUniqid }}_locale")?.value;
+            let urlField = document.querySelector('#{{ admin.uniqid }}_url');
+            let path = ''
+            let queryParams = new URLSearchParams();
+            queryParams.append('page_id', pageId);
+            queryParams.append('locale', locale);
+            queryParams.append('path', urlField.value);
+            let response = await fetch('{{ admin.generateUrl('getPath') }}?' + queryParams.toString())
+            let data = await response.json();
+            path = data.path
+            previewField.innerHTML = path;
+        }
+
+        const form = document.querySelector("form#{{ admin.uniqid }}_{{ admin.label }}_form");
+        KTUtil.on(document, "#{{ admin.getUniqid }}_parent", 'change', (event) => {
+            updateURLHelpText(event.target);
+        })
+
+        KTUtil.on(form, '#{{ admin.uniqid }}_url', 'keyup', () => {
+            updateURLHelpText();
+        })
+    });
+</script>
+{% endautoescape %}

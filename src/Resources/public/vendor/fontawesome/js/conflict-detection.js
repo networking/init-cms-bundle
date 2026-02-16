@@ -1,2 +1,1056 @@
-/*! For license information please see conflict-detection.js.LICENSE.txt */
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t():"function"==typeof define&&define.amd?define(t):t()}(0,function(){"use strict";function e(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var o=Object.getOwnPropertySymbols(e);t&&(o=o.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})),n.push.apply(n,o)}return n}function t(t){for(var n=1;n<arguments.length;n++){var r=null!=arguments[n]?arguments[n]:{};n%2?e(Object(r),!0).forEach(function(e){o(t,e,r[e])}):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(r)):e(Object(r)).forEach(function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(r,e))})}return t}function n(e){return n="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},n(e)}function o(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function r(e,t){(null==t||t>e.length)&&(t=e.length);for(var n=0,o=new Array(t);n<t;n++)o[n]=e[n];return o}var i={},c={};try{"undefined"!=typeof window&&(i=window),"undefined"!=typeof document&&(c=document)}catch(e){}var a=(i.navigator||{}).userAgent,s=void 0===a?"":a,f=i,l=c,u=!!f.document,d=!!l.documentElement&&!!l.head&&"function"==typeof l.addEventListener&&"function"==typeof l.createElement,m=(~s.indexOf("MSIE")||s.indexOf("Trident/"),[]),p=!1;function g(e){d&&(p?setTimeout(e,0):m.push(e))}d&&((p=(l.documentElement.doScroll?/^loaded|^c/:/^loaded|^i|^c/).test(l.readyState))||l.addEventListener("DOMContentLoaded",function e(){l.removeEventListener("DOMContentLoaded",e),p=1,m.map(function(e){return e()})}));var h="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{};var y=function(e,t){return e(t={exports:{}},t.exports),t.exports}(function(e){!function(t){function n(e,t){var n=(65535&e)+(65535&t);return(e>>16)+(t>>16)+(n>>16)<<16|65535&n}function o(e,t,o,r,i,c){return n((a=n(n(t,e),n(r,c)))<<(s=i)|a>>>32-s,o);var a,s}function r(e,t,n,r,i,c,a){return o(t&n|~t&r,e,t,i,c,a)}function i(e,t,n,r,i,c,a){return o(t&r|n&~r,e,t,i,c,a)}function c(e,t,n,r,i,c,a){return o(t^n^r,e,t,i,c,a)}function a(e,t,n,r,i,c,a){return o(n^(t|~r),e,t,i,c,a)}function s(e,t){var o,s,f,l,u;e[t>>5]|=128<<t%32,e[14+(t+64>>>9<<4)]=t;var d=1732584193,m=-271733879,p=-1732584194,g=271733878;for(o=0;o<e.length;o+=16)s=d,f=m,l=p,u=g,d=r(d,m,p,g,e[o],7,-680876936),g=r(g,d,m,p,e[o+1],12,-389564586),p=r(p,g,d,m,e[o+2],17,606105819),m=r(m,p,g,d,e[o+3],22,-1044525330),d=r(d,m,p,g,e[o+4],7,-176418897),g=r(g,d,m,p,e[o+5],12,1200080426),p=r(p,g,d,m,e[o+6],17,-1473231341),m=r(m,p,g,d,e[o+7],22,-45705983),d=r(d,m,p,g,e[o+8],7,1770035416),g=r(g,d,m,p,e[o+9],12,-1958414417),p=r(p,g,d,m,e[o+10],17,-42063),m=r(m,p,g,d,e[o+11],22,-1990404162),d=r(d,m,p,g,e[o+12],7,1804603682),g=r(g,d,m,p,e[o+13],12,-40341101),p=r(p,g,d,m,e[o+14],17,-1502002290),d=i(d,m=r(m,p,g,d,e[o+15],22,1236535329),p,g,e[o+1],5,-165796510),g=i(g,d,m,p,e[o+6],9,-1069501632),p=i(p,g,d,m,e[o+11],14,643717713),m=i(m,p,g,d,e[o],20,-373897302),d=i(d,m,p,g,e[o+5],5,-701558691),g=i(g,d,m,p,e[o+10],9,38016083),p=i(p,g,d,m,e[o+15],14,-660478335),m=i(m,p,g,d,e[o+4],20,-405537848),d=i(d,m,p,g,e[o+9],5,568446438),g=i(g,d,m,p,e[o+14],9,-1019803690),p=i(p,g,d,m,e[o+3],14,-187363961),m=i(m,p,g,d,e[o+8],20,1163531501),d=i(d,m,p,g,e[o+13],5,-1444681467),g=i(g,d,m,p,e[o+2],9,-51403784),p=i(p,g,d,m,e[o+7],14,1735328473),d=c(d,m=i(m,p,g,d,e[o+12],20,-1926607734),p,g,e[o+5],4,-378558),g=c(g,d,m,p,e[o+8],11,-2022574463),p=c(p,g,d,m,e[o+11],16,1839030562),m=c(m,p,g,d,e[o+14],23,-35309556),d=c(d,m,p,g,e[o+1],4,-1530992060),g=c(g,d,m,p,e[o+4],11,1272893353),p=c(p,g,d,m,e[o+7],16,-155497632),m=c(m,p,g,d,e[o+10],23,-1094730640),d=c(d,m,p,g,e[o+13],4,681279174),g=c(g,d,m,p,e[o],11,-358537222),p=c(p,g,d,m,e[o+3],16,-722521979),m=c(m,p,g,d,e[o+6],23,76029189),d=c(d,m,p,g,e[o+9],4,-640364487),g=c(g,d,m,p,e[o+12],11,-421815835),p=c(p,g,d,m,e[o+15],16,530742520),d=a(d,m=c(m,p,g,d,e[o+2],23,-995338651),p,g,e[o],6,-198630844),g=a(g,d,m,p,e[o+7],10,1126891415),p=a(p,g,d,m,e[o+14],15,-1416354905),m=a(m,p,g,d,e[o+5],21,-57434055),d=a(d,m,p,g,e[o+12],6,1700485571),g=a(g,d,m,p,e[o+3],10,-1894986606),p=a(p,g,d,m,e[o+10],15,-1051523),m=a(m,p,g,d,e[o+1],21,-2054922799),d=a(d,m,p,g,e[o+8],6,1873313359),g=a(g,d,m,p,e[o+15],10,-30611744),p=a(p,g,d,m,e[o+6],15,-1560198380),m=a(m,p,g,d,e[o+13],21,1309151649),d=a(d,m,p,g,e[o+4],6,-145523070),g=a(g,d,m,p,e[o+11],10,-1120210379),p=a(p,g,d,m,e[o+2],15,718787259),m=a(m,p,g,d,e[o+9],21,-343485551),d=n(d,s),m=n(m,f),p=n(p,l),g=n(g,u);return[d,m,p,g]}function f(e){var t,n="",o=32*e.length;for(t=0;t<o;t+=8)n+=String.fromCharCode(e[t>>5]>>>t%32&255);return n}function l(e){var t,n=[];for(n[(e.length>>2)-1]=void 0,t=0;t<n.length;t+=1)n[t]=0;var o=8*e.length;for(t=0;t<o;t+=8)n[t>>5]|=(255&e.charCodeAt(t/8))<<t%32;return n}function u(e){var t,n,o="0123456789abcdef",r="";for(n=0;n<e.length;n+=1)t=e.charCodeAt(n),r+=o.charAt(t>>>4&15)+o.charAt(15&t);return r}function d(e){return unescape(encodeURIComponent(e))}function m(e){return function(e){return f(s(l(e),8*e.length))}(d(e))}function p(e,t){return function(e,t){var n,o,r=l(e),i=[],c=[];for(i[15]=c[15]=void 0,r.length>16&&(r=s(r,8*e.length)),n=0;n<16;n+=1)i[n]=909522486^r[n],c[n]=1549556828^r[n];return o=s(i.concat(l(t)),512+8*t.length),f(s(c.concat(o),640))}(d(e),d(t))}function g(e,t,n){return t?n?p(t,e):u(p(t,e)):n?m(e):u(m(e))}e.exports?e.exports=g:t.md5=g}(h)});function b(e){if(null!==e&&"object"===n(e))return e.src?y(e.src):e.href?y(e.href):e.innerText&&""!==e.innerText?y(e.innerText):void 0}var v="fa-kits-diag",w="fa-kits-node-under-test",A="data-md5",x="data-fa-detection-ignore",T="data-fa-detection-timeout",D="data-fa-detection-results-collection-max-wait",E=function(e){e.preventDefault(),e.stopPropagation()};function O(e){var t=e.fn,n=void 0===t?function(){return!0}:t,o=e.initialDuration,r=void 0===o?1:o,i=e.maxDuration,c=void 0===i?f.FontAwesomeDetection.timeout:i,a=e.showProgress,s=void 0!==a&&a,l=e.progressIndicator;return new Promise(function(e,t){!function o(r,i){setTimeout(function(){var r=n();if(s&&console.info(l),r)e(r);else{var a=250+i;a<=c?o(250,a):t("timeout")}},r)}(r,0)})}function F(e){var t=e.nodesTested,n=e.nodesFound;f.FontAwesomeDetection=f.FontAwesomeDetection||{},f.FontAwesomeDetection.nodesTested=t,f.FontAwesomeDetection.nodesFound=n,f.FontAwesomeDetection.detectionDone=!0}function C(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:function(){},n={conflict:{},noConflict:{}};f.onmessage=function(e){"file://"!==f.location.origin&&e.origin!==f.location.origin||e&&e.data&&("fontawesome-conflict"===e.data.type?n.conflict[e.data.md5]=e.data:"no-conflict"===e.data.type&&(n.noConflict[e.data.md5]=e.data))};var o=function(e){for(var t=Array.from(l.scripts).filter(function(t){return!t.hasAttribute(x)&&t!==e}),n={},o=function(e){var o=l.createElement("iframe");o.setAttribute("style","display:none;");var r=l.createElement("script");r.setAttribute("id",w);var i=b(t[e]);r.setAttribute(A,i),n[i]=t[e],""!==t[e].src&&(r.src=t[e].src),""!==t[e].innerText&&(r.innerText=t[e].innerText),r.async=!0;var c=l.createElement("script");c.setAttribute("id",v);var a="file://"===f.location.origin?"*":f.location.origin;c.innerText="(".concat(function(e,t,n){parent.FontAwesomeDetection.__pollUntil({fn:function(){return!!window.FontAwesomeConfig||!!window.FontAwesomeKitConfig}}).then(function(){var o=document.getElementById(e);parent.postMessage({type:"fontawesome-conflict",technology:"js",src:o.src,innerText:o.innerText,tagName:o.tagName,md5:t},n)}).catch(function(o){var r=document.getElementById(e);"timeout"===o?parent.postMessage({type:"no-conflict",src:r.src,innerText:r.innerText,tagName:r.tagName,md5:t},n):console.error(o)})}.toString(),")('").concat(w,"', '").concat(i,"', '").concat(a,"');"),o.onload=function(){o.contentWindow.addEventListener("error",E,!0),o.contentDocument.head.appendChild(c),o.contentDocument.head.appendChild(r)},g(function(){return l.body.appendChild(o)})},r=0;r<t.length;r++)o(r);return n}(l.currentScript),r=function(){var e=Array.from(l.getElementsByTagName("link")).filter(function(e){return!e.hasAttribute(x)}),t=Array.from(l.getElementsByTagName("style")).filter(function(e){return!(e.hasAttribute(x)||f.FontAwesomeConfig&&e.innerText.match(new RegExp("svg:not\\(:root\\)\\.".concat(f.FontAwesomeConfig.replacementClass))))});function n(e,t){var n=l.createElement("iframe");n.setAttribute("style","visibility: hidden; position: absolute; height: 0; width: 0;");var o="fa-test-icon-"+t,r=l.createElement("i");r.setAttribute("class","fa fa-coffee"),r.setAttribute("id",o);var i=l.createElement("script");i.setAttribute("id",v);var c="file://"===f.location.origin?"*":f.location.origin;i.innerText="(".concat(function(e,t,n,o){parent.FontAwesomeDetection.__pollUntil({fn:function(){var e=document.getElementById(t),n=window.getComputedStyle(e).getPropertyValue("font-family");return!(!n.match(/FontAwesome/)&&!n.match(/Font Awesome [56]/))}}).then(function(){var t=document.getElementById(e);parent.postMessage({type:"fontawesome-conflict",technology:"webfont",href:t.href,innerText:t.innerText,tagName:t.tagName,md5:n},o)}).catch(function(t){var r=document.getElementById(e);"timeout"===t?parent.postMessage({type:"no-conflict",technology:"webfont",href:r.src,innerText:r.innerText,tagName:r.tagName,md5:n},o):console.error(t)})}.toString(),")('").concat(w,"', '").concat(o||"foo","', '").concat(t,"', '").concat(c,"');"),n.onload=function(){n.contentWindow.addEventListener("error",E,!0),n.contentDocument.head.appendChild(i),n.contentDocument.head.appendChild(e),n.contentDocument.body.appendChild(r)},g(function(){return l.body.appendChild(n)})}for(var o={},r=0;r<e.length;r++){var i=l.createElement("link");i.setAttribute("id",w),i.setAttribute("href",e[r].href),i.setAttribute("rel",e[r].rel);var c=b(e[r]);i.setAttribute(A,c),o[c]=e[r],n(i,c)}for(var a=0;a<t.length;a++){var s=l.createElement("style");s.setAttribute("id",w);var u=b(t[a]);s.setAttribute(A,u),s.innerText=t[a].innerText,o[u]=t[a],n(s,u)}return o}(),i=t(t({},o),r),c=Object.keys(o).length+Object.keys(r).length,a=f.FontAwesomeDetection.timeout+f.FontAwesomeDetection.resultsCollectionMaxWait;console.group("Font Awesome Detector"),0===c?(console.info("%cAll Good!","color: green; font-size: large"),console.info("We didn't find anything that needs testing for conflicts. Ergo, no conflicts.")):(console.info("Testing ".concat(c," possible conflicts.")),console.info("We'll wait about ".concat(Math.round(f.FontAwesomeDetection.timeout/10)/100," seconds while testing these and\n")+"then up to another ".concat(Math.round(f.FontAwesomeDetection.resultsCollectionMaxWait/10)/100," to allow the browser time\n")+"to accumulate the results. But we'll probably be outta here way before then.\n\n"),console.info("You can adjust those durations by assigning values to these attributes on the <script> element that loads this detection:"),console.info("\t%c".concat(T,"%c: milliseconds to wait for each test before deciding whether it's a conflict."),"font-weight: bold;","font-size: normal;"),console.info("\t%c".concat(D,"%c: milliseconds to wait for the browser to accumulate test results before giving up."),"font-weight: bold;","font-size: normal;"),O({maxDuration:a,showProgress:!0,progressIndicator:"waiting...",fn:function(){return Object.keys(n.conflict).length+Object.keys(n.noConflict).length>=c}}).then(function(){console.info("DONE!"),F({nodesTested:n,nodesFound:i}),e({nodesTested:n,nodesFound:i}),console.groupEnd()}).catch(function(t){"timeout"===t?(console.info("TIME OUT! We waited until we got tired. Here's what we found:"),F({nodesTested:n,nodesFound:i}),e({nodesTested:n,nodesFound:i})):(console.info("Whoops! We hit an error:",t),console.info("Here's what we'd found up until that error:"),F({nodesTested:n,nodesFound:i}),e({nodesTested:n,nodesFound:i})),console.groupEnd()}))}var j=f.FontAwesomeDetection||{},S={report:function(e){var t=e.nodesTested,n=e.nodesFound,o={};for(var r in n)t.conflict[r]||t.noConflict[r]||(o[r]=n[r]);var i=Object.keys(t.conflict).length;if(i>0){console.info("%cConflict".concat(i>1?"s":""," found:"),"color: darkred; font-size: large");var c={};for(var a in t.conflict){var s=t.conflict[a];c[a]={tagName:s.tagName,"src/href":s.src||s.href||"n/a","innerText excerpt":s.innerText&&""!==s.innerText?s.innerText.slice(0,200)+"...":"(empty)"}}console.table(c)}var f=Object.keys(t.noConflict).length;if(f>0){console.info("%cNo conflict".concat(f>1?"s":""," found with ").concat(1===f?"this":"these",":"),"color: green; font-size: large");var l={};for(var u in t.noConflict){var d=t.noConflict[u];l[u]={tagName:d.tagName,"src/href":d.src||d.href||"n/a","innerText excerpt":d.innerText&&""!==d.innerText?d.innerText.slice(0,200)+"...":"(empty)"}}console.table(l)}var m=Object.keys(o).length;if(m>0){console.info("%cLeftovers--we timed out before collecting test results for ".concat(1===m?"this":"these",":"),"color: blue; font-size: large");var p={};for(var g in o){var h=o[g];p[g]={tagName:h.tagName,"src/href":h.src||h.href||"n/a","innerText excerpt":h.innerText&&""!==h.innerText?h.innerText.slice(0,200)+"...":"(empty)"}}console.table(p)}},timeout:+(l.currentScript.getAttribute(T)||"2000"),resultsCollectionMaxWait:+(l.currentScript.getAttribute(D)||"5000")},N=t(t(t({},S),j),{},{__pollUntil:O,md5ForNode:b,detectionDone:!1,nodesTested:null,nodesFound:null});f.FontAwesomeDetection=N;var k,M=function(){try{return"production"===process.env.NODE_ENV}catch(e){return!1}}(),P=[1,2,3,4,5,6,7,8,9,10],I=P.concat([11,12,13,14,15,16,17,18,19,20]),W="duotone-group",B="swap-opacity",L="primary",z="secondary";[].concat((k=Object.keys({solid:"fas",regular:"far",light:"fal",thin:"fat",duotone:"fad",brands:"fab",kit:"fak"}),function(e){if(Array.isArray(e))return r(e)}(k)||function(e){if("undefined"!=typeof Symbol&&null!=e[Symbol.iterator]||null!=e["@@iterator"])return Array.from(e)}(k)||function(e,t){if(e){if("string"==typeof e)return r(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(e):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?r(e,t):void 0}}(k)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()),["2xs","xs","sm","lg","xl","2xl","beat","border","fade","beat-fade","bounce","flip-both","flip-horizontal","flip-vertical","flip","fw","inverse","layers-counter","layers-text","layers","li","pull-left","pull-right","pulse","rotate-180","rotate-270","rotate-90","rotate-by","shake","spin-pulse","spin-reverse","spin","stack-1x","stack-2x","stack","ul",W,B,L,z]).concat(P.map(function(e){return"".concat(e,"x")})).concat(I.map(function(e){return"w-".concat(e)}));!function(e){try{for(var t=arguments.length,n=new Array(t>1?t-1:0),o=1;o<t;o++)n[o-1]=arguments[o];e.apply(void 0,n)}catch(e){if(!M)throw e}}(function(){u&&d&&C(window.FontAwesomeDetection.report)})});
+/*!
+ * Font Awesome Free 6.1.0 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ * Copyright 2022 Fonticons, Inc.
+ */
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (factory());
+}(this, (function () { 'use strict';
+
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      enumerableOnly && (symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      })), keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = null != arguments[i] ? arguments[i] : {};
+      i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+
+    return target;
+  }
+
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
+  }
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+  }
+
+  function _iterableToArray(iter) {
+    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+  }
+
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  var _WINDOW = {};
+  var _DOCUMENT = {};
+
+  try {
+    if (typeof window !== 'undefined') _WINDOW = window;
+    if (typeof document !== 'undefined') _DOCUMENT = document;
+  } catch (e) {}
+
+  var _ref = _WINDOW.navigator || {},
+      _ref$userAgent = _ref.userAgent,
+      userAgent = _ref$userAgent === void 0 ? '' : _ref$userAgent;
+  var WINDOW = _WINDOW;
+  var DOCUMENT = _DOCUMENT;
+  var IS_BROWSER = !!WINDOW.document;
+  var IS_DOM = !!DOCUMENT.documentElement && !!DOCUMENT.head && typeof DOCUMENT.addEventListener === 'function' && typeof DOCUMENT.createElement === 'function';
+  var IS_IE = ~userAgent.indexOf('MSIE') || ~userAgent.indexOf('Trident/');
+
+  var functions = [];
+
+  var listener = function listener() {
+    DOCUMENT.removeEventListener('DOMContentLoaded', listener);
+    loaded = 1;
+    functions.map(function (fn) {
+      return fn();
+    });
+  };
+
+  var loaded = false;
+
+  if (IS_DOM) {
+    loaded = (DOCUMENT.documentElement.doScroll ? /^loaded|^c/ : /^loaded|^i|^c/).test(DOCUMENT.readyState);
+    if (!loaded) DOCUMENT.addEventListener('DOMContentLoaded', listener);
+  }
+
+  function domready (fn) {
+    if (!IS_DOM) return;
+    loaded ? setTimeout(fn, 0) : functions.push(fn);
+  }
+
+  function report (_ref) {
+    var nodesTested = _ref.nodesTested,
+        nodesFound = _ref.nodesFound;
+    var timedOutTests = {};
+
+    for (var key in nodesFound) {
+      if (!(nodesTested.conflict[key] || nodesTested.noConflict[key])) {
+        timedOutTests[key] = nodesFound[key];
+      }
+    }
+
+    var conflictsCount = Object.keys(nodesTested.conflict).length;
+
+    if (conflictsCount > 0) {
+      console.info("%cConflict".concat(conflictsCount > 1 ? 's' : '', " found:"), 'color: darkred; font-size: large');
+      var data = {};
+
+      for (var _key in nodesTested.conflict) {
+        var item = nodesTested.conflict[_key];
+        data[_key] = {
+          'tagName': item.tagName,
+          'src/href': item.src || item.href || 'n/a',
+          'innerText excerpt': item.innerText && item.innerText !== '' ? item.innerText.slice(0, 200) + '...' : '(empty)'
+        };
+      }
+
+      console.table(data);
+    }
+
+    var noConflictsCount = Object.keys(nodesTested.noConflict).length;
+
+    if (noConflictsCount > 0) {
+      console.info("%cNo conflict".concat(noConflictsCount > 1 ? 's' : '', " found with ").concat(noConflictsCount === 1 ? 'this' : 'these', ":"), 'color: green; font-size: large');
+      var _data = {};
+
+      for (var _key2 in nodesTested.noConflict) {
+        var _item = nodesTested.noConflict[_key2];
+        _data[_key2] = {
+          'tagName': _item.tagName,
+          'src/href': _item.src || _item.href || 'n/a',
+          'innerText excerpt': _item.innerText && _item.innerText !== '' ? _item.innerText.slice(0, 200) + '...' : '(empty)'
+        };
+      }
+
+      console.table(_data);
+    }
+
+    var timeOutCount = Object.keys(timedOutTests).length;
+
+    if (timeOutCount > 0) {
+      console.info("%cLeftovers--we timed out before collecting test results for ".concat(timeOutCount === 1 ? 'this' : 'these', ":"), 'color: blue; font-size: large');
+      var _data2 = {};
+
+      for (var _key3 in timedOutTests) {
+        var _item2 = timedOutTests[_key3];
+        _data2[_key3] = {
+          'tagName': _item2.tagName,
+          'src/href': _item2.src || _item2.href || 'n/a',
+          'innerText excerpt': _item2.innerText && _item2.innerText !== '' ? _item2.innerText.slice(0, 200) + '...' : '(empty)'
+        };
+      }
+
+      console.table(_data2);
+    }
+  }
+
+  var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+  function createCommonjsModule(fn, module) {
+  	return module = { exports: {} }, fn(module, module.exports), module.exports;
+  }
+
+  var md5 = createCommonjsModule(function (module) {
+
+    (function ($) {
+      /**
+       * Add integers, wrapping at 2^32.
+       * This uses 16-bit operations internally to work around bugs in interpreters.
+       *
+       * @param {number} x First integer
+       * @param {number} y Second integer
+       * @returns {number} Sum
+       */
+
+      function safeAdd(x, y) {
+        var lsw = (x & 0xffff) + (y & 0xffff);
+        var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+        return msw << 16 | lsw & 0xffff;
+      }
+      /**
+       * Bitwise rotate a 32-bit number to the left.
+       *
+       * @param {number} num 32-bit number
+       * @param {number} cnt Rotation count
+       * @returns {number} Rotated number
+       */
+
+
+      function bitRotateLeft(num, cnt) {
+        return num << cnt | num >>> 32 - cnt;
+      }
+      /**
+       * Basic operation the algorithm uses.
+       *
+       * @param {number} q q
+       * @param {number} a a
+       * @param {number} b b
+       * @param {number} x x
+       * @param {number} s s
+       * @param {number} t t
+       * @returns {number} Result
+       */
+
+
+      function md5cmn(q, a, b, x, s, t) {
+        return safeAdd(bitRotateLeft(safeAdd(safeAdd(a, q), safeAdd(x, t)), s), b);
+      }
+      /**
+       * Basic operation the algorithm uses.
+       *
+       * @param {number} a a
+       * @param {number} b b
+       * @param {number} c c
+       * @param {number} d d
+       * @param {number} x x
+       * @param {number} s s
+       * @param {number} t t
+       * @returns {number} Result
+       */
+
+
+      function md5ff(a, b, c, d, x, s, t) {
+        return md5cmn(b & c | ~b & d, a, b, x, s, t);
+      }
+      /**
+       * Basic operation the algorithm uses.
+       *
+       * @param {number} a a
+       * @param {number} b b
+       * @param {number} c c
+       * @param {number} d d
+       * @param {number} x x
+       * @param {number} s s
+       * @param {number} t t
+       * @returns {number} Result
+       */
+
+
+      function md5gg(a, b, c, d, x, s, t) {
+        return md5cmn(b & d | c & ~d, a, b, x, s, t);
+      }
+      /**
+       * Basic operation the algorithm uses.
+       *
+       * @param {number} a a
+       * @param {number} b b
+       * @param {number} c c
+       * @param {number} d d
+       * @param {number} x x
+       * @param {number} s s
+       * @param {number} t t
+       * @returns {number} Result
+       */
+
+
+      function md5hh(a, b, c, d, x, s, t) {
+        return md5cmn(b ^ c ^ d, a, b, x, s, t);
+      }
+      /**
+       * Basic operation the algorithm uses.
+       *
+       * @param {number} a a
+       * @param {number} b b
+       * @param {number} c c
+       * @param {number} d d
+       * @param {number} x x
+       * @param {number} s s
+       * @param {number} t t
+       * @returns {number} Result
+       */
+
+
+      function md5ii(a, b, c, d, x, s, t) {
+        return md5cmn(c ^ (b | ~d), a, b, x, s, t);
+      }
+      /**
+       * Calculate the MD5 of an array of little-endian words, and a bit length.
+       *
+       * @param {Array} x Array of little-endian words
+       * @param {number} len Bit length
+       * @returns {Array<number>} MD5 Array
+       */
+
+
+      function binlMD5(x, len) {
+        /* append padding */
+        x[len >> 5] |= 0x80 << len % 32;
+        x[(len + 64 >>> 9 << 4) + 14] = len;
+        var i;
+        var olda;
+        var oldb;
+        var oldc;
+        var oldd;
+        var a = 1732584193;
+        var b = -271733879;
+        var c = -1732584194;
+        var d = 271733878;
+
+        for (i = 0; i < x.length; i += 16) {
+          olda = a;
+          oldb = b;
+          oldc = c;
+          oldd = d;
+          a = md5ff(a, b, c, d, x[i], 7, -680876936);
+          d = md5ff(d, a, b, c, x[i + 1], 12, -389564586);
+          c = md5ff(c, d, a, b, x[i + 2], 17, 606105819);
+          b = md5ff(b, c, d, a, x[i + 3], 22, -1044525330);
+          a = md5ff(a, b, c, d, x[i + 4], 7, -176418897);
+          d = md5ff(d, a, b, c, x[i + 5], 12, 1200080426);
+          c = md5ff(c, d, a, b, x[i + 6], 17, -1473231341);
+          b = md5ff(b, c, d, a, x[i + 7], 22, -45705983);
+          a = md5ff(a, b, c, d, x[i + 8], 7, 1770035416);
+          d = md5ff(d, a, b, c, x[i + 9], 12, -1958414417);
+          c = md5ff(c, d, a, b, x[i + 10], 17, -42063);
+          b = md5ff(b, c, d, a, x[i + 11], 22, -1990404162);
+          a = md5ff(a, b, c, d, x[i + 12], 7, 1804603682);
+          d = md5ff(d, a, b, c, x[i + 13], 12, -40341101);
+          c = md5ff(c, d, a, b, x[i + 14], 17, -1502002290);
+          b = md5ff(b, c, d, a, x[i + 15], 22, 1236535329);
+          a = md5gg(a, b, c, d, x[i + 1], 5, -165796510);
+          d = md5gg(d, a, b, c, x[i + 6], 9, -1069501632);
+          c = md5gg(c, d, a, b, x[i + 11], 14, 643717713);
+          b = md5gg(b, c, d, a, x[i], 20, -373897302);
+          a = md5gg(a, b, c, d, x[i + 5], 5, -701558691);
+          d = md5gg(d, a, b, c, x[i + 10], 9, 38016083);
+          c = md5gg(c, d, a, b, x[i + 15], 14, -660478335);
+          b = md5gg(b, c, d, a, x[i + 4], 20, -405537848);
+          a = md5gg(a, b, c, d, x[i + 9], 5, 568446438);
+          d = md5gg(d, a, b, c, x[i + 14], 9, -1019803690);
+          c = md5gg(c, d, a, b, x[i + 3], 14, -187363961);
+          b = md5gg(b, c, d, a, x[i + 8], 20, 1163531501);
+          a = md5gg(a, b, c, d, x[i + 13], 5, -1444681467);
+          d = md5gg(d, a, b, c, x[i + 2], 9, -51403784);
+          c = md5gg(c, d, a, b, x[i + 7], 14, 1735328473);
+          b = md5gg(b, c, d, a, x[i + 12], 20, -1926607734);
+          a = md5hh(a, b, c, d, x[i + 5], 4, -378558);
+          d = md5hh(d, a, b, c, x[i + 8], 11, -2022574463);
+          c = md5hh(c, d, a, b, x[i + 11], 16, 1839030562);
+          b = md5hh(b, c, d, a, x[i + 14], 23, -35309556);
+          a = md5hh(a, b, c, d, x[i + 1], 4, -1530992060);
+          d = md5hh(d, a, b, c, x[i + 4], 11, 1272893353);
+          c = md5hh(c, d, a, b, x[i + 7], 16, -155497632);
+          b = md5hh(b, c, d, a, x[i + 10], 23, -1094730640);
+          a = md5hh(a, b, c, d, x[i + 13], 4, 681279174);
+          d = md5hh(d, a, b, c, x[i], 11, -358537222);
+          c = md5hh(c, d, a, b, x[i + 3], 16, -722521979);
+          b = md5hh(b, c, d, a, x[i + 6], 23, 76029189);
+          a = md5hh(a, b, c, d, x[i + 9], 4, -640364487);
+          d = md5hh(d, a, b, c, x[i + 12], 11, -421815835);
+          c = md5hh(c, d, a, b, x[i + 15], 16, 530742520);
+          b = md5hh(b, c, d, a, x[i + 2], 23, -995338651);
+          a = md5ii(a, b, c, d, x[i], 6, -198630844);
+          d = md5ii(d, a, b, c, x[i + 7], 10, 1126891415);
+          c = md5ii(c, d, a, b, x[i + 14], 15, -1416354905);
+          b = md5ii(b, c, d, a, x[i + 5], 21, -57434055);
+          a = md5ii(a, b, c, d, x[i + 12], 6, 1700485571);
+          d = md5ii(d, a, b, c, x[i + 3], 10, -1894986606);
+          c = md5ii(c, d, a, b, x[i + 10], 15, -1051523);
+          b = md5ii(b, c, d, a, x[i + 1], 21, -2054922799);
+          a = md5ii(a, b, c, d, x[i + 8], 6, 1873313359);
+          d = md5ii(d, a, b, c, x[i + 15], 10, -30611744);
+          c = md5ii(c, d, a, b, x[i + 6], 15, -1560198380);
+          b = md5ii(b, c, d, a, x[i + 13], 21, 1309151649);
+          a = md5ii(a, b, c, d, x[i + 4], 6, -145523070);
+          d = md5ii(d, a, b, c, x[i + 11], 10, -1120210379);
+          c = md5ii(c, d, a, b, x[i + 2], 15, 718787259);
+          b = md5ii(b, c, d, a, x[i + 9], 21, -343485551);
+          a = safeAdd(a, olda);
+          b = safeAdd(b, oldb);
+          c = safeAdd(c, oldc);
+          d = safeAdd(d, oldd);
+        }
+
+        return [a, b, c, d];
+      }
+      /**
+       * Convert an array of little-endian words to a string
+       *
+       * @param {Array<number>} input MD5 Array
+       * @returns {string} MD5 string
+       */
+
+
+      function binl2rstr(input) {
+        var i;
+        var output = '';
+        var length32 = input.length * 32;
+
+        for (i = 0; i < length32; i += 8) {
+          output += String.fromCharCode(input[i >> 5] >>> i % 32 & 0xff);
+        }
+
+        return output;
+      }
+      /**
+       * Convert a raw string to an array of little-endian words
+       * Characters >255 have their high-byte silently ignored.
+       *
+       * @param {string} input Raw input string
+       * @returns {Array<number>} Array of little-endian words
+       */
+
+
+      function rstr2binl(input) {
+        var i;
+        var output = [];
+        output[(input.length >> 2) - 1] = undefined;
+
+        for (i = 0; i < output.length; i += 1) {
+          output[i] = 0;
+        }
+
+        var length8 = input.length * 8;
+
+        for (i = 0; i < length8; i += 8) {
+          output[i >> 5] |= (input.charCodeAt(i / 8) & 0xff) << i % 32;
+        }
+
+        return output;
+      }
+      /**
+       * Calculate the MD5 of a raw string
+       *
+       * @param {string} s Input string
+       * @returns {string} Raw MD5 string
+       */
+
+
+      function rstrMD5(s) {
+        return binl2rstr(binlMD5(rstr2binl(s), s.length * 8));
+      }
+      /**
+       * Calculates the HMAC-MD5 of a key and some data (raw strings)
+       *
+       * @param {string} key HMAC key
+       * @param {string} data Raw input string
+       * @returns {string} Raw MD5 string
+       */
+
+
+      function rstrHMACMD5(key, data) {
+        var i;
+        var bkey = rstr2binl(key);
+        var ipad = [];
+        var opad = [];
+        var hash;
+        ipad[15] = opad[15] = undefined;
+
+        if (bkey.length > 16) {
+          bkey = binlMD5(bkey, key.length * 8);
+        }
+
+        for (i = 0; i < 16; i += 1) {
+          ipad[i] = bkey[i] ^ 0x36363636;
+          opad[i] = bkey[i] ^ 0x5c5c5c5c;
+        }
+
+        hash = binlMD5(ipad.concat(rstr2binl(data)), 512 + data.length * 8);
+        return binl2rstr(binlMD5(opad.concat(hash), 512 + 128));
+      }
+      /**
+       * Convert a raw string to a hex string
+       *
+       * @param {string} input Raw input string
+       * @returns {string} Hex encoded string
+       */
+
+
+      function rstr2hex(input) {
+        var hexTab = '0123456789abcdef';
+        var output = '';
+        var x;
+        var i;
+
+        for (i = 0; i < input.length; i += 1) {
+          x = input.charCodeAt(i);
+          output += hexTab.charAt(x >>> 4 & 0x0f) + hexTab.charAt(x & 0x0f);
+        }
+
+        return output;
+      }
+      /**
+       * Encode a string as UTF-8
+       *
+       * @param {string} input Input string
+       * @returns {string} UTF8 string
+       */
+
+
+      function str2rstrUTF8(input) {
+        return unescape(encodeURIComponent(input));
+      }
+      /**
+       * Encodes input string as raw MD5 string
+       *
+       * @param {string} s Input string
+       * @returns {string} Raw MD5 string
+       */
+
+
+      function rawMD5(s) {
+        return rstrMD5(str2rstrUTF8(s));
+      }
+      /**
+       * Encodes input string as Hex encoded string
+       *
+       * @param {string} s Input string
+       * @returns {string} Hex encoded string
+       */
+
+
+      function hexMD5(s) {
+        return rstr2hex(rawMD5(s));
+      }
+      /**
+       * Calculates the raw HMAC-MD5 for the given key and data
+       *
+       * @param {string} k HMAC key
+       * @param {string} d Input string
+       * @returns {string} Raw MD5 string
+       */
+
+
+      function rawHMACMD5(k, d) {
+        return rstrHMACMD5(str2rstrUTF8(k), str2rstrUTF8(d));
+      }
+      /**
+       * Calculates the Hex encoded HMAC-MD5 for the given key and data
+       *
+       * @param {string} k HMAC key
+       * @param {string} d Input string
+       * @returns {string} Raw MD5 string
+       */
+
+
+      function hexHMACMD5(k, d) {
+        return rstr2hex(rawHMACMD5(k, d));
+      }
+      /**
+       * Calculates MD5 value for a given string.
+       * If a key is provided, calculates the HMAC-MD5 value.
+       * Returns a Hex encoded string unless the raw argument is given.
+       *
+       * @param {string} string Input string
+       * @param {string} [key] HMAC key
+       * @param {boolean} [raw] Raw output switch
+       * @returns {string} MD5 output
+       */
+
+
+      function md5(string, key, raw) {
+        if (!key) {
+          if (!raw) {
+            return hexMD5(string);
+          }
+
+          return rawMD5(string);
+        }
+
+        if (!raw) {
+          return hexHMACMD5(key, string);
+        }
+
+        return rawHMACMD5(key, string);
+      }
+
+      if (module.exports) {
+        module.exports = md5;
+      } else {
+        $.md5 = md5;
+      }
+    })(commonjsGlobal);
+  });
+
+  function md5ForNode(node) {
+    if (null === node || 'object' !== _typeof(node)) return undefined;
+
+    if (node.src) {
+      return md5(node.src);
+    } else if (node.href) {
+      return md5(node.href);
+    } else if (node.innerText && '' !== node.innerText) {
+      // eslint-disable-line yoda
+      return md5(node.innerText);
+    } else {
+      return undefined;
+    }
+  }
+
+  var diagScriptId = 'fa-kits-diag';
+  var nodeUnderTestId = 'fa-kits-node-under-test';
+  var md5Attr = 'data-md5';
+  var detectionIgnoreAttr = 'data-fa-detection-ignore';
+  var timeoutAttr = 'data-fa-detection-timeout';
+  var resultsCollectionMaxWaitAttr = 'data-fa-detection-results-collection-max-wait';
+
+  var silenceErrors = function silenceErrors(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  function pollUntil(_ref) {
+    var _ref$fn = _ref.fn,
+        fn = _ref$fn === void 0 ? function () {
+      return true;
+    } : _ref$fn,
+        _ref$initialDuration = _ref.initialDuration,
+        initialDuration = _ref$initialDuration === void 0 ? 1 : _ref$initialDuration,
+        _ref$maxDuration = _ref.maxDuration,
+        maxDuration = _ref$maxDuration === void 0 ? WINDOW.FontAwesomeDetection.timeout : _ref$maxDuration,
+        _ref$showProgress = _ref.showProgress,
+        showProgress = _ref$showProgress === void 0 ? false : _ref$showProgress,
+        progressIndicator = _ref.progressIndicator;
+    return new Promise(function (resolve, reject) {
+      // eslint-disable-line compat/compat
+      function poll(duration, cumulativeDuration) {
+        setTimeout(function () {
+          var result = fn();
+
+          if (showProgress) {
+            console.info(progressIndicator);
+          }
+
+          if (!!result) {
+            // eslint-disable-line no-extra-boolean-cast
+            resolve(result);
+          } else {
+            var nextDuration = 250;
+            var nextCumulativeDuration = nextDuration + cumulativeDuration;
+
+            if (nextCumulativeDuration <= maxDuration) {
+              poll(nextDuration, nextCumulativeDuration);
+            } else {
+              reject('timeout'); // eslint-disable-line prefer-promise-reject-errors
+            }
+          }
+        }, duration);
+      }
+
+      poll(initialDuration, 0);
+    });
+  }
+
+  function detectWebfontConflicts() {
+    var linkTags = Array.from(DOCUMENT.getElementsByTagName('link')).filter(function (t) {
+      return !t.hasAttribute(detectionIgnoreAttr);
+    });
+    var styleTags = Array.from(DOCUMENT.getElementsByTagName('style')).filter(function (t) {
+      if (t.hasAttribute(detectionIgnoreAttr)) {
+        return false;
+      } // If the browser has loaded the FA5 CSS, let's not test that <style> element.
+      // Its enough that we'll be testing for traces of the corresponding JS being loaded, and testing
+      // this <style> would only produce a false negative anyway.
+
+
+      if (WINDOW.FontAwesomeConfig && t.innerText.match(new RegExp("svg:not\\(:root\\)\\.".concat(WINDOW.FontAwesomeConfig.replacementClass)))) {
+        return false;
+      }
+
+      return true;
+    });
+
+    function runDiag(scriptOrLinkTag, md5) {
+      var diagFrame = DOCUMENT.createElement('iframe'); // Using "visibility: hidden; position: absolute" instead of "display: none;" because
+      // Firefox will not return the expected results for getComputedStyle if our iframe has display: none.
+
+      diagFrame.setAttribute('style', 'visibility: hidden; position: absolute; height: 0; width: 0;');
+      var testIconId = 'fa-test-icon-' + md5;
+      var iTag = DOCUMENT.createElement('i');
+      iTag.setAttribute('class', 'fa fa-coffee');
+      iTag.setAttribute('id', testIconId);
+      var diagScript = DOCUMENT.createElement('script');
+      diagScript.setAttribute('id', diagScriptId); // WARNING: this function will be toString()'d and assigned to innerText of the diag script
+      // element that we'll be putting into a diagnostic iframe.
+      // That means that this code won't compile until after the outer script has run and injected
+      // this code into the iframe. There are some compile time errors that might occur there.
+      // For example, using single line (double-slash) comments like this one inside that function
+      // will probably cause it to choke. Chrome will show an error like this:
+      // Uncaught SyntaxError: Unexpected end of input
+
+      var diagScriptFun = function diagScriptFun(nodeUnderTestId, testIconId, md5, parentOrigin) {
+        parent.FontAwesomeDetection.__pollUntil({
+          fn: function fn() {
+            var iEl = document.getElementById(testIconId);
+            var computedStyle = window.getComputedStyle(iEl);
+            var fontFamily = computedStyle.getPropertyValue('font-family');
+
+            if (!!fontFamily.match(/FontAwesome/) || !!fontFamily.match(/Font Awesome [56]/)) {
+              return true;
+            } else {
+              return false;
+            }
+          }
+        }).then(function () {
+          var node = document.getElementById(nodeUnderTestId);
+          parent.postMessage({
+            type: 'fontawesome-conflict',
+            technology: 'webfont',
+            href: node.href,
+            innerText: node.innerText,
+            tagName: node.tagName,
+            md5: md5
+          }, parentOrigin);
+        }).catch(function (e) {
+          var node = document.getElementById(nodeUnderTestId);
+
+          if (e === 'timeout') {
+            parent.postMessage({
+              type: 'no-conflict',
+              technology: 'webfont',
+              href: node.src,
+              innerText: node.innerText,
+              tagName: node.tagName,
+              md5: md5
+            }, parentOrigin);
+          } else {
+            console.error(e);
+          }
+        });
+      };
+
+      var parentOrigin = WINDOW.location.origin === 'file://' ? '*' : WINDOW.location.origin;
+      diagScript.innerText = "(".concat(diagScriptFun.toString(), ")('").concat(nodeUnderTestId, "', '").concat(testIconId || 'foo', "', '").concat(md5, "', '").concat(parentOrigin, "');");
+
+      diagFrame.onload = function () {
+        diagFrame.contentWindow.addEventListener('error', silenceErrors, true);
+        diagFrame.contentDocument.head.appendChild(diagScript);
+        diagFrame.contentDocument.head.appendChild(scriptOrLinkTag);
+        diagFrame.contentDocument.body.appendChild(iTag);
+      };
+
+      domready(function () {
+        return DOCUMENT.body.appendChild(diagFrame);
+      });
+    }
+
+    var cssByMD5 = {};
+
+    for (var i = 0; i < linkTags.length; i++) {
+      var linkUnderTest = DOCUMENT.createElement('link');
+      linkUnderTest.setAttribute('id', nodeUnderTestId);
+      linkUnderTest.setAttribute('href', linkTags[i].href);
+      linkUnderTest.setAttribute('rel', linkTags[i].rel);
+      var md5ForLink = md5ForNode(linkTags[i]);
+      linkUnderTest.setAttribute(md5Attr, md5ForLink);
+      cssByMD5[md5ForLink] = linkTags[i];
+      runDiag(linkUnderTest, md5ForLink);
+    }
+
+    for (var _i = 0; _i < styleTags.length; _i++) {
+      var styleUnderTest = DOCUMENT.createElement('style');
+      styleUnderTest.setAttribute('id', nodeUnderTestId);
+      var md5ForStyle = md5ForNode(styleTags[_i]);
+      styleUnderTest.setAttribute(md5Attr, md5ForStyle);
+      styleUnderTest.innerText = styleTags[_i].innerText;
+      cssByMD5[md5ForStyle] = styleTags[_i];
+      runDiag(styleUnderTest, md5ForStyle);
+    }
+
+    return cssByMD5;
+  }
+
+  function detectSvgConflicts(currentScript) {
+    var scripts = Array.from(DOCUMENT.scripts).filter(function (t) {
+      return !t.hasAttribute(detectionIgnoreAttr) && t !== currentScript;
+    });
+    var scriptsByMD5 = {};
+
+    var _loop = function _loop(scriptIdx) {
+      var diagFrame = DOCUMENT.createElement('iframe');
+      diagFrame.setAttribute('style', 'display:none;');
+      var scriptUnderTest = DOCUMENT.createElement('script');
+      scriptUnderTest.setAttribute('id', nodeUnderTestId);
+      var md5ForScript = md5ForNode(scripts[scriptIdx]);
+      scriptUnderTest.setAttribute(md5Attr, md5ForScript);
+      scriptsByMD5[md5ForScript] = scripts[scriptIdx];
+
+      if (scripts[scriptIdx].src !== '') {
+        scriptUnderTest.src = scripts[scriptIdx].src;
+      }
+
+      if (scripts[scriptIdx].innerText !== '') {
+        scriptUnderTest.innerText = scripts[scriptIdx].innerText;
+      }
+
+      scriptUnderTest.async = true;
+      var diagScript = DOCUMENT.createElement('script');
+      diagScript.setAttribute('id', diagScriptId);
+      var parentOrigin = WINDOW.location.origin === 'file://' ? '*' : WINDOW.location.origin;
+
+      var diagScriptFun = function diagScriptFun(nodeUnderTestId, md5, parentOrigin) {
+        parent.FontAwesomeDetection.__pollUntil({
+          fn: function fn() {
+            return !!window.FontAwesomeConfig || !!window.FontAwesomeKitConfig;
+          }
+        }).then(function () {
+          var scriptNode = document.getElementById(nodeUnderTestId);
+          parent.postMessage({
+            type: 'fontawesome-conflict',
+            technology: 'js',
+            src: scriptNode.src,
+            innerText: scriptNode.innerText,
+            tagName: scriptNode.tagName,
+            md5: md5
+          }, parentOrigin);
+        }).catch(function (e) {
+          var scriptNode = document.getElementById(nodeUnderTestId);
+
+          if (e === 'timeout') {
+            parent.postMessage({
+              type: 'no-conflict',
+              src: scriptNode.src,
+              innerText: scriptNode.innerText,
+              tagName: scriptNode.tagName,
+              md5: md5
+            }, parentOrigin);
+          } else {
+            console.error(e);
+          }
+        });
+      };
+
+      diagScript.innerText = "(".concat(diagScriptFun.toString(), ")('").concat(nodeUnderTestId, "', '").concat(md5ForScript, "', '").concat(parentOrigin, "');");
+
+      diagFrame.onload = function () {
+        diagFrame.contentWindow.addEventListener('error', silenceErrors, true);
+        diagFrame.contentDocument.head.appendChild(diagScript);
+        diagFrame.contentDocument.head.appendChild(scriptUnderTest);
+      };
+
+      domready(function () {
+        return DOCUMENT.body.appendChild(diagFrame);
+      });
+    };
+
+    for (var scriptIdx = 0; scriptIdx < scripts.length; scriptIdx++) {
+      _loop(scriptIdx);
+    }
+
+    return scriptsByMD5;
+  }
+
+  function setDoneResults(_ref2) {
+    var nodesTested = _ref2.nodesTested,
+        nodesFound = _ref2.nodesFound;
+    WINDOW.FontAwesomeDetection = WINDOW.FontAwesomeDetection || {};
+    WINDOW.FontAwesomeDetection.nodesTested = nodesTested;
+    WINDOW.FontAwesomeDetection.nodesFound = nodesFound;
+    WINDOW.FontAwesomeDetection.detectionDone = true;
+  }
+
+  function conflictDetection() {
+    var report$$1 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
+    var nodesTested = {
+      conflict: {},
+      noConflict: {}
+    };
+
+    WINDOW.onmessage = function (e) {
+      if (WINDOW.location.origin === 'file://' || e.origin === WINDOW.location.origin) {
+        if (e && e.data) {
+          if (e.data.type === 'fontawesome-conflict') {
+            nodesTested.conflict[e.data.md5] = e.data;
+          } else if (e.data.type === 'no-conflict') {
+            nodesTested.noConflict[e.data.md5] = e.data;
+          }
+        }
+      }
+    };
+
+    var scriptsToTest = detectSvgConflicts(DOCUMENT.currentScript);
+    var cssToTest = detectWebfontConflicts();
+
+    var nodesFound = _objectSpread2(_objectSpread2({}, scriptsToTest), cssToTest);
+
+    var testCount = Object.keys(scriptsToTest).length + Object.keys(cssToTest).length; // The resultsCollectionMaxWait allows for the time between when the tests running under
+    // child iframes call postMessage with their results, and when the parent window
+    // receives and handles those events with window.onmessage.
+    // Making it configurable allows us to test the scenario where this timeout is exceeded.
+    // Naming it something very different from "timeout" is to help avoid the potential ambiguity between
+    // these two timeout-related settings.
+
+    var masterTimeout = WINDOW.FontAwesomeDetection.timeout + WINDOW.FontAwesomeDetection.resultsCollectionMaxWait;
+    console.group('Font Awesome Detector');
+
+    if (testCount === 0) {
+      console.info('%cAll Good!', 'color: green; font-size: large');
+      console.info('We didn\'t find anything that needs testing for conflicts. Ergo, no conflicts.');
+    } else {
+      console.info("Testing ".concat(testCount, " possible conflicts."));
+      console.info("We'll wait about ".concat(Math.round(WINDOW.FontAwesomeDetection.timeout / 10) / 100, " seconds while testing these and\n") + "then up to another ".concat(Math.round(WINDOW.FontAwesomeDetection.resultsCollectionMaxWait / 10) / 100, " to allow the browser time\n") + "to accumulate the results. But we'll probably be outta here way before then.\n\n");
+      console.info("You can adjust those durations by assigning values to these attributes on the <script> element that loads this detection:");
+      console.info("\t%c".concat(timeoutAttr, "%c: milliseconds to wait for each test before deciding whether it's a conflict."), 'font-weight: bold;', 'font-size: normal;');
+      console.info("\t%c".concat(resultsCollectionMaxWaitAttr, "%c: milliseconds to wait for the browser to accumulate test results before giving up."), 'font-weight: bold;', 'font-size: normal;');
+      pollUntil({
+        // Give this overall timer a little extra cushion
+        maxDuration: masterTimeout,
+        showProgress: true,
+        progressIndicator: 'waiting...',
+        fn: function fn() {
+          return Object.keys(nodesTested.conflict).length + Object.keys(nodesTested.noConflict).length >= testCount;
+        }
+      }).then(function () {
+        console.info('DONE!');
+        setDoneResults({
+          nodesTested: nodesTested,
+          nodesFound: nodesFound
+        });
+        report$$1({
+          nodesTested: nodesTested,
+          nodesFound: nodesFound
+        });
+        console.groupEnd();
+      }).catch(function (e) {
+        if (e === 'timeout') {
+          console.info('TIME OUT! We waited until we got tired. Here\'s what we found:');
+          setDoneResults({
+            nodesTested: nodesTested,
+            nodesFound: nodesFound
+          });
+          report$$1({
+            nodesTested: nodesTested,
+            nodesFound: nodesFound
+          });
+        } else {
+          console.info('Whoops! We hit an error:', e);
+          console.info('Here\'s what we\'d found up until that error:');
+          setDoneResults({
+            nodesTested: nodesTested,
+            nodesFound: nodesFound
+          });
+          report$$1({
+            nodesTested: nodesTested,
+            nodesFound: nodesFound
+          });
+        }
+
+        console.groupEnd();
+      });
+    }
+  } // Allow clients to access, and in some cases, override some properties
+
+  var initialConfig = WINDOW.FontAwesomeDetection || {}; // These can be overridden
+
+  var _default = {
+    report: report,
+    timeout: +(DOCUMENT.currentScript.getAttribute(timeoutAttr) || "2000"),
+    resultsCollectionMaxWait: +(DOCUMENT.currentScript.getAttribute(resultsCollectionMaxWaitAttr) || "5000")
+  };
+
+  var _config = _objectSpread2(_objectSpread2(_objectSpread2({}, _default), initialConfig), {}, {
+    // These cannot be overridden
+    __pollUntil: pollUntil,
+    md5ForNode: md5ForNode,
+    detectionDone: false,
+    nodesTested: null,
+    nodesFound: null
+  });
+
+  WINDOW.FontAwesomeDetection = _config;
+
+  var PRODUCTION = function () {
+    try {
+      return process.env.NODE_ENV === 'production';
+    } catch (e) {
+      return false;
+    }
+  }();
+  var STYLE_TO_PREFIX = {
+    'solid': 'fas',
+    'regular': 'far',
+    'light': 'fal',
+    'thin': 'fat',
+    'duotone': 'fad',
+    'brands': 'fab',
+    'kit': 'fak'
+  };
+  var oneToTen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  var oneToTwenty = oneToTen.concat([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+  var DUOTONE_CLASSES = {
+    GROUP: 'duotone-group',
+    SWAP_OPACITY: 'swap-opacity',
+    PRIMARY: 'primary',
+    SECONDARY: 'secondary'
+  };
+  var RESERVED_CLASSES = [].concat(_toConsumableArray(Object.keys(STYLE_TO_PREFIX)), ['2xs', 'xs', 'sm', 'lg', 'xl', '2xl', 'beat', 'border', 'fade', 'beat-fade', 'bounce', 'flip-both', 'flip-horizontal', 'flip-vertical', 'flip', 'fw', 'inverse', 'layers-counter', 'layers-text', 'layers', 'li', 'pull-left', 'pull-right', 'pulse', 'rotate-180', 'rotate-270', 'rotate-90', 'rotate-by', 'shake', 'spin-pulse', 'spin-reverse', 'spin', 'stack-1x', 'stack-2x', 'stack', 'ul', DUOTONE_CLASSES.GROUP, DUOTONE_CLASSES.SWAP_OPACITY, DUOTONE_CLASSES.PRIMARY, DUOTONE_CLASSES.SECONDARY]).concat(oneToTen.map(function (n) {
+    return "".concat(n, "x");
+  })).concat(oneToTwenty.map(function (n) {
+    return "w-".concat(n);
+  }));
+
+  function bunker(fn) {
+    try {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      fn.apply(void 0, args);
+    } catch (e) {
+      if (!PRODUCTION) {
+        throw e;
+      }
+    }
+  }
+
+  bunker(function () {
+    if (IS_BROWSER && IS_DOM) {
+      conflictDetection(window.FontAwesomeDetection.report);
+    }
+  });
+
+})));

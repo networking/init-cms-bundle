@@ -8,7 +8,7 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-{% set isAjax = app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+{% set isAjax = app.request.isXmlHttpRequest or app.request.query.getBoolean('_xml_http_request') %}
 {% set url = admin.id(object) ? 'edit' : 'create' %}
 {% extends isAjax?'@NetworkingInitCms/modal-edit.html.twig':'@NetworkingInitCms/CRUD/base_edit.html.twig' %}
 
@@ -56,7 +56,7 @@ file that was distributed with this source code.
 
         {% block modal_body %}
             {% if form.vars.errors|length > 0 %}
-                <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}alert alert-error{% endif %}">
+                <div class="sonata-ba-form-error {% if app.request.isXmlHttpRequest or app.request.query.getBoolean('_xml_http_request') %}alert alert-error{% endif %}">
                     {{ form_errors(form) }}
                 </div>
             {% endif %}
@@ -250,7 +250,7 @@ file that was distributed with this source code.
             <div class="card-footer">
                 {% block formactions %}
                     {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-                        {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+                        {% if app.request.isXmlHttpRequest or app.request.query.getBoolean('_xml_http_request') %}
                             <button class="btn btn-sm btn-light" data-bs-dismiss="modal" type="button"
                                     aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
                             {% if admin.id(object) %}

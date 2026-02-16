@@ -8,15 +8,14 @@ declare(strict_types=1);
  * Date: 20.12.17
  * Time: 16:38.
  */
+
 namespace Networking\InitCmsBundle\Admin;
 
-use Networking\InitCmsBundle\Admin\BaseAdmin;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\UserBundle\Form\Type\RolesMatrixType;
-use Sonata\UserBundle\Form\Type\SecurityRolesType;
 use Sonata\UserBundle\Model\UserInterface;
 
 /**
@@ -24,12 +23,7 @@ use Sonata\UserBundle\Model\UserInterface;
  */
 class GroupAdmin extends BaseAdmin
 {
-    /**
-     * @var array
-     */
-    protected $trackedActions = ['list'];
-
-
+    protected array $trackedActions = ['list'];
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {
@@ -37,8 +31,6 @@ class GroupAdmin extends BaseAdmin
     }
 
     /**
-     * @param $trackedActions
-     *
      * @return $this
      */
     public function setTrackedActions($trackedActions): AbstractAdmin
@@ -48,17 +40,11 @@ class GroupAdmin extends BaseAdmin
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getTrackedActions(): array
     {
         return $this->trackedActions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
@@ -66,9 +52,6 @@ class GroupAdmin extends BaseAdmin
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureListFields(ListMapper $list): void
     {
         $list
@@ -87,14 +70,10 @@ class GroupAdmin extends BaseAdmin
         );
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     protected function configureFormFields(FormMapper $form): void
     {
         $form
-            ->add('name', null, [ 'required' => true, 'row_attr' => ['class' => 'form-floating mb-3']])
+            ->add('name', null, ['required' => true, 'row_attr' => ['class' => 'form-floating mb-3']])
             ->add(
                 'roles',
                 RolesMatrixType::class,
@@ -106,10 +85,8 @@ class GroupAdmin extends BaseAdmin
                     'excluded_roles' => [
                         UserInterface::ROLE_DEFAULT,
                         UserInterface::ROLE_SUPER_ADMIN,
-                    ]
+                    ],
                 ]
             );
     }
-
-
 }

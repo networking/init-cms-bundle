@@ -1,7 +1,0 @@
-webauthn_routes:
-    resource: .
-    type: webauthn
-
-app_auth_register_request:
-    resource: '@NetworkingInitCmsBundle/Controller/WebAuthn/WebAuthnController.php'
-    type: attribute

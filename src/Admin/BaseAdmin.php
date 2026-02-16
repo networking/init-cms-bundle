@@ -27,17 +27,17 @@ use Symfony\Component\Intl\Locales;
  */
 abstract class BaseAdmin extends AbstractAdmin
 {
-    protected $attributeReader;
+    protected ?SonataAdminAttributeReaderInterface $attributeReader = null;
 
     /**
      * @var array
      */
-    protected $languages;
+    protected array $languages;
 
     /**
      * @var array
      */
-    protected $trackedActions = [];
+    protected array $trackedActions = [];
 
     /**
      * Set the language paramenter to contain a list of languages most likely
@@ -63,7 +63,7 @@ abstract class BaseAdmin extends AbstractAdmin
      * the value for easy display in a dropdown select for example
      * example: array('de_CH' => 'Deutsch', 'en_GB' => 'English').
      */
-    protected function getLocaleChoices(): array
+    public function getLocaleChoices(): array
     {
         $localeChoices = [];
 
@@ -87,7 +87,7 @@ abstract class BaseAdmin extends AbstractAdmin
             return '';
         }
 
-        $locale = $this->getRequest()->get('locale');
+        $locale = $this->getRequest()->query->all('locale');
 
         if (!$locale) {
             $locale = $this->getRequest()->getLocale();
@@ -104,7 +104,7 @@ abstract class BaseAdmin extends AbstractAdmin
 
         if (!array_key_exists($locale, $localeChoices)) {
             foreach ($localeChoices as $key => $choice) {
-                if (false !== strpos($key, substr($locale, 0, 2))) {
+                if (str_contains($key, substr($locale, 0, 2))) {
                     return $key;
                 }
             }

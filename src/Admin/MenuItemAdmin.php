@@ -46,24 +46,24 @@ class MenuItemAdmin extends BaseAdmin
      *
      * @var int
      */
-    protected $maxPerPage = 10000;
+    protected int $maxPerPage = 10000;
 
     /**
      * The maximum number of page numbers to display in the list.
      *
      * @var int
      */
-    protected $maxPageLinks = 10000;
+    protected int $maxPageLinks = 10000;
 
     /**
      * @var bool
      */
-    protected $isRoot = false;
+    protected bool $isRoot = false;
 
     /**
      * @var array
      */
-    protected $linkTargets
+    protected array $linkTargets
         = [
             '_blank' => '_blank',
             '_self' => '_self',
@@ -74,7 +74,7 @@ class MenuItemAdmin extends BaseAdmin
     /**
      * @var array
      */
-    protected $trackedActions = ['list'];
+    protected array $trackedActions = ['list'];
 
     protected function generateBaseRoutePattern(bool $isChildAdmin = false): string
     {

@@ -1,807 +1,934 @@
-import Sortable from '../admin-theme/plugins/custom/sortablejs/sortablejs.bundle.js';
-import {CMSAdmin} from "./cms-admin";
+import Sortable from "../vendor/sortablejs/sortablejs.bundle.js"
+import { CMSAdmin } from "./cms-admin"
 
-
-let containers = null;
-let dropzones = null;
-let contentTypeList = null;
-let addBlockUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_addBlock');
-let sortUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_updateLayoutBlockSort');
-let deleteUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_deleteAjax');
-let lastTranslationSettingsHtml = null;
-let pageId = null;
-let erroredContainers = new Set();
-let Translator = await CMSAdmin.getTranslator();
+let containers = null
+let dropzones = null
+let contentTypeList = null
+const addBlockUrl = CMSRouting.generate(
+	"admin_networking_initcms_layoutblock_addBlock",
+)
+const sortUrl = CMSRouting.generate(
+	"admin_networking_initcms_layoutblock_updateLayoutBlockSort",
+)
+const deleteUrl = CMSRouting.generate(
+	"admin_networking_initcms_layoutblock_deleteAjax",
+)
+let lastTranslationSettingsHtml = null
+let pageId = null
+const erroredContainers = new Set()
+const Translator = await CMSAdmin.getTranslator()
 
 function initDropZone() {
+	containers = document.querySelectorAll(".draggable-zone")
+	dropzones = document.querySelectorAll(".dropzone")
+	contentTypeList = document.querySelector("#content_item_list")
+	pageId = document
+		.querySelector("meta[name='init-cms-page-id']")
+		.getAttribute("content")
 
+	if (containers.length === 0) {
+		return false
+	}
 
-    containers = document.querySelectorAll(".draggable-zone");
-    dropzones = document.querySelectorAll(".dropzone");
-    contentTypeList = document.querySelector("#content_item_list");
-    pageId = document.querySelector("meta[name='init-cms-page-id']").getAttribute("content");
+	const contentItems = new Sortable(contentTypeList, {
+		group: {
+			name: "shared",
+			pull: "clone",
+			put: false,
+			revertClone: true,
+		},
+		sort: false,
+		onEnd: (/**Event*/ evt) => {
+			hideContainerErrors()
+		},
+	})
 
-    if (containers.length === 0) {
-        return false;
-    }
+	containers.forEach((container) => {
+		const swappable = new Sortable(container, {
+			group: { name: "shared", pull: true, put: acceptLayoutBlock },
+			animation: 150,
+			onEnd: (/**Event*/ evt) => {
+				hideContainerErrors()
 
-    let contentItems = new Sortable(contentTypeList, {
-        group: {
-            name: 'shared',
-            pull: 'clone',
-            put: false,
-            revertClone: true,
+				if (evt.newIndex === evt.oldIndex && evt.to.id === evt.from.id) {
+					return
+				}
 
-        },sort: false,
-        onEnd: function (/**Event*/evt) {
-            hideContainerErrors()
-        },
-    })
+				saveLayoutBlockSort(evt, (response) => {
+					CMSAdmin.createInitCmsMessageBox(
+						response.data.messageStatus,
+						response.data.message,
+						1000,
+					)
+				})
+			},
+			onAdd: (/**CustomEvent*/ evt, dragEl) => {
+				const count = evt.to.querySelectorAll(".draggable").length
+				const item = evt.item
 
-    containers.forEach(function (container) {
-        let swappable = new Sortable(container, {
-            group: {name: 'shared', pull: true, put: acceptLayoutBlock},
-            animation: 150,
-            onEnd: function (/**Event*/evt) {
+				if (!item.id) {
+					const dropzone = container.parentElement
+					createItem(
+						item.dataset.contentType,
+						dropzone.dataset.pageId,
+						dropzone.dataset.zone,
+						evt.newIndex,
+					)
+						.then((response) => {
+							item.outerHTML = response.data.html
+							saveLayoutBlockSort(evt)
+							document
+								.querySelector(
+									"#layoutBlock_" +
+										response.data.layoutBlockId +
+										"  .create_block",
+								)
+								.click()
+						})
+						.catch((error) => {
+							if (!error.response) {
+								console.error(error)
+								return
+							}
 
-                hideContainerErrors()
+							const message = error.response.data.detail
 
-                if(evt.newIndex === evt.oldIndex && evt.to.id === evt.from.id){
-                    return
-                }
+							CMSAdmin.createInitCmsMessageBox("error", message)
+						})
+				}
 
-                saveLayoutBlockSort(evt, (response) => {
-                    CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message, 1000);
-                })
-            },
-            onAdd: function (/**CustomEvent*/evt, dragEl) {
+				if (count) {
+					evt.to.querySelector(".empty_layout_block").classList.add("d-none")
+					return
+				}
 
-                let count = evt.to.querySelectorAll('.draggable').length;
-                let item = evt.item;
+				evt.to.querySelector(".empty_layout_block").classList.remove("d-none")
+			},
+			onRemove: (/**Event*/ evt) => {
+				const count = evt.from.querySelectorAll(".draggable").length
+				if (count) {
+					evt.from.querySelector(".empty_layout_block").classList.add("d-none")
+					return
+				}
 
-                if (!item.id) {
+				evt.from.querySelector(".empty_layout_block").classList.remove("d-none")
+			},
+		})
 
-                    let dropzone = container.parentElement
-                    createItem(item.dataset.contentType, dropzone.dataset.pageId, dropzone.dataset.zone, evt.newIndex)
-                        .then((response) => {
+		document.addEventListener("fade-out-blocks", (e) => {
+			swappable.option("disabled", true)
+		})
 
-                            item.outerHTML = response.data.html
-                            saveLayoutBlockSort(evt)
-                            document.querySelector('#layoutBlock_' + response.data.layoutBlockId + '  .create_block').click()
-
-
-                        })
-                        .catch((error) => {
-                            if(!error.response){
-                                console.error(error)
-                                return
-                            }
-
-                            let message = error.response.data.detail
-
-                            CMSAdmin.createInitCmsMessageBox('error', message);
-                        })
-                }
-
-                if (count) {
-                    evt.to.querySelector('.empty_layout_block').classList.add("d-none")
-                    return
-                }
-
-                evt.to.querySelector('.empty_layout_block').classList.remove("d-none")
-
-
-            },
-            onRemove: function (/**Event*/evt) {
-                let count = evt.from.querySelectorAll('.draggable').length;
-                if (count) {
-                    evt.from.querySelector('.empty_layout_block').classList.add("d-none")
-                    return
-                }
-
-                evt.from.querySelector('.empty_layout_block').classList.remove("d-none")
-
-            }
-        });
-
-        document.addEventListener('fade-out-blocks', function (e) {
-            swappable.option('disabled', true);
-        })
-
-        document.addEventListener('fade-in-blocks', function (e) {
-            swappable.option('disabled', false);
-        })
-    })
+		document.addEventListener("fade-in-blocks", (e) => {
+			swappable.option("disabled", false)
+		})
+	})
 }
 
-
-
-let showContainerError = (container) => {
-    let dropzone = container.closest('.dropzone')
-    dropzone.classList.add('bg-light-danger')
-    dropzone.closest('.dropzone').classList.add('border-danger')
-    erroredContainers.add(dropzone)
+const showContainerError = (container) => {
+	const dropzone = container.closest(".dropzone")
+	dropzone.classList.add("bg-light-danger")
+	dropzone.closest(".dropzone").classList.add("border-danger")
+	erroredContainers.add(dropzone)
 }
 
-let hideContainerErrors = () => {
-    erroredContainers.forEach((item) => {
-        item.classList.remove('bg-light-danger')
-        item.classList.remove('border-danger')
-    })
+const hideContainerErrors = () => {
+	erroredContainers.forEach((item) => {
+		item.classList.remove("bg-light-danger")
+		item.classList.remove("border-danger")
+	})
 }
 
-let acceptLayoutBlock = (to, from, dragEl) => {
-    let container = to.el
-    let contentBlock = dragEl
-    let contentTypes = JSON.parse(container.dataset.contentTypes);
-    if (contentTypes.length > 0) {
-        if (!contentTypes.includes(contentBlock.dataset.contentType)) {
-            showContainerError(container)
-            return false
+const acceptLayoutBlock = (to, from, dragEl) => {
+	const container = to.el
+	const contentBlock = dragEl
+	const contentTypes = JSON.parse(container.dataset.contentTypes)
+	if (contentTypes.length > 0) {
+		if (!contentTypes.includes(contentBlock.dataset.contentType)) {
+			showContainerError(container)
+			return false
+		}
+	}
 
-        }
-    }
+	const maxItems = container.dataset.maxItems
 
-    let maxItems = container.dataset.maxItems;
+	const count = container.querySelectorAll(".draggable").length
 
-    let count = container.querySelectorAll('.draggable').length;
-
-    if (maxItems > 0) {
-        if (count >= maxItems) {
-            showContainerError(container)
-            return false
-        }
-    }
-    hideContainerErrors()
-    return true
+	if (maxItems > 0) {
+		if (count >= maxItems) {
+			showContainerError(container)
+			return false
+		}
+	}
+	hideContainerErrors()
+	return true
 }
 
-let saveLayoutBlockSort = (event, callback) => {
-    // CMSAdmin.createInitCmsMessageBox(xhr.messageStatus, xhr.message);
+const saveLayoutBlockSort = (event, callback) => {
+	// CMSAdmin.createInitCmsMessageBox(xhr.messageStatus, xhr.message);
 
-    let zones = [];
-    let pageId = null;
-    let adminCode = null;
+	const zones = []
+	let pageId = null
+	let adminCode = null
 
-    dropzones.forEach(function (dropzone) {
-        let layoutBlocks = dropzone.querySelectorAll(".draggable");
-        let addButtons = dropzone.querySelectorAll(".add-layout");
-        let zone = dropzone.dataset.zone
+	dropzones.forEach((dropzone) => {
+		const layoutBlocks = dropzone.querySelectorAll(".draggable")
+		const addButtons = dropzone.querySelectorAll(".add-layout")
+		const zone = dropzone.dataset.zone
 
-        if (!pageId) {
-            pageId = dropzone.dataset.pageId
-        }
+		if (!pageId) {
+			pageId = dropzone.dataset.pageId
+		}
 
-        if (!adminCode) {
-            adminCode = dropzone.dataset.adminCode
-        }
+		if (!adminCode) {
+			adminCode = dropzone.dataset.adminCode
+		}
 
+		const layoutBlockIds = []
 
-        let layoutBlockIds = [];
+		layoutBlocks.forEach((layoutBlock, index) => {
+			layoutBlock.dataset.sortOrder = index
+			layoutBlockIds.push(layoutBlock.id)
+		})
+		zones.push({
+			zone: zone,
+			layoutBlocks: layoutBlockIds,
+		})
+	})
 
-        layoutBlocks.forEach(function (layoutBlock, index) {
-            layoutBlock.dataset.sortOrder = index;
-            layoutBlockIds.push(layoutBlock.id);
-        })
-        zones.push({
-            zone: zone,
-            layoutBlocks: layoutBlockIds
-        })
-    })
-
-    submitLayoutSort(zones, pageId, adminCode).then(function (response) {
-
-        let event = new CustomEvent('page-updated')
-        document.body.dispatchEvent(event)
-        if (callback !== undefined) {
-            callback(response)
-        }
-    })
-
-};
-
-let createItem = async (contentType, pageId, zone, sortOrder) => {
-
-    return await axios.get(addBlockUrl, {
-        params: {
-            subclass: contentType,
-            zone: zone,
-            pageId: pageId,
-            sortOrder: sortOrder
-        }
-    }, axiosConfig)
+	submitLayoutSort(zones, pageId, adminCode).then((response) => {
+		const event = new CustomEvent("page-updated")
+		document.body.dispatchEvent(event)
+		if (callback !== undefined) {
+			callback(response)
+		}
+	})
 }
 
-let submitLayoutSort = async (zones, pageId, adminCode) => {
-    return await axios.post(sortUrl, {
-        zones: zones,
-        pageId: pageId,
-        code: adminCode,
-    }, axiosConfig)
+const createItem = async (contentType, pageId, zone, sortOrder) => {
+	return await axios.get(
+		addBlockUrl,
+		{
+			params: {
+				subclass: contentType,
+				zone: zone,
+				pageId: pageId,
+				sortOrder: sortOrder,
+			},
+		},
+		axiosConfig,
+	)
 }
 
-let fadeOutContentBlocks = (except) => {
-    let contentBlocks = document.querySelectorAll('.content_type_item')
-    contentBlocks.forEach((item) => {
-        if (item === except) {
-
-
-            return
-        }
-        item.classList.add('opacity-5')
-    })
-    document.dispatchEvent(new CustomEvent('fade-out-blocks'))
+const submitLayoutSort = async (zones, pageId, adminCode) => {
+	return await axios.post(
+		sortUrl,
+		{
+			zones: zones,
+			pageId: pageId,
+			code: adminCode,
+		},
+		axiosConfig,
+	)
 }
 
-let fadeInContentBlocks = () => {
-    let contentBlocks = document.querySelectorAll('.content_type_item')
-    contentBlocks.forEach((item) => {
-        item.classList.remove('opacity-5')
-    })
-    document.dispatchEvent(new CustomEvent('fade-in-blocks'))
+const fadeOutContentBlocks = (except) => {
+	const contentBlocks = document.querySelectorAll(".content_type_item")
+	contentBlocks.forEach((item) => {
+		if (item === except) {
+			return
+		}
+		item.classList.add("opacity-5")
+	})
+	document.dispatchEvent(new CustomEvent("fade-out-blocks"))
 }
 
-
-let editBlock = (e) => {
-    e.preventDefault();
-    let el = e.target;
-
-    if (el.classList.contains('fa-pen-to-square')) {
-        el = el.parentElement
-    }
-
-    let id = el.dataset.value
-
-
-    let layoutBlock = document.getElementById('layoutBlock_' + id)
-
-    fadeOutContentBlocks(layoutBlock)
-
-    layoutBlock.querySelector('.edit_block').setAttribute('disabled', true)
-    layoutBlock.querySelector('.delete_block').setAttribute('disabled', true)
-
-    let editUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_edit', {id: id})
-    let displayBlock = document.getElementById('layoutBlockHtml' + id)
-    let editBlock = document.getElementById('editBlockHtml' + id)
-
-    axios.get(editUrl, axiosConfig).then((response) => {
-        editBlock.innerHTML = response.data.html
-        displayBlock.classList.add('d-none')
-        editBlock.classList.remove('d-none')
-        document.body.dispatchEvent(new CustomEvent('fields:added', {'detail': {
-                id: id, contentType: layoutBlock.dataset.contentType
-            }}))
-        layoutBlock.scrollIntoView();
-    }).catch((error) => {
-        let message = error.response.data.detail
-        CMSAdmin.createInitCmsMessageBox('error', message);
-    })
+const fadeInContentBlocks = () => {
+	const contentBlocks = document.querySelectorAll(".content_type_item")
+	contentBlocks.forEach((item) => {
+		item.classList.remove("opacity-5")
+	})
+	document.dispatchEvent(new CustomEvent("fade-in-blocks"))
 }
 
-let createBlock = (e) => {
-    e.preventDefault();
-    let el = e.target;
+const editBlock = (e) => {
+	e.preventDefault()
+	let el = e.target
 
-    if (el.classList.contains('fa-pen-to-square')) {
-        el = el.parentElement
-    }
+	if (el.classList.contains("fa-pen-to-square")) {
+		el = el.parentElement
+	}
 
-    let id = el.dataset.value
+	const id = el.dataset.value
 
+	const layoutBlock = document.getElementById("layoutBlock_" + id)
 
-    let layoutBlock = document.getElementById('layoutBlock_' + id)
+	fadeOutContentBlocks(layoutBlock)
 
-    fadeOutContentBlocks(layoutBlock)
-    layoutBlock.querySelector('.create_block').setAttribute('disabled', true)
+	layoutBlock.querySelector(".edit_block").setAttribute("disabled", true)
+	layoutBlock.querySelector(".delete_block").setAttribute("disabled", true)
 
-    let createUrl = CMSRouting.generate('admin_networking_initcms_layoutblock_create',{
-        subclass: layoutBlock.dataset.contentType,
-        zone: layoutBlock.dataset.zone,
-        pageId: layoutBlock.dataset.pageId,
-        sortOrder: layoutBlock.dataset.sortOrder
-    })
+	const editUrl = CMSRouting.generate(
+		"admin_networking_initcms_layoutblock_edit",
+		{ id: id },
+	)
+	const displayBlock = document.getElementById("layoutBlockHtml" + id)
+	const editBlock = document.getElementById("editBlockHtml" + id)
 
-    let displayBlock = document.getElementById('layoutBlockHtml' + id)
-    let editBlock = document.getElementById('editBlockHtml' + id)
-
-    axios.get(createUrl, axiosConfig).then((response) => {
-        editBlock.innerHTML = response.data.html
-        displayBlock.classList.add('d-none')
-        editBlock.classList.remove('d-none')
-        document.body.dispatchEvent(new CustomEvent('fields:added', {'detail': {
-                id: id, contentType: layoutBlock.dataset.contentType
-            }}))
-        layoutBlock.scrollIntoView();
-    }).catch((error) => {
-        if(!error.response){
-            console.error(error)
-            return
-        }
-
-        let message = error.response.data.detail
-        CMSAdmin.createInitCmsMessageBox('error', message);
-    })
+	axios
+		.get(editUrl, axiosConfig)
+		.then((response) => {
+			editBlock.innerHTML = response.data.html
+			displayBlock.classList.add("d-none")
+			editBlock.classList.remove("d-none")
+			document.body.dispatchEvent(
+				new CustomEvent("fields:added", {
+					detail: {
+						id: id,
+						contentType: layoutBlock.dataset.contentType,
+					},
+				}),
+			)
+			layoutBlock.scrollIntoView()
+		})
+		.catch((error) => {
+			const message = error.response.data.detail
+			CMSAdmin.createInitCmsMessageBox("error", message)
+		})
 }
 
-let cancelEditBlock = (e) => {
-    let id = e.target.dataset.value
-    let displayBlock = document.getElementById('layoutBlockHtml' + id)
-    let editBlock = document.getElementById('editBlockHtml' + id)
-    let layoutBlock = document.getElementById('layoutBlock_' + id)
-    layoutBlock.querySelector('.edit_block').removeAttribute('disabled')
-    layoutBlock.querySelector('.delete_block').removeAttribute('disabled')
-    editBlock.classList.add('d-none')
-    editBlock.innerHTML = ''
-    displayBlock.classList.remove('d-none')
-    fadeInContentBlocks()
+const createBlock = (e) => {
+	e.preventDefault()
+	let el = e.target
 
+	if (el.classList.contains("fa-pen-to-square")) {
+		el = el.parentElement
+	}
+
+	const id = el.dataset.value
+
+	const layoutBlock = document.getElementById("layoutBlock_" + id)
+
+	fadeOutContentBlocks(layoutBlock)
+	layoutBlock.querySelector(".create_block").setAttribute("disabled", true)
+
+	const createUrl = CMSRouting.generate(
+		"admin_networking_initcms_layoutblock_create",
+		{
+			subclass: layoutBlock.dataset.contentType,
+			zone: layoutBlock.dataset.zone,
+			pageId: layoutBlock.dataset.pageId,
+			sortOrder: layoutBlock.dataset.sortOrder,
+		},
+	)
+
+	const displayBlock = document.getElementById("layoutBlockHtml" + id)
+	const editBlock = document.getElementById("editBlockHtml" + id)
+
+	axios
+		.get(createUrl, axiosConfig)
+		.then((response) => {
+			editBlock.innerHTML = response.data.html
+			displayBlock.classList.add("d-none")
+			editBlock.classList.remove("d-none")
+			document.body.dispatchEvent(
+				new CustomEvent("fields:added", {
+					detail: {
+						id: id,
+						contentType: layoutBlock.dataset.contentType,
+					},
+				}),
+			)
+			layoutBlock.scrollIntoView()
+		})
+		.catch((error) => {
+			if (!error.response) {
+				console.error(error)
+				return
+			}
+
+			const message = error.response.data.detail
+			CMSAdmin.createInitCmsMessageBox("error", message)
+		})
 }
 
-let cancelCreateBlock = (e) => {
-    e.preventDefault();
-    let form = e.target.closest('form')
-    let div = form.closest('[data-zone]')
-    let id = div.getAttribute('id').replace('layoutBlock_', '')
-    let displayBlock = document.getElementById('layoutBlockHtml' + id)
-    let editBlock = document.getElementById('editBlockHtml' + id)
-    let layoutBlock = document.getElementById('layoutBlock_' + id)
-    layoutBlock.querySelector('.create_block').removeAttribute('disabled')
-    editBlock.classList.add('d-none')
-    editBlock.innerHTML = ''
-    displayBlock.classList.remove('d-none')
-    fadeInContentBlocks()
+const cancelEditBlock = (e) => {
+	const id = e.target.dataset.value
+	const displayBlock = document.getElementById("layoutBlockHtml" + id)
+	const editBlock = document.getElementById("editBlockHtml" + id)
+	const layoutBlock = document.getElementById("layoutBlock_" + id)
+	layoutBlock.querySelector(".edit_block").removeAttribute("disabled")
+	layoutBlock.querySelector(".delete_block").removeAttribute("disabled")
+	editBlock.classList.add("d-none")
+	editBlock.innerHTML = ""
+	displayBlock.classList.remove("d-none")
+	fadeInContentBlocks()
 }
 
-let saveLayoutBlock = (e) => {
-    e.preventDefault();
-    let form = e.target.closest('form')
-    let config = {
-        url: form.action,
-        method: form.method,
-        data: new FormData(form),
-        ...axiosConfig
-    }
-
-    if (form.enctype === 'multipart/form-data') {
-        config.headers['Content-Type'] = 'multipart/form-data'
-    }
-    axios.request(config).then((response) => {
-        if (response.status === 200) {
-            let id = response.data.id
-            let displayBlock = document.getElementById('layoutBlockHtml' + id)
-            let editBlock = document.getElementById('editBlockHtml' + id)
-            let layoutBlock = document.getElementById('layoutBlock_' + id)
-            layoutBlock.querySelector('.edit_block').removeAttribute('disabled')
-            layoutBlock.querySelector('.delete_block').removeAttribute('disabled')
-            editBlock.classList.add('d-none')
-            editBlock.innerHTML = ''
-            displayBlock.classList.remove('d-none')
-            displayBlock.innerHTML = response.data.html
-            CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message, 1000);
-            let event = new CustomEvent('page-updated')
-            document.body.dispatchEvent(event)
-            let layoutBlockEvent = new CustomEvent('layout-block-updated', {'detail': displayBlock.id})
-            document.body.dispatchEvent(layoutBlockEvent)
-            fadeInContentBlocks()
-        }
-    }).catch((error) => {
-        if(!error.response){
-            console.error(error)
-            return
-        }
-
-        let id = error.response.data.id
-        let editBlock = document.getElementById('editBlockHtml' + id)
-        if(error.response.data.html) {
-            editBlock.innerHTML = error.response.data.html
-        }
-        CMSAdmin.createInitCmsMessageBox('error', error.response.data.message);
-        document.body.dispatchEvent(new CustomEvent('fields:added', {'detail': id}))
-    })
-
+const cancelCreateBlock = (e) => {
+	e.preventDefault()
+	const form = e.target.closest("form")
+	const div = form.closest("[data-zone]")
+	const id = div.getAttribute("id").replace("layoutBlock_", "")
+	const displayBlock = document.getElementById("layoutBlockHtml" + id)
+	const editBlock = document.getElementById("editBlockHtml" + id)
+	const layoutBlock = document.getElementById("layoutBlock_" + id)
+	layoutBlock.querySelector(".create_block").removeAttribute("disabled")
+	editBlock.classList.add("d-none")
+	editBlock.innerHTML = ""
+	displayBlock.classList.remove("d-none")
+	fadeInContentBlocks()
 }
 
-let createLayoutBlock = (e) => {
-    e.preventDefault();
-    let form = e.target.closest('form')
-    let config = {
-        url: form.action,
-        method: form.method,
-        data: new FormData(form),
-        ...axiosConfig
-    }
+const saveLayoutBlock = (e) => {
+	e.preventDefault()
+	const form = e.target.closest("form")
+	const config = {
+		url: form.action,
+		method: form.method,
+		data: new FormData(form),
+		...axiosConfig,
+	}
 
-    if (form.enctype === 'multipart/form-data') {
-        config.headers['Content-Type'] = 'multipart/form-data'
-    }
+	if (form.enctype === "multipart/form-data") {
+		config.headers["Content-Type"] = "multipart/form-data"
+	}
+	axios
+		.request(config)
+		.then((response) => {
+			if (response.status === 200) {
+				const id = response.data.id
+				const displayBlock = document.getElementById("layoutBlockHtml" + id)
+				const editBlock = document.getElementById("editBlockHtml" + id)
+				const layoutBlock = document.getElementById("layoutBlock_" + id)
+				layoutBlock.querySelector(".edit_block").removeAttribute("disabled")
+				layoutBlock.querySelector(".delete_block").removeAttribute("disabled")
+				editBlock.classList.add("d-none")
+				editBlock.innerHTML = ""
+				displayBlock.classList.remove("d-none")
+				displayBlock.innerHTML = response.data.html
+				CMSAdmin.createInitCmsMessageBox(
+					response.data.status,
+					response.data.message,
+					1000,
+				)
+				const event = new CustomEvent("page-updated")
+				document.body.dispatchEvent(event)
+				const layoutBlockEvent = new CustomEvent("layout-block-updated", {
+					detail: displayBlock.id,
+				})
+				document.body.dispatchEvent(layoutBlockEvent)
+				fadeInContentBlocks()
+			}
+		})
+		.catch((error) => {
+			if (!error.response) {
+				console.error(error)
+				return
+			}
 
-    let div = form.closest('[data-zone]')
-
-    let id = div.getAttribute('id').replace('layoutBlock_', '')
-    axios.request(config).then((response) => {
-        if (response.status === 200) {
-            let template = document.createElement('template');
-            template.innerHTML = response.data.html.trim();;
-            div.replaceWith(template.content.firstChild)
-            CMSAdmin.createInitCmsMessageBox(response.data.status, response.data.message, 1000);
-            let event = new CustomEvent('page-updated')
-            document.body.dispatchEvent(event)
-            let layoutBlockEvent = new CustomEvent('layout-block-updated', {'detail': 'layoutBlock_' + response.data.layoutBlockId})
-            document.body.dispatchEvent(layoutBlockEvent)
-            fadeInContentBlocks()
-        }
-    }).catch((error) => {
-        if(!error.response){
-            console.error(error)
-            return
-        }
-
-        let createBlock = document.getElementById('editBlockHtml' + id)
-        createBlock.innerHTML = error.response.data.html
-        CMSAdmin.createInitCmsMessageBox('error', error.response.data.message);
-        document.body.dispatchEvent(new CustomEvent('fields:added', {'detail': id}))
-    })
-
+			const id = error.response.data.id
+			const editBlock = document.getElementById("editBlockHtml" + id)
+			if (error.response.data.html) {
+				editBlock.innerHTML = error.response.data.html
+			}
+			CMSAdmin.createInitCmsMessageBox("error", error.response.data.message)
+			document.body.dispatchEvent(
+				new CustomEvent("fields:added", { detail: id }),
+			)
+		})
 }
 
-let toggleActive = (e) => {
-    e.preventDefault();
-    let el = e.target;
-    if (el.classList.contains('ki-outline')) {
-        el = el.parentElement
-    }
-    let icon = el.querySelector('i')
-    let id = el.dataset.value
-    let displayBlock = document.getElementById('layoutBlockHtml' + id)
-    let url = CMSRouting.generate('admin_networking_initcms_layoutblock_toggleActive')
+const createLayoutBlock = (e) => {
+	e.preventDefault()
+	const form = e.target.closest("form")
+	const config = {
+		url: form.action,
+		method: form.method,
+		data: new FormData(form),
+		...axiosConfig,
+	}
 
-    axios.post(url, {id: id}, axiosConfig).then((response) => {
+	if (form.enctype === "multipart/form-data") {
+		config.headers["Content-Type"] = "multipart/form-data"
+	}
 
+	const div = form.closest("[data-zone]")
 
-        CMSAdmin.createInitCmsMessageBox('success', response.data.message, 1000);
-        if (response.data.active) {
-            icon.classList.remove('ki-minus-circle')
-            icon.classList.add('ki-check-circle')
-            el.classList.remove('btn-light-danger')
-            el.classList.add('btn-light-success')
-            displayBlock.classList.remove('opacity-25')
-            return
-        }
-        icon.classList.add('ki-minus-circle')
-        icon.classList.remove('ki-check-circle')
-        el.classList.add('btn-light-danger')
-        el.classList.remove('btn-light-success')
-        displayBlock.classList.add('opacity-25')
-        let event = new CustomEvent('page-updated')
-        document.body.dispatchEvent(event)
-    }).catch((error) => {
-        CMSAdmin.createInitCmsMessageBox('error', error.response.data.message);
-    })
+	const id = div.getAttribute("id").replace("layoutBlock_", "")
+	axios
+		.request(config)
+		.then((response) => {
+			if (response.status === 200) {
+				const template = document.createElement("template")
+				template.innerHTML = response.data.html.trim()
+				div.replaceWith(template.content.firstChild)
+				CMSAdmin.createInitCmsMessageBox(
+					response.data.status,
+					response.data.message,
+					1000,
+				)
+				const event = new CustomEvent("page-updated")
+				document.body.dispatchEvent(event)
+				const layoutBlockEvent = new CustomEvent("layout-block-updated", {
+					detail: "layoutBlock_" + response.data.layoutBlockId,
+				})
+				document.body.dispatchEvent(layoutBlockEvent)
+				fadeInContentBlocks()
+			}
+		})
+		.catch((error) => {
+			if (!error.response) {
+				console.error(error)
+				return
+			}
 
+			const createBlock = document.getElementById("editBlockHtml" + id)
+			createBlock.innerHTML = error.response.data.html
+			CMSAdmin.createInitCmsMessageBox("error", error.response.data.message)
+			document.body.dispatchEvent(
+				new CustomEvent("fields:added", { detail: id }),
+			)
+		})
 }
 
+const toggleActive = (e) => {
+	e.preventDefault()
+	let el = e.target
+	if (el.classList.contains("ki-outline")) {
+		el = el.parentElement
+	}
+	const icon = el.querySelector("i")
+	const id = el.dataset.value
+	const displayBlock = document.getElementById("layoutBlockHtml" + id)
+	const url = CMSRouting.generate(
+		"admin_networking_initcms_layoutblock_toggleActive",
+	)
 
-let deleteBlock = (e) => {
-    e.preventDefault();
-    let el = e.target;
-
-    if (el.classList.contains('fa-trash')) {
-        el = el.parentElement
-    }
-
-    let container = el.closest('.draggable-zone')
-
-
-    Swal.fire({
-        html: Translator.trans('page_admin.confirm', [], 'PageAdmin'),
-        icon: "warning",
-        buttonsStyling: false,
-        showCancelButton: true,
-        confirmButtonText: Translator.trans('button.confirm_delete', [], 'PageAdmin'),
-        cancelButtonText: Translator.trans('button.cancel', [], 'PageAdmin'),
-        customClass: {
-            confirmButton: "btn btn-sm btn-danger",
-            cancelButton: 'btn btn-sm btn-light'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            axios.post(deleteUrl, {
-                id: el.dataset.value,
-                _method: 'DELETE'
-            }).then((response) => {
-                fadeInContentBlocks()
-                document.querySelector('#layoutBlock_' + el.dataset.value).remove()
-                CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message, 1000);
-                saveLayoutBlockSort();
-                if (container.querySelectorAll('.draggable').length) {
-                    container.querySelector('.empty_layout_block').classList.add("d-none")
-                    return
-                }
-                container.querySelector('.empty_layout_block').classList.remove("d-none")
-            }).catch((err) => {
-
-                CMSAdmin.createInitCmsMessageBox('error', 'Something went wrong');
-            })
-        }
-    })
+	axios
+		.post(url, { id: id }, axiosConfig)
+		.then((response) => {
+			CMSAdmin.createInitCmsMessageBox("success", response.data.message, 1000)
+			if (response.data.active) {
+				icon.classList.remove("ki-minus-circle")
+				icon.classList.add("ki-check-circle")
+				el.classList.remove("btn-light-danger")
+				el.classList.add("btn-light-success")
+				displayBlock.classList.remove("opacity-25")
+				return
+			}
+			icon.classList.add("ki-minus-circle")
+			icon.classList.remove("ki-check-circle")
+			el.classList.add("btn-light-danger")
+			el.classList.remove("btn-light-success")
+			displayBlock.classList.add("opacity-25")
+			const event = new CustomEvent("page-updated")
+			document.body.dispatchEvent(event)
+		})
+		.catch((error) => {
+			CMSAdmin.createInitCmsMessageBox("error", error.response.data.message)
+		})
 }
 
-let unlinkTranslation = (e) => {
-    e.preventDefault();
-    let el = e.target;
+const deleteBlock = (e) => {
+	e.preventDefault()
+	let el = e.target
 
-    let text = el.dataset.text
-    let id = el.dataset.objectId
+	if (el.classList.contains("fa-trash")) {
+		el = el.parentElement
+	}
 
-    Swal.fire({
-        html: text,
-        icon: "warning",
-        buttonsStyling: false,
-        showCancelButton: true,
-        confirmButtonText: Translator.trans('button.confirm_delete', [], 'PageAdmin'),
-        cancelButtonText: Translator.trans('button.cancel', [], 'PageAdmin'),
-        customClass: {
-            confirmButton: "btn btn-sm btn-danger",
-            cancelButton: 'btn btn-sm btn-light'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
+	const container = el.closest(".draggable-zone")
 
-            let headers = {"X-HTTP-Method-Override": "DELETE", ...axiosConfig.headers}
-
-            axios.post(el.href, {}, {
-                headers: headers
-            }).then((response) => {
-                document.querySelector('#translations').innerHTML = response.data.html
-                CMSAdmin.createInitCmsMessageBox('success', response.data.message, 1000);
-            }).catch((err) => {
-                CMSAdmin.createInitCmsMessageBox('error', 'Something went wrong');
-            })
-        }
-    })
+	Swal.fire({
+		html: Translator.trans("page_admin.confirm", [], "PageAdmin"),
+		icon: "warning",
+		buttonsStyling: false,
+		showCancelButton: true,
+		confirmButtonText: Translator.trans(
+			"button.confirm_delete",
+			[],
+			"PageAdmin",
+		),
+		cancelButtonText: Translator.trans("button.cancel", [], "PageAdmin"),
+		customClass: {
+			confirmButton: "btn btn-sm btn-danger",
+			cancelButton: "btn btn-sm btn-light",
+		},
+	}).then((result) => {
+		if (result.isConfirmed) {
+			axios
+				.post(deleteUrl, {
+					id: el.dataset.value,
+					_method: "DELETE",
+				})
+				.then((response) => {
+					fadeInContentBlocks()
+					document.querySelector("#layoutBlock_" + el.dataset.value).remove()
+					CMSAdmin.createInitCmsMessageBox(
+						response.data.messageStatus,
+						response.data.message,
+						1000,
+					)
+					saveLayoutBlockSort()
+					if (container.querySelectorAll(".draggable").length) {
+						container
+							.querySelector(".empty_layout_block")
+							.classList.add("d-none")
+						return
+					}
+					container
+						.querySelector(".empty_layout_block")
+						.classList.remove("d-none")
+				})
+				.catch((err) => {
+					CMSAdmin.createInitCmsMessageBox("error", "Something went wrong")
+				})
+		}
+	})
 }
 
-let linkTranslation = (e) => {
-    e.preventDefault()
+const unlinkTranslation = (e) => {
+	e.preventDefault()
+	const el = e.target
 
-    let el = e.target;
+	const text = el.dataset.text
+	const id = el.dataset.objectId
 
-    axios.get(el.href, axiosConfig).then((response) => {
-        lastTranslationSettingsHtml = document.querySelector('#translations').innerHTML
-        document.querySelector('#translations').innerHTML = response.data.html
-    }).catch((err) => {
-        CMSAdmin.createInitCmsMessageBox('error', 'Something went wrong');
-    })
+	Swal.fire({
+		html: text,
+		icon: "warning",
+		buttonsStyling: false,
+		showCancelButton: true,
+		confirmButtonText: Translator.trans(
+			"button.confirm_delete",
+			[],
+			"PageAdmin",
+		),
+		cancelButtonText: Translator.trans("button.cancel", [], "PageAdmin"),
+		customClass: {
+			confirmButton: "btn btn-sm btn-danger",
+			cancelButton: "btn btn-sm btn-light",
+		},
+	}).then((result) => {
+		if (result.isConfirmed) {
+			const headers = {
+				"X-HTTP-Method-Override": "DELETE",
+				...axiosConfig.headers,
+			}
+
+			axios
+				.post(
+					el.href,
+					{},
+					{
+						headers: headers,
+					},
+				)
+				.then((response) => {
+					document.querySelector("#translations").innerHTML = response.data.html
+					CMSAdmin.createInitCmsMessageBox(
+						"success",
+						response.data.message,
+						1000,
+					)
+				})
+				.catch((err) => {
+					CMSAdmin.createInitCmsMessageBox("error", "Something went wrong")
+				})
+		}
+	})
 }
 
-let submitTranslationLink = (e) => {
-    e.preventDefault()
+const linkTranslation = (e) => {
+	e.preventDefault()
 
-    let form = e.target.closest('form')
+	const el = e.target
 
-    if (e.submitter.classList.contains('btn-cancel') || e.submitter.classList.contains('cancel')) {
-        document.querySelector('#translations').innerHTML = lastTranslationSettingsHtml
-        return;
-    }
-
-    axios.post(form.action, new FormData(form), axiosConfig).then((response) => {
-        document.querySelector('#translations').innerHTML = response.data.html
-        CMSAdmin.createInitCmsMessageBox('success', response.data.message, 1000);
-    }, axiosConfig).catch((err) => {
-
-        if (err.response.data.message) {
-            return CMSAdmin.createInitCmsMessageBox('error', err.response.data.message);
-        }
-
-        CMSAdmin.createInitCmsMessageBox('error', err.response.data.detail);
-    })
+	axios
+		.get(el.href, axiosConfig)
+		.then((response) => {
+			lastTranslationSettingsHtml =
+				document.querySelector("#translations").innerHTML
+			document.querySelector("#translations").innerHTML = response.data.html
+		})
+		.catch((err) => {
+			CMSAdmin.createInitCmsMessageBox("error", "Something went wrong")
+		})
 }
 
-let submitPageSettings = (e) => {
-    e.preventDefault()
-    let form = e.target.closest('form')
+const submitTranslationLink = (e) => {
+	e.preventDefault()
 
-    form.elements.forEach((item) => {
-        item.classList.remove('is-invalid')
-    })
+	const form = e.target.closest("form")
 
-    axios.post(form.action, new FormData(form), axiosConfig).then((response) => {
-        document.querySelector('#pageStatusSettings').innerHTML = response.data.pageStatusSettings
+	if (
+		e.submitter.classList.contains("btn-cancel") ||
+		e.submitter.classList.contains("cancel")
+	) {
+		document.querySelector("#translations").innerHTML =
+			lastTranslationSettingsHtml
+		return
+	}
 
-        if(response.data.layoutBlockSettingsHtml){
-            document.querySelector('#page_content').innerHTML = response.data.layoutBlockSettingsHtml
-            initDropZone()
-        }
+	axios
+		.post(form.action, new FormData(form), axiosConfig)
+		.then((response) => {
+			document.querySelector("#translations").innerHTML = response.data.html
+			CMSAdmin.createInitCmsMessageBox("success", response.data.message, 1000)
+		}, axiosConfig)
+		.catch((err) => {
+			if (err.response.data.message) {
+				return CMSAdmin.createInitCmsMessageBox(
+					"error",
+					err.response.data.message,
+				)
+			}
 
-        CMSAdmin.createInitCmsMessageBox('success', response.data.message, 1000);
-    }).catch((err) => {
-        let data = err.response.data
-
-        data.violations.forEach((item) => {
-            let path = item.propertyPath
-            let message = item.title
-            let field = form.querySelector('[name="' + path + '"]')
-            field.classList.add('is-invalid')
-            field.setAttribute('required', 'required')
-
-            if (field.nextElementSibling && field.nextElementSibling.classList.contains('invalid-feedback')) {
-                field.nextElementSibling.innerHtml = message;
-                return
-            }
-            field.insertAdjacentHTML('afterend', '<div class="invalid-feedback">' + message + '</div>')
-        })
-    })
+			CMSAdmin.createInitCmsMessageBox("error", err.response.data.detail)
+		})
 }
 
-let updatePageStatus = () => {
-    axios.get(CMSRouting.generate('admin_networking_initcms_page_getPageStatus', {id: pageId}), axiosConfig)
-        .then((response) => {
-            document.querySelector('#pageStatusSettings').innerHTML = response.data.pageStatusSettings
-        }).catch((err) => {
-        if (err.response.data.message) {
-            return CMSAdmin.createInitCmsMessageBox('error', err.response.data.message);
-        }
+const submitPageSettings = (e) => {
+	e.preventDefault()
+	const form = e.target.closest("form")
 
-        CMSAdmin.createInitCmsMessageBox('error', err.response.data.detail);
-    })
+	form.elements.forEach((item) => {
+		item.classList.remove("is-invalid")
+	})
+
+	axios
+		.post(form.action, new FormData(form), axiosConfig)
+		.then((response) => {
+			document.querySelector("#pageStatusSettings").innerHTML =
+				response.data.pageStatusSettings
+
+			if (response.data.layoutBlockSettingsHtml) {
+				document.querySelector("#page_content").innerHTML =
+					response.data.layoutBlockSettingsHtml
+				initDropZone()
+			}
+
+			CMSAdmin.createInitCmsMessageBox("success", response.data.message, 1000)
+		})
+		.catch((err) => {
+			const data = err.response.data
+
+			data.violations.forEach((item) => {
+				const path = item.propertyPath
+				const message = item.title
+				let field = form.querySelector(`[name="${path}"]`)
+
+				field.setAttribute("required", "required")
+
+				if (field.nextElementSibling?.classList.contains("select2-container")) {
+					field = field.nextElementSibling
+				}
+
+				field.classList.add("is-invalid")
+
+				if (field.nextElementSibling?.classList.contains("invalid-feedback")) {
+					field.nextElementSibling.innerHtml = message
+					return
+				}
+				field.insertAdjacentHTML(
+					"afterend",
+					`<div class="invalid-feedback">${message}</div>`,
+				)
+			})
+		})
 }
 
-let loadLayoutBlockJs = (event) => {
-    if(event.detail){
-        let scripts = document.querySelector('#' + event.detail).getElementsByTagName("script");
-        for (let i = 0; i < scripts.length; ++i) {
-            let script = scripts[i];
-            eval(script.innerHTML);
+const updatePageStatus = () => {
+	axios
+		.get(
+			CMSRouting.generate("admin_networking_initcms_page_getPageStatus", {
+				id: pageId,
+			}),
+			axiosConfig,
+		)
+		.then((response) => {
+			document.querySelector("#pageStatusSettings").innerHTML =
+				response.data.pageStatusSettings
+		})
+		.catch((err) => {
+			if (err.response.data.message) {
+				return CMSAdmin.createInitCmsMessageBox(
+					"error",
+					err.response.data.message,
+				)
+			}
 
-            CMSAdmin.log(script.innerHTML)
-        }
-    }
+			CMSAdmin.createInitCmsMessageBox("error", err.response.data.detail)
+		})
 }
 
-let statusDialog = (e) => {
-    e.preventDefault()
+const loadLayoutBlockJs = (event) => {
+	if (event.detail) {
+		const scripts = document
+			.querySelector("#" + event.detail)
+			.getElementsByTagName("script")
+		for (let i = 0; i < scripts.length; ++i) {
+			const script = scripts[i]
+			eval(script.innerHTML)
 
-    let el = e.target;
-
-    if (!el.href) {
-        el = el.closest('a')
-    }
-    let text = el.dataset.text
-    Swal.fire({
-        html: text,
-        icon: "warning",
-        buttonsStyling: false,
-        showCancelButton: true,
-        confirmButtonText: "Ok, got it!",
-        cancelButtonText: 'Nope, cancel it',
-        customClass: {
-            confirmButton: "btn btn-danger",
-            cancelButton: 'btn btn-primary'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            axios.post(el.href, axiosConfig).then((response) => {
-                if (response.data.redirect) {
-                    return window.location = response.data.redirect
-                }
-            }).catch((err) => {
-                if (err.response.data.message) {
-                    return CMSAdmin.createInitCmsMessageBox('error', err.response.data.message);
-                }
-
-                CMSAdmin.createInitCmsMessageBox('error', err.response.data.detail);
-            })
-
-        }
-    })
-
+			CMSAdmin.log(script.innerHTML)
+		}
+	}
 }
 
-let updateAfterContentBuilder = () => {
-    axios.get(CMSRouting.generate('admin_networking_initcms_page_edit', {id: pageId}), axiosConfig)
-        .then((response) => {
-            if(response.data.layoutBlockSettingsHtml){
+const statusDialog = (e) => {
+	e.preventDefault()
 
-                let pageContentDiv = document.querySelector('#page_content')
-                pageContentDiv.innerHTML = response.data.layoutBlockSettingsHtml
-                initDropZone()
+	let el = e.target
 
-                var scripts = pageContentDiv.getElementsByTagName("script");
-                for (var i = 0; i < scripts.length; ++i) {
-                    var script = scripts[i];
-                    eval(script.innerHTML);
-                    CMSAdmin.log(script.innerHTML)
-                }
-            }
-        }).catch((err) => {
+	if (!el.href) {
+		el = el.closest("a")
+	}
+	const text = el.dataset.text
+	Swal.fire({
+		html: text,
+		icon: "warning",
+		buttonsStyling: false,
+		showCancelButton: true,
+		confirmButtonText: "Ok, got it!",
+		cancelButtonText: "Nope, cancel it",
+		customClass: {
+			confirmButton: "btn btn-danger",
+			cancelButton: "btn btn-primary",
+		},
+	}).then((result) => {
+		if (result.isConfirmed) {
+			axios
+				.post(el.href, axiosConfig)
+				.then((response) => {
+					if (response.data.redirect) {
+						return (window.location = response.data.redirect)
+					}
+				})
+				.catch((err) => {
+					if (err.response.data.message) {
+						return CMSAdmin.createInitCmsMessageBox(
+							"error",
+							err.response.data.message,
+						)
+					}
 
-        if(!err.response){
-            CMSAdmin.error(err)
-            return
-        }
-
-        if ( err.response.data.message) {
-            return CMSAdmin.createInitCmsMessageBox('error', err.response.data.message);
-        }
-
-        CMSAdmin.createInitCmsMessageBox('error', err.response.data.detail);
-    })
+					CMSAdmin.createInitCmsMessageBox("error", err.response.data.detail)
+				})
+		}
+	})
 }
 
-KTUtil.onDOMContentLoaded(function () {
+const updateAfterContentBuilder = () => {
+	axios
+		.get(
+			CMSRouting.generate("admin_networking_initcms_page_edit", { id: pageId }),
+			axiosConfig,
+		)
+		.then((response) => {
+			if (response.data.layoutBlockSettingsHtml) {
+				const pageContentDiv = document.querySelector("#page_content")
+				pageContentDiv.innerHTML = response.data.layoutBlockSettingsHtml
+				initDropZone()
 
-    KTUtil.on(document.body, '.delete_block', 'click', (e) => {
-        deleteBlock(e)
-    })
+				var scripts = pageContentDiv.getElementsByTagName("script")
+				for (var i = 0; i < scripts.length; ++i) {
+					var script = scripts[i]
+					eval(script.innerHTML)
+					CMSAdmin.log(script.innerHTML)
+				}
+			}
+		})
+		.catch((err) => {
+			if (!err.response) {
+				CMSAdmin.error(err)
+				return
+			}
 
-    KTUtil.on(document.body, '.edit_block', 'click', (e) => {
-        editBlock(e)
-    })
+			if (err.response.data.message) {
+				return CMSAdmin.createInitCmsMessageBox(
+					"error",
+					err.response.data.message,
+				)
+			}
 
-    KTUtil.on(document.body, '.create_block', 'click', (e) => {
-        createBlock(e)
-    })
+			CMSAdmin.createInitCmsMessageBox("error", err.response.data.detail)
+		})
+}
 
-    KTUtil.on(document.body, '.toggle-active', 'click', (e) => {
-        toggleActive(e)
-    })
+KTUtil.onDOMContentLoaded(() => {
+	KTUtil.on(document.body, ".delete_block", "click", (e) => {
+		deleteBlock(e)
+	})
 
-    KTUtil.on(document.body, '[data-dismiss="edit"]', 'click', (e) => {
-        cancelEditBlock(e)
-    })
+	KTUtil.on(document.body, ".edit_block", "click", (e) => {
+		editBlock(e)
+	})
 
-    KTUtil.on(document.body, '[data-dismiss="create"]', 'click', (e) => {
-        cancelCreateBlock(e)
-    })
+	KTUtil.on(document.body, ".create_block", "click", (e) => {
+		createBlock(e)
+	})
 
-    KTUtil.on(document.body, '[data-save="edit"]', 'click', (e) => {
-        saveLayoutBlock(e)
-    })
+	KTUtil.on(document.body, ".toggle-active", "click", (e) => {
+		toggleActive(e)
+	})
 
-    KTUtil.on(document.body, '[data-save="create"]', 'click', (e) => {
-        createLayoutBlock(e)
-    })
+	KTUtil.on(document.body, '[data-dismiss="edit"]', "click", (e) => {
+		cancelEditBlock(e)
+	})
 
-    KTUtil.on(document.body, '.translation-dialog-unlink', 'click', (e) => {
-        unlinkTranslation(e)
-    });
+	KTUtil.on(document.body, '[data-dismiss="create"]', "click", (e) => {
+		cancelCreateBlock(e)
+	})
 
-    KTUtil.on(document.body, '.translation-dialog-link', 'click', (e) => {
-        linkTranslation(e)
-    });
+	KTUtil.on(document.body, '[data-save="edit"]', "click", (e) => {
+		saveLayoutBlock(e)
+	})
 
-    KTUtil.on(document.body, '#translation-link-form', 'submit', (e) => {
-        submitTranslationLink(e)
-    });
+	KTUtil.on(document.body, '[data-save="create"]', "click", (e) => {
+		createLayoutBlock(e)
+	})
 
-    KTUtil.on(document.body, '#translate-copy-page-form', 'submit', (e) => {
-        submitTranslationLink(e)
-    });
+	KTUtil.on(document.body, ".translation-dialog-unlink", "click", (e) => {
+		unlinkTranslation(e)
+	})
 
-    KTUtil.on(document.body, '#page-settings-form', 'submit', (e) => {
-        submitPageSettings(e)
-    });
+	KTUtil.on(document.body, ".translation-dialog-link", "click", (e) => {
+		linkTranslation(e)
+	})
 
-    KTUtil.on(document.body, '#page-metadata-form', 'submit', (e) => {
-        submitPageSettings(e)
-    });
+	KTUtil.on(document.body, "#translation-link-form", "submit", (e) => {
+		submitTranslationLink(e)
+	})
 
-    KTUtil.on(document.body, '.status-dialog-link', 'click', (e) => {
-        statusDialog(e)
-    });
+	KTUtil.on(document.body, "#translate-copy-page-form", "submit", (e) => {
+		submitTranslationLink(e)
+	})
 
-    document.body.addEventListener('page-updated', (e) => {
-        updatePageStatus()
-    })
+	KTUtil.on(document.body, "#page-settings-form", "submit", (e) => {
+		submitPageSettings(e)
+	})
 
-    document.body.addEventListener('layout-block-updated', (e) => {
-        loadLayoutBlockJs(e)
-    })
+	KTUtil.on(document.body, "#page-metadata-form", "submit", (e) => {
+		submitPageSettings(e)
+	})
 
-    document.body.addEventListener('content-builder-updated', (e) => {
-        updateAfterContentBuilder()
-    })
+	KTUtil.on(document.body, ".status-dialog-link", "click", (e) => {
+		statusDialog(e)
+	})
 
-    initDropZone();
+	document.body.addEventListener("page-updated", (e) => {
+		updatePageStatus()
+	})
+
+	document.body.addEventListener("layout-block-updated", (e) => {
+		loadLayoutBlockJs(e)
+	})
+
+	document.body.addEventListener("content-builder-updated", (e) => {
+		updateAfterContentBuilder()
+	})
+
+	initDropZone()
 })
-

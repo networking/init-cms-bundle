@@ -114,3 +114,12 @@ table.dataTable > thead .sorting_asc, table.dataTable > thead .sorting_desc {
 .content_type_item {
   background-color: var(--bs-app-aside-base-bg-color);
 }
+
+.select2-container.is-invalid .select2-selection {
+  background-image: escape-svg($form-feedback-icon-invalid);
+  background-position: right calc(.375em + .3875rem) center;
+  background-repeat: no-repeat;
+  background-size: calc(.75em + .775rem) calc(.75em + .775rem);
+  border-color: var(--bs-form-invalid-border-color);
+  padding-right: calc(1.5em + 1.55rem);
+}

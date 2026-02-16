@@ -18,15 +18,15 @@ file that was distributed with this source code.
 
 {% block form %}
     {{ form_errors(form) }}
-    <form class="form-{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}horizontal{% else %}vertical{% endif %}" novalidate="novalidate"
+    <form class="form-{% if app.request.isXmlHttpRequest or app.request.query.getBoolean('_xml_http_request') %}horizontal{% else %}vertical{% endif %}" novalidate="novalidate"
           action="{{ admin.generateUrl('batchCopy') }}" method="POST">
         {{ form_row(form.fromLocale) }}
         {{ form_row(form.toLocale) }}
         {{ form_row(form._token) }}
         {% block formactions %}
             {% set admin_label = admin.getLabel()|trans({}, admin.translationDomain) %}
-            <div class="{% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
-                {% if app.request.isXmlHttpRequest or app.request.get('_xml_http_request') %}
+            <div class="{% if app.request.isXmlHttpRequest or app.request.query.getBoolean('_xml_http_request') %}modal-footer{% else %}well form-actions{% endif %}">
+                {% if app.request.isXmlHttpRequest or app.request.query.getBoolean('_xml_http_request') %}
                     <button class="btn btn-light" data-dismiss="modal"
                             aria-hidden="true">{{ 'button.cancel'|trans({'%admin_label%': admin_label}, 'PageAdmin') }}</button>
 

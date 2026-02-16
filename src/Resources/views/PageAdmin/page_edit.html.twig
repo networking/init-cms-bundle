@@ -163,5 +163,6 @@ file that was distributed with this source code.
 {% block before_body_end %}
     {{ parent() }}
         <script type="module"  src="{{ asset('pageAdmin.js', 'init_cms') }}"></script>
+    {% include '@NetworkingInitCms/PageAdmin/page_url_parent_page_widgets_script.html.twig' with {admin: admin} %}
 {% endblock %}
 

@@ -1,91 +1,90 @@
 {
-  "name": "networking/init-cms-bundle",
-  "description": "This Bundle is a basic cms based on symfony",
-  "keywords": [
-    "symfony",
-    "cms"
-  ],
-  "type": "symfony-bundle",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Yorkie Chadwick",
-      "homepage": "http://web.networking.ch",
-      "email": "y.chadwick@networking.ch"
-    }
-  ],
-  "require": {
-    "php": "^8.2",
-    "ext-ctype": "*",
-    "ext-iconv": "*",
-    "ext-json": "*",
-    "bacon/bacon-qr-code": "^2.0",
-    "doctrine/doctrine-fixtures-bundle": "^3.4 || ^4.3",
-    "friendsofsymfony/ckeditor-bundle": "^2.8",
-    "friendsofsymfony/jsrouting-bundle": "^3.6",
-    "knplabs/knp-paginator-bundle": "^6.2",
-    "jenssegers/agent": "^2.6",
-    "lexik/translation-bundle": "^6.0 || ^7.0 || ^8.0",
-    "oneup/flysystem-bundle": "^4.0",
-    "oneup/uploader-bundle": "^4.0 || ^5.0",
-    "pragmarx/google2fa": "^8.0",
-    "sonata-project/admin-bundle": "^4.17.0",
-    "sonata-project/doctrine-orm-admin-bundle": "^4.7",
-    "sonata-project/media-bundle": "^4.5",
-    "sonata-project/user-bundle": "^5.3",
-    "gedmo/doctrine-extensions": "^v3.8",
-    "symfony/http-foundation": "^6.4 || ^7.3 || ^8.0",
-    "symfony/http-kernel": "^6.4 || ^7.3 || ^8.0",
-    "symfony/routing": "^6.4 || ^7.3 || ^8.0",
-    "symfony/acl-bundle": "^2.3",
-    "symfony/asset": "^6.4 || ^7.3 || ^8.0",
-    "symfony/console": "^6.4 || ^7.3 || ^8.0",
-    "symfony/doctrine-messenger": "^6.4 || ^7.3 || ^8.0",
-    "symfony/expression-language": "^6.4 || ^7.3 || ^8.0",
-    "symfony/form": "^6.4 || ^7.3 || ^8.0",
-    "symfony/framework-bundle": "^6.4 || ^7.3 || ^8.0",
-    "symfony/monolog-bundle": "^3.8.0 || ^7.0",
-    "symfony/orm-pack": "^2.0",
-    "symfony/proxy-manager-bridge": "^6.4 || ^7.3 || ^8.0",
-    "symfony/security-bundle": "^6.4 || ^7.3 || ^8.0",
-    "symfony/serializer-pack": "^1.0",
-    "symfony/translation": "^6.4 || ^7.3 || ^8.0",
-    "symfony/twig-bundle": "^6.4 || ^7.3 || ^8.0",
-    "symfony/validator": "^6.4 || ^7.3 || ^8.0",
-    "symfony/webpack-encore-bundle": "^2.4",
-    "symfony/yaml": "^6.4 || ^7.3 || ^8.0",
-    "symfony/polyfill-apcu": "^1.0",
-    "symfony-cmf/routing-bundle": "^3.0",
-    "twig/twig": "^3.0",
-    "willdurand/js-translation-bundle": "^7.0.0"
-  },
-  "suggest": {
-      "web-auth/webauthn-symfony-bundle": "To enable WebAuthn support"
-  },
-  "scripts": {
-  },
-  "autoload": {
-    "psr-4": {
-      "Networking\\InitCmsBundle\\": "src"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Networking\\InitCmsBundle\\Tests\\": "tests/"
-    }
-  },
-  "config": {
-    "sort-packages": true
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "7.x-dev"
-    },
-    "symfony": {
-      "endpoint": [
-        "https://api.github.com/repos/networking/recipes/contents/index.json",
-        "flex://defaults"
-      ]
-    }
-  }
+	"name": "networking/init-cms-bundle",
+	"description": "This Bundle is a basic cms based on symfony",
+	"keywords": ["symfony", "cms"],
+	"type": "symfony-bundle",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Yorkie Chadwick",
+			"homepage": "http://web.networking.ch",
+			"email": "y.chadwick@networking.ch"
+		}
+	],
+	"require": {
+		"php": "^8.4 || ^8.5",
+		"ext-ctype": "*",
+		"ext-iconv": "*",
+		"ext-json": "*",
+		"bacon/bacon-qr-code": "^2.0",
+		"doctrine/doctrine-fixtures-bundle": "^3.4 || ^4.3",
+		"friendsofsymfony/ckeditor-bundle": "^2.8",
+		"friendsofsymfony/jsrouting-bundle": "^3.6",
+		"knplabs/knp-paginator-bundle": "^6.2",
+		"jenssegers/agent": "^2.6",
+		"lexik/translation-bundle": "^6.0 || ^7.0 || ^8.0",
+		"oneup/flysystem-bundle": "^4.0",
+		"oneup/uploader-bundle": "^4.0 || ^5.0",
+		"pragmarx/google2fa": "^8.0",
+		"sonata-project/admin-bundle": "^4.17.0",
+		"sonata-project/doctrine-orm-admin-bundle": "^4.7",
+		"sonata-project/media-bundle": "^4.5",
+		"sonata-project/user-bundle": "^5.3",
+		"gedmo/doctrine-extensions": "^v3.8",
+		"symfony/http-foundation": "^6.4 || ^7.3 || ^8.0",
+		"symfony/http-kernel": "^6.4 || ^7.3 || ^8.0",
+		"symfony/routing": "^6.4 || ^7.3 || ^8.0",
+		"symfony/acl-bundle": "^2.3",
+		"symfony/asset": "^6.4 || ^7.3 || ^8.0",
+		"symfony/console": "^6.4 || ^7.3 || ^8.0",
+		"symfony/doctrine-messenger": "^6.4 || ^7.3 || ^8.0",
+		"symfony/expression-language": "^6.4 || ^7.3 || ^8.0",
+		"symfony/form": "^6.4 || ^7.3 || ^8.0",
+		"symfony/framework-bundle": "^6.4 || ^7.3 || ^8.0",
+		"symfony/monolog-bundle": "^3.8.0 || ^7.0",
+		"symfony/orm-pack": "^2.0",
+		"symfony/proxy-manager-bridge": "^6.4 || ^7.3 || ^8.0",
+		"symfony/security-bundle": "^6.4 || ^7.3 || ^8.0",
+		"symfony/serializer-pack": "^1.0",
+		"symfony/translation": "^6.4 || ^7.3 || ^8.0",
+		"symfony/twig-bundle": "^6.4 || ^7.3 || ^8.0",
+		"symfony/validator": "^6.4 || ^7.3 || ^8.0",
+		"symfony/webpack-encore-bundle": "^2.4",
+		"symfony/ux-icons": "^2.32",
+		"symfony/ux-live-component": "*",
+		"symfony/ux-twig-component": "^2.32",
+		"symfony/yaml": "^6.4 || ^7.3 || ^8.0",
+		"symfony/polyfill-apcu": "^1.0",
+		"symfony-cmf/routing-bundle": "^3.0",
+		"twig/twig": "^3.0",
+		"willdurand/js-translation-bundle": "^7.0.0"
+	},
+	"suggest": {
+		"web-auth/webauthn-symfony-bundle": "To enable WebAuthn support"
+	},
+	"scripts": {},
+	"autoload": {
+		"psr-4": {
+			"Networking\\InitCmsBundle\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Networking\\InitCmsBundle\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "7.x-dev"
+		},
+		"symfony": {
+			"endpoint": [
+				"https://api.github.com/repos/networking/recipes/contents/index.json",
+				"flex://defaults"
+			]
+		}
+	}
 }

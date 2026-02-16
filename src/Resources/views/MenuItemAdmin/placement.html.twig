@@ -2,7 +2,7 @@
     <h3>
         {{ "placement_title"|trans({}, admin.translationDomain) }}
     </h3>
-    <button type="button" class="btn btn-sm" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+    <button type="button" class="btn btn-sm btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
 </div>
 <div class="modal-body">
     <div class="menu_tree" id="placement_menu" data-tree="{{ menu.navigation|json_encode }}" ></div>

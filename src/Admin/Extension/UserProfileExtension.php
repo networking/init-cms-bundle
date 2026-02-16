@@ -18,7 +18,14 @@ class UserProfileExtension extends AbstractAdminExtension implements AdminExtens
 {
     public function configureFormFields(FormMapper $form): void
     {
-        $form->removeGroup('Groups');
+        $admin = $form->getAdmin();
+        $localeChoices = [];
+        if (method_exists($admin, 'getLocaleChoices')) {
+            $localeChoices = $admin->getLocaleChoices();
+        }
+
+        $form
+            ->removeGroup('Groups');
         $form->removeGroup('Management');
         $form->removeGroup('Keys');
         $form->remove('plainPassword');
@@ -36,7 +43,7 @@ class UserProfileExtension extends AbstractAdminExtension implements AdminExtens
                 'locale',
                 ChoiceType::class,
                 [
-                    'choices' => $form->getAdmin()->getLocaleChoices(),
+                    'choices' => $localeChoices,
                     'choice_translation_domain' => false,
                     'row_attr' => ['class' => 'form-floating mb-3'],
                 ]

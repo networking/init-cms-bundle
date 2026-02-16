@@ -46,9 +46,9 @@ file that was distributed with this source code.
     {% if app.request.isxmlhttprequest and app.request.get('with_js')|default(true) %}
         {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
     {% else %}
-        {% jsblock 'addToBottom' %}
+        {% js_block 'addToBottom' %}
         {% include '@NetworkingInitCms/CRUD/edit_orm_many_association_script.html.twig' %}
-        {% jsblock 'addToBottomEnd' %}
+        {% js_block 'addToBottomEnd' %}
     {% endif %}
 
 

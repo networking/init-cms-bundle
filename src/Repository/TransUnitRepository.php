@@ -4,9 +4,8 @@ namespace Networking\InitCmsBundle\Repository;
 
 class TransUnitRepository extends \Lexik\Bundle\TranslationBundle\Entity\TransUnitRepository
 {
-    public function getAllDomainsByLocale()
+    public function getAllDomainsByLocale(): array
     {
-
         return $this->createQueryBuilder('tu')
             ->select('te.locale, tu.domain')
             ->join('tu.translations', 'te')

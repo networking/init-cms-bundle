@@ -309,8 +309,8 @@ file that was distributed with this source code.
 
 
 {% endblock before_body_end %}
-    {# Render any javascript which was given usin the jsblock twig nodes #}
-    {% jsblock 'render' %}
+    {# Render any javascript which was given usin the js_block twig nodes #}
+    {% js_block 'render' %}
     {% autoescape false %}
 
 {% block theme_js_setup %}

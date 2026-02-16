@@ -1,119 +1,129 @@
-import Sortable from 'sortablejs/modular/sortable.complete.esm.js';
-import SmoothScroll from 'smooth-scroll';
+import SmoothScroll from "smooth-scroll"
+import Sortable from "sortablejs/modular/sortable.complete.esm.js"
 
-import FormLegend from './components/form-legend';
-import InfoText from './components/info-text';
-import TextInput from './components/text-input';
-import TextArea from './components/text-area';
-import {SelectBasic, SelectMultiple} from './components/select-basic';
-import {MultipleCheckboxes, MultipleCheckboxesInline, MultipleRadios, MultipleRadiosInline} from './components/multiple-checkboxes';
+import FormLegend from "./components/form-legend"
+import InfoText from "./components/info-text"
+import {
+	MultipleCheckboxes,
+	MultipleCheckboxesInline,
+	MultipleRadios,
+	MultipleRadiosInline,
+} from "./components/multiple-checkboxes"
+import { SelectBasic, SelectMultiple } from "./components/select-basic"
+import TextArea from "./components/text-area"
+import TextInput from "./components/text-input"
 
-import '../scss/form_admin.scss';
+import "../scss/form_admin.scss"
 
-let formContent = null;
-let contentPanes = [];
-let formFields = new Map();
-let swappable = null;
-let postUrl = null;
-let objectId = null;
+let formContent = null
+let contentPanes = []
+const formFields = new Map()
+let swappable = null
+let postUrl = null
+let objectId = null
 
-let initFormFields = () => {
-    let currentFields = formContent.querySelectorAll('.component');
+const initFormFields = () => {
+	const currentFields = formContent.querySelectorAll(".component")
 
-    currentFields.forEach((item) => {
-        let block = createFormField(item);
-        formFields.set(item.dataset.id, block);
-    })
+	currentFields.forEach((item) => {
+		const block = createFormField(item)
+		formFields.set(item.dataset.id, block)
+	})
 }
 
-let createFormField = (item) => {
-    let block = null;
-    switch (item.dataset.type) {
-        case 'Legend':
-            block = new FormLegend(item.dataset.id, item.dataset.value, item);
-            break;
-        case 'Infotext':
-            block = new InfoText(item.dataset.id, item.dataset.value, item);
-            break;
-        case 'Text Input':
-            block = new TextInput(item.dataset.id, item.dataset.value, item);
-            break;
-        case 'Text Area':
-            block = new TextArea(item.dataset.id, item.dataset.value, item);
-            break;
-        case 'Select Basic':
-            block = new SelectBasic(item.dataset.id, item.dataset.value, item);
-            break;
-        case 'Select Multiple':
-            block = new SelectMultiple(item.dataset.id, item.dataset.value, item);
-            break;
-        case 'Multiple Checkboxes':
-            block = new MultipleCheckboxes(item.dataset.id, item.dataset.value, item);
-            break;
-        case 'Multiple Checkboxes Inline':
-            block = new MultipleCheckboxesInline(item.dataset.id, item.dataset.value, item);
-            break;
-        case 'Multiple Radios':
-            block = new MultipleRadios(item.dataset.id, item.dataset.value, item);
-            break;
-        case 'Multiple Radios Inline':
-            block = new MultipleRadiosInline(item.dataset.id, item.dataset.value, item);
-            break;
-    }
+const createFormField = (item) => {
+	let block = null
+	switch (item.dataset.type) {
+		case "Legend":
+			block = new FormLegend(item.dataset.id, item.dataset.value, item)
+			break
+		case "Infotext":
+			block = new InfoText(item.dataset.id, item.dataset.value, item)
+			break
+		case "Text Input":
+			block = new TextInput(item.dataset.id, item.dataset.value, item)
+			break
+		case "Text Area":
+			block = new TextArea(item.dataset.id, item.dataset.value, item)
+			break
+		case "Select Basic":
+			block = new SelectBasic(item.dataset.id, item.dataset.value, item)
+			break
+		case "Select Multiple":
+			block = new SelectMultiple(item.dataset.id, item.dataset.value, item)
+			break
+		case "Multiple Checkboxes":
+			block = new MultipleCheckboxes(item.dataset.id, item.dataset.value, item)
+			break
+		case "Multiple Checkboxes Inline":
+			block = new MultipleCheckboxesInline(
+				item.dataset.id,
+				item.dataset.value,
+				item,
+			)
+			break
+		case "Multiple Radios":
+			block = new MultipleRadios(item.dataset.id, item.dataset.value, item)
+			break
+		case "Multiple Radios Inline":
+			block = new MultipleRadiosInline(
+				item.dataset.id,
+				item.dataset.value,
+				item,
+			)
+			break
+	}
 
-    if(block === null){
-        return;
-    }
-    return block
+	if (block === null) {
+		return
+	}
+	return block
 }
-let initDropZone = ()=> {
+const initDropZone = () => {
+	contentPanes.forEach((contentPane) => {
+		new Sortable(contentPane, {
+			group: {
+				name: "shared",
+				pull: "clone",
+				put: false,
+			},
+			sort: false,
+			handle: ".component",
+			onEnd: (/**Event*/ evt) => {
+				evt.to.classList.remove("bg-light-primary")
+			},
+			onChange: (/**Event*/ evt) => {
+				evt.to.classList.add("bg-light-primary")
+			},
+		})
+	})
 
-    contentPanes.forEach((contentPane) => {
-        let contentItems = new Sortable(contentPane, {
-            group: {
-                name: 'shared',
-                pull: 'clone',
-                put: false
-            },
-            sort: false,
-            handle: ".component",
-            onEnd: function (/**Event*/evt) {
-                evt.to.classList.remove('bg-light-primary')
-            },
-            onChange: function (/**Event*/evt) {
-                evt.to.classList.add('bg-light-primary')
-            }
-        })
-    })
+	swappable = new Sortable(formContent, {
+		group: {
+			name: "shared",
+			pull: true,
+			put: true,
+		},
+		revertClone: true,
+		handle: ".component",
+		animation: 150,
+		dataIdAttr: "data-id",
+		onSort: (/**Event*/ evt) => {
+			// saveLayoutBlockSort(evt, (response) => {
+			//     CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
+			// })
+			const item = evt.item
+			item.dataset.sort = evt.newIndex
+		},
+		onAdd: (/**CustomEvent*/ evt) => {
+			const item = evt.item
+			const now = Date.now()
 
+			item.dataset.id = now
+			item.id = `item_${now}`
 
-    swappable = new Sortable(formContent, {
-        group: {
-            name: 'shared',
-            pull: true,
-            put: true
-        },
-        revertClone: true,
-        handle: ".component",
-        animation: 150,
-        dataIdAttr: 'data-id',
-        onSort: function (/**Event*/evt) {
-            // saveLayoutBlockSort(evt, (response) => {
-            //     CMSAdmin.createInitCmsMessageBox(response.data.messageStatus, response.data.message);
-            // })
-            let item = evt.item;
-            item.dataset.sort = evt.newIndex
-
-        },
-        onAdd: function (/**CustomEvent*/evt, dragEl) {
-            let item = evt.item;
-            let now = Date.now()
-
-            item.dataset.id = now
-            item.id = 'item_' + now
-
-            let toolbar = item.querySelector('.toolbar')
-            toolbar.innerHTML = `<div class="d-flex align-items-center">
+			const toolbar = item.querySelector(".toolbar")
+			toolbar.innerHTML = `<div class="d-flex align-items-center">
                                         <button type="button"
                                                 data-id="${now}"
                                                 class="me-2 btn btn-sm btn-light-danger delete_block"
@@ -128,151 +138,145 @@ let initDropZone = ()=> {
                                         </button>
                                     </div>`
 
-
-            let form = document.createElement('form');
-            form.id = 'form_' + now
-            item.append(form)
-            item.dataset.sort = evt.newIndex
-            let block = createFormField(item);
-            formFields.set(item.dataset.id, block);
-
-        },
-        onRemove: function (/**Event*/evt) {
-        }
-    });
+			const form = document.createElement("form")
+			form.id = `form_${now}`
+			item.append(form)
+			item.dataset.sort = evt.newIndex
+			const block = createFormField(item)
+			formFields.set(item.dataset.id, block)
+		},
+		onRemove: () => {},
+	})
 }
 
-let saveForm = async (event)=> {
-    event.preventDefault()
-    let items = swappable.toArray();
+const saveForm = async (event) => {
+	event.preventDefault()
+	const items = swappable.toArray()
 
+	const form = event.target
 
-    let form = event.target
+	form.elements.forEach((item) => {
+		item.classList.remove("is-invalid")
+	})
+	const collection = []
+	const formData = new FormData(form)
 
-    form.elements.forEach((item) => {
-        item.classList.remove('is-invalid')
-    })
-    let collection = [];
-    let formData = new FormData(form);
+	items.forEach((item, index) => {
+		const formField = formFields.get(item)
+		formField.position = index
+		collection.push(formField.toJson())
+	})
 
+	formData.append("collection", JSON.stringify(collection))
+	let headers = axiosConfig.headers
 
-    items.forEach((item, index) => {
-        let formField = formFields.get(item);
-        formField.position = index
-        collection.push(formField.toJson())
-    })
+	if (objectId) {
+		headers = { "X-HTTP-Method-Override": "PUT", ...axiosConfig.headers }
+	}
+	const scroll = new SmoothScroll()
+	try {
+		const response = await axios.post(form.action, formData, {
+			headers: headers,
+		})
+		CMSAdmin.createInitCmsMessageBox("success", response.data.message)
 
-    formData.append('collection', JSON.stringify(collection));
-    let headers = axiosConfig.headers;
+		document.querySelector("#kt_app_toolbar").scrollIntoView()
+	} catch (error) {
+		const translator = await CMSAdmin.getTranslator()
+		const data = error.response.data
 
-    if(objectId) {
-        headers = {"X-HTTP-Method-Override": "PUT", ...axiosConfig.headers}
-    }
-    let scroll = new SmoothScroll();
-    try{
-        let response = await axios.post(form.action, formData, {headers: headers})
-        CMSAdmin.createInitCmsMessageBox('success', response.data.message);
+		if (error.response.data.detail) {
+			CMSAdmin.createInitCmsMessageBox(
+				"danger",
+				translator.trans("Form is invalid", "validators"),
+			)
+		}
+		data.violations.forEach((item) => {
+			const path = item.propertyPath
+			const message = item.title
+			let field = form.querySelector(`[name="${path}"]`)
 
-        document.querySelector('#kt_app_toolbar').scrollIntoView();
+			field.setAttribute("required", "required")
 
-    }catch (error){
-        let translator = await CMSAdmin.getTranslator()
-        let data = error.response.data
+			if (field.nextElementSibling?.classList.contains("select2-container")) {
+				field = field.nextElementSibling
+			}
 
-        if(error.response.data.detail) {
+			field.classList.add("is-invalid")
 
-            CMSAdmin.createInitCmsMessageBox('danger', translator.trans('Form is invalid', 'validators'));
-        }
-        data.violations.forEach((item) => {
-            let path = item.propertyPath
-            let message = item.title
+			if (field.nextElementSibling?.classList.contains("invalid-feedback")) {
+				field.nextElementSibling.innerHtml = message
+				return
+			}
+			field.insertAdjacentHTML(
+				"afterend",
+				`<div class="invalid-feedback">${message}</div>`,
+			)
+		})
 
-            let field = form.querySelector('#'+form.dataset.uniqId + '_'+path)
-
-
-            if(!field) {
-                return
-            }
-            field.classList.add('is-invalid')
-            field.setAttribute('required', 'required')
-
-            if(field.nextElementSibling && field.nextElementSibling.classList.contains('invalid-feedback')){
-                field.nextElementSibling.innerHtml = message;
-                return
-            }
-            field.insertAdjacentHTML('afterend', '<div class="invalid-feedback">' + message + '</div>')
-        })
-
-
-        scroll.animateScroll(form, null, {header: '#kt_app_header_wrapper'})
-    }
+		scroll.animateScroll(form, null, { header: "#kt_app_header_wrapper" })
+	}
 }
 
-let editBlock = (event) => {
-    event.preventDefault()
-    let el = event.target;
+const editBlock = (event) => {
+	event.preventDefault()
+	let el = event.target
 
-    if (!el.dataset.id) {
-        el = el.closest('button');
-    }
+	if (!el.dataset.id) {
+		el = el.closest("button")
+	}
 
-    let item = document.querySelector('#item_' + el.dataset.id)
+	const block = formFields.get(el.dataset.id)
 
-    let formFieldContainer = document.querySelector('#form_' + el.dataset.id)
-    let block = formFields.get(el.dataset.id)
+	el.dataset.bsContent = block.getForm()
 
-    el.dataset.bsContent = block.getForm()
-
-    let popover = bootstrap.Popover.getOrCreateInstance(el, {
-        html: true,
-        sanitize: false,
-        title: block.label,
-        template: `<div class="popover min-w-600px" role="tooltip">
+	const popover = bootstrap.Popover.getOrCreateInstance(el, {
+		html: true,
+		sanitize: false,
+		title: block.label,
+		template: `<div class="popover min-w-600px" role="tooltip">
                             <div class="popover-arrow"></div>
                             <h3 class="popover-header"></h3>
                             <div class="popover-body"></div>
-                    </div>`
-    })
+                    </div>`,
+	})
 
-    popover.show()
-    block.appendListener(popover, el)
+	popover.show()
+	block.appendListener(popover, el)
 }
 
-let deleteBlock = (event) => {
-    let element = event.target
+const deleteBlock = (event) => {
+	let element = event.target
 
-    if (!element.dataset.id) {
-        element = element.closest('button')
-    }
+	if (!element.dataset.id) {
+		element = element.closest("button")
+	}
 
-    let block = element.closest('.component')
+	const block = element.closest(".component")
 
-    block.remove()
+	block.remove()
 
-    formFields.delete(element.dataset.id)
-
+	formFields.delete(element.dataset.id)
 }
 
+KTUtil.onDOMContentLoaded(() => {
+	formContent = document.querySelector("#form-contents")
+	contentPanes = document.querySelectorAll(".tab-pane ")
+	objectId = formContent.dataset.objectId
+	postUrl = formContent.dataset.postUrl
 
+	initFormFields()
 
-KTUtil.onDOMContentLoaded(function () {
-    formContent = document.querySelector("#form-contents")
-    contentPanes = document.querySelectorAll(".tab-pane ")
-    objectId = formContent.dataset.objectId
-    postUrl = formContent.dataset.postUrl
+	KTUtil.on(formContent, ".delete_block", "click", (event) => {
+		deleteBlock(event)
+	})
 
-    initFormFields();
+	KTUtil.on(document.body, "#build form", "submit", (event) => {
+		saveForm(event)
+	})
 
-    KTUtil.on(formContent, '.delete_block', 'click', (event) => {
-        deleteBlock(event)
-    });
-
-    KTUtil.on(document.body, '#build form', 'submit', (event) => {
-        saveForm(event)
-    })
-
-    KTUtil.on(formContent, '.edit_block', 'click', (event) => {
-        editBlock(event)
-    })
-    initDropZone();
+	KTUtil.on(formContent, ".edit_block", "click", (event) => {
+		editBlock(event)
+	})
+	initDropZone()
 })

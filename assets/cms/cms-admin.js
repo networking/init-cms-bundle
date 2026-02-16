@@ -8,6 +8,9 @@ import CMSSortableCollection from "./sortable-collection"
 import { CMSTranslator } from "./translator"
 import "select2"
 
+$.fn.select2.defaults.set("theme", "bootstrap5")
+$.fn.select2.defaults.set("width", "100%")
+$.fn.select2.defaults.set("selectionCssClass", ":all:")
 // Class definition
 const CMSAdmin = {
 	// Define shared variables
@@ -41,8 +44,8 @@ const CMSAdmin = {
 		this.initTabs()
 	},
 
-	initTabs(_el) {
-		const el = _el ?? document.body
+	initTabs(el) {
+		el ??= document.body
 
 		const elements = [].slice.call(
 			document.querySelectorAll('[data-kt-tabs="true"]'),
@@ -69,8 +72,8 @@ const CMSAdmin = {
 		})
 	},
 
-	initToolTips(_el) {
-		const el = _el ?? document.body
+	initToolTips(el) {
+		el ??= document.body
 
 		const tooltipTriggerList = [].slice.call(
 			el.querySelectorAll('[data-bs-toggle="tooltip"]'),
@@ -162,10 +165,21 @@ const CMSAdmin = {
 		)
 
 		elements.forEach((element) => {
-			$(element).on("select2:select", () => {
-				const event = new Event("change", { bubbles: true })
-				element.dispatchEvent(event)
-			})
+			if (element.getAttribute("data-kt-initialized") === "1") {
+				return
+			}
+			const select = $(`#${element.id}`)
+			const parent = select.parent()
+			select
+				.select2({
+					dropdownParent: parent,
+				})
+				.on("select2:select", (e) => {
+					const event = new Event("change", { bubbles: true })
+					e.target.dispatchEvent(event)
+				})
+
+			element.setAttribute("data-kt-initialized", "1")
 		})
 	},
 	initCkeditor() {
@@ -352,6 +366,8 @@ const CMSAdmin = {
 
 		if (window.console?.log) {
 			window.console.log(msg)
+		} else if (window.opera?.postError) {
+			window.opera.postError(msg)
 		}
 	},
 	error(...args) {
@@ -362,6 +378,8 @@ const CMSAdmin = {
 		const msg = `[Init CMS] ${Array.prototype.join.call(args, ", ")}`
 		if (window.console?.error) {
 			window.console.error(msg)
+		} else if (window.opera?.postError) {
+			window.opera.postError(msg)
 		}
 	},
 	createInitCmsMessageBox(
@@ -423,7 +441,7 @@ const CMSAdmin = {
 			}
 
 			$(element).select2(options)
-			$(element).on("select2:select", (e) => {
+			$(element).on("select2:select", () => {
 				const event = new Event("change", { bubbles: true })
 				element.dispatchEvent(event)
 			})

@@ -27,19 +27,22 @@
          data-unique-id="{{ admin.uniqid }}"
     >
         <div>
-            <form action="{{ oneup_uploader_endpoint('media_admin') }}?context={{app.request.get('context')}}" id="upload-form">
+            <form action="{{ oneup_uploader_endpoint('media_admin') }}?context={{app.request.query.get('context')}}" id="upload-form">
             {{ form_row(form.tags) }}
             {{ form_row(form.providerName) }}
+                {% if form.locale is defined %}
+                {{ form_row(form.locale) }}
+                {% endif %}
                 <input type="hidden" name="with_js" value="0">
             </form>
         </div>
         <div id="actions" class="d-flex flex-row justify-content-between mb-2">
-            <span class="fileupload-process">
+            <div class="fileupload-process">
                   <div id="total-progress" class="progress active" role="progressbar" aria-valuemin="0"
                        aria-valuemax="100" aria-valuenow="0" style="opacity: 0;">
-                      <div class="progress-bar progress-bar-info" style="width:0%;" data-dz-uploadprogress=""></div>
+                      <div class="progress-bar progress-bar-info" style="width:0;" data-dz-uploadprogress=""></div>
                   </div>
-            </span>
+            </div>
             <a class="dropzone-remove-all cancel btn btn-sm btn-light-primary">
                 {{ 'upload_btn_cancel_all'|trans({}, 'MediaAdmin') }}
             </a>

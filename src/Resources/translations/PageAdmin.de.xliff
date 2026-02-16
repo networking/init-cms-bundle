@@ -556,6 +556,14 @@
                 <source>link.preview</source>
                 <target>Vorschau</target>
             </trans-unit>
+            <trans-unit id="link.copy">
+                <source>link.copy</source>
+                <target>URL kopieren</target>
+            </trans-unit>
+            <trans-unit id="link.copied">
+                <source>link.copied</source>
+                <target>URL in die Zwischenablage kopiert</target>
+            </trans-unit>
             <trans-unit id="link.live">
                 <source>link.live</source>
                 <target>Veröffentlichte Version anzeigen</target>
